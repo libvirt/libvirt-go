@@ -25,6 +25,8 @@ func main() {
 	// }
 	// for k := range definedDomains {
 	// 	log.Printf("Defined domain %s\n", definedDomains[k])
+	// 	dom, _ = vir.LookupDomainByName(definedDomains[k])
+	// 	log.Println(dom.GetName())
 	// }
 
 	domains, err := vir.ListDomains()

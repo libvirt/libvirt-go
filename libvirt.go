@@ -115,6 +115,16 @@ func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
 	return VirDomain{domain: ptr}, nil
 }
 
+func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
+	cName := C.CString(id)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virDomainLookupByName(c.connection, cName)
+	if ptr == nil {
+		return VirDomain{}, errors.New(GetLastError())
+	}
+	return VirDomain{domain: ptr}, nil
+}
+
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.domain)
 	if name == nil {
