@@ -10,6 +10,7 @@ import (
 /*
 #cgo LDFLAGS: -lvirt -ldl
 #include <libvirt/libvirt.h>
+#include <stdlib.h>
 */
 import "C"
 
@@ -18,7 +19,9 @@ type VirConnection struct {
 }
 
 func NewVirConnection(uri string) (VirConnection, error) {
-	ptr := C.virConnectOpen(C.CString(uri))
+	cUri := C.CString(uri)
+	defer C.free(unsafe.Pointer(cUri))
+	ptr := C.virConnectOpen(cUri)
 	if ptr == nil {
 		return VirConnection{}, errors.New("Failed to connect to hypervisor")
 	}
