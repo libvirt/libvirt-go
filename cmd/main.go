@@ -18,5 +18,11 @@ func main() {
 
 	for k := range domains {
 		log.Printf("Domain %d\n", domains[k])
+		dom, err := vir.LookupDomainById(domains[k])
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		name, _ := dom.GetName()
+		log.Println(name)
 	}
 }
