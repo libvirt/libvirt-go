@@ -19,6 +19,14 @@ func main() {
 	// 	log.Fatalln(err)
 	// }
 
+	// definedDomains, err := vir.ListDefinedDomains()
+	// if err != nil {
+	// 	log.Fatalln(err.Error())
+	// }
+	// for k := range definedDomains {
+	// 	log.Printf("Defined domain %s\n", definedDomains[k])
+	// }
+
 	domains, err := vir.ListDomains()
 	if err != nil {
 		log.Fatalln(err.Error())

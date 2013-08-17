@@ -71,6 +71,24 @@ func (c *VirConnection) GetHostname() (string, error) {
 	return hostname, nil
 }
 
+func (c *VirConnection) ListDefinedDomains() ([]string, error) {
+	var names [1024](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numDomains := C.virConnectListDefinedDomains(
+		c.connection,
+		(**C.char)(namesPtr),
+		1024)
+	if numDomains == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numDomains)
+	for k := 0; k < int(numDomains); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
 func (c *VirConnection) ListDomains() ([]uint32, error) {
 	domainIds := make([]int, 1024)
 	domainIdsPtr := unsafe.Pointer(&domainIds)
