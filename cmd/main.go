@@ -25,8 +25,9 @@ func main() {
 	// }
 	// for k := range definedDomains {
 	// 	log.Printf("Defined domain %s\n", definedDomains[k])
-	// 	dom, _ = vir.LookupDomainByName(definedDomains[k])
+	// 	dom, _ := vir.LookupDomainByName(definedDomains[k])
 	// 	log.Println(dom.GetName())
+	// 	log.Println(dom.GetState())
 	// }
 
 	domains, err := vir.ListDomains()
@@ -41,7 +42,8 @@ func main() {
 			log.Fatalln(err.Error())
 		}
 		name, _ := dom.GetName()
-		log.Println(name)
+		state, _ := dom.GetState()
+		log.Println(name, state)
 	}
 
 	vir.CloseConnection()

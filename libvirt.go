@@ -132,3 +132,16 @@ func (d *VirDomain) GetName() (string, error) {
 	}
 	return C.GoString(name), nil
 }
+
+func (d *VirDomain) GetState() ([]int, error) {
+	var cState C.int
+	var cReason C.int
+	result := C.virDomainGetState(d.domain,
+		(*C.int)(unsafe.Pointer(&cState)),
+		(*C.int)(unsafe.Pointer(&cReason)),
+		0)
+	if int(result) == -1 {
+		return []int{}, errors.New(GetLastError())
+	}
+	return []int{int(cState), int(cReason)}, nil
+}
