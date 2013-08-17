@@ -43,6 +43,34 @@ func GetLastError() string {
 	return errMsg
 }
 
+func (c *VirConnection) CloseConnection() error {
+	result := int(C.virConnectClose(c.connection))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (c *VirConnection) GetCapabilities() (string, error) {
+	str := C.virConnectGetCapabilities(c.connection)
+	if str == nil {
+		return "", errors.New(GetLastError())
+	}
+	capabilities := C.GoString(str)
+	C.free(unsafe.Pointer(str))
+	return capabilities, nil
+}
+
+func (c *VirConnection) GetHostname() (string, error) {
+	str := C.virConnectGetHostname(c.connection)
+	if str == nil {
+		return "", errors.New(GetLastError())
+	}
+	hostname := C.GoString(str)
+	C.free(unsafe.Pointer(str))
+	return hostname, nil
+}
+
 func (c *VirConnection) ListDomains() ([]uint32, error) {
 	domainIds := make([]int, 1024)
 	domainIdsPtr := unsafe.Pointer(&domainIds)

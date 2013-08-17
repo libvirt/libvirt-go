@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/alexzorin/libvirt"
+	"github.com/alexzorin/libvirt-go"
 	"log"
 )
 
@@ -10,6 +10,14 @@ func main() {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+
+	hostname, _ := vir.GetHostname()
+	log.Printf("Connected to hypervisor at %s\n", hostname)
+
+	// capabilities, err := vir.GetCapabilities()
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
 	domains, err := vir.ListDomains()
 	if err != nil {
@@ -25,4 +33,6 @@ func main() {
 		name, _ := dom.GetName()
 		log.Println(name)
 	}
+
+	vir.CloseConnection()
 }
