@@ -60,10 +60,22 @@ func TestGetDomainInfo(t *testing.T) {
 	}
 }
 
-func TestGetXMLDesc(t *testing.T) {
+func TestGetDomainXMLDesc(t *testing.T) {
 	dom := buildTestDomain()
 	_, err := dom.GetXMLDesc(0)
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestCreateDomainSnapshotXML(t *testing.T) {
+	dom := buildTestDomain()
+	_, err := dom.CreateSnapshotXML(`
+		<domainsnapshot>
+			<description>Test snapshot that will fail because its unsupported</description>
+		</domainsnapshot>
+	`, 0)
+	if err == nil {
+		t.Error("Snapshot should have failed due to being unsupported on test transport")
 	}
 }

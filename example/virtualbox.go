@@ -43,7 +43,10 @@ func main() {
 		}
 		name, _ := dom.GetName()
 		state, _ := dom.GetState()
-		log.Println(name, state)
+		xml, _ := dom.GetXMLDesc(0)
+		log.Println(name, state, xml)
+		// snapshot, err := dom.CreateSnapshotXML(`<domainsnapshot></domainsnapshot>`, 0)
+		// log.Println(snapshot, err)
 	}
 
 	vir.CloseConnection()
