@@ -6,6 +6,10 @@ import (
 	"unsafe"
 )
 
+type VirNodeInfo struct {
+	ptr _Ctype_virNodeInfo
+}
+
 func (ni *VirNodeInfo) GetModel() string {
 	model := C.GoString((*C.char)(unsafe.Pointer(&ni.ptr.model)))
 	return model
