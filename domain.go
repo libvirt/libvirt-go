@@ -14,7 +14,7 @@ import (
 )
 
 type VirDomain struct {
-	ptr _Ctype_virDomainPtr
+	ptr C.virDomainPtr
 }
 
 type VirDomainInfo struct {
@@ -64,8 +64,8 @@ func (d *VirDomain) GetUUIDString() (string, error) {
 
 func (d *VirDomain) GetInfo() (VirDomainInfo, error) {
 	di := VirDomainInfo{}
-	var ptr _Ctype_virDomainInfo
-	result := C.virDomainGetInfo(d.ptr, (*_Ctype_virDomainInfo)(unsafe.Pointer(&ptr)))
+	var ptr C.virDomainInfo
+	result := C.virDomainGetInfo(d.ptr, (*C.virDomainInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
 		return di, errors.New(GetLastError())
 	}

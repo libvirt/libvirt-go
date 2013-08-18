@@ -17,7 +17,7 @@ import (
 import "C"
 
 type VirConnection struct {
-	ptr _Ctype_virConnectPtr
+	ptr C.virConnectPtr
 }
 
 func NewVirConnection(uri string) (VirConnection, error) {
@@ -59,8 +59,8 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 
 func (c *VirConnection) GetNodeInfo() (VirNodeInfo, error) {
 	ni := VirNodeInfo{}
-	var ptr _Ctype_virNodeInfo
-	result := C.virNodeGetInfo(c.ptr, (*_Ctype_virNodeInfo)(unsafe.Pointer(&ptr)))
+	var ptr C.virNodeInfo
+	result := C.virNodeGetInfo(c.ptr, (*C.virNodeInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
 		return ni, errors.New(GetLastError())
 	}

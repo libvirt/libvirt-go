@@ -1,5 +1,11 @@
 package libvirt
 
+/*
+#cgo LDFLAGS: -lvirt -ldl
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include <stdlib.h>
+*/
 import "C"
 
 import (
@@ -7,7 +13,7 @@ import (
 )
 
 type VirNodeInfo struct {
-	ptr _Ctype_virNodeInfo
+	ptr C.virNodeInfo
 }
 
 func (ni *VirNodeInfo) GetModel() string {
