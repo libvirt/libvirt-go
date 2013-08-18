@@ -79,3 +79,19 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 		t.Error("Snapshot should have failed due to being unsupported on test transport")
 	}
 }
+
+func TestSaveDomain(t *testing.T) {
+	dom := buildTestDomain()
+	err := dom.Save("/tmp/libvirt-go-test.tmp")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestSaveDomainFlags(t *testing.T) {
+	dom := buildTestDomain()
+	err := dom.SaveFlags("/tmp/libvirt-go-test.tmp", "", 0)
+	if err == nil {
+		t.Error("Excected xml modification unsupported")
+	}
+}
