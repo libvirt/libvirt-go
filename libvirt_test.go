@@ -97,7 +97,7 @@ func TestLookupInvalidDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	_, err := conn.LookupDomainById(2)
 	if err == nil {
-		t.Error(err)
+		t.Error("Domain #2 shouldn't exist in test transport")
 	}
 }
 
