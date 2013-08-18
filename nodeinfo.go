@@ -15,30 +15,30 @@ func (ni *VirNodeInfo) GetModel() string {
 	return model
 }
 
-func (ni *VirNodeInfo) getMemoryKB() uint64 {
+func (ni *VirNodeInfo) GetMemoryKB() uint64 {
 	return uint64(ni.ptr.memory)
 }
 
-func (ni *VirNodeInfo) getCPUs() uint32 {
+func (ni *VirNodeInfo) GetCPUs() uint32 {
 	return uint32(ni.ptr.cpus)
 }
 
-func (ni *VirNodeInfo) getMhz() uint32 {
+func (ni *VirNodeInfo) GetMhz() uint32 {
 	return uint32(ni.ptr.mhz)
 }
 
-func (ni *VirNodeInfo) getNodes() uint32 {
+func (ni *VirNodeInfo) GetNodes() uint32 {
 	return uint32(ni.ptr.nodes)
 }
 
-func (ni *VirNodeInfo) getSockets() uint32 {
+func (ni *VirNodeInfo) GetSockets() uint32 {
 	return uint32(ni.ptr.sockets)
 }
 
-func (ni *VirNodeInfo) getCores() uint32 {
+func (ni *VirNodeInfo) GetCores() uint32 {
 	return uint32(ni.ptr.cores)
 }
 
-func (ni *VirNodeInfo) getThreads() uint32 {
+func (ni *VirNodeInfo) GetThreads() uint32 {
 	return uint32(ni.ptr.threads)
 }
