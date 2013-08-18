@@ -17,11 +17,11 @@ import (
 import "C"
 
 type VirConnection struct {
-	connection _Ctype_virConnectPtr
+	ptr _Ctype_virConnectPtr
 }
 
 type VirDomain struct {
-	domain _Ctype_virDomainPtr
+	ptr _Ctype_virDomainPtr
 }
 
 func NewVirConnection(uri string) (VirConnection, error) {
@@ -31,7 +31,7 @@ func NewVirConnection(uri string) (VirConnection, error) {
 	if ptr == nil {
 		return VirConnection{}, errors.New(GetLastError())
 	}
-	obj := VirConnection{connection: ptr}
+	obj := VirConnection{ptr: ptr}
 	return obj, nil
 }
 
@@ -44,7 +44,7 @@ func GetLastError() string {
 }
 
 func (c *VirConnection) CloseConnection() error {
-	result := int(C.virConnectClose(c.connection))
+	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return errors.New(GetLastError())
 	}
@@ -52,7 +52,7 @@ func (c *VirConnection) CloseConnection() error {
 }
 
 func (c *VirConnection) GetCapabilities() (string, error) {
-	str := C.virConnectGetCapabilities(c.connection)
+	str := C.virConnectGetCapabilities(c.ptr)
 	if str == nil {
 		return "", errors.New(GetLastError())
 	}
@@ -62,7 +62,7 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 }
 
 func (c *VirConnection) GetHostname() (string, error) {
-	str := C.virConnectGetHostname(c.connection)
+	str := C.virConnectGetHostname(c.ptr)
 	if str == nil {
 		return "", errors.New(GetLastError())
 	}
@@ -75,7 +75,7 @@ func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 	var names [1024](*C.char)
 	namesPtr := unsafe.Pointer(&names)
 	numDomains := C.virConnectListDefinedDomains(
-		c.connection,
+		c.ptr,
 		(**C.char)(namesPtr),
 		1024)
 	if numDomains == -1 {
@@ -92,7 +92,7 @@ func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 func (c *VirConnection) ListDomains() ([]uint32, error) {
 	domainIds := make([]int, 1024)
 	domainIdsPtr := unsafe.Pointer(&domainIds)
-	numDomains := C.virConnectListDomains(c.connection, (*C.int)(domainIdsPtr), 1024)
+	numDomains := C.virConnectListDomains(c.ptr, (*C.int)(domainIdsPtr), 1024)
 	if numDomains == -1 {
 		return nil, errors.New(GetLastError())
 	}
@@ -108,25 +108,25 @@ func (c *VirConnection) ListDomains() ([]uint32, error) {
 }
 
 func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
-	ptr := C.virDomainLookupByID(c.connection, C.int(id))
+	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
 		return VirDomain{}, errors.New(GetLastError())
 	}
-	return VirDomain{domain: ptr}, nil
+	return VirDomain{ptr: ptr}, nil
 }
 
 func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
-	ptr := C.virDomainLookupByName(c.connection, cName)
+	ptr := C.virDomainLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return VirDomain{}, errors.New(GetLastError())
 	}
-	return VirDomain{domain: ptr}, nil
+	return VirDomain{ptr: ptr}, nil
 }
 
 func (d *VirDomain) GetName() (string, error) {
-	name := C.virDomainGetName(d.domain)
+	name := C.virDomainGetName(d.ptr)
 	if name == nil {
 		return "", errors.New(GetLastError())
 	}
@@ -136,7 +136,7 @@ func (d *VirDomain) GetName() (string, error) {
 func (d *VirDomain) GetState() ([]int, error) {
 	var cState C.int
 	var cReason C.int
-	result := C.virDomainGetState(d.domain,
+	result := C.virDomainGetState(d.ptr,
 		(*C.int)(unsafe.Pointer(&cState)),
 		(*C.int)(unsafe.Pointer(&cReason)),
 		0)
@@ -149,7 +149,7 @@ func (d *VirDomain) GetState() ([]int, error) {
 func (d *VirDomain) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
-	result := C.virDomainGetUUID(d.domain, (*C.uchar)(cuidPtr))
+	result := C.virDomainGetUUID(d.ptr, (*C.uchar)(cuidPtr))
 	if result != 0 {
 		return []byte{}, errors.New(GetLastError())
 	}
@@ -159,7 +159,7 @@ func (d *VirDomain) GetUUID() ([]byte, error) {
 func (d *VirDomain) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
-	result := C.virDomainGetUUIDString(d.domain, (*C.char)(cuidPtr))
+	result := C.virDomainGetUUIDString(d.ptr, (*C.char)(cuidPtr))
 	if result != 0 {
 		return "", errors.New(GetLastError())
 	}
