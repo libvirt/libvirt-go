@@ -136,3 +136,20 @@ func TestGetDomainState(t *testing.T) {
 		t.Error("Domain state in test transport should be [1 1]")
 	}
 }
+
+func TestGetDomainUUID(t *testing.T) {
+	dom := buildTestDomain()
+	_, err := dom.GetUUID()
+	// how to test uuid validity?
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestGetDomainUUIDString(t *testing.T) {
+	dom := buildTestDomain()
+	uuid, err := dom.GetUUIDString()
+	if err != nil {
+		t.Error(uuid)
+	}
+}

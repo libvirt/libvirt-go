@@ -145,3 +145,23 @@ func (d *VirDomain) GetState() ([]int, error) {
 	}
 	return []int{int(cState), int(cReason)}, nil
 }
+
+func (d *VirDomain) GetUUID() ([]byte, error) {
+	var cUuid [C.VIR_UUID_BUFLEN](byte)
+	cuidPtr := unsafe.Pointer(&cUuid)
+	result := C.virDomainGetUUID(d.domain, (*C.uchar)(cuidPtr))
+	if result != 0 {
+		return []byte{}, errors.New(GetLastError())
+	}
+	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
+}
+
+func (d *VirDomain) GetUUIDString() (string, error) {
+	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
+	cuidPtr := unsafe.Pointer(&cUuid)
+	result := C.virDomainGetUUIDString(d.domain, (*C.char)(cuidPtr))
+	if result != 0 {
+		return "", errors.New(GetLastError())
+	}
+	return C.GoString((*C.char)(cuidPtr)), nil
+}
