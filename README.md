@@ -7,10 +7,12 @@ Make sure to have libvirt-dev package (or the development files otherwise somewh
 
 Documentation
 --------------
-[api documentation for the bindings](http://godoc.org/github.com/alexzorin/libvirt-go)
-[api documentation for libvirt](http://libvirt.org/html/libvirt-libvirt.html)
+
+* [api documentation for the bindings](http://godoc.org/github.com/alexzorin/libvirt-go)
+* [api documentation for libvirt](http://libvirt.org/html/libvirt-libvirt.html)
 
 Contributing
 -------------
+
 Please fork and write tests
 
