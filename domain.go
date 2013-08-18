@@ -73,6 +73,16 @@ func (d *VirDomain) GetInfo() (VirDomainInfo, error) {
 	return di, nil
 }
 
+func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
+	result := C.virDomainGetXMLDesc(d.ptr, C.uint(flags))
+	if result == nil {
+		return "", errors.New(GetLastError())
+	}
+	xml := C.GoString(result)
+	C.free(unsafe.Pointer(result))
+	return xml, nil
+}
+
 func (i *VirDomainInfo) GetState() uint8 {
 	return uint8(i.ptr.state)
 }

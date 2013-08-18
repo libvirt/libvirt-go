@@ -59,3 +59,11 @@ func TestGetDomainInfo(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGetXMLDesc(t *testing.T) {
+	dom := buildTestDomain()
+	_, err := dom.GetXMLDesc(0)
+	if err != nil {
+		t.Error(err)
+	}
+}
