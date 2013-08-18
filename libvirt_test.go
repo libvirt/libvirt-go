@@ -44,6 +44,17 @@ func TestCapabilities(t *testing.T) {
 	}
 }
 
+func TestGetNodeInfo(t *testing.T) {
+	conn := buildTestConnection()
+	ni, err := conn.GetNodeInfo()
+	if err != nil {
+		t.Error(err)
+	}
+	if ni.GetModel() != "i686" {
+		t.Error("Expected i686 model in test transport")
+	}
+}
+
 func TestHostname(t *testing.T) {
 	conn := buildTestConnection()
 	hostname, err := conn.GetHostname()

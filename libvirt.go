@@ -24,6 +24,10 @@ type VirDomain struct {
 	ptr _Ctype_virDomainPtr
 }
 
+type VirNodeInfo struct {
+	ptr _Ctype_virNodeInfo
+}
+
 func NewVirConnection(uri string) (VirConnection, error) {
 	cUri := C.CString(uri)
 	defer C.free(unsafe.Pointer(cUri))
@@ -59,6 +63,17 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 	capabilities := C.GoString(str)
 	C.free(unsafe.Pointer(str))
 	return capabilities, nil
+}
+
+func (c *VirConnection) GetNodeInfo() (VirNodeInfo, error) {
+	ni := VirNodeInfo{}
+	var ptr _Ctype_virNodeInfo
+	result := C.virNodeGetInfo(c.ptr, (*_Ctype_virNodeInfo)(unsafe.Pointer(&ptr)))
+	if result == -1 {
+		return ni, errors.New(GetLastError())
+	}
+	ni.ptr = ptr
+	return ni, nil
 }
 
 func (c *VirConnection) GetHostname() (string, error) {
