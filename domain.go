@@ -17,6 +17,10 @@ type VirDomain struct {
 	ptr _Ctype_virDomainPtr
 }
 
+type VirDomainInfo struct {
+	ptr C.virDomainInfo
+}
+
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {
@@ -56,4 +60,35 @@ func (d *VirDomain) GetUUIDString() (string, error) {
 		return "", errors.New(GetLastError())
 	}
 	return C.GoString((*C.char)(cuidPtr)), nil
+}
+
+func (d *VirDomain) GetInfo() (VirDomainInfo, error) {
+	di := VirDomainInfo{}
+	var ptr _Ctype_virDomainInfo
+	result := C.virDomainGetInfo(d.ptr, (*_Ctype_virDomainInfo)(unsafe.Pointer(&ptr)))
+	if result == -1 {
+		return di, errors.New(GetLastError())
+	}
+	di.ptr = ptr
+	return di, nil
+}
+
+func (i *VirDomainInfo) GetState() uint8 {
+	return uint8(i.ptr.state)
+}
+
+func (i *VirDomainInfo) GetMaxMem() uint64 {
+	return uint64(i.ptr.maxMem)
+}
+
+func (i *VirDomainInfo) GetMemory() uint64 {
+	return uint64(i.ptr.memory)
+}
+
+func (i *VirDomainInfo) GetNrVirtCpu() uint16 {
+	return uint16(i.ptr.nrVirtCpu)
+}
+
+func (i *VirDomainInfo) GetCpuTime() uint64 {
+	return uint64(i.ptr.cpuTime)
 }

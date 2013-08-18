@@ -46,8 +46,16 @@ func TestGetDomainUUID(t *testing.T) {
 
 func TestGetDomainUUIDString(t *testing.T) {
 	dom := buildTestDomain()
-	uuid, err := dom.GetUUIDString()
+	_, err := dom.GetUUIDString()
 	if err != nil {
-		t.Error(uuid)
+		t.Error(err)
+	}
+}
+
+func TestGetDomainInfo(t *testing.T) {
+	dom := buildTestDomain()
+	_, err := dom.GetInfo()
+	if err != nil {
+		t.Error(err)
 	}
 }
