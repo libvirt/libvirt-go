@@ -39,12 +39,12 @@ func GetLastError() string {
 	return errMsg
 }
 
-func (c *VirConnection) CloseConnection() error {
+func (c *VirConnection) CloseConnection() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
-		return errors.New(GetLastError())
+		return result, errors.New(GetLastError())
 	}
-	return nil
+	return result, nil
 }
 
 func (c *VirConnection) GetCapabilities() (string, error) {
