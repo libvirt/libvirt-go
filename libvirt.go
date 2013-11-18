@@ -46,6 +46,18 @@ func (c *VirConnection) CloseConnection() (int, error) {
 	return result, nil
 }
 
+func (c *VirConnection) UnrefAndCloseConnection() error {
+	closeRes := 1
+	var err error
+	for closeRes > 0 {
+		closeRes, err = c.CloseConnection()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (c *VirConnection) GetCapabilities() (string, error) {
 	str := C.virConnectGetCapabilities(c.ptr)
 	if str == nil {
