@@ -14,7 +14,7 @@ func TestConnection(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = conn.CloseConnection()
+	_, err = conn.CloseConnection()
 	if err != nil {
 		t.Error(err)
 	}
