@@ -1,8 +1,6 @@
 package libvirt
 
 import (
-	"bytes"
-	"encoding/binary"
 	"errors"
 	"fmt"
 	"unsafe"
@@ -103,7 +101,7 @@ func (c *VirConnection) ListDomains() ([]uint32, error) {
 	if numDomains == -1 {
 		return nil, errors.New(GetLastError())
 	}
-	
+
 	return cDomainsIds[:numDomains], nil
 }
 
