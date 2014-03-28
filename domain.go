@@ -33,13 +33,24 @@ func (d *VirDomain) Create() error {
 	}
 	return nil
 }
+
 func (d *VirDomain) Destroy() error {
 	result := C.virDomainDestroy(d.ptr)
 	if result == -1 {
 		return errors.New(GetLastError())
 	}
-
 	return nil
+}
+
+func (d *VirDomain) IsActive() (bool, error) {
+	result := C.virDomainIsActive(d.ptr)
+	if result == -1 {
+		return false, errors.New(GetLastError())
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (d *VirDomain) SetAutostart(autostart bool) error {

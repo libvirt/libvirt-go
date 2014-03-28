@@ -175,3 +175,30 @@ func TestAutostart(t *testing.T) {
 		return
 	}
 }
+
+func TestDomainIsActive(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	active, err := dom.IsActive()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !active {
+		t.Fatal("Domain should be active")
+		return
+	}
+	if err := dom.Destroy(); err != nil {
+		t.Error(err)
+		return
+	}
+	active, err = dom.IsActive()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if active {
+		t.Fatal("Domain should be inactive")
+		return
+	}
+}
