@@ -21,6 +21,14 @@ type VirDomainInfo struct {
 	ptr C.virDomainInfo
 }
 
+func (d *VirDomain) Create() error {
+	result := C.virDomainCreate(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+
+	return nil
+}
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {
