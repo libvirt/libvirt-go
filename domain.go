@@ -13,6 +13,11 @@ import (
 	"unsafe"
 )
 
+const (
+	VIR_DOMAIN_RUNNING = C.VIR_DOMAIN_RUNNING
+	VIR_DOMAIN_SHUTOFF = C.VIR_DOMAIN_SHUTOFF
+)
+
 type VirDomain struct {
 	ptr C.virDomainPtr
 }
@@ -28,7 +33,14 @@ func (d *VirDomain) Create() error {
 	}
 	return nil
 }
+func (d *VirDomain) Destroy() error {
+	result := C.virDomainDestroy(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
 
+	return nil
+}
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {

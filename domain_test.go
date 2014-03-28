@@ -104,3 +104,47 @@ func TestSaveDomainFlags(t *testing.T) {
 		t.Error("Excected xml modification unsupported")
 	}
 }
+
+func TestCreateDestroyDomain(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	xml := `
+	<domain type="test">
+		<name>test domain</name>
+		<memory unit="KiB">8192</memory>
+		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`
+	dom, err := conn.DomainDefineXML(xml)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if err = dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	state, err := dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != VIR_DOMAIN_RUNNING {
+		t.Fatal("Domain should be running")
+		return
+	}
+	if err = dom.Destroy(); err != nil {
+		t.Error(err)
+		return
+	}
+	state, err = dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != VIR_DOMAIN_SHUTOFF {
+		t.Fatal("Domain should be destroyed")
+		return
+	}
+}
