@@ -4,14 +4,15 @@ import (
 	"testing"
 )
 
-func buildTestDomain() VirDomain {
+func buildTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
 	dom, _ := conn.LookupDomainById(1)
-	return dom
+	return dom, conn
 }
 
 func TestGetDomainName(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	name, err := dom.GetName()
 	if err != nil {
 		t.Error(err)
@@ -22,7 +23,8 @@ func TestGetDomainName(t *testing.T) {
 }
 
 func TestGetDomainState(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	state, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
@@ -36,7 +38,8 @@ func TestGetDomainState(t *testing.T) {
 }
 
 func TestGetDomainUUID(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	_, err := dom.GetUUID()
 	// how to test uuid validity?
 	if err != nil {
@@ -45,7 +48,8 @@ func TestGetDomainUUID(t *testing.T) {
 }
 
 func TestGetDomainUUIDString(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	_, err := dom.GetUUIDString()
 	if err != nil {
 		t.Error(err)
@@ -53,7 +57,8 @@ func TestGetDomainUUIDString(t *testing.T) {
 }
 
 func TestGetDomainInfo(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	_, err := dom.GetInfo()
 	if err != nil {
 		t.Error(err)
@@ -61,7 +66,8 @@ func TestGetDomainInfo(t *testing.T) {
 }
 
 func TestGetDomainXMLDesc(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	_, err := dom.GetXMLDesc(0)
 	if err != nil {
 		t.Error(err)
@@ -69,7 +75,8 @@ func TestGetDomainXMLDesc(t *testing.T) {
 }
 
 func TestCreateDomainSnapshotXML(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	_, err := dom.CreateSnapshotXML(`
 		<domainsnapshot>
 			<description>Test snapshot that will fail because its unsupported</description>
@@ -81,7 +88,8 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 }
 
 func TestSaveDomain(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	err := dom.Save("/tmp/libvirt-go-test.tmp")
 	if err != nil {
 		t.Error(err)
@@ -89,7 +97,8 @@ func TestSaveDomain(t *testing.T) {
 }
 
 func TestSaveDomainFlags(t *testing.T) {
-	dom := buildTestDomain()
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
 	err := dom.SaveFlags("/tmp/libvirt-go-test.tmp", "", 0)
 	if err == nil {
 		t.Error("Excected xml modification unsupported")

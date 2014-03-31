@@ -26,9 +26,9 @@ func (d *VirDomain) Create() error {
 	if result == -1 {
 		return errors.New(GetLastError())
 	}
-
 	return nil
 }
+
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {

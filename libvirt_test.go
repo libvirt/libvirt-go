@@ -29,6 +29,7 @@ func TestInvalidConnection(t *testing.T) {
 
 func TestCapabilities(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	capabilities, err := conn.GetCapabilities()
 	if err != nil {
 		t.Error(err)
@@ -40,6 +41,7 @@ func TestCapabilities(t *testing.T) {
 
 func TestGetNodeInfo(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	ni, err := conn.GetNodeInfo()
 	if err != nil {
 		t.Error(err)
@@ -51,6 +53,7 @@ func TestGetNodeInfo(t *testing.T) {
 
 func TestHostname(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	hostname, err := conn.GetHostname()
 	if err != nil {
 		t.Error(err)
@@ -62,6 +65,7 @@ func TestHostname(t *testing.T) {
 
 func TestListDefinedDomains(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	doms, err := conn.ListDefinedDomains()
 	if err != nil {
 		t.Error(err)
@@ -73,6 +77,7 @@ func TestListDefinedDomains(t *testing.T) {
 
 func TestListDomains(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	doms, err := conn.ListDomains()
 	if err != nil {
 		t.Error(err)
@@ -87,6 +92,7 @@ func TestListDomains(t *testing.T) {
 
 func TestLookupDomainById(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	_, err := conn.LookupDomainById(1)
 	if err != nil {
 		t.Error(err)
@@ -95,6 +101,7 @@ func TestLookupDomainById(t *testing.T) {
 
 func TestLookupInvalidDomainById(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	_, err := conn.LookupDomainById(2)
 	if err == nil {
 		t.Error("Domain #2 shouldn't exist in test transport")
@@ -103,6 +110,7 @@ func TestLookupInvalidDomainById(t *testing.T) {
 
 func TestLookupDomainByName(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	_, err := conn.LookupDomainByName("test")
 	if err != nil {
 		t.Error(err)
@@ -111,6 +119,7 @@ func TestLookupDomainByName(t *testing.T) {
 
 func TestLookupInvalidDomainByName(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	_, err := conn.LookupDomainByName("non_existent_domain")
 	if err == nil {
 		t.Error("Could find non-existent domain by name")
@@ -119,6 +128,7 @@ func TestLookupInvalidDomainByName(t *testing.T) {
 
 func TestDomainDefineXML(t *testing.T) {
 	conn := buildTestConnection()
+	defer conn.CloseConnection()
 	// Test a minimally valid xml
 	xml := `
 	<domain type="test">
