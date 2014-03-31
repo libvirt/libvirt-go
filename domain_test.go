@@ -161,6 +161,24 @@ func TestCreateDestroyDomain(t *testing.T) {
 	}
 }
 
+func TestShutdownDomain(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Shutdown(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestShutdownReboot(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Reboot(0); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestAutostart(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()

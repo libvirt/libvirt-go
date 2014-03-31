@@ -42,6 +42,22 @@ func (d *VirDomain) Destroy() error {
 	return nil
 }
 
+func (d *VirDomain) Shutdown() error {
+	result := C.virDomainShutdown(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) Reboot(flags uint) error {
+	result := C.virDomainReboot(d.ptr, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (d *VirDomain) IsActive() (bool, error) {
 	result := C.virDomainIsActive(d.ptr)
 	if result == -1 {
