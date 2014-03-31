@@ -148,3 +148,30 @@ func TestCreateDestroyDomain(t *testing.T) {
 		return
 	}
 }
+
+func TestAutostart(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	as, err := dom.GetAutostart()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if as {
+		t.Fatal("autostart should be false")
+		return
+	}
+	if err := dom.SetAutostart(true); err != nil {
+		t.Error(err)
+		return
+	}
+	as, err = dom.GetAutostart()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !as {
+		t.Fatal("autostart should be true")
+		return
+	}
+}

@@ -41,23 +41,36 @@ func (d *VirDomain) Destroy() error {
 
 	return nil
 }
+
 func (d *VirDomain) SetAutostart(autostart bool) error {
 	var cAutostart C.int
-
 	switch autostart {
 	case true:
 		cAutostart = 1
 	default:
 		cAutostart = 0
 	}
-
 	result := C.virDomainSetAutostart(d.ptr, cAutostart)
 	if result == -1 {
 		return errors.New(GetLastError())
 	}
-
 	return nil
 }
+
+func (d *VirDomain) GetAutostart() (bool, error) {
+	var out C.int
+	result := C.virDomainGetAutostart(d.ptr, (*C.int)(unsafe.Pointer(&out)))
+	if result == -1 {
+		return false, errors.New(GetLastError())
+	}
+	switch out {
+	case 1:
+		return true, nil
+	default:
+		return false, nil
+	}
+}
+
 func (d *VirDomain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {
