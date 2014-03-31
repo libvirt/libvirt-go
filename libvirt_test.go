@@ -13,10 +13,12 @@ func TestConnection(t *testing.T) {
 	conn, err := NewVirConnection("test:///default")
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	_, err = conn.CloseConnection()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -33,9 +35,11 @@ func TestCapabilities(t *testing.T) {
 	capabilities, err := conn.GetCapabilities()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if capabilities == "" {
 		t.Error("Capabilities was empty")
+		return
 	}
 }
 
@@ -45,9 +49,11 @@ func TestGetNodeInfo(t *testing.T) {
 	ni, err := conn.GetNodeInfo()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if ni.GetModel() != "i686" {
 		t.Error("Expected i686 model in test transport")
+		return
 	}
 }
 
@@ -57,9 +63,11 @@ func TestHostname(t *testing.T) {
 	hostname, err := conn.GetHostname()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if hostname == "" {
 		t.Error("Hostname was empty")
+		return
 	}
 }
 
@@ -69,9 +77,11 @@ func TestListDefinedDomains(t *testing.T) {
 	doms, err := conn.ListDefinedDomains()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if len(doms) != 0 {
 		t.Error("Defined domains should be zero in test transport")
+		return
 	}
 }
 
@@ -81,12 +91,15 @@ func TestListDomains(t *testing.T) {
 	doms, err := conn.ListDomains()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if len(doms) != 1 {
 		t.Error("Length of active domains should be 1 in test transport")
+		return
 	}
 	if doms[0] != 1 {
 		t.Error("Active domain should have ID #1 in test transport")
+		return
 	}
 }
 
@@ -96,6 +109,7 @@ func TestLookupDomainById(t *testing.T) {
 	_, err := conn.LookupDomainById(1)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -105,6 +119,7 @@ func TestLookupInvalidDomainById(t *testing.T) {
 	_, err := conn.LookupDomainById(2)
 	if err == nil {
 		t.Error("Domain #2 shouldn't exist in test transport")
+		return
 	}
 }
 
@@ -114,6 +129,7 @@ func TestLookupDomainByName(t *testing.T) {
 	_, err := conn.LookupDomainByName("test")
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -123,6 +139,7 @@ func TestLookupInvalidDomainByName(t *testing.T) {
 	_, err := conn.LookupDomainByName("non_existent_domain")
 	if err == nil {
 		t.Error("Could find non-existent domain by name")
+		return
 	}
 }
 

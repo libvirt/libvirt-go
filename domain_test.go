@@ -16,9 +16,11 @@ func TestGetDomainName(t *testing.T) {
 	name, err := dom.GetName()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if name != "test" {
 		t.Error("Name of active domain in test transport should be 'test'")
+		return
 	}
 }
 
@@ -28,12 +30,15 @@ func TestGetDomainState(t *testing.T) {
 	state, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if len(state) != 2 {
 		t.Error("Length of domain state should be 2")
+		return
 	}
 	if state[0] != 1 || state[1] != 1 {
 		t.Error("Domain state in test transport should be [1 1]")
+		return
 	}
 }
 
@@ -44,6 +49,7 @@ func TestGetDomainUUID(t *testing.T) {
 	// how to test uuid validity?
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -53,6 +59,7 @@ func TestGetDomainUUIDString(t *testing.T) {
 	_, err := dom.GetUUIDString()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -62,6 +69,7 @@ func TestGetDomainInfo(t *testing.T) {
 	_, err := dom.GetInfo()
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -71,6 +79,7 @@ func TestGetDomainXMLDesc(t *testing.T) {
 	_, err := dom.GetXMLDesc(0)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -84,6 +93,7 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 	`, 0)
 	if err == nil {
 		t.Error("Snapshot should have failed due to being unsupported on test transport")
+		return
 	}
 }
 
@@ -93,6 +103,7 @@ func TestSaveDomain(t *testing.T) {
 	err := dom.Save("/tmp/libvirt-go-test.tmp")
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -102,6 +113,7 @@ func TestSaveDomainFlags(t *testing.T) {
 	err := dom.SaveFlags("/tmp/libvirt-go-test.tmp", "", 0)
 	if err == nil {
 		t.Error("Excected xml modification unsupported")
+		return
 	}
 }
 
