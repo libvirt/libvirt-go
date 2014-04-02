@@ -2,24 +2,29 @@ package libvirt
 
 import (
 	"testing"
+	"time"
 )
 
 func buildTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
-	dom, _ := conn.LookupDomainById(1)
+	dom, err := conn.DomainDefineXML(`<domain type="test">
+		<name>` + time.Now().String() + `</name>
+		<memory unit="KiB">8192</memory>
+		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`)
+	if err != nil {
+		panic(err)
+	}
 	return dom, conn
 }
 
 func TestGetDomainName(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
-	name, err := dom.GetName()
-	if err != nil {
+	if _, err := dom.GetName(); err != nil {
 		t.Error(err)
-		return
-	}
-	if name != "test" {
-		t.Error("Name of active domain in test transport should be 'test'")
 		return
 	}
 }
@@ -36,8 +41,8 @@ func TestGetDomainState(t *testing.T) {
 		t.Error("Length of domain state should be 2")
 		return
 	}
-	if state[0] != 1 || state[1] != 1 {
-		t.Error("Domain state in test transport should be [1 1]")
+	if state[0] != 5 || state[1] != 0 {
+		t.Error("Domain state in test transport should be [5 0]")
 		return
 	}
 }
@@ -91,8 +96,8 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 			<description>Test snapshot that will fail because its unsupported</description>
 		</domainsnapshot>
 	`, 0)
-	if err == nil {
-		t.Error("Snapshot should have failed due to being unsupported on test transport")
+	if err != nil {
+		t.Error(err)
 		return
 	}
 }
@@ -100,8 +105,22 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 func TestSaveDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
-	err := dom.Save("/tmp/libvirt-go-test.tmp")
+	// get the name so we can get a handle on it later
+	domName, err := dom.GetName()
 	if err != nil {
+		t.Error(err)
+		return
+	}
+	const tmpFile = "/tmp/libvirt-go-test.tmp"
+	if err := dom.Save(tmpFile); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := conn.Restore(tmpFile); err != nil {
+		t.Error(err)
+		return
+	}
+	if _, err = conn.LookupDomainByName(domName); err != nil {
 		t.Error(err)
 		return
 	}
@@ -110,30 +129,17 @@ func TestSaveDomain(t *testing.T) {
 func TestSaveDomainFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
-	err := dom.SaveFlags("/tmp/libvirt-go-test.tmp", "", 0)
-	if err == nil {
-		t.Error("Excected xml modification unsupported")
+	const srcFile = "/tmp/libvirt-go-test.tmp"
+	if err := dom.SaveFlags(srcFile, "", 0); err == nil {
+		t.Fatal("expected xml modification unsupported")
 		return
 	}
 }
 
 func TestCreateDestroyDomain(t *testing.T) {
-	conn := buildTestConnection()
+	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
-	xml := `
-	<domain type="test">
-		<name>test domain</name>
-		<memory unit="KiB">8192</memory>
-		<os>
-			<type>hvm</type>
-		</os>
-	</domain>`
-	dom, err := conn.DomainDefineXML(xml)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	if err = dom.Create(); err != nil {
+	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
 	}
@@ -164,8 +170,21 @@ func TestCreateDestroyDomain(t *testing.T) {
 func TestShutdownDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
 	if err := dom.Shutdown(); err != nil {
 		t.Error(err)
+		return
+	}
+	state, err := dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != 5 || state[1] != 1 {
+		t.Fatal("state should be [5 1]")
 		return
 	}
 }
@@ -209,6 +228,10 @@ func TestAutostart(t *testing.T) {
 func TestDomainIsActive(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Log(err)
+		return
+	}
 	active, err := dom.IsActive()
 	if err != nil {
 		t.Error(err)

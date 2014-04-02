@@ -2,10 +2,14 @@ package libvirt
 
 import (
 	"testing"
+	"time"
 )
 
 func buildTestConnection() VirConnection {
-	conn, _ := NewVirConnection("test:///default")
+	conn, err := NewVirConnection("test:///default")
+	if err != nil {
+		panic(err)
+	}
 	return conn
 }
 
@@ -79,8 +83,8 @@ func TestListDefinedDomains(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if len(doms) != 0 {
-		t.Error("Defined domains should be zero in test transport")
+	if doms == nil {
+		t.Fatal("ListDefinedDomains shouldn't be nil")
 		return
 	}
 }
@@ -93,12 +97,8 @@ func TestListDomains(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if len(doms) != 1 {
-		t.Error("Length of active domains should be 1 in test transport")
-		return
-	}
-	if doms[0] != 1 {
-		t.Error("Active domain should have ID #1 in test transport")
+	if doms == nil {
+		t.Fatal("ListDomains shouldn't be nil")
 		return
 	}
 }
@@ -106,8 +106,17 @@ func TestListDomains(t *testing.T) {
 func TestLookupDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
-	_, err := conn.LookupDomainById(1)
+	ids, err := conn.ListDomains()
 	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(ids)
+	if len(ids) == 0 {
+		t.Fatal("Length of ListDomains shouldn't be zero")
+		return
+	}
+	if _, err := conn.LookupDomainById(ids[0]); err != nil {
 		t.Error(err)
 		return
 	}
@@ -116,9 +125,9 @@ func TestLookupDomainById(t *testing.T) {
 func TestLookupInvalidDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
-	_, err := conn.LookupDomainById(2)
+	_, err := conn.LookupDomainById(12345)
 	if err == nil {
-		t.Error("Domain #2 shouldn't exist in test transport")
+		t.Error("Domain #12345 shouldn't exist in test transport")
 		return
 	}
 }
@@ -147,9 +156,9 @@ func TestDomainDefineXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
 	// Test a minimally valid xml
-	xml := `
-	<domain type="test">
-		<name>test domain</name>
+	defName := time.Now().String()
+	xml := `<domain type="test">
+		<name>` + defName + `</name>
 		<memory unit="KiB">8192</memory>
 		<os>
 			<type>hvm</type>
@@ -165,7 +174,7 @@ func TestDomainDefineXML(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if name != "test domain" {
+	if name != defName {
 		t.Fatalf("Name was not 'test': %s", name)
 		return
 	}

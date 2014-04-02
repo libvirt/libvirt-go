@@ -48,3 +48,26 @@ func (d *VirDomain) SaveFlags(destFile string, destXml string, flags uint32) err
 	}
 	return nil
 }
+
+func (conn VirConnection) Restore(srcFile string) error {
+	cPath := C.CString(srcFile)
+	defer C.free(unsafe.Pointer(cPath))
+	if result := C.virDomainRestore(conn.ptr, cPath); result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (conn VirConnection) RestoreFlags(srcFile, xmlConf string, flags uint32) error {
+	cPath := C.CString(srcFile)
+	defer C.free(unsafe.Pointer(cPath))
+	var cXmlConf *C.char
+	if xmlConf != "" {
+		cXmlConf = C.CString(xmlConf)
+		defer C.free(unsafe.Pointer(cXmlConf))
+	}
+	if result := C.virDomainRestoreFlags(conn.ptr, cPath, cXmlConf, C.uint(flags)); result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
