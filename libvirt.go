@@ -252,3 +252,59 @@ func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
 	}
 	return goNames, nil
 }
+
+func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
+	result := int(C.virConnectNumOfDefinedInterfaces(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfDefinedNetworks() (int, error) {
+	result := int(C.virConnectNumOfDefinedNetworks(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
+	result := int(C.virConnectNumOfDefinedStoragePools(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfDomains() (int, error) {
+	result := int(C.virConnectNumOfDomains(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfInterfaces() (int, error) {
+	result := int(C.virConnectNumOfInterfaces(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfNetworks() (int, error) {
+	result := int(C.virConnectNumOfNetworks(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfNWFilters() (int, error) {
+	result := int(C.virConnectNumOfNWFilters(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
