@@ -182,3 +182,20 @@ func (i *VirDomainInfo) GetNrVirtCpu() uint16 {
 func (i *VirDomainInfo) GetCpuTime() uint64 {
 	return uint64(i.ptr.cpuTime)
 }
+
+func (d *VirDomain) GetMetadata(tipus int, uri string, flags uint32) (string, error) {
+
+	var cUri *C.char
+	if uri != "" {
+		cUri = C.CString(uri)
+		defer C.free(unsafe.Pointer(cUri))
+	}
+
+	result := C.virDomainGetMetadata(d.ptr, C.int(tipus), cUri, C.uint(flags))
+	if result == nil {
+		return "", errors.New(GetLastError())
+
+	}
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result), nil
+}

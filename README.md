@@ -1,7 +1,13 @@
 libvirt-go
 ============
 
-(Start of work on) Go bindings for libvirt (0.9.8 at this time).
+Go bindings for libvirt.
+
+Versions
+--------------
+Please use the v1.x branch for libvirt 0.9.8 and below: `gopkg.in/alexzorin/libvirt-go.v1` [(docs)](http://gopkg.in/alexzorin/libvirt-go.v1).
+
+The 2.x branch targets the 1.x version of libvirt: `gopkg.in/alexzorin/libvirt-go.v2` [(docs)http://gopkg.in/alexzorin/libvirt-go.v2].
 
 Make sure to have libvirt-dev package (or the development files otherwise somewhere in your include path)
 
@@ -14,5 +20,7 @@ Documentation
 Contributing
 -------------
 
-Please fork and write tests
+Please fork and write tests.
+
+Integration tests are available where functionality isn't provided by the test driver, see `integration_test.go` for more info.
 
