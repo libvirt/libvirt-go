@@ -195,3 +195,57 @@ func (c *VirConnection) DomainDefineXML(xmlConfig string) (VirDomain, error) {
 	}
 	return VirDomain{ptr: ptr}, nil
 }
+
+func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
+	var names [1024](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numIfaces := C.virConnectListDefinedInterfaces(
+		c.ptr,
+		(**C.char)(namesPtr),
+		1024)
+	if numIfaces == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numIfaces)
+	for k := 0; k < int(numIfaces); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (c *VirConnection) ListDefinedNetworks() ([]string, error) {
+	var names [1024](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numNetworks := C.virConnectListDefinedNetworks(
+		c.ptr,
+		(**C.char)(namesPtr),
+		1024)
+	if numNetworks == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numNetworks)
+	for k := 0; k < int(numNetworks); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
+	var names [1024](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numStoragePools := C.virConnectListDefinedStoragePools(
+		c.ptr,
+		(**C.char)(namesPtr),
+		1024)
+	if numStoragePools == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numStoragePools)
+	for k := 0; k < int(numStoragePools); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
