@@ -89,6 +89,16 @@ func (c *VirConnection) GetHostname() (string, error) {
 	return hostname, nil
 }
 
+func (c *VirConnection) GetType() (string, error) {
+	str := C.virConnectGetType(c.ptr)
+	if str == nil {
+		return "", errors.New(GetLastError())
+	}
+	hypDriver := C.GoString(str)
+	C.free(unsafe.Pointer(str))
+	return hypDriver, nil
+}
+
 func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 	var names [1024](*C.char)
 	namesPtr := unsafe.Pointer(&names)
