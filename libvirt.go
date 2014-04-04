@@ -98,6 +98,39 @@ func (c *VirConnection) GetType() (string, error) {
 	return hypDriver, nil
 }
 
+func (c *VirConnection) IsAlive() (bool, error) {
+	result := C.virConnectIsAlive(c.ptr)
+	if result == -1 {
+		return false, errors.New(GetLastError())
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (c *VirConnection) IsEncrypted() (bool, error) {
+	result := C.virConnectIsEncrypted(c.ptr)
+	if result == -1 {
+		return false, errors.New(GetLastError())
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (c *VirConnection) IsSecure() (bool, error) {
+	result := C.virConnectIsSecure(c.ptr)
+	if result == -1 {
+		return false, errors.New(GetLastError())
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
 func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 	var names [1024](*C.char)
 	namesPtr := unsafe.Pointer(&names)
