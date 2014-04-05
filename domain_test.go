@@ -217,7 +217,7 @@ func TestShutdownReboot(t *testing.T) {
 	}
 }
 
-func TestAutostart(t *testing.T) {
+func TestDomainAutostart(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer conn.CloseConnection()
 	as, err := dom.GetAutostart()

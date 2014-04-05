@@ -308,3 +308,31 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 	}
 	return result, nil
 }
+
+func (c *VirConnection) NetworkDefineXMLFromFile(xmlFile string) (VirNetwork, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirNetwork{}, err
+	}
+	return c.NetworkDefineXML(string(xmlConfig))
+}
+
+func (c *VirConnection) NetworkDefineXML(xmlConfig string) (VirNetwork, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virNetworkDefineXML(c.ptr, cXml)
+	if ptr == nil {
+		return VirNetwork{}, errors.New(GetLastError())
+	}
+	return VirNetwork{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virNetworkLookupByName(c.ptr, cName)
+	if ptr == nil {
+		return VirNetwork{}, errors.New(GetLastError())
+	}
+	return VirNetwork{ptr: ptr}, nil
+}
