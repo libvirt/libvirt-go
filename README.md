@@ -1,6 +1,8 @@
 libvirt-go
 ============
 
+[![Build Status](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go/status.svg?branch=master)](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go)
+
 Go bindings for libvirt.
 
 Versions
