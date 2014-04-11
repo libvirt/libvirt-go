@@ -1,7 +1,6 @@
 image: alexzorin/libvirt-go_test:1.2
 script:
-  - go build
-    - go test -v
+  - go test -v
 notify:
   email:
     recipients:
