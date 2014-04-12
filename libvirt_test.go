@@ -47,6 +47,43 @@ func TestGetType(t *testing.T) {
 	}
 }
 
+func TestIsAlive(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	alive, err := conn.IsAlive()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !alive {
+		t.Fatal("Connection should be alive")
+		return
+	}
+}
+
+func TestIsEncryptedAndSecure(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	secure, err := conn.IsSecure()
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	enc, err := conn.IsEncrypted()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !secure {
+		t.Fatal("Test driver should be secure")
+		return
+	}
+	if enc {
+		t.Fatal("Test driver should not be encrypted")
+		return
+	}
+}
+
 func TestCapabilities(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
