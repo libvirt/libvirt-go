@@ -199,3 +199,11 @@ func (d *VirDomain) GetMetadata(tipus int, uri string, flags uint32) (string, er
 	defer C.free(unsafe.Pointer(result))
 	return C.GoString(result), nil
 }
+
+func (d *VirDomain) Undefine() error {
+	result := C.virDomainUndefine(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}

@@ -169,6 +169,7 @@ func TestDomainDefineXML(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	defer dom.Undefine()
 	name, err := dom.GetName()
 	if err != nil {
 		t.Error(err)

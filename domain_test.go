@@ -20,8 +20,27 @@ func buildTestDomain() (VirDomain, VirConnection) {
 	return dom, conn
 }
 
+func TestUndefineDomain(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	name, err := dom.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.Undefine(); err != nil {
+		t.Error(err)
+		return
+	}
+	if _, err := conn.LookupDomainByName(name); err == nil {
+		t.Fatal("Shouldn't have been able to find domain")
+		return
+	}
+}
+
 func TestGetDomainName(t *testing.T) {
 	dom, conn := buildTestDomain()
+	defer dom.Undefine()
 	defer conn.CloseConnection()
 	if _, err := dom.GetName(); err != nil {
 		t.Error(err)

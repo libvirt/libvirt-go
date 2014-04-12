@@ -52,4 +52,8 @@ func TestIntegrationGetMetadata(t *testing.T) {
 		t.Fatal("title didnt match: expected %s, got %s", title, v)
 		return
 	}
+	if err := dom.Undefine(); err != nil {
+		t.Error(err)
+		return
+	}
 }
