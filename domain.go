@@ -200,6 +200,27 @@ func (d *VirDomain) GetMetadata(tipus int, uri string, flags uint32) (string, er
 	return C.GoString(result), nil
 }
 
+func (d *VirDomain) SetMetadata(metaDataType int, metaDataCont, uriKey, uri string, flags uint32) error {
+	var cMetaDataCont *C.char
+	var cUriKey *C.char
+	var cUri *C.char
+
+	cMetaDataCont = C.CString(metaDataCont)
+	defer C.free(unsafe.Pointer(cMetaDataCont))
+
+	if metaDataType == VIR_DOMAIN_METADATA_ELEMENT {
+		cUriKey = C.CString(uriKey)
+		defer C.free(unsafe.Pointer(cUriKey))
+		cUri = C.CString(uri)
+		defer C.free(unsafe.Pointer(cUri))
+	}
+	result := C.virDomainSetMetadata(d.ptr, C.int(metaDataType), cMetaDataCont, cUriKey, cUri, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (d *VirDomain) Undefine() error {
 	result := C.virDomainUndefine(d.ptr)
 	if result == -1 {
