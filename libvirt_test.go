@@ -238,3 +238,33 @@ func TestDomainDefineXML(t *testing.T) {
 		return
 	}
 }
+
+func TestListDefinedInterfaces(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListDefinedInterfaces()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestListDefinedNetworks(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListDefinedNetworks()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestListDefinedStoragePools(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListDefinedStoragePools()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
