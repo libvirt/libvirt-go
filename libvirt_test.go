@@ -33,6 +33,20 @@ func TestInvalidConnection(t *testing.T) {
 	}
 }
 
+func TestGetType(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	tp, err := conn.GetType()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if tp != "Test" {
+		t.Fatalf("type should have been test: %s", tp)
+		return
+	}
+}
+
 func TestCapabilities(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()

@@ -95,7 +95,6 @@ func (c *VirConnection) GetType() (string, error) {
 		return "", errors.New(GetLastError())
 	}
 	hypDriver := C.GoString(str)
-	C.free(unsafe.Pointer(str))
 	return hypDriver, nil
 }
 
