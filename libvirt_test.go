@@ -268,3 +268,66 @@ func TestListDefinedStoragePools(t *testing.T) {
 		return
 	}
 }
+
+func TestNumOfDefinedInterfaces(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfDefinedInterfaces(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfDefinedNetworks(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfDefinedNetworks(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfDefinedStoragePools(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfDefinedStoragePools(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfDomains(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfDomains(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfInterfaces(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfInterfaces(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfNetworks(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfNetworks(); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestNumOfNWFilters(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfNWFilters(); err == nil {
+		t.Fatalf("NumOfNWFilters should fail due to no support on test driver")
+		return
+	}
+}
