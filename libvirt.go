@@ -347,3 +347,12 @@ func (c *VirConnection) GetSysinfo() (string, error) {
 	return info, nil
 }
 
+func (c *VirConnection) GetURI() (string, error) {
+	cStr := C.virConnectGetURI(c.ptr)
+	if cStr == nil {
+		return "", errors.New(GetLastError())
+	}
+	uri := C.GoString(cStr)
+	C.free(unsafe.Pointer(cStr))
+	return uri, nil
+}

@@ -331,3 +331,16 @@ func TestNumOfNWFilters(t *testing.T) {
 		return
 	}
 }
+
+func TestGetURI(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	uri, err := conn.GetURI()
+	if err != nil {
+		t.Error(err)
+	}
+	origUri := "test:///default"
+	if uri != origUri {
+		t.Fatalf("should be %s but got %s", origUri, uri)
+	}
+}
