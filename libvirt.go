@@ -336,3 +336,14 @@ func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 	}
 	return VirNetwork{ptr: ptr}, nil
 }
+
+func (c *VirConnection) GetSysinfo() (string, error) {
+	cStr := C.virConnectGetSysinfo(c.ptr, 0)
+	if cStr == nil {
+		return "", errors.New(GetLastError())
+	}
+	info := C.GoString(cStr)
+	C.free(unsafe.Pointer(cStr))
+	return info, nil
+}
+
