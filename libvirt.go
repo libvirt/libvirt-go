@@ -160,6 +160,63 @@ func (c *VirConnection) ListDomains() ([]uint32, error) {
 	return cDomainsIds[:numDomains], nil
 }
 
+func (c *VirConnection) ListInterfaces() ([]string, error) {
+	const maxIfaces = 1024
+	var names [maxIfaces](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numIfaces := C.virConnectListInterfaces(
+		c.ptr,
+		(**C.char)(namesPtr),
+		maxIfaces)
+	if numIfaces == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numIfaces)
+	for k := 0; k < int(numIfaces); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (c *VirConnection) ListNetworks() ([]string, error) {
+	const maxNets = 1024
+	var names [maxNets](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numNetworks := C.virConnectListNetworks(
+		c.ptr,
+		(**C.char)(namesPtr),
+		maxNets)
+	if numNetworks == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numNetworks)
+	for k := 0; k < int(numNetworks); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (c *VirConnection) ListStoragePools() ([]string, error) {
+	const maxPools = 1024
+	var names [maxPools](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numStoragePools := C.virConnectListStoragePools(
+		c.ptr,
+		(**C.char)(namesPtr),
+		maxPools)
+	if numStoragePools == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	goNames := make([]string, numStoragePools)
+	for k := 0; k < int(numStoragePools); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
 func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {

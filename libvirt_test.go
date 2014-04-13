@@ -154,6 +154,36 @@ func TestListDomains(t *testing.T) {
 	}
 }
 
+func TestListInterfaces(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListInterfaces()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestListNetworks(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListNetworks()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestListStoragePools(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.ListStoragePools()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestLookupDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
