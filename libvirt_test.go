@@ -374,3 +374,12 @@ func TestGetURI(t *testing.T) {
 		t.Fatalf("should be %s but got %s", origUri, uri)
 	}
 }
+
+func TestGetMaxVcpus(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	_, err := conn.GetMaxVcpus("")
+	if err != nil {
+		t.Error(err)
+	}
+}

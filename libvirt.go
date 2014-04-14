@@ -413,3 +413,16 @@ func (c *VirConnection) GetURI() (string, error) {
 	C.free(unsafe.Pointer(cStr))
 	return uri, nil
 }
+
+func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
+	var cTypeAttr *C.char
+	if typeAttr != "" {
+		cTypeAttr = C.CString(typeAttr)
+		defer C.free(unsafe.Pointer(cTypeAttr))
+	}
+	result := int(C.virConnectGetMaxVcpus(c.ptr, cTypeAttr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
