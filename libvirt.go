@@ -394,8 +394,8 @@ func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 	return VirNetwork{ptr: ptr}, nil
 }
 
-func (c *VirConnection) GetSysinfo() (string, error) {
-	cStr := C.virConnectGetSysinfo(c.ptr, 0)
+func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
+	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {
 		return "", errors.New(GetLastError())
 	}

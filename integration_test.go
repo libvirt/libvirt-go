@@ -3,6 +3,7 @@
 package libvirt
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -91,6 +92,24 @@ func TestIntegrationSetMetadata(t *testing.T) {
 	}
 	if v != domTitle {
 		t.Fatalf("VIR_DOMAIN_METADATA_TITLE should have been %s, not %s", domTitle, v)
+		return
+	}
+}
+
+func TestIntegrationGetSysinfo(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	info, err := conn.GetSysinfo(0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if strings.Index(info, "<sysinfo") != 0 {
+		t.Fatalf("Sysinfo not valid: %s", info)
 		return
 	}
 }
