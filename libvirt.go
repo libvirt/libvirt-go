@@ -30,6 +30,17 @@ func NewVirConnection(uri string) (VirConnection, error) {
 	return obj, nil
 }
 
+func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
+	cUri := C.CString(uri)
+	defer C.free(unsafe.Pointer(cUri))
+	ptr := C.virConnectOpenReadOnly(cUri)
+	if ptr == nil {
+		return VirConnection{}, errors.New(GetLastError())
+	}
+	obj := VirConnection{ptr: ptr}
+	return obj, nil
+}
+
 func GetLastError() string {
 	err := C.virGetLastError()
 	errMsg := fmt.Sprintf("[Code-%d] [Domain-%d] %s",
@@ -366,6 +377,14 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 	return result, nil
 }
 
+func (c *VirConnection) NumOfSecrets() (int, error) {
+	result := int(C.virConnectNumOfSecrets(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
 func (c *VirConnection) NetworkDefineXMLFromFile(xmlFile string) (VirNetwork, error) {
 	xmlConfig, err := ioutil.ReadFile(xmlFile)
 	if err != nil {
@@ -412,4 +431,17 @@ func (c *VirConnection) GetURI() (string, error) {
 	uri := C.GoString(cStr)
 	C.free(unsafe.Pointer(cStr))
 	return uri, nil
+}
+
+func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
+	var cTypeAttr *C.char
+	if typeAttr != "" {
+		cTypeAttr = C.CString(typeAttr)
+		defer C.free(unsafe.Pointer(cTypeAttr))
+	}
+	result := int(C.virConnectGetMaxVcpus(c.ptr, cTypeAttr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
 }
