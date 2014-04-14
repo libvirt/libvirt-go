@@ -366,6 +366,14 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 	return result, nil
 }
 
+func (c *VirConnection) NumOfSecrets() (int, error) {
+	result := int(C.virConnectNumOfSecrets(c.ptr))
+	if result == -1 {
+		return 0, errors.New(GetLastError())
+	}
+	return result, nil
+}
+
 func (c *VirConnection) NetworkDefineXMLFromFile(xmlFile string) (VirNetwork, error) {
 	xmlConfig, err := ioutil.ReadFile(xmlFile)
 	if err != nil {

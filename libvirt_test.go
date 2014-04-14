@@ -362,6 +362,15 @@ func TestNumOfNWFilters(t *testing.T) {
 	}
 }
 
+func TestNumOfSecrets(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	if _, err := conn.NumOfSecrets(); err == nil {
+		t.Fatalf("NumOfSecrets should fail due to no support on test driver")
+		return
+	}
+}
+
 func TestGetURI(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
