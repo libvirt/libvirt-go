@@ -26,6 +26,26 @@ func TestConnection(t *testing.T) {
 	}
 }
 
+func TestConnectionReadOnly(t *testing.T) {
+	conn, err := NewVirConnectionReadOnly("test:///default")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	_, err = conn.NetworkDefineXML(`<network>
+    <name>` + time.Now().String() + `</name>
+    <bridge name="testbr0"/>
+    <forward/>
+    <ip address="192.168.0.1" netmask="255.255.255.0">
+    </ip>
+    </network>`)
+	if err == nil {
+		t.Fatal("writing on a read only connection")
+	}
+}
+
 func TestInvalidConnection(t *testing.T) {
 	_, err := NewVirConnection("invalid_transport:///default")
 	if err == nil {

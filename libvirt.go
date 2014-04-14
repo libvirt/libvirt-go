@@ -30,6 +30,17 @@ func NewVirConnection(uri string) (VirConnection, error) {
 	return obj, nil
 }
 
+func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
+	cUri := C.CString(uri)
+	defer C.free(unsafe.Pointer(cUri))
+	ptr := C.virConnectOpenReadOnly(cUri)
+	if ptr == nil {
+		return VirConnection{}, errors.New(GetLastError())
+	}
+	obj := VirConnection{ptr: ptr}
+	return obj, nil
+}
+
 func GetLastError() string {
 	err := C.virGetLastError()
 	errMsg := fmt.Sprintf("[Code-%d] [Domain-%d] %s",
