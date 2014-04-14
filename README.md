@@ -24,4 +24,12 @@ Contributing
 
 Please fork and write tests.
 
-Integration tests are available where functionality isn't provided by the test driver, see `integration_test.go` for more info.
+Integration tests are available where functionality isn't provided by the test driver, see `integration_test.go`.
+
+`Vagrantfiles` are included to provision testing environments to run the integration tests:
+
+* `cd ./vagrant/{branch}` (i.e `./vagrant/master`, where you will find a `Vagrantfile` for the `master` branch)
+* `vagrant up` to provision the virtual machine
+* `vagrant ssh` to login to the virtual machine
+
+Once inside, `sudo su -`, `cd /libvirt-go` and `go test -tags integration`.
