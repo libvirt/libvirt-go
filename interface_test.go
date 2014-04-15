@@ -36,6 +36,31 @@ func TestCreateDestroyInterface(t *testing.T) {
 	}
 }
 
+func TestUndefineInterface(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	name, err := iface.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if err := iface.Undefine(); err != nil {
+		t.Error(err)
+		return
+	}
+	if _, err := conn.LookupInterfaceByName(name); err == nil {
+		t.Fatal("Shouldn't have been able to find interface")
+	}
+}
+
+func TestGetInterfaceName(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if _, err := iface.GetName(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestInterfaceIsActive(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
 	defer conn.CloseConnection()
@@ -86,3 +111,12 @@ func TestGetMACString(t *testing.T) {
 		t.Fatalf("expected MAC: %s , got: %s", origMac, mac)
 	}
 }
+
+func TestGetInterfaceXMLDesc(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if _, err := iface.GetXMLDesc(0); err != nil {
+		t.Error(err)
+	}
+}
+

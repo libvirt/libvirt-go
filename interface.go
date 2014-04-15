@@ -60,3 +60,31 @@ func (n *VirInterface) GetMACString() (string, error) {
 	mac := C.GoString(result)
 	return mac, nil
 }
+
+func (n *VirInterface) GetName() (string, error) {
+	result := C.virInterfaceGetName(n.ptr)
+	if result == nil {
+		return "", errors.New(GetLastError())
+	}
+	name := C.GoString(result)
+	return name, nil
+}
+
+func (n *VirInterface) GetXMLDesc(flags uint32) (string, error) {
+	result := C.virInterfaceGetXMLDesc(n.ptr, C.uint(flags))
+	if result == nil {
+		return "", errors.New(GetLastError())
+	}
+	xml := C.GoString(result)
+	C.free(unsafe.Pointer(result))
+	return xml, nil
+}
+
+func (n *VirInterface) Undefine() error {
+	result := C.virInterfaceUndefine(n.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
