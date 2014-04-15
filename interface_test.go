@@ -23,3 +23,15 @@ func generateRandomMac() string {
 	}
 	return fmt.Sprintf("aa:bb:cc:%02x:%02x:%02x", macBuf[0], macBuf[1], macBuf[2])
 }
+
+func TestCreateDestroyInterface(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if err := iface.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := iface.Destroy(0); err != nil {
+		t.Error(err)
+	}
+}
