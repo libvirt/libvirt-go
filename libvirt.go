@@ -445,3 +445,21 @@ func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
 	}
 	return result, nil
 }
+
+func (c *VirConnection) InterfaceDefineXMLFromFile(xmlFile string) (VirInterface, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirInterface{}, err
+	}
+	return c.InterfaceDefineXML(string(xmlConfig), 0)
+}
+
+func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (VirInterface, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virInterfaceDefineXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirInterface{}, errors.New(GetLastError())
+	}
+	return VirInterface{ptr: ptr}, nil
+}

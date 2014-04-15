@@ -412,3 +412,31 @@ func TestGetMaxVcpus(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestInterfaceDefineXML(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	defName := "ethTest0"
+	xml := `<interface type='ethernet' name='` + defName + `'><mac address='` + generateRandomMac() + `'/></interface>`
+	iface, err := conn.InterfaceDefineXML(xml, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer iface.Undefine()
+	name, err := iface.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if name != defName {
+		t.Fatalf("Expected interface name: %s,got: %s", defName, name)
+		return
+	}
+	// Invalid configuration
+	xml = `<interface type="test"></interface>`
+	_, err = conn.InterfaceDefineXML(xml, 0)
+	if err == nil {
+		t.Fatal("Should have had an error")
+		return
+	}
+}
