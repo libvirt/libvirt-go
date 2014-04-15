@@ -440,3 +440,43 @@ func TestInterfaceDefineXML(t *testing.T) {
 		return
 	}
 }
+
+func TestLookupInterfaceByName(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	testEth := "eth1"
+	iface, err := conn.LookupInterfaceByName(testEth)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	var ifName string
+	ifName, err = iface.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if ifName != testEth {
+		t.Fatalf("expected interface name: %s ,got: %s", testEth, ifName)
+	}
+}
+
+func TestLookupInterfaceByMACString(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	testMAC := "aa:bb:cc:dd:ee:ff"
+	iface, err := conn.LookupInterfaceByMACString(testMAC)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	var ifMAC string
+	ifMAC, err = iface.GetMACString()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if ifMAC != testMAC {
+		t.Fatalf("expected interface MAC: %s ,got: %s", testMAC, ifMAC)
+	}
+}

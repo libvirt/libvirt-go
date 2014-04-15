@@ -463,3 +463,23 @@ func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (VirI
 	}
 	return VirInterface{ptr: ptr}, nil
 }
+
+func (c *VirConnection) LookupInterfaceByName(name string) (VirInterface, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virInterfaceLookupByName(c.ptr, cName)
+	if ptr == nil {
+		return VirInterface{}, errors.New(GetLastError())
+	}
+	return VirInterface{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupInterfaceByMACString(mac string) (VirInterface, error) {
+	cName := C.CString(mac)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virInterfaceLookupByMACString(c.ptr, cName)
+	if ptr == nil {
+		return VirInterface{}, errors.New(GetLastError())
+	}
+	return VirInterface{ptr: ptr}, nil
+}
