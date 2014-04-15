@@ -35,3 +35,54 @@ func TestCreateDestroyInterface(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestInterfaceIsActive(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if err := iface.Create(0); err != nil {
+		t.Log(err)
+		return
+	}
+	active, err := iface.IsActive()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !active {
+		t.Fatal("Interface should be active")
+	}
+	if err := iface.Destroy(0); err != nil {
+		t.Error(err)
+		return
+	}
+	active, err = iface.IsActive()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if active {
+		t.Fatal("Interface should be inactive")
+	}
+}
+
+func TestInterfaceGetConnect(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if _, err := iface.GetConnect(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestGetMACString(t *testing.T) {
+	origMac := generateRandomMac()
+	iface, conn := buildTestInterface(origMac)
+	defer conn.CloseConnection()
+	mac, err := iface.GetMACString()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if mac != origMac {
+		t.Fatalf("expected MAC: %s , got: %s", origMac, mac)
+	}
+}
