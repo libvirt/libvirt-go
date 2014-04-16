@@ -228,3 +228,11 @@ func (d *VirDomain) SetMemory(memory uint64) error {
 	}
 	return nil
 }
+
+func (d *VirDomain) SetMemoryFlags(memory uint64, flags uint32) error {
+	result := C.virDomainSetMemoryFlags(d.ptr, C.ulong(memory), C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
