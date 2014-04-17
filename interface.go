@@ -79,3 +79,10 @@ func (n *VirInterface) Undefine() error {
 	}
 	return nil
 }
+
+func (n *VirInterface) Free() error {
+	if result := C.virInterfaceFree(n.ptr); result != 0 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}

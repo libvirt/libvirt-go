@@ -26,6 +26,7 @@ func generateRandomMac() string {
 
 func TestCreateDestroyInterface(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
+	defer iface.Free()
 	defer conn.CloseConnection()
 	if err := iface.Create(0); err != nil {
 		t.Error(err)
@@ -38,6 +39,7 @@ func TestCreateDestroyInterface(t *testing.T) {
 
 func TestUndefineInterface(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
+	defer iface.Free()
 	defer conn.CloseConnection()
 	name, err := iface.GetName()
 	if err != nil {
@@ -55,6 +57,7 @@ func TestUndefineInterface(t *testing.T) {
 
 func TestGetInterfaceName(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
+	defer iface.Free()
 	defer conn.CloseConnection()
 	if _, err := iface.GetName(); err != nil {
 		t.Fatal(err)
@@ -63,6 +66,7 @@ func TestGetInterfaceName(t *testing.T) {
 
 func TestInterfaceIsActive(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
+	defer iface.Free()
 	defer conn.CloseConnection()
 	if err := iface.Create(0); err != nil {
 		t.Log(err)
@@ -93,6 +97,7 @@ func TestInterfaceIsActive(t *testing.T) {
 func TestGetMACString(t *testing.T) {
 	origMac := generateRandomMac()
 	iface, conn := buildTestInterface(origMac)
+	defer iface.Free()
 	defer conn.CloseConnection()
 	mac, err := iface.GetMACString()
 	if err != nil {
@@ -107,7 +112,17 @@ func TestGetMACString(t *testing.T) {
 func TestGetInterfaceXMLDesc(t *testing.T) {
 	iface, conn := buildTestInterface(generateRandomMac())
 	defer conn.CloseConnection()
+	defer iface.Free()
 	if _, err := iface.GetXMLDesc(0); err != nil {
 		t.Error(err)
+	}
+}
+
+func TestInterfaceFree(t *testing.T) {
+	iface, conn := buildTestInterface(generateRandomMac())
+	defer conn.CloseConnection()
+	if err := iface.Free(); err != nil {
+		t.Error(err)
+		return
 	}
 }
