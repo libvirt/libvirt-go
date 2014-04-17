@@ -90,14 +90,6 @@ func TestInterfaceIsActive(t *testing.T) {
 	}
 }
 
-func TestInterfaceGetConnect(t *testing.T) {
-	iface, conn := buildTestInterface(generateRandomMac())
-	defer conn.CloseConnection()
-	if _, err := iface.GetConnect(); err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestGetMACString(t *testing.T) {
 	origMac := generateRandomMac()
 	iface, conn := buildTestInterface(origMac)
@@ -119,4 +111,3 @@ func TestGetInterfaceXMLDesc(t *testing.T) {
 		t.Error(err)
 	}
 }
-

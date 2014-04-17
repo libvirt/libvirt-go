@@ -44,14 +44,6 @@ func (n *VirInterface) IsActive() (bool, error) {
 	return false, nil
 }
 
-func (n *VirInterface) GetConnect() (VirConnection, error) {
-	virConPtr := C.virInterfaceGetConnect(n.ptr)
-	if virConPtr == nil {
-		return VirConnection{}, errors.New(GetLastError())
-	}
-	return VirConnection{virConPtr}, nil
-}
-
 func (n *VirInterface) GetMACString() (string, error) {
 	result := C.virInterfaceGetMACString(n.ptr)
 	if result == nil {
@@ -87,4 +79,3 @@ func (n *VirInterface) Undefine() error {
 	}
 	return nil
 }
-
