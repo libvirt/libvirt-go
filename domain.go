@@ -245,6 +245,14 @@ func (d *VirDomain) SetMemoryFlags(memory uint64, flags uint32) error {
 	return nil
 }
 
+func (d *VirDomain) SetMemoryStatsPeriod(period int, flags uint) error {
+	result := C.virDomainSetMemoryStatsPeriod(d.ptr, C.int(period), C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (d *VirDomain) SetVcpus(vcpu uint) error {
 	result := C.virDomainSetVcpus(d.ptr, C.uint(vcpu))
 	if result == -1 {
