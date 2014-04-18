@@ -134,7 +134,7 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 		dom.Free()
 		conn.CloseConnection()
 	}()
-	_, err := dom.CreateSnapshotXML(`
+	ss, err := dom.CreateSnapshotXML(`
 		<domainsnapshot>
 			<description>Test snapshot that will fail because its unsupported</description>
 		</domainsnapshot>
@@ -143,6 +143,7 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	defer ss.Free()
 }
 
 func TestSaveDomain(t *testing.T) {

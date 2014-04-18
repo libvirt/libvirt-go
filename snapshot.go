@@ -17,6 +17,13 @@ type VirDomainSnapshot struct {
 	ptr C.virDomainSnapshotPtr
 }
 
+func (s *VirDomainSnapshot) Free() error {
+	if result := C.virDomainSnapshotFree(s.ptr); result != 0 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (d *VirDomain) CreateSnapshotXML(xml string, flags uint32) (VirDomainSnapshot, error) {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
