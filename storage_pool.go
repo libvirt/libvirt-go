@@ -21,6 +21,13 @@ type VirStoragePoolInfo struct {
 	ptr C.virStoragePoolInfo
 }
 
+func (p *VirStoragePool) Build(flags uint32) error {
+	result := C.virStoragePoolBuild(p.ptr, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
 
 func (p *VirStoragePool) Create(flags uint32) error {
 	result := C.virStoragePoolCreate(p.ptr, C.uint(flags))

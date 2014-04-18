@@ -523,11 +523,11 @@ func TestLookupStoragePoolByName(t *testing.T) {
 	defer conn.CloseConnection()
 	testPool := "default-pool"
 	pool, err := conn.LookupStoragePoolByName(testPool)
-	defer pool.Free()
 	if err != nil {
 		t.Error(err)
 		return
 	}
+	defer pool.Free()
 	var poolName string
 	poolName, err = pool.GetName()
 	if err != nil {
@@ -536,5 +536,35 @@ func TestLookupStoragePoolByName(t *testing.T) {
 	}
 	if poolName != testPool {
 		t.Fatalf("expected storage pool name: %s ,got: %s", testPool, poolName)
+	}
+}
+
+func TestLookupStoragePoolByUUIDString(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	poolName := "default-pool"
+	pool, err := conn.LookupStoragePoolByName(poolName)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Free()
+	var poolUUID string
+	poolUUID, err = pool.GetUUIDString()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	pool, err = conn.LookupStoragePoolByUUIDString(poolUUID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	name, err := pool.GetName()
+	if err != nil {
+		t.Error(err)
+	}
+	if name != poolName {
+		t.Fatalf("fetching by UUID: expected storage pool name: %s ,got: %s", name, poolName)
 	}
 }

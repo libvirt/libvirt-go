@@ -511,3 +511,13 @@ func (c *VirConnection) LookupStoragePoolByName(name string) (VirStoragePool, er
 	}
 	return VirStoragePool{ptr: ptr}, nil
 }
+
+func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (VirStoragePool, error) {
+	cUuid := C.CString(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
+	if ptr == nil {
+		return VirStoragePool{}, errors.New(GetLastError())
+	}
+	return VirStoragePool{ptr: ptr}, nil
+}

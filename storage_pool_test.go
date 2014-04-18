@@ -18,6 +18,17 @@ func buildTestStoragePool() (VirStoragePool, VirConnection) {
 	return pool, conn
 }
 
+func TestStoragePoolBuild(t *testing.T) {
+	pool, conn := buildTestStoragePool()
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	if err := pool.Build(VIR_STORAGE_POOL_BUILD_NEW); err != nil {
+		t.Fatal(err)
+	}
+}
 
 func TestUndefineStoragePool(t *testing.T) {
 	pool, conn := buildTestStoragePool()
