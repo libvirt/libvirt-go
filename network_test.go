@@ -22,7 +22,10 @@ func buildTestNetwork() (VirNetwork, VirConnection) {
 
 func TestGetNetworkName(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	if _, err := net.GetName(); err != nil {
 		t.Fatal(err)
 		return
@@ -31,7 +34,10 @@ func TestGetNetworkName(t *testing.T) {
 
 func TestGetNetworkUUID(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	_, err := net.GetUUID()
 	if err != nil {
 		t.Error(err)
@@ -41,7 +47,10 @@ func TestGetNetworkUUID(t *testing.T) {
 
 func TestGetNetworkUUIDString(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	_, err := net.GetUUIDString()
 	if err != nil {
 		t.Error(err)
@@ -51,7 +60,10 @@ func TestGetNetworkUUIDString(t *testing.T) {
 
 func TestGetNetworkXMLDesc(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	if _, err := net.GetXMLDesc(0); err != nil {
 		t.Error(err)
 		return
@@ -60,7 +72,10 @@ func TestGetNetworkXMLDesc(t *testing.T) {
 
 func TestCreateDestroyNetwork(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	if err := net.Create(); err != nil {
 		t.Error(err)
 		return
@@ -74,7 +89,10 @@ func TestCreateDestroyNetwork(t *testing.T) {
 
 func TestNetworkAutostart(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	as, err := net.GetAutostart()
 	if err != nil {
 		t.Error(err)
@@ -101,7 +119,10 @@ func TestNetworkAutostart(t *testing.T) {
 
 func TestNetworkIsActive(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	if err := net.Create(); err != nil {
 		t.Log(err)
 		return
@@ -132,7 +153,10 @@ func TestNetworkIsActive(t *testing.T) {
 
 func TestNetworkGetBridgeName(t *testing.T) {
 	net, conn := buildTestNetwork()
-	defer conn.CloseConnection()
+	defer func() {
+		net.Free()
+		conn.CloseConnection()
+	}()
 	if err := net.Create(); err != nil {
 		t.Error(err)
 		return
@@ -141,5 +165,14 @@ func TestNetworkGetBridgeName(t *testing.T) {
 	br, err := net.GetBridgeName()
 	if err != nil {
 		t.Errorf("got %s but expected %s", br, brName)
+	}
+}
+
+func TestNetworkFree(t *testing.T) {
+	net, conn := buildTestNetwork()
+	defer conn.CloseConnection()
+	if err := net.Free(); err != nil {
+		t.Error(err)
+		return
 	}
 }

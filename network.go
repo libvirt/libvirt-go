@@ -17,6 +17,13 @@ type VirNetwork struct {
 	ptr C.virNetworkPtr
 }
 
+func (n *VirNetwork) Free() error {
+	if result := C.virNetworkFree(n.ptr); result != 0 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (n *VirNetwork) Create() error {
 	result := C.virNetworkCreate(n.ptr)
 	if result == -1 {
