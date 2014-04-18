@@ -274,3 +274,43 @@ func TestDomainIsActive(t *testing.T) {
 		return
 	}
 }
+
+func TestDomainSetMaxMemory(t *testing.T) {
+	const mem = 8192 * 100
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.SetMaxMemory(mem); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestDomainSetMemory(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.SetMemory(1024); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestDomainSetVcpus(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.SetVcpus(1); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.SetVcpusFlags(1, VIR_DOMAIN_VCPU_LIVE); err != nil {
+		t.Error(err)
+		return
+	}
+}
