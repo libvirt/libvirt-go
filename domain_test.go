@@ -22,7 +22,10 @@ func buildTestDomain() (VirDomain, VirConnection) {
 
 func TestUndefineDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	name, err := dom.GetName()
 	if err != nil {
 		t.Error(err)
@@ -40,8 +43,11 @@ func TestUndefineDomain(t *testing.T) {
 
 func TestGetDomainName(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer dom.Undefine()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if _, err := dom.GetName(); err != nil {
 		t.Error(err)
 		return
@@ -50,7 +56,10 @@ func TestGetDomainName(t *testing.T) {
 
 func TestGetDomainState(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	state, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
@@ -68,7 +77,10 @@ func TestGetDomainState(t *testing.T) {
 
 func TestGetDomainUUID(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	_, err := dom.GetUUID()
 	// how to test uuid validity?
 	if err != nil {
@@ -79,7 +91,10 @@ func TestGetDomainUUID(t *testing.T) {
 
 func TestGetDomainUUIDString(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	_, err := dom.GetUUIDString()
 	if err != nil {
 		t.Error(err)
@@ -89,7 +104,10 @@ func TestGetDomainUUIDString(t *testing.T) {
 
 func TestGetDomainInfo(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	_, err := dom.GetInfo()
 	if err != nil {
 		t.Error(err)
@@ -99,7 +117,10 @@ func TestGetDomainInfo(t *testing.T) {
 
 func TestGetDomainXMLDesc(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	_, err := dom.GetXMLDesc(0)
 	if err != nil {
 		t.Error(err)
@@ -109,7 +130,10 @@ func TestGetDomainXMLDesc(t *testing.T) {
 
 func TestCreateDomainSnapshotXML(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	_, err := dom.CreateSnapshotXML(`
 		<domainsnapshot>
 			<description>Test snapshot that will fail because its unsupported</description>
@@ -123,7 +147,10 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 
 func TestSaveDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	// get the name so we can get a handle on it later
 	domName, err := dom.GetName()
 	if err != nil {
@@ -147,7 +174,10 @@ func TestSaveDomain(t *testing.T) {
 
 func TestSaveDomainFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	const srcFile = "/tmp/libvirt-go-test.tmp"
 	if err := dom.SaveFlags(srcFile, "", 0); err == nil {
 		t.Fatal("expected xml modification unsupported")
@@ -157,7 +187,10 @@ func TestSaveDomainFlags(t *testing.T) {
 
 func TestCreateDestroyDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
@@ -210,7 +243,10 @@ func TestShutdownDomain(t *testing.T) {
 
 func TestShutdownReboot(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.Reboot(0); err != nil {
 		t.Error(err)
 		return
@@ -219,7 +255,10 @@ func TestShutdownReboot(t *testing.T) {
 
 func TestDomainAutostart(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	as, err := dom.GetAutostart()
 	if err != nil {
 		t.Error(err)
@@ -246,7 +285,10 @@ func TestDomainAutostart(t *testing.T) {
 
 func TestDomainIsActive(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.Create(); err != nil {
 		t.Log(err)
 		return
@@ -278,7 +320,10 @@ func TestDomainIsActive(t *testing.T) {
 func TestDomainSetMaxMemory(t *testing.T) {
 	const mem = 8192 * 100
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.SetMaxMemory(mem); err != nil {
 		t.Error(err)
 		return
@@ -287,7 +332,10 @@ func TestDomainSetMaxMemory(t *testing.T) {
 
 func TestDomainSetMemory(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
@@ -300,7 +348,10 @@ func TestDomainSetMemory(t *testing.T) {
 
 func TestDomainSetVcpus(t *testing.T) {
 	dom, conn := buildTestDomain()
-	defer conn.CloseConnection()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
@@ -310,6 +361,15 @@ func TestDomainSetVcpus(t *testing.T) {
 		return
 	}
 	if err := dom.SetVcpusFlags(1, VIR_DOMAIN_VCPU_LIVE); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestDomainFree(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Free(); err != nil {
 		t.Error(err)
 		return
 	}

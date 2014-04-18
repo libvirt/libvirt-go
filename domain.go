@@ -21,6 +21,13 @@ type VirDomainInfo struct {
 	ptr C.virDomainInfo
 }
 
+func (d *VirDomain) Free() error {
+	if result := C.virDomainFree(d.ptr); result != 0 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
 func (d *VirDomain) Create() error {
 	result := C.virDomainCreate(d.ptr)
 	if result == -1 {

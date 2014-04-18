@@ -217,10 +217,12 @@ func TestLookupDomainById(t *testing.T) {
 		t.Fatal("Length of ListDomains shouldn't be zero")
 		return
 	}
-	if _, err := conn.LookupDomainById(ids[0]); err != nil {
+	dom, err := conn.LookupDomainById(ids[0])
+	if err != nil {
 		t.Error(err)
 		return
 	}
+	defer dom.Free()
 }
 
 func TestLookupInvalidDomainById(t *testing.T) {
@@ -236,11 +238,12 @@ func TestLookupInvalidDomainById(t *testing.T) {
 func TestLookupDomainByName(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
-	_, err := conn.LookupDomainByName("test")
+	dom, err := conn.LookupDomainByName("test")
 	if err != nil {
 		t.Error(err)
 		return
 	}
+	defer dom.Free()
 }
 
 func TestLookupInvalidDomainByName(t *testing.T) {
@@ -270,7 +273,10 @@ func TestDomainDefineXML(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer dom.Undefine()
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+	}()
 	name, err := dom.GetName()
 	if err != nil {
 		t.Error(err)

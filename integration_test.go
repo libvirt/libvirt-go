@@ -47,6 +47,7 @@ func TestIntegrationGetMetadata(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	defer dom.Free()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
@@ -79,7 +80,10 @@ func TestIntegrationSetMetadata(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer dom.Undefine()
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+	}()
 	const domTitle = "newtitle"
 	if err := dom.SetMetadata(VIR_DOMAIN_METADATA_TITLE, domTitle, "", "", 0); err != nil {
 		t.Error(err)
