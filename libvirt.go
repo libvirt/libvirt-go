@@ -483,3 +483,31 @@ func (c *VirConnection) LookupInterfaceByMACString(mac string) (VirInterface, er
 	}
 	return VirInterface{ptr: ptr}, nil
 }
+
+func (c *VirConnection) StoragePoolDefineXMLFromFile(xmlFile string) (VirStoragePool, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirStoragePool{}, err
+	}
+	return c.StoragePoolDefineXML(string(xmlConfig), 0)
+}
+
+func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (VirStoragePool, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virStoragePoolDefineXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirStoragePool{}, errors.New(GetLastError())
+	}
+	return VirStoragePool{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupStoragePoolByName(name string) (VirStoragePool, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virStoragePoolLookupByName(c.ptr, cName)
+	if ptr == nil {
+		return VirStoragePool{}, errors.New(GetLastError())
+	}
+	return VirStoragePool{ptr: ptr}, nil
+}
