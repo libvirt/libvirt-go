@@ -521,3 +521,41 @@ func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (VirStoragePo
 	}
 	return VirStoragePool{ptr: ptr}, nil
 }
+
+func (c *VirConnection) NWFilterDefineXMLFromFile(xmlFile string) (VirNWFilter, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirNWFilter{}, err
+	}
+	return c.NWFilterDefineXML(string(xmlConfig))
+}
+
+func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (VirNWFilter, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virNWFilterDefineXML(c.ptr, cXml)
+	if ptr == nil {
+		return VirNWFilter{}, errors.New(GetLastError())
+	}
+	return VirNWFilter{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupNWFilterByName(name string) (VirNWFilter, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virNWFilterLookupByName(c.ptr, cName)
+	if ptr == nil {
+		return VirNWFilter{}, errors.New(GetLastError())
+	}
+	return VirNWFilter{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (VirNWFilter, error) {
+	cUuid := C.CString(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virNWFilterLookupByUUIDString(c.ptr, cUuid)
+	if ptr == nil {
+		return VirNWFilter{}, errors.New(GetLastError())
+	}
+	return VirNWFilter{ptr: ptr}, nil
+}
