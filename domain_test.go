@@ -375,3 +375,65 @@ func TestDomainFree(t *testing.T) {
 		return
 	}
 }
+
+func TestDomainSuspend(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+	if err := dom.Suspend(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Resume()
+}
+
+func TesDomainShutdownFlags(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.ShutdownFlags(VIR_DOMAIN_SHUTDOWN_SIGNAL); err != nil {
+		t.Error(err)
+		return
+	}
+	state, err := dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != 5 || state[1] != 1 {
+		t.Fatal("state should be [5 1]")
+		return
+	}
+}
+
+func TesDomainDestoryFlags(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer conn.CloseConnection()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.DestroyFlags(VIR_DOMAIN_DESTROY_GRACEFUL); err != nil {
+		t.Error(err)
+		return
+	}
+	state, err := dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != 5 || state[1] != 1 {
+		t.Fatal("state should be [5 1]")
+		return
+	}
+}

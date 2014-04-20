@@ -275,3 +275,83 @@ func (d *VirDomain) SetVcpusFlags(vcpu uint, flags uint) error {
 	}
 	return nil
 }
+
+func (d *VirDomain) Suspend() error {
+	result := C.virDomainSuspend(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) Resume() error {
+	result := C.virDomainResume(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) AbortJob() error {
+	result := C.virDomainAbortJob(d.ptr)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) DestroyFlags(flags uint) error {
+	result := C.virDomainDestroyFlags(d.ptr, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) ShutdownFlags(flags uint) error {
+	result := C.virDomainShutdownFlags(d.ptr, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) AttachDevice(xml string) error {
+	cXml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cXml))
+	result := C.virDomainAttachDevice(d.ptr, cXml)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) AttachDeviceFlags(xml string, flags uint) error {
+	cXml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cXml))
+	result := C.virDomainAttachDeviceFlags(d.ptr, cXml, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) DetachDevice(xml string) error {
+	cXml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cXml))
+	result := C.virDomainDetachDevice(d.ptr, cXml)
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
+
+func (d *VirDomain) DetachDeviceFlags(xml string, flags uint) error {
+	cXml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cXml))
+	result := C.virDomainDetachDeviceFlags(d.ptr, cXml, C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+	return nil
+}
