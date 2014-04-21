@@ -559,3 +559,23 @@ func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (VirNWFilter, er
 	}
 	return VirNWFilter{ptr: ptr}, nil
 }
+
+func (c *VirConnection) LookupStorageVolByKey(key string) (VirStorageVol, error) {
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
+	ptr := C.virStorageVolLookupByKey(c.ptr, cKey)
+	if ptr == nil {
+		return VirStorageVol{}, errors.New(GetLastError())
+	}
+	return VirStorageVol{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupStorageVolByPath(path string) (VirStorageVol, error) {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+	ptr := C.virStorageVolLookupByPath(c.ptr, cPath)
+	if ptr == nil {
+		return VirStorageVol{}, errors.New(GetLastError())
+	}
+	return VirStorageVol{ptr: ptr}, nil
+}

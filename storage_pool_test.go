@@ -2,6 +2,7 @@ package libvirt
 
 import (
 	"testing"
+	"time"
 )
 
 func buildTestStoragePool() (VirStoragePool, VirConnection) {
@@ -222,5 +223,64 @@ func TestStoragePoolIsActive(t *testing.T) {
 	}
 	if active {
 		t.Fatal("Storage pool should be inactive")
+	}
+}
+
+func TestStorageVolCreateDelete(t *testing.T) {
+	pool, conn := buildTestStoragePool()
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", "default-pool"), 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer vol.Free()
+	if err := vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestLookupStorageVolByName(t *testing.T) {
+	pool, conn := buildTestStoragePool()
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	defVolName := time.Now().String()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML(defVolName, "default-pool"), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+	vol, err = pool.LookupStorageVolByName(defVolName)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	name, err := vol.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if name != defVolName {
+		t.Fatalf("expected storage volume name: %s ,got: %s", defVolName, name)
 	}
 }

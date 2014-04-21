@@ -84,3 +84,43 @@ const (
 	VIR_DOMAIN_DEVICE_MODIFY_LIVE    = C.VIR_DOMAIN_AFFECT_LIVE
 	VIR_DOMAIN_DEVICE_MODIFY_FORCE   = C.VIR_DOMAIN_DEVICE_MODIFY_FORCE
 )
+
+// virStorageVolCreateFlags
+const (
+	VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA = C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA
+)
+
+// virStorageVolDeleteFlags
+const (
+	VIR_STORAGE_VOL_DELETE_NORMAL = C.VIR_STORAGE_VOL_DELETE_NORMAL // Delete metadata only (fast)
+	VIR_STORAGE_VOL_DELETE_ZEROED = C.VIR_STORAGE_VOL_DELETE_ZEROED // Clear all data to zeros (slow)
+)
+
+// virStorageVolResizeFlags
+const (
+	VIR_STORAGE_VOL_RESIZE_ALLOCATE = C.VIR_STORAGE_VOL_RESIZE_ALLOCATE // force allocation of new size
+	VIR_STORAGE_VOL_RESIZE_DELTA    = C.VIR_STORAGE_VOL_RESIZE_DELTA    // size is relative to current
+	VIR_STORAGE_VOL_RESIZE_SHRINK   = C.VIR_STORAGE_VOL_RESIZE_SHRINK   // allow decrease in capacity
+)
+
+// virStorageVolType
+const (
+	VIR_STORAGE_VOL_FILE    = C.VIR_STORAGE_VOL_FILE    // Regular file based volumes
+	VIR_STORAGE_VOL_BLOCK   = C.VIR_STORAGE_VOL_BLOCK   // Block based volumes
+	VIR_STORAGE_VOL_DIR     = C.VIR_STORAGE_VOL_DIR     // Directory-passthrough based volume
+	VIR_STORAGE_VOL_NETWORK = C.VIR_STORAGE_VOL_NETWORK //Network volumes like RBD (RADOS Block Device)
+	VIR_STORAGE_VOL_NETDIR  = C.VIR_STORAGE_VOL_NETDIR  // Network accessible directory that can contain other network volumes
+)
+
+// virStorageVolWipeAlgorithm
+const (
+	VIR_STORAGE_VOL_WIPE_ALG_ZERO       = C.VIR_STORAGE_VOL_WIPE_ALG_ZERO       // 1-pass, all zeroes
+	VIR_STORAGE_VOL_WIPE_ALG_NNSA       = C.VIR_STORAGE_VOL_WIPE_ALG_NNSA       // 4-pass NNSA Policy Letter NAP-14.1-C (XVI-8)
+	VIR_STORAGE_VOL_WIPE_ALG_DOD        = C.VIR_STORAGE_VOL_WIPE_ALG_DOD        // 4-pass DoD 5220.22-M section 8-306 procedure
+	VIR_STORAGE_VOL_WIPE_ALG_BSI        = C.VIR_STORAGE_VOL_WIPE_ALG_BSI        // 9-pass method recommended by the German Center of Security in Information Technologies
+	VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    = C.VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    // The canonical 35-pass sequence
+	VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   = C.VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   // 7-pass method described by Bruce Schneier in "Applied Cryptography" (1996)
+	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  = C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  // 7-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 = C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 // 33-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_RANDOM     = C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM     // 1-pass random
+)

@@ -10,6 +10,7 @@ import "C"
 
 import (
 	"errors"
+	"io/ioutil"
 	"unsafe"
 )
 
@@ -179,4 +180,32 @@ func (i *VirStoragePoolInfo) GetAllocationInBytes() uint64 {
 
 func (i *VirStoragePoolInfo) GetAvailableInBytes() uint64 {
 	return uint64(i.ptr.available)
+}
+
+func (p *VirStoragePool) StorageVolCreateXMLFromFile(xmlFile string, flags uint32) (VirStorageVol, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirStorageVol{}, err
+	}
+	return p.StorageVolCreateXML(string(xmlConfig), flags)
+}
+
+func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (VirStorageVol, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virStorageVolCreateXML(p.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirStorageVol{}, errors.New(GetLastError())
+	}
+	return VirStorageVol{ptr: ptr}, nil
+}
+
+func (p *VirStoragePool) LookupStorageVolByName(name string) (VirStorageVol, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virStorageVolLookupByName(p.ptr, cName)
+	if ptr == nil {
+		return VirStorageVol{}, errors.New(GetLastError())
+	}
+	return VirStorageVol{ptr: ptr}, nil
 }

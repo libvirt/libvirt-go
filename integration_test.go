@@ -3,6 +3,8 @@
 package libvirt
 
 import (
+	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -342,5 +344,135 @@ func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
 	if err := dom.DetachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Error(err)
 		return
+	}
+}
+
+func TestStorageVolResize(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	poolPath, err := ioutil.TempDir("", "default-pool-test-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.RemoveAll(poolPath)
+	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
+                                          <name>default-pool-test-1</name>
+                                          <target>
+                                          <path>`+poolPath+`</path>
+                                          </target>
+                                          </pool>`, 0)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", poolPath), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+	const newCapacityInBytes = 12582912
+	if err := vol.Resize(newCapacityInBytes, VIR_STORAGE_VOL_RESIZE_ALLOCATE); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestStorageVolWipe(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	poolPath, err := ioutil.TempDir("", "default-pool-test-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.RemoveAll(poolPath)
+	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
+                                          <name>default-pool-test-1</name>
+                                          <target>
+                                          <path>`+poolPath+`</path>
+                                          </target>
+                                          </pool>`, 0)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", poolPath), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+	if err := vol.Wipe(0); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestStorageVolWipePattern(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	poolPath, err := ioutil.TempDir("", "default-pool-test-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.RemoveAll(poolPath)
+	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
+                                          <name>default-pool-test-1</name>
+                                          <target>
+                                          <path>`+poolPath+`</path>
+                                          </target>
+                                          </pool>`, 0)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", poolPath), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+	if err := vol.WipePattern(VIR_STORAGE_VOL_WIPE_ALG_ZERO, 0); err != nil {
+		t.Fatal(err)
 	}
 }
