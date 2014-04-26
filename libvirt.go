@@ -579,3 +579,41 @@ func (c *VirConnection) LookupStorageVolByPath(path string) (VirStorageVol, erro
 	}
 	return VirStorageVol{ptr: ptr}, nil
 }
+
+func (c *VirConnection) SecretDefineXMLFromFile(xmlFile string) (VirSecret, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirSecret{}, err
+	}
+	return c.SecretDefineXML(string(xmlConfig), 0)
+}
+
+func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (VirSecret, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirSecret{}, errors.New(GetLastError())
+	}
+	return VirSecret{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupSecretByUUIDString(uuid string) (VirSecret, error) {
+	cUuid := C.CString(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virSecretLookupByUUIDString(c.ptr, cUuid)
+	if ptr == nil {
+		return VirSecret{}, errors.New(GetLastError())
+	}
+	return VirSecret{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupSecretByUsage(usageType int, usageID string) (VirSecret, error) {
+	cUsageID := C.CString(usageID)
+	defer C.free(unsafe.Pointer(cUsageID))
+	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
+	if ptr == nil {
+		return VirSecret{}, errors.New(GetLastError())
+	}
+	return VirSecret{ptr: ptr}, nil
+}

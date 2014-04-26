@@ -476,3 +476,175 @@ func TestStorageVolWipePattern(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func testSecretTypeCephFromXML(name string) string {
+	var setName string
+	if name == "" {
+		setName = time.Now().String()
+	} else {
+		setName = name
+	}
+	return `<secret ephemeral='no' private='no'>
+            <usage type='ceph'>
+            <name>` + setName + `</name>
+            </usage>
+            </secret>`
+}
+
+func TestIntegrationSecretDefineUndefine(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer sec.Free()
+
+	if err := sec.Undefine(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIntegrationSecretGetUUID(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	if _, err := sec.GetUUID(); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationSecretGetUUIDString(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	if _, err := sec.GetUUIDString(); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationSecretGetXMLDesc(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	if _, err := sec.GetXMLDesc(0); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationSecretGetUsageType(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	uType, err := sec.GetUsageType()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if uType != VIR_SECRET_USAGE_TYPE_CEPH {
+		t.Fatal("unexpected usage type.Expected usage type is Ceph")
+	}
+}
+
+func TestIntegrationSecretGetUsageID(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	setUsageID := time.Now().String()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(setUsageID), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	recUsageID, err := sec.GetUsageID()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if recUsageID != setUsageID {
+		t.Fatalf("exepected usage ID: %s, got: %s", setUsageID, recUsageID)
+	}
+}
+
+func TestIntegrationLookupSecretByUsage(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+	usageID := time.Now().String()
+	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(usageID), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		sec.Undefine()
+		sec.Free()
+	}()
+	sec, err = conn.LookupSecretByUsage(VIR_SECRET_USAGE_TYPE_CEPH, usageID)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
