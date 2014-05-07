@@ -648,3 +648,84 @@ func TestIntegrationLookupSecretByUsage(t *testing.T) {
 	}
 }
 
+func TestGetDomainCPUStats(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.CloseConnection()
+	dom, err := defineTestLxcDomain(conn, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+	}()
+
+	if err := dom.Create(); err != nil {
+		t.Fatal(err)
+	}
+	defer dom.Destroy()
+
+	// ... if @params is NULL and @nparams is 0 and @ncpus is 0, the
+	// number of cpus available to query is returned. From the host perspective,
+	ncpus, err := dom.GetCPUStats(nil, 0, 0, 0, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ncpus != 1 {
+		t.Fatal("Number of CPUs should be 1")
+	}
+
+	// ... if @params is NULL and @nparams is 0 and @ncpus is 1,
+	// and the return value will be how many statistics are available for the given @start_cpu.
+	nparams, err := dom.GetCPUStats(nil, 0, 0, 1, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	const lxcNumParams = 1
+	const lxcParamName = "cpu_time"
+
+	if nparams != lxcNumParams {
+		t.Fatal("Number of parameters for this hypervisor should be 2, got ", nparams)
+	}
+	var params VirTypedParameters
+	if _, err = dom.GetCPUStats(&params, nparams, 0, uint32(ncpus), 0); err != nil {
+		t.Fatal(err)
+	}
+
+	if len(params) != lxcNumParams {
+		t.Fatalf("Wanted %d returned parameters, got %d", lxcNumParams, len(params))
+	}
+	param := params[0]
+	if param.Name != lxcParamName {
+		t.Fatalf("Wanted param '%s', got '%s'", lxcParamName, param.Name)
+	}
+	if _, ok := param.Value.(uint64); !ok {
+		t.Fatalf("Wanted uint64 param, got %v instead", param.Value)
+	}
+}
+
+// Not supported on libvirt driver, so no integration test
+// func TestGetInterfaceParameters(t *testing.T) {
+// 	dom, conn := buildTestDomain()
+// 	defer func() {
+// 		dom.Undefine()
+// 		dom.Free()
+// 		conn.CloseConnection()
+// 	}()
+// 	iface := "either mac or path to interface"
+// 	nparams := int(0)
+// 	if _, err := dom.GetInterfaceParameters(iface, nil, &nparams, 0); err != nil {
+// 		t.Error(err)
+// 		return
+// 	}
+
+// 	var params VirTypedParameters
+// 	if _, err := dom.GetInterfaceParameters(iface, &params, &nparams, 0); err != nil {
+// 		t.Error(err)
+// 		return
+// 	}
+// }

@@ -10,6 +10,8 @@ import "C"
 
 import (
 	"errors"
+	"reflect"
+	"strings"
 	"unsafe"
 )
 
@@ -19,6 +21,54 @@ type VirDomain struct {
 
 type VirDomainInfo struct {
 	ptr C.virDomainInfo
+}
+
+type VirTypedParameter struct {
+	Name  string
+	Value interface{}
+}
+
+type VirTypedParameters []VirTypedParameter
+
+func (dest *VirTypedParameters) loadFromCPtr(params C.virTypedParameterPtr, nParams int) {
+	// reset slice
+	*dest = VirTypedParameters{}
+
+	// transform that C array to a go slice
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(params)),
+		Len:  int(nParams),
+		Cap:  int(nParams),
+	}
+	rawParams := *(*[]C.struct__virTypedParameter)(unsafe.Pointer(&hdr))
+
+	// there is probably a more elegant way to deal with that union
+	for _, rawParam := range rawParams {
+		name := C.GoStringN(&rawParam.field[0], C.VIR_TYPED_PARAM_FIELD_LENGTH)
+		if nbIdx := strings.Index(name, "\x00"); nbIdx != -1 {
+			name = name[:nbIdx]
+		}
+		switch rawParam._type {
+		case C.VIR_TYPED_PARAM_INT:
+			*dest = append(*dest, VirTypedParameter{name, int(*(*C.int)(unsafe.Pointer(&rawParam.value[0])))})
+		case C.VIR_TYPED_PARAM_UINT:
+			*dest = append(*dest, VirTypedParameter{name, uint32(*(*C.uint)(unsafe.Pointer(&rawParam.value[0])))})
+		case C.VIR_TYPED_PARAM_LLONG:
+			*dest = append(*dest, VirTypedParameter{name, int64(*(*C.longlong)(unsafe.Pointer(&rawParam.value[0])))})
+		case C.VIR_TYPED_PARAM_ULLONG:
+			*dest = append(*dest, VirTypedParameter{name, uint64(*(*C.ulonglong)(unsafe.Pointer(&rawParam.value[0])))})
+		case C.VIR_TYPED_PARAM_DOUBLE:
+			*dest = append(*dest, VirTypedParameter{name, float64(*(*C.double)(unsafe.Pointer(&rawParam.value[0])))})
+		case C.VIR_TYPED_PARAM_BOOLEAN:
+			if int(*(*C.char)(unsafe.Pointer(&rawParam.value[0]))) == 1 {
+				*dest = append(*dest, VirTypedParameter{name, true})
+			} else {
+				*dest = append(*dest, VirTypedParameter{name, false})
+			}
+		case C.VIR_TYPED_PARAM_STRING:
+			*dest = append(*dest, VirTypedParameter{name, C.GoString((*C.char)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(&rawParam.value[0])))))})
+		}
+	}
 }
 
 func (d *VirDomain) Free() error {
@@ -182,8 +232,56 @@ func (i *VirDomainInfo) GetCpuTime() uint64 {
 	return uint64(i.ptr.cpuTime)
 }
 
-func (d *VirDomain) GetMetadata(tipus int, uri string, flags uint32) (string, error) {
+func (d *VirDomain) GetCPUStats(params *VirTypedParameters, nParams int, startCpu int, nCpus uint32, flags uint32) (int, error) {
+	var cParams C.virTypedParameterPtr
+	var cParamsLen int
 
+	cParamsLen = int(nCpus) * nParams
+
+	if params != nil && cParamsLen > 0 {
+		cParams = (C.virTypedParameterPtr)(C.calloc(C.size_t(cParamsLen), C.size_t(unsafe.Sizeof(C.struct__virTypedParameter{}))))
+		defer C.virTypedParamsFree(cParams, C.int(cParamsLen))
+	} else {
+		cParamsLen = 0
+		cParams = nil
+	}
+
+	result := int(C.virDomainGetCPUStats(d.ptr, (C.virTypedParameterPtr)(cParams), C.uint(nParams), C.int(startCpu), C.uint(nCpus), C.uint(flags)))
+	if result == -1 {
+		return result, errors.New(GetLastError())
+	}
+
+	if cParamsLen > 0 {
+		params.loadFromCPtr(cParams, cParamsLen)
+	}
+
+	return result, nil
+}
+
+// Warning: No test written for this function
+func (d *VirDomain) GetInterfaceParameters(device string, params *VirTypedParameters, nParams *int, flags uint32) (int, error) {
+	var cParams C.virTypedParameterPtr
+
+	if params != nil && *nParams > 0 {
+		cParams = (C.virTypedParameterPtr)(C.calloc(C.size_t(*nParams), C.size_t(unsafe.Sizeof(C.struct__virTypedParameter{}))))
+		defer C.virTypedParamsFree(cParams, C.int(*nParams))
+	} else {
+		cParams = nil
+	}
+
+	result := int(C.virDomainGetInterfaceParameters(d.ptr, C.CString(device), (C.virTypedParameterPtr)(cParams), (*C.int)(unsafe.Pointer(nParams)), C.uint(flags)))
+	if result == -1 {
+		return result, errors.New(GetLastError())
+	}
+
+	if params != nil && *nParams > 0 {
+		params.loadFromCPtr(cParams, *nParams)
+	}
+
+	return result, nil
+}
+
+func (d *VirDomain) GetMetadata(tipus int, uri string, flags uint32) (string, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
