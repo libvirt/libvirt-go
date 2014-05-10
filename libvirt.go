@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"reflect"
 	"unsafe"
 )
 
@@ -616,4 +617,24 @@ func (c *VirConnection) LookupSecretByUsage(usageType int, usageID string) (VirS
 		return VirSecret{}, errors.New(GetLastError())
 	}
 	return VirSecret{ptr: ptr}, nil
+}
+
+func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
+	var cList *C.virInterfacePtr
+	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
+	if numIfaces == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numIfaces),
+		Cap:  int(numIfaces),
+	}
+	var ifaces []VirInterface
+	slice := *(*[]C.virInterfacePtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		ifaces = append(ifaces, VirInterface{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return ifaces, nil
 }
