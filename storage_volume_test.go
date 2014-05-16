@@ -27,7 +27,7 @@ func testStorageVolXML(volName, poolPath string) string {
 }
 
 func TestStorageVolGetInfo(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -53,7 +53,7 @@ func TestStorageVolGetInfo(t *testing.T) {
 }
 
 func TestStorageVolGetKey(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -79,7 +79,7 @@ func TestStorageVolGetKey(t *testing.T) {
 }
 
 func TestStorageVolGetName(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -105,7 +105,7 @@ func TestStorageVolGetName(t *testing.T) {
 }
 
 func TestStorageVolGetPath(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -131,7 +131,7 @@ func TestStorageVolGetPath(t *testing.T) {
 }
 
 func TestStorageVolGetXMLDesc(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()

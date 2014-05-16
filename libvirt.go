@@ -638,3 +638,83 @@ func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) 
 	C.free(unsafe.Pointer(cList))
 	return ifaces, nil
 }
+
+func (c *VirConnection) ListAllNetworks(flags uint32) ([]VirNetwork, error) {
+	var cList *C.virNetworkPtr
+	numNets := C.virConnectListAllNetworks(c.ptr, (**C.virNetworkPtr)(&cList), C.uint(flags))
+	if numNets == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numNets),
+		Cap:  int(numNets),
+	}
+	var nets []VirNetwork
+	slice := *(*[]C.virNetworkPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		nets = append(nets, VirNetwork{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return nets, nil
+}
+
+func (c *VirConnection) ListAllDomains(flags uint32) ([]VirDomain, error) {
+	var cList *C.virDomainPtr
+	numDomains := C.virConnectListAllDomains(c.ptr, (**C.virDomainPtr)(&cList), C.uint(flags))
+	if numDomains == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numDomains),
+		Cap:  int(numDomains),
+	}
+	var domains []VirDomain
+	slice := *(*[]C.virDomainPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		domains = append(domains, VirDomain{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return domains, nil
+}
+
+func (c *VirConnection) ListAllNWFilters(flags uint32) ([]VirNWFilter, error) {
+	var cList *C.virNWFilterPtr
+	numNWFilters := C.virConnectListAllNWFilters(c.ptr, (**C.virNWFilterPtr)(&cList), C.uint(flags))
+	if numNWFilters == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numNWFilters),
+		Cap:  int(numNWFilters),
+	}
+	var filters []VirNWFilter
+	slice := *(*[]C.virNWFilterPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		filters = append(filters, VirNWFilter{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return filters, nil
+}
+
+func (c *VirConnection) ListAllStoragePools(flags uint32) ([]VirStoragePool, error) {
+	var cList *C.virStoragePoolPtr
+	numPools := C.virConnectListAllStoragePools(c.ptr, (**C.virStoragePoolPtr)(&cList), C.uint(flags))
+	if numPools == -1 {
+		return nil, errors.New(GetLastError())
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numPools),
+		Cap:  int(numPools),
+	}
+	var pools []VirStoragePool
+	slice := *(*[]C.virStoragePoolPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirStoragePool{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
+}
