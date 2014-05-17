@@ -648,7 +648,7 @@ func TestIntegrationLookupSecretByUsage(t *testing.T) {
 	}
 }
 
-func TestGetDomainCPUStats(t *testing.T) {
+func TestIntegrationGetDomainCPUStats(t *testing.T) {
 	conn, err := NewVirConnection("lxc:///")
 	if err != nil {
 		t.Fatal(err)
@@ -730,7 +730,7 @@ func TestGetDomainCPUStats(t *testing.T) {
 // 	}
 // }
 
-func TestListAllInterfaces(t *testing.T) {
+func TestIntegrationListAllInterfaces(t *testing.T) {
 	conn, err := NewVirConnection("lxc:///")
 	if err != nil {
 		t.Error(err)
@@ -750,10 +750,47 @@ func TestListAllInterfaces(t *testing.T) {
 		}
 		if name == lookingFor {
 			found = true
-			break
 		}
+		iface.Free()
 	}
 	if found == false {
 		t.Fatalf("interface %s not found", lookingFor)
+	}
+}
+
+func TestIntergrationListAllNWFilters(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	testNWFilterName := time.Now().String()
+	filter, err := conn.NWFilterDefineXML(testNWFilterXML(testNWFilterName, "ipv4"))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		filter.Undefine()
+		filter.Free()
+	}()
+
+	filters, err := conn.ListAllNWFilters(0)
+	if len(filters) == 0 {
+		t.Fatal("length of []VirNWFilter shouldn't be 0")
+	}
+
+	found := false
+	for _, f := range filters {
+		name, _ := f.GetName()
+		if name == testNWFilterName {
+			found = true
+		}
+		f.Free()
+	}
+	if found == false {
+		t.Fatalf("NWFilter %s not found", testNWFilterName)
 	}
 }

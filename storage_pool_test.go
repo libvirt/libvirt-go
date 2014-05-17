@@ -5,10 +5,16 @@ import (
 	"time"
 )
 
-func buildTestStoragePool() (VirStoragePool, VirConnection) {
+func buildTestStoragePool(poolName string) (VirStoragePool, VirConnection) {
 	conn := buildTestConnection()
+	var name string
+	if poolName == "" {
+		name = "default-pool-test-1"
+	} else {
+		name = poolName
+	}
 	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
-  <name>default-pool-test-1</name>
+  <name>`+name+`</name>
   <target>
   <path>/default-pool</path>
   </target>
@@ -20,7 +26,7 @@ func buildTestStoragePool() (VirStoragePool, VirConnection) {
 }
 
 func TestStoragePoolBuild(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -32,7 +38,7 @@ func TestStoragePoolBuild(t *testing.T) {
 }
 
 func TestUndefineStoragePool(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Free()
 		conn.CloseConnection()
@@ -53,7 +59,7 @@ func TestUndefineStoragePool(t *testing.T) {
 }
 
 func TestGetStoragePoolName(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -65,7 +71,7 @@ func TestGetStoragePoolName(t *testing.T) {
 }
 
 func TestGetStoragePoolUUID(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -77,7 +83,7 @@ func TestGetStoragePoolUUID(t *testing.T) {
 }
 
 func TestGetStoragePoolUUIDString(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -89,7 +95,7 @@ func TestGetStoragePoolUUIDString(t *testing.T) {
 }
 
 func TestGetStoragePoolInfo(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -101,7 +107,7 @@ func TestGetStoragePoolInfo(t *testing.T) {
 }
 
 func TestGetStoragePoolXMLDesc(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -113,7 +119,7 @@ func TestGetStoragePoolXMLDesc(t *testing.T) {
 }
 
 func TestStoragePoolRefresh(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Destroy()
 		pool.Undefine()
@@ -130,7 +136,7 @@ func TestStoragePoolRefresh(t *testing.T) {
 }
 
 func TestCreateDestroyStoragePool(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -164,7 +170,7 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 }
 
 func TestStoragePoolAutostart(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -193,7 +199,7 @@ func TestStoragePoolAutostart(t *testing.T) {
 }
 
 func TestStoragePoolIsActive(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -227,7 +233,7 @@ func TestStoragePoolIsActive(t *testing.T) {
 }
 
 func TestStorageVolCreateDelete(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -249,7 +255,7 @@ func TestStorageVolCreateDelete(t *testing.T) {
 }
 
 func TestLookupStorageVolByName(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()

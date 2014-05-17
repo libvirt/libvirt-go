@@ -570,7 +570,7 @@ func TestLookupStoragePoolByUUIDString(t *testing.T) {
 }
 
 func TestLookupStorageVolByKey(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -609,7 +609,7 @@ func TestLookupStorageVolByKey(t *testing.T) {
 }
 
 func TestLookupStorageVolByPath(t *testing.T) {
-	pool, conn := buildTestStoragePool()
+	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Undefine()
 		pool.Free()
@@ -644,5 +644,89 @@ func TestLookupStorageVolByPath(t *testing.T) {
 	}
 	if path != defVolPath {
 		t.Fatalf("expected storage volume path: %s ,got: %s", defVolPath, path)
+	}
+}
+
+func TestListAllDomains(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	doms, err := conn.ListAllDomains(VIR_CONNECT_LIST_DOMAINS_PERSISTENT)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(doms) == 0 {
+		t.Fatal("length of []VirDomain shouldn't be 0")
+	}
+	testDomName := "test"
+	found := false
+	for _, dom := range doms {
+		name, _ := dom.GetName()
+		if name == testDomName {
+			found = true
+		}
+		// not mandatory for the tests but lets make it in a proper way
+		dom.Free()
+	}
+	if found == false {
+		t.Fatalf("domain %s not found", testDomName)
+	}
+}
+
+func TestListAllNetworks(t *testing.T) {
+	testNetwork := time.Now().String()
+	net, conn := buildTestNetwork(testNetwork)
+	defer func() {
+		// actually,no nicessaty to destroy as the network is being removed as soon as
+		// the test connection is closed
+		net.Destroy()
+		net.Free()
+		conn.CloseConnection()
+	}()
+	nets, err := conn.ListAllNetworks(VIR_CONNECT_LIST_NETWORKS_INACTIVE)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(nets) == 0 {
+		t.Fatal("length of []VirNetwork shouldn't be 0")
+	}
+	found := false
+	for _, n := range nets {
+		name, _ := n.GetName()
+		if name == testNetwork {
+			found = true
+		}
+		n.Free()
+	}
+	if found == false {
+		t.Fatalf("network %s not found", testNetwork)
+	}
+}
+
+func TestListAllStoragePools(t *testing.T) {
+	testStoragePool := "default-pool-test-1"
+	pool, conn := buildTestStoragePool(testStoragePool)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	pools, err := conn.ListAllStoragePools(VIR_STORAGE_POOL_INACTIVE)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(pools) == 0 {
+		t.Fatal("length of []VirStoragePool shouldn't be 0")
+	}
+	found := false
+	for _, p := range pools {
+		name, _ := p.GetName()
+		if name == testStoragePool {
+			found = true
+		}
+		p.Free()
+	}
+	if found == false {
+		t.Fatalf("storage pool %s not found", testStoragePool)
 	}
 }

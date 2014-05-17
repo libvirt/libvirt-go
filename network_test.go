@@ -5,10 +5,16 @@ import (
 	"time"
 )
 
-func buildTestNetwork() (VirNetwork, VirConnection) {
+func buildTestNetwork(netName string) (VirNetwork, VirConnection) {
 	conn := buildTestConnection()
+	var name string
+	if netName == "" {
+		name = time.Now().String()
+	} else {
+		name = netName
+	}
 	net, err := conn.NetworkDefineXML(`<network>
-    <name>` + time.Now().String() + `</name>
+    <name>` + name + `</name>
     <bridge name="testbr0"/>
     <forward/>
     <ip address="192.168.0.1" netmask="255.255.255.0">
@@ -21,7 +27,7 @@ func buildTestNetwork() (VirNetwork, VirConnection) {
 }
 
 func TestGetNetworkName(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -33,7 +39,7 @@ func TestGetNetworkName(t *testing.T) {
 }
 
 func TestGetNetworkUUID(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -46,7 +52,7 @@ func TestGetNetworkUUID(t *testing.T) {
 }
 
 func TestGetNetworkUUIDString(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -59,7 +65,7 @@ func TestGetNetworkUUIDString(t *testing.T) {
 }
 
 func TestGetNetworkXMLDesc(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -71,7 +77,7 @@ func TestGetNetworkXMLDesc(t *testing.T) {
 }
 
 func TestCreateDestroyNetwork(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -88,7 +94,7 @@ func TestCreateDestroyNetwork(t *testing.T) {
 }
 
 func TestNetworkAutostart(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -118,7 +124,7 @@ func TestNetworkAutostart(t *testing.T) {
 }
 
 func TestNetworkIsActive(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -152,7 +158,7 @@ func TestNetworkIsActive(t *testing.T) {
 }
 
 func TestNetworkGetBridgeName(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
 		conn.CloseConnection()
@@ -169,7 +175,7 @@ func TestNetworkGetBridgeName(t *testing.T) {
 }
 
 func TestNetworkFree(t *testing.T) {
-	net, conn := buildTestNetwork()
+	net, conn := buildTestNetwork("")
 	defer conn.CloseConnection()
 	if err := net.Free(); err != nil {
 		t.Error(err)
