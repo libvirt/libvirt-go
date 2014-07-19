@@ -453,3 +453,14 @@ func (d *VirDomain) DetachDeviceFlags(xml string, flags uint) error {
 	}
 	return nil
 }
+
+func (d *VirDomain) Screenshot(stream *VirStream, screen, flags uint) (string, error) {
+	cType := C.virDomainScreenshot(d.ptr, stream.ptr, C.uint(screen), C.uint(flags))
+	if cType == nil {
+		return "", errors.New(GetLastError())
+	}
+	defer C.free(unsafe.Pointer(cType))
+
+	mimeType := C.GoString(cType)
+	return mimeType, nil
+}

@@ -437,3 +437,24 @@ func TesDomainDestoryFlags(t *testing.T) {
 		return
 	}
 }
+
+func TestDomainScreenshot(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	stream, err := NewVirStream(&conn, 0)
+	if err != nil {
+		t.Fatalf("failed to create new stream: %s", err)
+	}
+	defer stream.Free()
+	_, err = dom.Screenshot(stream, 0, 0)
+	if err != nil {
+		t.Fatalf("failed to take screenshot: %s", err)
+	}
+}
