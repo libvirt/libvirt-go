@@ -458,3 +458,19 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Fatalf("failed to take screenshot: %s", err)
 	}
 }
+
+func TesDomainSendKey(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	if err := dom.SendKey(VIR_KEYCODE_SET_LINUX, 1000, []uint{1}, 0); err != nil {
+		t.Fatalf("failed to send escape key: %s", err)
+	}
+
+}

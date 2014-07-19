@@ -464,3 +464,12 @@ func (d *VirDomain) Screenshot(stream *VirStream, screen, flags uint) (string, e
 	mimeType := C.GoString(cType)
 	return mimeType, nil
 }
+
+func (d *VirDomain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint) error {
+	result := C.virDomainSendKey(d.ptr, C.uint(codeset), C.uint(holdtime), (*C.uint)(unsafe.Pointer(&keycodes[0])), C.int(len(keycodes)), C.uint(flags))
+	if result == -1 {
+		return errors.New(GetLastError())
+	}
+
+	return nil
+}
