@@ -1,6 +1,8 @@
 package libvirt
 
 import (
+	"image/png"
+	"strings"
 	"testing"
 	"time"
 )
@@ -453,24 +455,22 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Fatalf("failed to create new stream: %s", err)
 	}
 	defer stream.Free()
-	_, err = dom.Screenshot(stream, 0, 0)
+	mime, err := dom.Screenshot(stream, 0, 0)
 	if err != nil {
 		t.Fatalf("failed to take screenshot: %s", err)
 	}
-}
-
-func TesDomainSendKey(t *testing.T) {
-	dom, conn := buildTestDomain()
-	defer func() {
-		dom.Free()
-		conn.CloseConnection()
-	}()
-	if err := dom.Create(); err != nil {
-		t.Error(err)
-		return
+	if strings.Index(mime, "image/") != 0 {
+		t.Fatalf("Wanted image/*, got %s", mime)
 	}
-	if err := dom.SendKey(VIR_KEYCODE_SET_LINUX, 1000, []uint{1}, 0); err != nil {
-		t.Fatalf("failed to send escape key: %s", err)
+	decoded, err := png.Decode(stream)
+	if err != nil {
+		t.Fatal(err)
 	}
-
+	if err := stream.Finish(); err != nil {
+		t.Fatal(err)
+	}
+	size := decoded.Bounds().Size()
+	if size.X == 0 || size.Y == 0 {
+		t.Fatal("Size wrong", size)
+	}
 }
