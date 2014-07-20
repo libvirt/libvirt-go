@@ -37,7 +37,7 @@ func (v *VirStream) Abort() error {
 	return nil
 }
 
-func (v *VirStream) Finish() error {
+func (v *VirStream) Close() error {
 	result := C.virStreamFinish(v.ptr)
 	if result == -1 {
 		return errors.New(GetLastError())

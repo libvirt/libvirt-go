@@ -466,7 +466,7 @@ func TestDomainScreenshot(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := stream.Finish(); err != nil {
+	if err := stream.Close(); err != nil {
 		t.Fatal(err)
 	}
 	size := decoded.Bounds().Size()
