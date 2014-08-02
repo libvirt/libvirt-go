@@ -1,7 +1,6 @@
 package libvirt
 
 import (
-	"image/png"
 	"strings"
 	"testing"
 	"time"
@@ -461,16 +460,5 @@ func TestDomainScreenshot(t *testing.T) {
 	}
 	if strings.Index(mime, "image/") != 0 {
 		t.Fatalf("Wanted image/*, got %s", mime)
-	}
-	decoded, err := png.Decode(stream)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := stream.Close(); err != nil {
-		t.Fatal(err)
-	}
-	size := decoded.Bounds().Size()
-	if size.X == 0 || size.Y == 0 {
-		t.Fatal("Size wrong", size)
 	}
 }
