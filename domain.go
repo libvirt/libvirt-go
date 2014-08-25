@@ -157,7 +157,9 @@ func (d *VirDomain) GetAutostart() (bool, error) {
 func (d *VirDomain) GetBlockInfo(disk string, flag uint) (VirDomainBlockInfo, error) {
 	bi := VirDomainBlockInfo{}
 	var ptr C.virDomainBlockInfo
-	result := C.virDomainGetBlockInfo(d.ptr, C.CString(disk), (*C.virDomainBlockInfo)(unsafe.Pointer(&ptr)), C.uint(flag))
+	cDisk := C.CString(disk)
+	defer C.free(unsafe.Pointer(cDisk))
+	result := C.virDomainGetBlockInfo(d.ptr, cDisk, (*C.virDomainBlockInfo)(unsafe.Pointer(&ptr)), C.uint(flag))
 	if result == -1 {
 		return bi, errors.New(GetLastError())
 	}
