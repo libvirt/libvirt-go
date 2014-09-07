@@ -19,6 +19,10 @@ type VirDomain struct {
 	ptr C.virDomainPtr
 }
 
+type VirDomainBlockInfo struct {
+	ptr C.virDomainBlockInfo
+}
+
 type VirDomainInfo struct {
 	ptr C.virDomainInfo
 }
@@ -148,6 +152,31 @@ func (d *VirDomain) GetAutostart() (bool, error) {
 	default:
 		return false, nil
 	}
+}
+
+func (d *VirDomain) GetBlockInfo(disk string, flag uint) (VirDomainBlockInfo, error) {
+	bi := VirDomainBlockInfo{}
+	var ptr C.virDomainBlockInfo
+	cDisk := C.CString(disk)
+	defer C.free(unsafe.Pointer(cDisk))
+	result := C.virDomainGetBlockInfo(d.ptr, cDisk, (*C.virDomainBlockInfo)(unsafe.Pointer(&ptr)), C.uint(flag))
+	if result == -1 {
+		return bi, errors.New(GetLastError())
+	}
+	bi.ptr = ptr
+	return bi, nil
+}
+
+func (b *VirDomainBlockInfo) Allocation() uint64 {
+	return uint64(b.ptr.allocation)
+}
+
+func (b *VirDomainBlockInfo) Capacity() uint64 {
+	return uint64(b.ptr.capacity)
+}
+
+func (b *VirDomainBlockInfo) Physical() uint64 {
+	return uint64(b.ptr.physical)
 }
 
 func (d *VirDomain) GetName() (string, error) {
