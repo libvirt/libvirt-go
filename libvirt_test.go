@@ -146,6 +146,20 @@ func TestHostname(t *testing.T) {
 	}
 }
 
+func TestLibVersion(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+    version, err := conn.GetLibVersion()
+    if err != nil {
+        t.Error(err)
+        return
+    }
+    if version == 0 {
+        t.Error("Version was 0")
+        return
+    }
+}
+
 func TestListDefinedDomains(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()

@@ -101,6 +101,14 @@ func (c *VirConnection) GetHostname() (string, error) {
 	return hostname, nil
 }
 
+func (c *VirConnection) GetLibVersion() (uint32, error) {
+    var version C.ulong
+    if err := C.virConnectGetLibVersion(c.ptr, &version); err < 0 {
+        return 0, errors.New(GetLastError())
+    }
+    return uint32(version), nil
+}
+
 func (c *VirConnection) GetType() (string, error) {
 	str := C.virConnectGetType(c.ptr)
 	if str == nil {
