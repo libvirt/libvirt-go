@@ -255,6 +255,24 @@ func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
 	return VirDomain{ptr: ptr}, nil
 }
 
+func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags uint32) (VirDomain, error) {
+	xmlConfig, err := ioutil.ReadFile(xmlFile)
+	if err != nil {
+		return VirDomain{}, err
+	}
+	return c.DomainCreateXML(string(xmlConfig), flags)
+}
+
+func (c *VirConnection) DomainCreateXML(xmlConfig string, flags uint32) (VirDomain, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirDomain{}, errors.New(GetLastError())
+	}
+	return VirDomain{ptr: ptr}, nil
+}
+
 func (c *VirConnection) DomainDefineXMLFromFile(xmlFile string) (VirDomain, error) {
 	xmlConfig, err := ioutil.ReadFile(xmlFile)
 	if err != nil {

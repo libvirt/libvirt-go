@@ -270,6 +270,54 @@ func TestLookupInvalidDomainByName(t *testing.T) {
 	}
 }
 
+func TestDomainCreateXML(t *testing.T) {
+	conn := buildTestConnection()
+    nodom := VirDomain{}
+	defer conn.CloseConnection()
+	// Test a minimally valid xml
+	defName := time.Now().String()
+	xml := `<domain type="test">
+		<name>` + defName + `</name>
+		<memory unit="KiB">8192</memory>
+		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`
+	dom, err := conn.DomainCreateXML(xml, VIR_DOMAIN_NONE)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+        if dom != nodom {    
+    		dom.Destroy()
+		    dom.Free()
+        }
+	}()
+	name, err := dom.GetName()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if name != defName {
+		t.Fatalf("Name was not '%s': %s", defName, name)
+		return
+	}
+
+    // Destroy the domain: it should not be persistent
+    if err := dom.Destroy(); err != nil {
+        t.Error(err)
+        return
+    }
+    dom = nodom
+
+    testeddom, err := conn.LookupDomainByName(defName)
+    if testeddom != nodom {
+        t.Fatal("Created domain is persisting")
+        return
+    }
+}
+
 func TestDomainDefineXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
