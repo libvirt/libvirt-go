@@ -77,4 +77,3 @@ func (s *VirSecret) GetXMLDesc(flags uint32) (string, error) {
 	C.free(unsafe.Pointer(result))
 	return xml, nil
 }
-
