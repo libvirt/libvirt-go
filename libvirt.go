@@ -1,8 +1,6 @@
 package libvirt
 
 import (
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"reflect"
 	"unsafe"
@@ -25,7 +23,7 @@ func NewVirConnection(uri string) (VirConnection, error) {
 	defer C.free(unsafe.Pointer(cUri))
 	ptr := C.virConnectOpen(cUri)
 	if ptr == nil {
-		return VirConnection{}, errors.New(GetLastError())
+		return VirConnection{}, GetLastError()
 	}
 	obj := VirConnection{ptr: ptr}
 	return obj, nil
@@ -36,24 +34,29 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 	defer C.free(unsafe.Pointer(cUri))
 	ptr := C.virConnectOpenReadOnly(cUri)
 	if ptr == nil {
-		return VirConnection{}, errors.New(GetLastError())
+		return VirConnection{}, GetLastError()
 	}
 	obj := VirConnection{ptr: ptr}
 	return obj, nil
 }
 
-func GetLastError() string {
+func GetLastError() VirError {
+	var virErr VirError
 	err := C.virGetLastError()
-	errMsg := fmt.Sprintf("[Code-%d] [Domain-%d] %s",
-		err.code, err.domain, C.GoString(err.message))
+
+	virErr.Code = int(err.code)
+	virErr.Domain = int(err.domain)
+	virErr.Message = C.GoString(err.message)
+	virErr.Level = int(err.level)
+
 	C.virResetError(err)
-	return errMsg
+	return virErr
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
-		return result, errors.New(GetLastError())
+		return result, GetLastError()
 	}
 	return result, nil
 }
@@ -73,7 +76,7 @@ func (c *VirConnection) UnrefAndCloseConnection() error {
 func (c *VirConnection) GetCapabilities() (string, error) {
 	str := C.virConnectGetCapabilities(c.ptr)
 	if str == nil {
-		return "", errors.New(GetLastError())
+		return "", GetLastError()
 	}
 	capabilities := C.GoString(str)
 	C.free(unsafe.Pointer(str))
@@ -85,7 +88,7 @@ func (c *VirConnection) GetNodeInfo() (VirNodeInfo, error) {
 	var ptr C.virNodeInfo
 	result := C.virNodeGetInfo(c.ptr, (*C.virNodeInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
-		return ni, errors.New(GetLastError())
+		return ni, GetLastError()
 	}
 	ni.ptr = ptr
 	return ni, nil
@@ -94,7 +97,7 @@ func (c *VirConnection) GetNodeInfo() (VirNodeInfo, error) {
 func (c *VirConnection) GetHostname() (string, error) {
 	str := C.virConnectGetHostname(c.ptr)
 	if str == nil {
-		return "", errors.New(GetLastError())
+		return "", GetLastError()
 	}
 	hostname := C.GoString(str)
 	C.free(unsafe.Pointer(str))
@@ -104,7 +107,7 @@ func (c *VirConnection) GetHostname() (string, error) {
 func (c *VirConnection) GetLibVersion() (uint32, error) {
 	var version C.ulong
 	if err := C.virConnectGetLibVersion(c.ptr, &version); err < 0 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return uint32(version), nil
 }
@@ -112,7 +115,7 @@ func (c *VirConnection) GetLibVersion() (uint32, error) {
 func (c *VirConnection) GetType() (string, error) {
 	str := C.virConnectGetType(c.ptr)
 	if str == nil {
-		return "", errors.New(GetLastError())
+		return "", GetLastError()
 	}
 	hypDriver := C.GoString(str)
 	return hypDriver, nil
@@ -121,7 +124,7 @@ func (c *VirConnection) GetType() (string, error) {
 func (c *VirConnection) IsAlive() (bool, error) {
 	result := C.virConnectIsAlive(c.ptr)
 	if result == -1 {
-		return false, errors.New(GetLastError())
+		return false, GetLastError()
 	}
 	if result == 1 {
 		return true, nil
@@ -132,7 +135,7 @@ func (c *VirConnection) IsAlive() (bool, error) {
 func (c *VirConnection) IsEncrypted() (bool, error) {
 	result := C.virConnectIsEncrypted(c.ptr)
 	if result == -1 {
-		return false, errors.New(GetLastError())
+		return false, GetLastError()
 	}
 	if result == 1 {
 		return true, nil
@@ -143,7 +146,7 @@ func (c *VirConnection) IsEncrypted() (bool, error) {
 func (c *VirConnection) IsSecure() (bool, error) {
 	result := C.virConnectIsSecure(c.ptr)
 	if result == -1 {
-		return false, errors.New(GetLastError())
+		return false, GetLastError()
 	}
 	if result == 1 {
 		return true, nil
@@ -159,7 +162,7 @@ func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 		(**C.char)(namesPtr),
 		1024)
 	if numDomains == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numDomains)
 	for k := 0; k < int(numDomains); k++ {
@@ -174,7 +177,7 @@ func (c *VirConnection) ListDomains() ([]uint32, error) {
 	cDomainsPointer := unsafe.Pointer(&cDomainsIds)
 	numDomains := C.virConnectListDomains(c.ptr, (*C.int)(cDomainsPointer), 512)
 	if numDomains == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 
 	return cDomainsIds[:numDomains], nil
@@ -189,7 +192,7 @@ func (c *VirConnection) ListInterfaces() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxIfaces)
 	if numIfaces == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numIfaces)
 	for k := 0; k < int(numIfaces); k++ {
@@ -208,7 +211,7 @@ func (c *VirConnection) ListNetworks() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxNets)
 	if numNetworks == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numNetworks)
 	for k := 0; k < int(numNetworks); k++ {
@@ -227,7 +230,7 @@ func (c *VirConnection) ListStoragePools() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxPools)
 	if numStoragePools == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numStoragePools)
 	for k := 0; k < int(numStoragePools); k++ {
@@ -240,7 +243,7 @@ func (c *VirConnection) ListStoragePools() ([]string, error) {
 func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
-		return VirDomain{}, errors.New(GetLastError())
+		return VirDomain{}, GetLastError()
 	}
 	return VirDomain{ptr: ptr}, nil
 }
@@ -250,7 +253,7 @@ func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirDomain{}, errors.New(GetLastError())
+		return VirDomain{}, GetLastError()
 	}
 	return VirDomain{ptr: ptr}, nil
 }
@@ -268,7 +271,7 @@ func (c *VirConnection) DomainCreateXML(xmlConfig string, flags uint32) (VirDoma
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirDomain{}, errors.New(GetLastError())
+		return VirDomain{}, GetLastError()
 	}
 	return VirDomain{ptr: ptr}, nil
 }
@@ -286,7 +289,7 @@ func (c *VirConnection) DomainDefineXML(xmlConfig string) (VirDomain, error) {
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirDomain{}, errors.New(GetLastError())
+		return VirDomain{}, GetLastError()
 	}
 	return VirDomain{ptr: ptr}, nil
 }
@@ -300,7 +303,7 @@ func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxIfaces)
 	if numIfaces == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numIfaces)
 	for k := 0; k < int(numIfaces); k++ {
@@ -319,7 +322,7 @@ func (c *VirConnection) ListDefinedNetworks() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxNets)
 	if numNetworks == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numNetworks)
 	for k := 0; k < int(numNetworks); k++ {
@@ -338,7 +341,7 @@ func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
 		(**C.char)(namesPtr),
 		maxPools)
 	if numStoragePools == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	goNames := make([]string, numStoragePools)
 	for k := 0; k < int(numStoragePools); k++ {
@@ -351,7 +354,7 @@ func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
 func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
 	result := int(C.virConnectNumOfDefinedInterfaces(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -359,7 +362,7 @@ func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
 func (c *VirConnection) NumOfDefinedNetworks() (int, error) {
 	result := int(C.virConnectNumOfDefinedNetworks(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -367,7 +370,7 @@ func (c *VirConnection) NumOfDefinedNetworks() (int, error) {
 func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
 	result := int(C.virConnectNumOfDefinedStoragePools(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -375,7 +378,7 @@ func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
 func (c *VirConnection) NumOfDomains() (int, error) {
 	result := int(C.virConnectNumOfDomains(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -383,7 +386,7 @@ func (c *VirConnection) NumOfDomains() (int, error) {
 func (c *VirConnection) NumOfInterfaces() (int, error) {
 	result := int(C.virConnectNumOfInterfaces(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -391,7 +394,7 @@ func (c *VirConnection) NumOfInterfaces() (int, error) {
 func (c *VirConnection) NumOfNetworks() (int, error) {
 	result := int(C.virConnectNumOfNetworks(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -399,7 +402,7 @@ func (c *VirConnection) NumOfNetworks() (int, error) {
 func (c *VirConnection) NumOfNWFilters() (int, error) {
 	result := int(C.virConnectNumOfNWFilters(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -407,7 +410,7 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 func (c *VirConnection) NumOfSecrets() (int, error) {
 	result := int(C.virConnectNumOfSecrets(c.ptr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -425,7 +428,7 @@ func (c *VirConnection) NetworkDefineXML(xmlConfig string) (VirNetwork, error) {
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirNetwork{}, errors.New(GetLastError())
+		return VirNetwork{}, GetLastError()
 	}
 	return VirNetwork{ptr: ptr}, nil
 }
@@ -435,7 +438,7 @@ func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNetworkLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirNetwork{}, errors.New(GetLastError())
+		return VirNetwork{}, GetLastError()
 	}
 	return VirNetwork{ptr: ptr}, nil
 }
@@ -443,7 +446,7 @@ func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
 	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {
-		return "", errors.New(GetLastError())
+		return "", GetLastError()
 	}
 	info := C.GoString(cStr)
 	C.free(unsafe.Pointer(cStr))
@@ -453,7 +456,7 @@ func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
 func (c *VirConnection) GetURI() (string, error) {
 	cStr := C.virConnectGetURI(c.ptr)
 	if cStr == nil {
-		return "", errors.New(GetLastError())
+		return "", GetLastError()
 	}
 	uri := C.GoString(cStr)
 	C.free(unsafe.Pointer(cStr))
@@ -468,7 +471,7 @@ func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
 	}
 	result := int(C.virConnectGetMaxVcpus(c.ptr, cTypeAttr))
 	if result == -1 {
-		return 0, errors.New(GetLastError())
+		return 0, GetLastError()
 	}
 	return result, nil
 }
@@ -486,7 +489,7 @@ func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (VirI
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virInterfaceDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirInterface{}, errors.New(GetLastError())
+		return VirInterface{}, GetLastError()
 	}
 	return VirInterface{ptr: ptr}, nil
 }
@@ -496,7 +499,7 @@ func (c *VirConnection) LookupInterfaceByName(name string) (VirInterface, error)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirInterface{}, errors.New(GetLastError())
+		return VirInterface{}, GetLastError()
 	}
 	return VirInterface{ptr: ptr}, nil
 }
@@ -506,7 +509,7 @@ func (c *VirConnection) LookupInterfaceByMACString(mac string) (VirInterface, er
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByMACString(c.ptr, cName)
 	if ptr == nil {
-		return VirInterface{}, errors.New(GetLastError())
+		return VirInterface{}, GetLastError()
 	}
 	return VirInterface{ptr: ptr}, nil
 }
@@ -524,7 +527,7 @@ func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (Vi
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirStoragePool{}, errors.New(GetLastError())
+		return VirStoragePool{}, GetLastError()
 	}
 	return VirStoragePool{ptr: ptr}, nil
 }
@@ -534,7 +537,7 @@ func (c *VirConnection) LookupStoragePoolByName(name string) (VirStoragePool, er
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStoragePoolLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirStoragePool{}, errors.New(GetLastError())
+		return VirStoragePool{}, GetLastError()
 	}
 	return VirStoragePool{ptr: ptr}, nil
 }
@@ -544,7 +547,7 @@ func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (VirStoragePo
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirStoragePool{}, errors.New(GetLastError())
+		return VirStoragePool{}, GetLastError()
 	}
 	return VirStoragePool{ptr: ptr}, nil
 }
@@ -562,7 +565,7 @@ func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (VirNWFilter, error)
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNWFilterDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirNWFilter{}, errors.New(GetLastError())
+		return VirNWFilter{}, GetLastError()
 	}
 	return VirNWFilter{ptr: ptr}, nil
 }
@@ -572,7 +575,7 @@ func (c *VirConnection) LookupNWFilterByName(name string) (VirNWFilter, error) {
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNWFilterLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirNWFilter{}, errors.New(GetLastError())
+		return VirNWFilter{}, GetLastError()
 	}
 	return VirNWFilter{ptr: ptr}, nil
 }
@@ -582,7 +585,7 @@ func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (VirNWFilter, er
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNWFilterLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirNWFilter{}, errors.New(GetLastError())
+		return VirNWFilter{}, GetLastError()
 	}
 	return VirNWFilter{ptr: ptr}, nil
 }
@@ -592,7 +595,7 @@ func (c *VirConnection) LookupStorageVolByKey(key string) (VirStorageVol, error)
 	defer C.free(unsafe.Pointer(cKey))
 	ptr := C.virStorageVolLookupByKey(c.ptr, cKey)
 	if ptr == nil {
-		return VirStorageVol{}, errors.New(GetLastError())
+		return VirStorageVol{}, GetLastError()
 	}
 	return VirStorageVol{ptr: ptr}, nil
 }
@@ -602,7 +605,7 @@ func (c *VirConnection) LookupStorageVolByPath(path string) (VirStorageVol, erro
 	defer C.free(unsafe.Pointer(cPath))
 	ptr := C.virStorageVolLookupByPath(c.ptr, cPath)
 	if ptr == nil {
-		return VirStorageVol{}, errors.New(GetLastError())
+		return VirStorageVol{}, GetLastError()
 	}
 	return VirStorageVol{ptr: ptr}, nil
 }
@@ -620,7 +623,7 @@ func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (VirSecr
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirSecret{}, errors.New(GetLastError())
+		return VirSecret{}, GetLastError()
 	}
 	return VirSecret{ptr: ptr}, nil
 }
@@ -630,7 +633,7 @@ func (c *VirConnection) LookupSecretByUUIDString(uuid string) (VirSecret, error)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virSecretLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirSecret{}, errors.New(GetLastError())
+		return VirSecret{}, GetLastError()
 	}
 	return VirSecret{ptr: ptr}, nil
 }
@@ -640,7 +643,7 @@ func (c *VirConnection) LookupSecretByUsage(usageType int, usageID string) (VirS
 	defer C.free(unsafe.Pointer(cUsageID))
 	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
 	if ptr == nil {
-		return VirSecret{}, errors.New(GetLastError())
+		return VirSecret{}, GetLastError()
 	}
 	return VirSecret{ptr: ptr}, nil
 }
@@ -649,7 +652,7 @@ func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) 
 	var cList *C.virInterfacePtr
 	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
 	if numIfaces == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cList)),
@@ -669,7 +672,7 @@ func (c *VirConnection) ListAllNetworks(flags uint32) ([]VirNetwork, error) {
 	var cList *C.virNetworkPtr
 	numNets := C.virConnectListAllNetworks(c.ptr, (**C.virNetworkPtr)(&cList), C.uint(flags))
 	if numNets == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cList)),
@@ -689,7 +692,7 @@ func (c *VirConnection) ListAllDomains(flags uint32) ([]VirDomain, error) {
 	var cList *C.virDomainPtr
 	numDomains := C.virConnectListAllDomains(c.ptr, (**C.virDomainPtr)(&cList), C.uint(flags))
 	if numDomains == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cList)),
@@ -709,7 +712,7 @@ func (c *VirConnection) ListAllNWFilters(flags uint32) ([]VirNWFilter, error) {
 	var cList *C.virNWFilterPtr
 	numNWFilters := C.virConnectListAllNWFilters(c.ptr, (**C.virNWFilterPtr)(&cList), C.uint(flags))
 	if numNWFilters == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cList)),
@@ -729,7 +732,7 @@ func (c *VirConnection) ListAllStoragePools(flags uint32) ([]VirStoragePool, err
 	var cList *C.virStoragePoolPtr
 	numPools := C.virConnectListAllStoragePools(c.ptr, (**C.virStoragePoolPtr)(&cList), C.uint(flags))
 	if numPools == -1 {
-		return nil, errors.New(GetLastError())
+		return nil, GetLastError()
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cList)),
