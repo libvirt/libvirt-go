@@ -6,6 +6,10 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 
+void virErrorFuncDummy(void *userData, virErrorPtr error)
+{
+}
+
 int domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,
                                      int event, int detail, void *data)
 {

@@ -12,6 +12,8 @@ import (
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 
+void virErrorFuncDummy(void *userData, virErrorPtr error);
+
 int domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,
                                      int event, int detail, void* data);
 
@@ -57,6 +59,11 @@ int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *devAlias, void* data);
 */
 import "C"
+
+func init() {
+   // libvirt won't print to stderr
+   C.virSetErrorFunc(nil, C.virErrorFunc(unsafe.Pointer(C.virErrorFuncDummy)))
+}
 
 type VirConnection struct {
 	ptr C.virConnectPtr
