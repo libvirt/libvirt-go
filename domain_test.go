@@ -76,6 +76,25 @@ func TestGetDomainState(t *testing.T) {
 	}
 }
 
+func TestGetDomainID(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+
+	if err := dom.Create(); err != nil {
+		t.Error("Failed to create domain")
+	}
+
+	if id, err := dom.GetID(); id == ^uint(0) || err != nil {
+		dom.Destroy()
+		t.Error("Couldn't get domain ID")
+		return
+	}
+	dom.Destroy()
+}
+
 func TestGetDomainUUID(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {

@@ -199,6 +199,14 @@ func (d *VirDomain) GetState() ([]int, error) {
 	return []int{int(cState), int(cReason)}, nil
 }
 
+func (d *VirDomain) GetID() (uint, error) {
+	id := uint(C.virDomainGetID(d.ptr))
+	if id == ^uint(0) {
+		return id, GetLastError()
+	}
+	return id, nil
+}
+
 func (d *VirDomain) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)

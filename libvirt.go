@@ -61,8 +61,8 @@ int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
 import "C"
 
 func init() {
-   // libvirt won't print to stderr
-   C.virSetErrorFunc(nil, C.virErrorFunc(unsafe.Pointer(C.virErrorFuncDummy)))
+	// libvirt won't print to stderr
+	C.virSetErrorFunc(nil, C.virErrorFunc(unsafe.Pointer(C.virErrorFuncDummy)))
 }
 
 type VirConnection struct {
