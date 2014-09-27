@@ -292,7 +292,8 @@ const (
 	VIR_ERR_STORAGE_VOL_EXIST = C.VIR_ERR_STORAGE_VOL_EXIST
 
 	// given CPU is incompatible with host CPU
-	VIR_ERR_CPU_INCOMPATIBLE = C.VIR_ERR_CPU_INCOMPATIBLE
+	// added in libvirt 1.2.6
+	// VIR_ERR_CPU_INCOMPATIBLE = C.VIR_ERR_CPU_INCOMPATIBLE
 )
 
 // virErrorDomain
