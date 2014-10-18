@@ -53,12 +53,6 @@ func TestInvalidConnection(t *testing.T) {
 	}
 }
 
-func TestConnectionNilUri(t *testing.T) {
-	if _, err := NewVirConnection(""); err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestGetType(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
