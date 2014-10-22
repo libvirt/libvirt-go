@@ -5,6 +5,19 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+
+#ifndef VIR_FROM_BHYVE
+#define VIR_FROM_BHYVE 57
+#endif
+
+#ifndef VIR_FROM_CRYPTO
+#define VIR_FROM_CRYPTO 58
+#endif
+
+#ifndef VIR_FROM_FIREWALL
+#define VIR_FROM_FIREWALL 59
+#endif
+
 */
 import "C"
 
