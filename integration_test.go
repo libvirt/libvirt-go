@@ -822,3 +822,44 @@ func TestIntegrationDomainBlockStatsFlags(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestIntegrationDomainInterfaceStats(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.CloseConnection()
+
+	dom, err := defineTestLxcDomain(conn, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+	}()
+	const nwXml = `<interface type='network'>
+		<mac address='52:54:00:37:aa:c7'/>
+		<source network='default'/>
+		<model type='virtio'/>
+		</interface>`
+	if err := dom.AttachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := dom.Create(); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := dom.InterfaceStats("vnet0"); err != nil {
+		t.Error(err)
+	}
+
+	if err := dom.Destroy(); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := dom.DetachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+		t.Fatal(err)
+	}
+}

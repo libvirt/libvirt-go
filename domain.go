@@ -535,3 +535,40 @@ func (d *VirDomain) BlockStatsFlags(disk string, params *VirTypedParameters, nPa
 
 	return int(cParamsLen), nil
 }
+
+type VirDomainInterfaceStats struct {
+	RxBytes   int64
+	RxPackets int64
+	RxErrs    int64
+	RxDrop    int64
+	TxBytes   int64
+	TxPackets int64
+	TxErrs    int64
+	TxDrop    int64
+}
+
+func (d *VirDomain) InterfaceStats(path string) (VirDomainInterfaceStats, error) {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+
+	size := C.size_t(unsafe.Sizeof(C.struct__virDomainInterfaceStats{}))
+
+	cStats := (C.virDomainInterfaceStatsPtr)(C.malloc(size))
+	defer C.free(unsafe.Pointer(cStats))
+
+	result := C.virDomainInterfaceStats(d.ptr, cPath, (C.virDomainInterfaceStatsPtr)(cStats), size)
+
+	if result != 0 {
+		return VirDomainInterfaceStats{}, GetLastError()
+	}
+	return VirDomainInterfaceStats{
+		RxBytes:   int64(cStats.rx_bytes),
+		RxPackets: int64(cStats.rx_packets),
+		RxErrs:    int64(cStats.rx_errs),
+		RxDrop:    int64(cStats.rx_drop),
+		TxBytes:   int64(cStats.tx_bytes),
+		TxPackets: int64(cStats.tx_packets),
+		TxErrs:    int64(cStats.tx_errs),
+		TxDrop:    int64(cStats.tx_drop),
+	}, nil
+}
