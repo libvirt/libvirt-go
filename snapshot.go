@@ -23,6 +23,22 @@ func (s *VirDomainSnapshot) Free() error {
 	return nil
 }
 
+func (s *VirDomainSnapshot) Delete(flags uint32) error {
+	result := C.virDomainSnapshotDelete(s.ptr, C.uint(flags))
+	if result != 0 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (s *VirDomainSnapshot) RevertToSnapshot(flags uint32) error {
+	result := C.virDomainRevertToSnapshot(s.ptr, C.uint(flags))
+	if result != 0 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (d *VirDomain) CreateSnapshotXML(xml string, flags uint32) (VirDomainSnapshot, error) {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
