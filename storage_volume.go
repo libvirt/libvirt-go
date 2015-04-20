@@ -116,3 +116,19 @@ func (v *VirStorageVol) WipePattern(algorithm uint32, flags uint32) error {
 	}
 	return nil
 }
+
+func (v *VirStorageVol) Upload(stream *VirStream, offset, length uint64, flags uint32) error {
+	if C.virStorageVolUpload(v.ptr, stream.ptr, C.ulonglong(offset),
+		C.ulonglong(length), C.uint(flags)) == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (v *VirStorageVol) Download(stream *VirStream, offset, length uint64, flags uint32) error {
+	if C.virStorageVolDownload(v.ptr, stream.ptr, C.ulonglong(offset),
+		C.ulonglong(length), C.uint(flags)) == -1 {
+		return GetLastError()
+	}
+	return nil
+}

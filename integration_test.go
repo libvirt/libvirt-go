@@ -863,3 +863,100 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestStorageVolUploadDownload(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	poolPath, err := ioutil.TempDir("", "default-pool-test-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.RemoveAll(poolPath)
+	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
+                                          <name>default-pool-test-1</name>
+                                          <target>
+                                          <path>`+poolPath+`</path>
+                                          </target>
+                                          </pool>`, 0)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", poolPath), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+
+	data := []byte{1, 2, 3, 4, 5, 6}
+
+	// write above data to the vol
+	// 1. create a stream
+	stream, err := NewVirStream(&conn, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		stream.Free()
+	}()
+
+	// 2. set it up to upload from stream
+	if err := vol.Upload(stream, 0, uint64(len(data)), 0); err != nil {
+		stream.Abort()
+		t.Fatal(err)
+	}
+
+	// 3. do the actual writing
+	if n, err := stream.Write(data); err != nil || n != len(data) {
+		t.Fatal(err, n)
+	}
+
+	// 4. finish!
+	if err := stream.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	// read back the data
+	// 1. create a stream
+	downStream, err := NewVirStream(&conn, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		downStream.Free()
+	}()
+
+	// 2. set it up to download from stream
+	if err := vol.Download(downStream, 0, uint64(len(data)), 0); err != nil {
+		downStream.Abort()
+		t.Fatal(err)
+	}
+
+	// 3. do the actual reading
+	buf := make([]byte, 1024)
+	if n, err := downStream.Read(buf); err != nil || n != len(data) {
+		t.Fatal(err, n)
+	}
+
+	t.Logf("read back: %#v", buf[:len(data)])
+
+	// 4. finish!
+	if err := downStream.Close(); err != nil {
+		t.Fatal(err)
+	}
+}
