@@ -960,3 +960,34 @@ func TestStorageVolUploadDownload(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+/*func TestDomainMemoryStats(t *testing.T) {
+	conn, err := NewVirConnection("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer conn.CloseConnection()
+
+	dom, err := defineTestLxcDomain(conn, "")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Fatal(err)
+	}
+	defer dom.Destroy()
+
+	ms, err := dom.MemoryStats(1, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ms) != 1 {
+		t.Fatal("Should have got one result, got", len(ms))
+	}
+}*/

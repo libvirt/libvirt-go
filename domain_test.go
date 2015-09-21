@@ -481,3 +481,51 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Fatalf("Wanted image/*, got %s", mime)
 	}
 }
+
+func TestDomainGetVcpus(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	stats, err := dom.GetVcpus(1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(stats) != 1 {
+		t.Fatal("should have 1 cpu")
+	}
+
+	if stats[0].State != 1 {
+		t.Fatal("state should be 1")
+	}
+}
+
+func TestDomainGetVcpusFlags(t *testing.T) {
+	dom, conn := buildTestDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	num, err := dom.GetVcpusFlags(0)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if num != 1 {
+		t.Fatal("should have 1 cpu", num)
+	}
+}
