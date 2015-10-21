@@ -5,7 +5,7 @@ import (
 )
 
 /*
-#cgo LDFLAGS: -lvirt -ldl
+#cgo LDFLAGS: -lvirt 
 #include <libvirt/libvirt.h>
 */
 import "C"
