@@ -1,3 +1,7 @@
+# Deprecation
+
+With the upcoming changes to cgo in Go 1.6 this package will probably break. I will not be updating it, or addressing any issues or PRs in general. If somebody wants to take ownership of the repo, let me know.
+
 # libvirt-go
 
 [![Build Status](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go/status.svg?branch=master)](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go)
