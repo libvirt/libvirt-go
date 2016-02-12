@@ -1,6 +1,6 @@
-# Deprecation
+# Carving out the future
 
-With the upcoming changes to cgo in Go 1.6 this package will probably break. I will not be updating it, or addressing any issues or PRs in general. If somebody wants to take ownership of the repo, let me know.
+With the upcoming changes to cgo in Go 1.6 this package will probably break. We'll need to update it and crank through PRs together. Let's get things in :ship: shape.
 
 # libvirt-go
 
