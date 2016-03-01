@@ -239,6 +239,32 @@ func TestLookupDomainById(t *testing.T) {
 	defer dom.Free()
 }
 
+func TestLookupDomainByUUIDString(t *testing.T) {
+	conn := buildTestConnection()
+	defer conn.CloseConnection()
+	doms, err := conn.ListAllDomains(0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(doms)
+	if len(doms) == 0 {
+		t.Fatal("Length of ListAllDomains shouldn't be empty")
+		return
+	}
+	uuid, err := doms[0].GetUUIDString()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	dom, err := conn.LookupByUUIDString(uuid)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Free()
+}
+
 func TestLookupInvalidDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
