@@ -155,3 +155,45 @@ func TestStorageVolGetXMLDesc(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestPoolLookupByVolume(t *testing.T) {
+	pool, conn := buildTestStoragePool("")
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", "default-pool"), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+
+	retPool, err := vol.LookupPoolByVolume()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	poolUUID, err := pool.GetUUIDString()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	retPoolUUID, err := retPool.GetUUIDString()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if retPoolUUID != poolUUID {
+		t.Fail()
+	}
+}
