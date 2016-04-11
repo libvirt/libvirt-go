@@ -5,6 +5,14 @@ import (
 	"time"
 )
 
+func buildTestQEMUConnection() VirConnection {
+	conn, err := NewVirConnection("qemu:///system")
+	if err != nil {
+		panic(err)
+	}
+	return conn
+}
+
 func buildTestConnection() VirConnection {
 	conn, err := NewVirConnection("test:///default")
 	if err != nil {

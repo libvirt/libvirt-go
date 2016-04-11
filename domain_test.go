@@ -6,6 +6,20 @@ import (
 	"time"
 )
 
+func buildTestQEMUDomain() (VirDomain, VirConnection) {
+	conn := buildTestQEMUConnection()
+	dom, err := conn.DomainDefineXML(`<domain type="qemu">
+		<name>` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
+		<memory unit="KiB">128</memory>
+		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`)
+	if err != nil {
+		panic(err)
+	}
+	return dom, conn
+}
 func buildTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
@@ -527,5 +541,30 @@ func TestDomainGetVcpusFlags(t *testing.T) {
 
 	if num != 1 {
 		t.Fatal("should have 1 cpu", num)
+	}
+}
+
+func TestQemuMonitorCommand(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+        dom.Destroy()
+		dom.Undefine()
+		dom.Free()
+		conn.CloseConnection()
+	}()
+
+    if err := dom.Create(); err != nil {
+        t.Error(err)
+        return
+    }
+
+	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
+		t.Error(err)
+		return
 	}
 }
