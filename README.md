@@ -35,7 +35,7 @@ Previously there was support for libvirt 0.9.8 and below, however this is no lon
 
 ## Documentation
 
-* [api documentation for the bindings](http://godoc.org/github.com/alexzorin/libvirt-go)
+* [api documentation for the bindings](http://godoc.org/github.com/rgbkrk/libvirt-go)
 * [api documentation for libvirt](http://libvirt.org/html/libvirt-libvirt.html)
 
 ## Contributing
