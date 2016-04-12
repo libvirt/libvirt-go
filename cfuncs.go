@@ -1,5 +1,3 @@
-//+build !go1.6
-
 package libvirt
 
 /*
@@ -9,7 +7,7 @@ package libvirt
  */
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -95,6 +93,17 @@ int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *devAlias, void *data)
 {
     return domainEventDeviceRemovedCallback(c, d, devAlias, data);
+}
+
+void freeGoCallback_cgo(void* goCallbackId) {
+   freeCallbackId((size_t)goCallbackId);
+}
+
+int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
+						                             int eventID, virConnectDomainEventGenericCallback cb,
+                                         int goCallbackId) {
+    void* id = (void*)0 + goCallbackId; // Hack to silence the warning
+    return virConnectDomainEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
 }
 */
 import "C"

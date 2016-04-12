@@ -1,5 +1,3 @@
-//+build !go1.6
-
 package libvirt
 
 import (
@@ -79,9 +77,24 @@ func TestDomainEventRegister(t *testing.T) {
 		}
 	}()
 
+	// Check that the internal context entry was added, and that there only is
+	// one.
+	goCallbackLock.Lock()
+	if len(goCallbacks) != 1 {
+		t.Error("goCallbacks should hold one entry")
+	}
+	goCallbackLock.Unlock()
+
 	// Deregister the event
 	if ret := conn.DomainEventDeregister(callbackId); ret < 0 {
 		t.Fatal("Event deregistration failed")
 	}
 	callbackId = -1 // Don't deregister twice
+
+	// Check that the internal context entries was removed
+	goCallbackLock.Lock()
+	if len(goCallbacks) > 0 {
+		t.Error("goCallbacks entry wasn't removed")
+	}
+	goCallbackLock.Unlock()
 }
