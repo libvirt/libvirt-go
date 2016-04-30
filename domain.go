@@ -137,6 +137,17 @@ func (d *VirDomain) IsActive() (bool, error) {
 	return false, nil
 }
 
+func (d *VirDomain) IsPersistent() (bool, error) {
+	result := C.virDomainIsPersistent(d.ptr)
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
 func (d *VirDomain) SetAutostart(autostart bool) error {
 	var cAutostart C.int
 	switch autostart {
