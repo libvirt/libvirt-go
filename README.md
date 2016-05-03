@@ -1,7 +1,3 @@
-# Carving out the future
-
-Go 1.6 is incompatible with libvirt's implementation of Domain Events (those things that callback to your code to let you know something changed in a domain's state), so builds of this under golang 1.6 will not include Domain Events unless someone comes up with a workaround.
-
 # libvirt-go
 
 [![Build Status](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go/status.svg?branch=master)](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go)
