@@ -612,3 +612,26 @@ func TestQemuMonitorCommand(t *testing.T) {
 		return
 	}
 }
+
+func TestDomainCreateWithFlags(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+		dom.Undefine()
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.CreateWithFlags(VIR_DOMAIN_START_PAUSED); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+	state, err := dom.GetState()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if state[0] != VIR_DOMAIN_PAUSED {
+		t.Fatalf("Domain should be paused")
+	}
+}
+

@@ -102,6 +102,14 @@ func (d *VirDomain) Create() error {
 	return nil
 }
 
+func (d *VirDomain) CreateWithFlags(flags uint) error {
+	result := C.virDomainCreateWithFlags(d.ptr, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (d *VirDomain) Destroy() error {
 	result := C.virDomainDestroy(d.ptr)
 	if result == -1 {
