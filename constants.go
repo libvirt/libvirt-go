@@ -384,6 +384,43 @@ const (
 	VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE = C.VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE
 )
 
+// virDomainRunningReason
+const (
+	VIR_DOMAIN_RUNNING_UNKNOWN            = C.VIR_DOMAIN_RUNNING_UNKNOWN
+	VIR_DOMAIN_RUNNING_BOOTED             = C.VIR_DOMAIN_RUNNING_BOOTED             /* normal startup from boot */
+	VIR_DOMAIN_RUNNING_MIGRATED           = C.VIR_DOMAIN_RUNNING_MIGRATED           /* migrated from another host */
+	VIR_DOMAIN_RUNNING_RESTORED           = C.VIR_DOMAIN_RUNNING_RESTORED           /* restored from a state file */
+	VIR_DOMAIN_RUNNING_FROM_SNAPSHOT      = C.VIR_DOMAIN_RUNNING_FROM_SNAPSHOT      /* restored from snapshot */
+	VIR_DOMAIN_RUNNING_UNPAUSED           = C.VIR_DOMAIN_RUNNING_UNPAUSED           /* returned from paused state */
+	VIR_DOMAIN_RUNNING_MIGRATION_CANCELED = C.VIR_DOMAIN_RUNNING_MIGRATION_CANCELED /* returned from migration */
+	VIR_DOMAIN_RUNNING_SAVE_CANCELED      = C.VIR_DOMAIN_RUNNING_SAVE_CANCELED      /* returned from failed save process */
+	VIR_DOMAIN_RUNNING_WAKEUP             = C.VIR_DOMAIN_RUNNING_WAKEUP             /* returned from pmsuspended due to wakeup event */
+	VIR_DOMAIN_RUNNING_CRASHED            = C.VIR_DOMAIN_RUNNING_CRASHED            /* resumed from crashed */
+)
+
+// virDomainPausedReason
+const (
+	VIR_DOMAIN_PAUSED_UNKNOWN       = C.VIR_DOMAIN_PAUSED_UNKNOWN       /* the reason is unknown */
+	VIR_DOMAIN_PAUSED_USER          = C.VIR_DOMAIN_PAUSED_USER          /* paused on user request */
+	VIR_DOMAIN_PAUSED_MIGRATION     = C.VIR_DOMAIN_PAUSED_MIGRATION     /* paused for offline migration */
+	VIR_DOMAIN_PAUSED_SAVE          = C.VIR_DOMAIN_PAUSED_SAVE          /* paused for save */
+	VIR_DOMAIN_PAUSED_DUMP          = C.VIR_DOMAIN_PAUSED_DUMP          /* paused for offline core dump */
+	VIR_DOMAIN_PAUSED_IOERROR       = C.VIR_DOMAIN_PAUSED_IOERROR       /* paused due to a disk I/O error */
+	VIR_DOMAIN_PAUSED_WATCHDOG      = C.VIR_DOMAIN_PAUSED_WATCHDOG      /* paused due to a watchdog event */
+	VIR_DOMAIN_PAUSED_FROM_SNAPSHOT = C.VIR_DOMAIN_PAUSED_FROM_SNAPSHOT /* paused after restoring from snapshot */
+	VIR_DOMAIN_PAUSED_SHUTTING_DOWN = C.VIR_DOMAIN_PAUSED_SHUTTING_DOWN /* paused during shutdown process */
+	VIR_DOMAIN_PAUSED_SNAPSHOT      = C.VIR_DOMAIN_PAUSED_SNAPSHOT      /* paused while creating a snapshot */
+	VIR_DOMAIN_PAUSED_CRASHED       = C.VIR_DOMAIN_PAUSED_CRASHED       /* paused due to a guest crash */
+)
+
+// virDomainXMLFlags
+const (
+	VIR_DOMAIN_XML_SECURE     = C.VIR_DOMAIN_XML_SECURE     /* dump security sensitive information too */
+	VIR_DOMAIN_XML_INACTIVE   = C.VIR_DOMAIN_XML_INACTIVE   /* dump inactive domain information */
+	VIR_DOMAIN_XML_UPDATE_CPU = C.VIR_DOMAIN_XML_UPDATE_CPU /* update guest CPU requirements according to host CPU */
+	VIR_DOMAIN_XML_MIGRATABLE = C.VIR_DOMAIN_XML_MIGRATABLE /* dump XML suitable for migration */
+)
+
 /*
  * QMP has two different kinds of ways to talk to QEMU. One is legacy (HMP,
  * or 'human' monitor protocol. The default is QMP, which is all-JSON.
