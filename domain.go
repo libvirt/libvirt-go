@@ -522,6 +522,16 @@ func (d *VirDomain) DetachDeviceFlags(xml string, flags uint) error {
 	return nil
 }
 
+func (d *VirDomain) UpdateDeviceFlags(xml string, flags uint) error {
+	cXml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cXml))
+	result := C.virDomainUpdateDeviceFlags(d.ptr, cXml, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (d *VirDomain) Screenshot(stream *VirStream, screen, flags uint) (string, error) {
 	cType := C.virDomainScreenshot(d.ptr, stream.ptr, C.uint(screen), C.uint(flags))
 	if cType == nil {
