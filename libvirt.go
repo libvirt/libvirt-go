@@ -72,6 +72,10 @@ func GetLastError() VirError {
 	return virErr
 }
 
+func (c *VirConnection) SetPtr(ptr unsafe.Pointer) {
+	c.ptr = C.virConnectPtr(ptr)
+}
+
 func (c *VirConnection) CloseConnection() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
