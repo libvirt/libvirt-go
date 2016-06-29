@@ -472,6 +472,16 @@ func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 	return VirNetwork{ptr: ptr}, nil
 }
 
+func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (VirNetwork, error) {
+	cUuid := C.CString(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virNetworkLookupByUUIDString(c.ptr, cUuid)
+	if ptr == nil {
+		return VirNetwork{}, GetLastError()
+	}
+	return VirNetwork{ptr: ptr}, nil
+}
+
 func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
 	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {

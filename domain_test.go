@@ -620,18 +620,37 @@ func TestDomainCreateWithFlags(t *testing.T) {
 		dom.Free()
 		conn.CloseConnection()
 	}()
+
 	if err := dom.CreateWithFlags(VIR_DOMAIN_START_PAUSED); err != nil {
+		state, err := dom.GetState()
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
+		if state[0] != VIR_DOMAIN_PAUSED {
+			t.Fatalf("Domain should be paused")
+		}
+	}
+}
+
+func TestDomainListAllInterfaceAddresses(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+		dom.Free()
+		conn.CloseConnection()
+	}()
+	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
 	}
 	defer dom.Destroy()
-	state, err := dom.GetState()
+	ifaces, err := dom.ListAllInterfaceAddresses(0)
 	if err != nil {
-		t.Error(err)
-		return
+		t.Fatal(err)
 	}
-	if state[0] != VIR_DOMAIN_PAUSED {
-		t.Fatalf("Domain should be paused")
+
+	if len(ifaces) != 2 {
+		t.Fatal("should have 0 interfaces", len(ifaces))
 	}
 }
-

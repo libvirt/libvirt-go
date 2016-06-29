@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -52,6 +52,13 @@ const (
 	VIR_DOMAIN_VCPU_LIVE    = C.VIR_DOMAIN_VCPU_LIVE
 	VIR_DOMAIN_VCPU_MAXIMUM = C.VIR_DOMAIN_VCPU_MAXIMUM
 	VIR_DOMAIN_VCPU_GUEST   = C.VIR_DOMAIN_VCPU_GUEST
+)
+
+// virDomainModificationImpact
+const (
+	VIR_DOMAIN_AFFECT_CONFIG  = C.VIR_DOMAIN_AFFECT_CONFIG
+	VIR_DOMAIN_AFFECT_CURRENT = C.VIR_DOMAIN_AFFECT_CURRENT
+	VIR_DOMAIN_AFFECT_LIVE    = C.VIR_DOMAIN_AFFECT_LIVE
 )
 
 // virDomainMemoryModFlags
@@ -433,5 +440,17 @@ const (
  */
 const (
 	VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT = 0
-	VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP = (1 << 0)
+	VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP     = (1 << 0)
+)
+
+// virDomainInterfaceAddressesSource
+const (
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE = 0
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = 1
+)
+
+// virIPAddrType
+const (
+	VIR_IP_ADDR_TYPE_IPV4 = 0
+	VIR_IP_ADDR_TYPE_IPV6 = 1
 )
