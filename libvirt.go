@@ -466,6 +466,16 @@ func (c *VirConnection) NetworkDefineXML(xmlConfig string) (VirNetwork, error) {
 	return VirNetwork{ptr: ptr}, nil
 }
 
+func (c *VirConnection) NetworkCreateXML(xmlConfig string) (VirNetwork, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virNetworkCreateXML(c.ptr, cXml)
+	if ptr == nil {
+		return VirNetwork{}, GetLastError()
+	}
+	return VirNetwork{ptr: ptr}, nil
+}
+
 func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
