@@ -254,6 +254,43 @@ func TestStorageVolCreateDelete(t *testing.T) {
 	}
 }
 
+func TestStorageVolCreateFromDelete(t *testing.T) {
+	pool, conn := buildTestStoragePool("")
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+		conn.CloseConnection()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", "default-pool"), 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer vol.Free()
+	clonexml := `
+	<volume>
+		<name>clone-test</name>
+		<capacity unit="KiB">128</capacity>
+		<format type="qcow2"/>
+	</volume>
+	`
+	clone, err := pool.StorageVolCreateXMLFrom(clonexml, vol, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer clone.Free()
+	if err := clone.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+		t.Fatal(err)
+	}
+	if err := vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestLookupStorageVolByName(t *testing.T) {
 	pool, conn := buildTestStoragePool("")
 	defer func() {
