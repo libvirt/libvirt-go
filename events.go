@@ -60,8 +60,8 @@ int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *devAlias, void* data);
 
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
-						                             int eventID, virConnectDomainEventGenericCallback cb,
-                                         int goCallbackId);
+                                         int eventID, virConnectDomainEventGenericCallback cb,
+                                         long goCallbackId);
 */
 import "C"
 
@@ -443,7 +443,7 @@ func (c *VirConnection) DomainEventRegister(dom VirDomain,
 	}
 	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, dom.ptr, C.VIR_DOMAIN_EVENT_ID_LIFECYCLE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
-		C.int(goCallBackId))
+		C.long(goCallBackId))
 	if ret == -1 {
 		goCallbackLock.Lock()
 		delete(goCallbacks, goCallBackId)
