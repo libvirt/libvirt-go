@@ -96,13 +96,13 @@ int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
 }
 
 void freeGoCallback_cgo(void* goCallbackId) {
-   freeCallbackId((size_t)goCallbackId);
+   freeCallbackId((long)goCallbackId);
 }
 
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
-						                             int eventID, virConnectDomainEventGenericCallback cb,
-                                         int goCallbackId) {
-    void* id = (void*)0 + goCallbackId; // Hack to silence the warning
+                                         int eventID, virConnectDomainEventGenericCallback cb,
+                                         long goCallbackId) {
+    void* id = (void*)goCallbackId;
     return virConnectDomainEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
 }
 */
