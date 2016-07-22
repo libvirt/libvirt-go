@@ -6,12 +6,6 @@ import (
 )
 
 /*
- * Golang 1.6 doesn't support C pointers to go memory.
- * A hacky-solution might be some multi-threaded approach to support domain events, but let's make it work
- * without domain events for now.
- */
-
-/*
 #cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 
