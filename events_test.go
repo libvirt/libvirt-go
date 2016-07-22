@@ -12,7 +12,10 @@ func TestDomainEventRegister(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
 		if callbackId >= 0 {
-			conn.DomainEventDeregister(callbackId)
+			ret := conn.DomainEventDeregister(callbackId)
+			if ret != 0 {
+				t.Errorf("got %d on DomainEventDeregister instead of 0", ret)
+			}
 		}
 		conn.CloseConnection()
 	}()
