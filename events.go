@@ -363,9 +363,10 @@ type domainCallbackContext struct {
 	f  func()
 }
 
+const firstGoCallbackId int = 100 // help catch some additional errors during test
 var goCallbackLock sync.RWMutex
 var goCallbacks = make(map[int]*domainCallbackContext)
-var nextGoCallbackId int
+var nextGoCallbackId int = firstGoCallbackId
 
 //export freeCallbackId
 func freeCallbackId(goCallbackId int) {
@@ -444,7 +445,7 @@ func (c *VirConnection) DomainEventRegister(dom VirDomain,
 		goCallbackLock.Unlock()
 		return -1
 	}
-	return goCallBackId
+	return int(ret)
 }
 
 func (c *VirConnection) DomainEventDeregister(callbackId int) int {
