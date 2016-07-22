@@ -38,7 +38,7 @@ func buildTestDomain() (VirDomain, VirConnection) {
 func buildTransientTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainCreateXML(`<domain type="test">
-		<name>` + time.Now().String() + `</name>
+		<name>`+time.Now().String()+`</name>
 		<memory unit="KiB">8192</memory>
 		<os>
 			<type>hvm</type>
@@ -591,16 +591,16 @@ func TestDomainGetVcpusFlags(t *testing.T) {
 func TestQemuMonitorCommand(t *testing.T) {
 	dom, conn := buildTestQEMUDomain()
 	defer func() {
-        dom.Destroy()
+		dom.Destroy()
 		dom.Undefine()
 		dom.Free()
 		conn.CloseConnection()
 	}()
 
-    if err := dom.Create(); err != nil {
-        t.Error(err)
-        return
-    }
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
 
 	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
 		t.Error(err)
@@ -650,7 +650,7 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(ifaces) != 2 {
+	if len(ifaces) != 0 {
 		t.Fatal("should have 0 interfaces", len(ifaces))
 	}
 }
