@@ -1,6 +1,7 @@
 package libvirt
 
 /*
+#cgo CFLAGS: -Wno-implicit-function-declaration
 #cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
