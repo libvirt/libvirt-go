@@ -496,6 +496,16 @@ func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (VirNetwork, erro
 	return VirNetwork{ptr: ptr}, nil
 }
 
+func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
+	res := int(C.virConnectSetKeepAlive(c.ptr, C.int(interval), C.uint(count)))
+	switch res {
+	case 0:
+		return nil
+	default:
+		return GetLastError()
+	}
+}
+
 func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
 	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {
