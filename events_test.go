@@ -84,7 +84,7 @@ func TestDomainEventRegister(t *testing.T) {
 	// one.
 	goCallbackLock.Lock()
 	if len(goCallbacks) != 1 {
-		t.Error("goCallbacks should hold one entry")
+		t.Errorf("goCallbacks should hold one entry, got %+v", goCallbacks)
 	}
 	goCallbackLock.Unlock()
 
@@ -97,7 +97,7 @@ func TestDomainEventRegister(t *testing.T) {
 	// Check that the internal context entries was removed
 	goCallbackLock.Lock()
 	if len(goCallbacks) > 0 {
-		t.Error("goCallbacks entry wasn't removed")
+		t.Errorf("goCallbacks entry wasn't removed: %+v", goCallbacks)
 	}
 	goCallbackLock.Unlock()
 }
