@@ -1,0 +1,32 @@
+language: go
+os: linux
+dist: trusty
+sudo: require
+
+go:
+  - 1.5
+  - 1.6
+
+env:
+  - LIBVIRT=1.2.12
+  - LIBVIRT=1.2.14
+
+install:
+  - sudo apt-get -qqy build-dep libvirt
+  - sudo apt-get -qqy install curl qemu-system-x86
+  - sudo mkdir -p /usr/src && sudo chown $(id -u) /usr/src
+  - curl -s https://libvirt.org/sources/libvirt-${LIBVIRT}.tar.gz | tar -C /usr/src -zxf -
+  - pushd /usr/src/libvirt-${LIBVIRT}
+  - |
+        ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc \
+                    --without-polkit \
+                    --without-esx --without-vbox --without-xen --without-libxl \
+                    --with-qemu --with-lxc
+  - make
+  - sudo make install
+  - sudo libvirtd -d
+  - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
+  - popd
+
+script:
+  go test -timeout 1m -v

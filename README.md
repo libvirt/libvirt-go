@@ -1,6 +1,4 @@
-# libvirt-go
-
-[![Build Status](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go/status.svg?branch=master)](http://ci.serversaurus.com/github.com/alexzorin/libvirt-go)
+# libvirt-go [![Build Status](https://travis-ci.org/rgbkrk/libvirt-go.svg?branch=master)](https://travis-ci.org/rgbkrk/libvirt-go) [![GoDoc](https://godoc.org/gopkg.in/alexzorin/libvirt-go.v2?status.svg)](http://godoc.org/gopkg.in/alexzorin/libvirt-go.v2)
 
 Go bindings for libvirt.
 
