@@ -100,5 +100,10 @@ int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
     void* id = (void*)goCallbackId;
     return virConnectDomainEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
 }
+
+void errorGlobalCallback_cgo(void *userData, virErrorPtr error) {
+    globalErrorCallback(error);
+}
+
 */
 import "C"

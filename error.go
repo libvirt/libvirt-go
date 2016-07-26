@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -18,10 +18,15 @@ package libvirt
 #define VIR_FROM_FIREWALL 59
 #endif
 
+void errorGlobalCallback_cgo(void *userData, virErrorPtr error);
 */
 import "C"
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+	"unsafe"
+)
 
 // virErrorLevel
 const (
@@ -501,4 +506,45 @@ type VirError struct {
 func (err VirError) Error() string {
 	return fmt.Sprintf("[Code-%d] [Domain-%d] %s",
 		err.Code, err.Domain, err.Message)
+}
+
+// Callback handling for errors
+type ErrorCallback func(error VirError, opaque func())
+type errorContext struct {
+	cb ErrorCallback
+	f  func()
+}
+
+func newError(err C.virErrorPtr) VirError {
+	return VirError{
+		Code:    int(err.code),
+		Domain:  int(err.domain),
+		Message: C.GoString(err.message),
+		Level:   int(err.level),
+	}
+}
+
+var globalErrorContext errorContext
+var globalErrorMutex sync.RWMutex
+
+func SetErrorFunc(cb ErrorCallback, opaque func()) {
+	globalErrorMutex.Lock()
+	defer globalErrorMutex.Unlock()
+	globalErrorContext = errorContext{
+		cb: cb,
+		f:  opaque,
+	}
+}
+
+//export globalErrorCallback
+func globalErrorCallback(err C.virErrorPtr) {
+	globalErrorMutex.RLock()
+	defer globalErrorMutex.RUnlock()
+	if globalErrorContext.cb != nil {
+		globalErrorContext.cb(newError(err), globalErrorContext.f)
+	}
+}
+
+func init() {
+	C.virSetErrorFunc(nil, C.virErrorFunc(unsafe.Pointer(C.errorGlobalCallback_cgo)))
 }

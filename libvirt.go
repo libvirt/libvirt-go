@@ -12,20 +12,8 @@ import (
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
-
-void virErrorFuncDummy(void *userData, virErrorPtr error);
-
-void virErrorFuncDummy(void *userData, virErrorPtr error)
-{
-}
-
 */
 import "C"
-
-func init() {
-	// libvirt won't print to stderr
-	C.virSetErrorFunc(nil, C.virErrorFunc(unsafe.Pointer(C.virErrorFuncDummy)))
-}
 
 type VirConnection struct {
 	ptr C.virConnectPtr
@@ -60,14 +48,8 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 }
 
 func GetLastError() VirError {
-	var virErr VirError
 	err := C.virGetLastError()
-
-	virErr.Code = int(err.code)
-	virErr.Domain = int(err.domain)
-	virErr.Message = C.GoString(err.message)
-	virErr.Level = int(err.level)
-
+	virErr := newError(err)
 	C.virResetError(err)
 	return virErr
 }
