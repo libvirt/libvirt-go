@@ -75,6 +75,29 @@ func TestGetType(t *testing.T) {
 	}
 }
 
+func TestSetKeepalive(t *testing.T) {
+	EventRegisterDefaultImpl()        // We need the event loop for keepalive
+	conn := buildTestQEMUConnection() // The test driver doesn't support keepalives
+	defer conn.CloseConnection()
+	if err := conn.SetKeepAlive(1, 1); err != nil {
+		t.Error(err)
+		return
+	}
+
+	// It should block until we have a keepalive message
+	done := make(chan struct{})
+	timeout := time.After(5 * time.Second)
+	go func() {
+		EventRunDefaultImpl()
+		close(done)
+	}()
+	select {
+	case <-done: // OK!
+	case <-timeout:
+		t.Fatalf("timeout reached while waiting for keepalive")
+	}
+}
+
 func TestIsAlive(t *testing.T) {
 	conn := buildTestConnection()
 	defer conn.CloseConnection()
