@@ -101,9 +101,22 @@ int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
     return virConnectDomainEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
 }
 
-void errorGlobalCallback_cgo(void *userData, virErrorPtr error) {
+void errorGlobalCallback_cgo(void *userData, virErrorPtr error)
+{
     globalErrorCallback(error);
 }
+
+void errorConnCallback_cgo(void *userData, virErrorPtr error)
+{
+    connErrorCallback((long)userData, error);
+}
+
+void virConnSetErrorFunc_cgo(virConnectPtr c, long goCallbackId, virErrorFunc cb)
+{
+    void* id = (void*)goCallbackId;
+    virConnSetErrorFunc(c, id, cb);
+}
+
 
 */
 import "C"

@@ -19,6 +19,8 @@ package libvirt
 #endif
 
 void errorGlobalCallback_cgo(void *userData, virErrorPtr error);
+void errorConnCallback_cgo(void *userData, virErrorPtr error);
+void virConnSetErrorFunc_cgo(virConnectPtr c, long goCallbackId, virErrorFunc cb);
 */
 import "C"
 
@@ -542,6 +544,37 @@ func globalErrorCallback(err C.virErrorPtr) {
 	defer globalErrorMutex.RUnlock()
 	if globalErrorContext.cb != nil {
 		globalErrorContext.cb(newError(err), globalErrorContext.f)
+	}
+}
+
+func (c *VirConnection) SetErrorFunc(cb ErrorCallback, opaque func()) {
+	c.UnsetErrorFunc()
+	context := &errorContext{
+		cb: cb,
+		f:  opaque,
+	}
+	goCallbackId := registerCallbackId(context)
+	callbackPtr := unsafe.Pointer(C.errorConnCallback_cgo)
+	C.virConnSetErrorFunc_cgo(c.ptr, C.long(goCallbackId), C.virErrorFunc(callbackPtr))
+	c.errCallbackId = &goCallbackId
+}
+
+func (c *VirConnection) UnsetErrorFunc() {
+	C.virConnSetErrorFunc(c.ptr, nil, nil)
+	if c.errCallbackId != nil {
+		freeCallbackId(*c.errCallbackId)
+		c.errCallbackId = nil
+	}
+}
+
+//export connErrorCallback
+func connErrorCallback(goCallbackId int, err C.virErrorPtr) {
+	ctx := getCallbackId(goCallbackId)
+	switch cctx := ctx.(type) {
+	case *errorContext:
+		cctx.cb(newError(err), cctx.f)
+	default:
+		panic("Inappropriate callback type called")
 	}
 }
 

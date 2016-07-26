@@ -375,8 +375,7 @@ func freeCallbackId(goCallbackId int) {
 	goCallbackLock.Unlock()
 }
 
-func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
-	event interface{}) int {
+func getCallbackId(goCallbackId int) interface{} {
 	goCallbackLock.RLock()
 	ctx := goCallbacks[goCallbackId]
 	goCallbackLock.RUnlock()
@@ -384,6 +383,12 @@ func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
 		// If this happens there must be a bug in libvirt
 		panic("Callback arrived after freeCallbackId was called")
 	}
+	return ctx
+}
+
+func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
+	event interface{}) int {
+	ctx := getCallbackId(goCallbackId)
 	switch cctx := ctx.(type) {
 	case *domainCallbackContext:
 		return (*cctx.cb)(c, d, event, cctx.f)

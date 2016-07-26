@@ -16,7 +16,8 @@ import (
 import "C"
 
 type VirConnection struct {
-	ptr C.virConnectPtr
+	ptr           C.virConnectPtr
+	errCallbackId *int
 }
 
 func NewVirConnection(uri string) (VirConnection, error) {
@@ -59,6 +60,7 @@ func (c *VirConnection) SetPtr(ptr unsafe.Pointer) {
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
+	c.UnsetErrorFunc()
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return result, GetLastError()
