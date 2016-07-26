@@ -401,6 +401,9 @@ func registerCallbackId(ctx interface{}) int {
 	goCallbackLock.Lock()
 	goCallBackId := nextGoCallbackId
 	nextGoCallbackId++
+	for goCallbacks[nextGoCallbackId] != nil {
+		nextGoCallbackId++
+	}
 	goCallbacks[goCallBackId] = ctx
 	goCallbackLock.Unlock()
 	return goCallBackId
