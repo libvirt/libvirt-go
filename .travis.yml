@@ -8,8 +8,8 @@ go:
   - 1.6
 
 env:
-  - LIBVIRT=1.2.12
-  - LIBVIRT=1.2.14
+  - LIBVIRT=1.2.2  TAGS=""
+  - LIBVIRT=1.2.14 TAGS="libvirt.1.2.14"
 
 install:
   - sudo apt-get -qqy build-dep libvirt
@@ -29,4 +29,4 @@ install:
   - popd
 
 script:
-  go test -timeout 1m -v
+  go test -timeout 1m -tags "${TAGS}" -v
