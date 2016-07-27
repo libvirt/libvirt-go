@@ -10,7 +10,9 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 	dom, conn := buildTestQEMUDomain()
 	defer func() {
 		dom.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
