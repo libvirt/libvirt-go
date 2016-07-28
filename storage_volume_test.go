@@ -31,7 +31,9 @@ func TestStorageVolGetInfo(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -57,7 +59,9 @@ func TestStorageVolGetKey(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -83,7 +87,9 @@ func TestStorageVolGetName(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -109,7 +115,9 @@ func TestStorageVolGetPath(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -135,7 +143,9 @@ func TestStorageVolGetXMLDesc(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -161,7 +171,9 @@ func TestPoolLookupByVolume(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 	if err := pool.Create(0); err != nil {
 		t.Error(err)
@@ -182,6 +194,7 @@ func TestPoolLookupByVolume(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer retPool.Free()
 
 	poolUUID, err := pool.GetUUIDString()
 	if err != nil {

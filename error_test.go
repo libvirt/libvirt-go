@@ -35,7 +35,14 @@ func TestConnectionErrorCallback(t *testing.T) {
 		errors = append(errors, err)
 		f()
 	})
+
 	conn := buildTestConnection()
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+
 	conn.SetErrorFunc(callback, func() {
 		nbErrors++
 	})
@@ -46,6 +53,7 @@ func TestConnectionErrorCallback(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	defer domain.Free()
 	err = domain.SetMemory(100000000000)
 	if err == nil {
 		t.Fatalf("Was expecting an error when setting memory to too high value")

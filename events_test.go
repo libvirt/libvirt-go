@@ -17,7 +17,9 @@ func TestDomainEventRegister(t *testing.T) {
 				t.Errorf("got %d on DomainEventDeregister instead of 0", ret)
 			}
 		}
-		conn.CloseConnection()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
 	}()
 
 	nodom := VirDomain{}
