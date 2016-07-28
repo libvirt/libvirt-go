@@ -563,7 +563,7 @@ func (c *VirConnection) SetErrorFunc(cb ErrorCallback, opaque func()) {
 func (c *VirConnection) UnsetErrorFunc() {
 	C.virConnSetErrorFunc(c.ptr, nil, nil)
 	connData := getConnectionData(c)
-	if connData != nil && connData.errCallbackId != nil {
+	if connData.errCallbackId != nil {
 		freeCallbackId(*connData.errCallbackId)
 		connData.errCallbackId = nil
 	}

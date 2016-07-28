@@ -68,6 +68,82 @@ func TestInvalidConnection(t *testing.T) {
 	}
 }
 
+func TestMultipleCloseCallback(t *testing.T) {
+	nbCall1 := 0
+	nbCall2 := 0
+	nbCall3 := 0
+	conn := buildTestQEMUConnection()
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+		if nbCall1 != 0 || nbCall2 != 0 || nbCall3 != 1 {
+			t.Errorf("Wrong number of calls to callback, got %v, expected %v",
+				[]int{nbCall1, nbCall2, nbCall3},
+				[]int{0, 0, 1})
+		}
+	}()
+
+	callback := func(conn VirConnection, reason int, opaque func()) {
+		if reason != VIR_CONNECT_CLOSE_REASON_KEEPALIVE {
+			t.Errorf("Expected close reason to be %d, got %d",
+				VIR_CONNECT_CLOSE_REASON_KEEPALIVE, reason)
+		}
+		opaque()
+	}
+	err := conn.RegisterCloseCallback(callback, func() {
+		nbCall1++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.RegisterCloseCallback(callback, func() {
+		nbCall2++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.RegisterCloseCallback(callback, func() {
+		nbCall3++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+
+	// To trigger a disconnect, we use a keepalive
+	if err := conn.SetKeepAlive(1, 1); err != nil {
+		t.Fatalf("Unable to enable keeplive: %+v", err)
+	}
+	EventRunDefaultImpl()
+	time.Sleep(2 * time.Second)
+	EventRunDefaultImpl()
+}
+
+func TestUnregisterCloseCallback(t *testing.T) {
+	nbCall := 0
+	conn := buildTestQEMUConnection()
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+		if nbCall != 0 {
+			t.Errorf("Expected no call to close callback, got %d", nbCall)
+		}
+	}()
+
+	callback := func(conn VirConnection, reason int, opaque func()) {
+		nbCall++
+	}
+	err := conn.RegisterCloseCallback(callback, nil)
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.UnregisterCloseCallback()
+	if err != nil {
+		t.Fatalf("Unable to unregister close callback: %+v", err)
+	}
+}
+
 func TestGetType(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {

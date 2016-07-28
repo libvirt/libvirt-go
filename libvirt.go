@@ -13,6 +13,9 @@ import (
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+
+void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque);
+int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
 */
 import "C"
 
@@ -22,7 +25,8 @@ type VirConnection struct {
 
 // Additional data associated to the connection.
 type virConnectionData struct {
-	errCallbackId *int
+	errCallbackId   *int
+	closeCallbackId *int
 }
 
 var connections map[C.virConnectPtr]*virConnectionData
@@ -98,6 +102,7 @@ func GetLastError() VirError {
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
+	c.UnregisterCloseCallback() // Mandatory, otherwise, we are leaking the connection
 	c.UnsetErrorFunc()
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
@@ -108,6 +113,58 @@ func (c *VirConnection) CloseConnection() (int, error) {
 		releaseConnectionData(c)
 	}
 	return result, nil
+}
+
+type CloseCallback func(conn VirConnection, reason int, opaque func())
+type closeContext struct {
+	cb CloseCallback
+	f  func()
+}
+
+// Register a close callback for the given destination. Only one
+// callback per connection is allowed. Setting a callback will remove
+// the previous one.
+func (c *VirConnection) RegisterCloseCallback(cb CloseCallback, opaque func()) error {
+	c.UnregisterCloseCallback()
+	context := &closeContext{
+		cb: cb,
+		f:  opaque,
+	}
+	goCallbackId := registerCallbackId(context)
+	callbackPtr := unsafe.Pointer(C.closeCallback_cgo)
+	res := C.virConnectRegisterCloseCallback_cgo(c.ptr, C.virConnectCloseFunc(callbackPtr), C.long(goCallbackId))
+	if res != 0 {
+		freeCallbackId(goCallbackId)
+		return GetLastError()
+	}
+	connData := getConnectionData(c)
+	connData.closeCallbackId = &goCallbackId
+	return nil
+}
+
+func (c *VirConnection) UnregisterCloseCallback() error {
+	connData := getConnectionData(c)
+	if connData.closeCallbackId == nil {
+		return nil
+	}
+	callbackPtr := unsafe.Pointer(C.closeCallback_cgo)
+	res := C.virConnectUnregisterCloseCallback(c.ptr, C.virConnectCloseFunc(callbackPtr))
+	if res != 0 {
+		return GetLastError()
+	}
+	connData.closeCallbackId = nil
+	return nil
+}
+
+//export closeCallback
+func closeCallback(conn C.virConnectPtr, reason int, goCallbackId int) {
+	ctx := getCallbackId(goCallbackId)
+	switch cctx := ctx.(type) {
+	case *closeContext:
+		cctx.cb(VirConnection{ptr: conn}, reason, cctx.f)
+	default:
+		panic("Inappropriate callback type called")
+	}
 }
 
 func (c *VirConnection) GetCapabilities() (string, error) {
