@@ -556,14 +556,16 @@ func (c *VirConnection) SetErrorFunc(cb ErrorCallback, opaque func()) {
 	goCallbackId := registerCallbackId(context)
 	callbackPtr := unsafe.Pointer(C.errorConnCallback_cgo)
 	C.virConnSetErrorFunc_cgo(c.ptr, C.long(goCallbackId), C.virErrorFunc(callbackPtr))
-	c.errCallbackId = &goCallbackId
+	connData := getConnectionData(c)
+	connData.errCallbackId = &goCallbackId
 }
 
 func (c *VirConnection) UnsetErrorFunc() {
 	C.virConnSetErrorFunc(c.ptr, nil, nil)
-	if c.errCallbackId != nil {
-		freeCallbackId(*c.errCallbackId)
-		c.errCallbackId = nil
+	connData := getConnectionData(c)
+	if connData != nil && connData.errCallbackId != nil {
+		freeCallbackId(*connData.errCallbackId)
+		connData.errCallbackId = nil
 	}
 }
 

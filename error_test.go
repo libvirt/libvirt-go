@@ -30,6 +30,7 @@ func TestGlobalErrorCallback(t *testing.T) {
 
 func TestConnectionErrorCallback(t *testing.T) {
 	var nbErrors int
+	initialConnectionsLen := len(connections)
 	errors := make([]VirError, 0, 10)
 	callback := ErrorCallback(func(err VirError, f func()) {
 		errors = append(errors, err)
@@ -37,16 +38,18 @@ func TestConnectionErrorCallback(t *testing.T) {
 	})
 
 	conn := buildTestConnection()
+	conn.SetErrorFunc(callback, func() {
+		nbErrors++
+	})
 	defer func() {
 		if res, _ := conn.CloseConnection(); res != 0 {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
+		if len(connections) != initialConnectionsLen {
+			t.Errorf("%d connections data leaked",
+				len(connections)-initialConnectionsLen)
+		}
 	}()
-
-	conn.SetErrorFunc(callback, func() {
-		nbErrors++
-	})
-	defer conn.UnsetErrorFunc()
 
 	// To generate an error, we set memory of a domain to an insance value
 	domain, err := conn.LookupDomainByName("test")

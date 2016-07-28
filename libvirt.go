@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"io/ioutil"
 	"reflect"
+	"sync"
 	"unsafe"
 )
 
@@ -16,8 +17,49 @@ import (
 import "C"
 
 type VirConnection struct {
-	ptr           C.virConnectPtr
+	ptr C.virConnectPtr
+}
+
+// Additional data associated to the connection.
+type virConnectionData struct {
 	errCallbackId *int
+}
+
+var connections map[C.virConnectPtr]*virConnectionData
+var connectionsLock sync.RWMutex
+
+func init() {
+	connections = make(map[C.virConnectPtr]*virConnectionData)
+}
+
+func saveConnectionData(c *VirConnection, d *virConnectionData) {
+	if c.ptr == nil {
+		return // Or panic?
+	}
+	connectionsLock.Lock()
+	defer connectionsLock.Unlock()
+	connections[c.ptr] = d
+}
+
+func getConnectionData(c *VirConnection) *virConnectionData {
+	connectionsLock.RLock()
+	d := connections[c.ptr]
+	connectionsLock.RUnlock()
+	if d != nil {
+		return d
+	}
+	d = &virConnectionData{}
+	saveConnectionData(c, d)
+	return d
+}
+
+func releaseConnectionData(c *VirConnection) {
+	if c.ptr == nil {
+		return
+	}
+	connectionsLock.Lock()
+	defer connectionsLock.Unlock()
+	delete(connections, c.ptr)
 }
 
 func NewVirConnection(uri string) (VirConnection, error) {
@@ -60,6 +102,10 @@ func (c *VirConnection) CloseConnection() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return result, GetLastError()
+	}
+	if result == 0 {
+		// No more reference to this connection, release data.
+		releaseConnectionData(c)
 	}
 	return result, nil
 }
