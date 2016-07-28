@@ -2,7 +2,6 @@ package libvirt
 
 import (
 	"fmt"
-	"sync"
 	"unsafe"
 )
 
@@ -371,29 +370,6 @@ type domainCallbackContext struct {
 	f  func()
 }
 
-const firstGoCallbackId int = 100 // help catch some additional errors during test
-var goCallbackLock sync.RWMutex
-var goCallbacks = make(map[int]interface{})
-var nextGoCallbackId int = firstGoCallbackId
-
-//export freeCallbackId
-func freeCallbackId(goCallbackId int) {
-	goCallbackLock.Lock()
-	delete(goCallbacks, goCallbackId)
-	goCallbackLock.Unlock()
-}
-
-func getCallbackId(goCallbackId int) interface{} {
-	goCallbackLock.RLock()
-	ctx := goCallbacks[goCallbackId]
-	goCallbackLock.RUnlock()
-	if ctx == nil {
-		// If this happens there must be a bug in libvirt
-		panic("Callback arrived after freeCallbackId was called")
-	}
-	return ctx
-}
-
 func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
 	event interface{}) {
 	ctx := getCallbackId(goCallbackId)
@@ -403,18 +379,6 @@ func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
 	default:
 		panic("Inappropriate callback type called")
 	}
-}
-
-func registerCallbackId(ctx interface{}) int {
-	goCallbackLock.Lock()
-	goCallBackId := nextGoCallbackId
-	nextGoCallbackId++
-	for goCallbacks[nextGoCallbackId] != nil {
-		nextGoCallbackId++
-	}
-	goCallbacks[goCallBackId] = ctx
-	goCallbackLock.Unlock()
-	return goCallBackId
 }
 
 // BUG(vincentbernat): The returned value of DomainEventRegister,
