@@ -1,6 +1,7 @@
 package libvirt
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -36,8 +37,13 @@ func TestDomainEventRegister(t *testing.T) {
 						t.Fatalf("Name was not '%s': %s", defName, domName)
 					}
 				}
+				eventString := fmt.Sprintf("%s", lifecycleEvent)
+				expected := "Domain event=\"started\" detail=\"booted\""
+				if eventString != expected {
+					t.Errorf("event == %q, expected %q", eventString, expected)
+				}
 			} else {
-				t.Fatalf("event details isn't DomainLifecycleEvent")
+				t.Fatalf("event details isn't DomainLifecycleEvent: %s", eventDetails)
 			}
 			f()
 			return 0

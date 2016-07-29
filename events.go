@@ -1,6 +1,7 @@
 package libvirt
 
 import (
+	"fmt"
 	"sync"
 	"unsafe"
 )
@@ -475,4 +476,168 @@ func EventRegisterDefaultImpl() int {
 
 func EventRunDefaultImpl() int {
 	return int(C.virEventRunDefaultImpl())
+}
+
+func (e DomainLifecycleEvent) String() string {
+	var detail, event string
+	switch e.Event {
+	case VIR_DOMAIN_EVENT_DEFINED:
+		event = "defined"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_DEFINED_ADDED:
+			detail = "added"
+		case VIR_DOMAIN_EVENT_DEFINED_UPDATED:
+			detail = "updated"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_UNDEFINED:
+		event = "undefined"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_UNDEFINED_REMOVED:
+			detail = "removed"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_STARTED:
+		event = "started"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_STARTED_BOOTED:
+			detail = "booted"
+		case VIR_DOMAIN_EVENT_STARTED_MIGRATED:
+			detail = "migrated"
+		case VIR_DOMAIN_EVENT_STARTED_RESTORED:
+			detail = "restored"
+		case VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT:
+			detail = "snapshot"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_SUSPENDED:
+		event = "suspended"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_SUSPENDED_PAUSED:
+			detail = "paused"
+		case VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED:
+			detail = "migrated"
+		case VIR_DOMAIN_EVENT_SUSPENDED_IOERROR:
+			detail = "I/O error"
+		case VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG:
+			detail = "watchdog"
+		case VIR_DOMAIN_EVENT_SUSPENDED_RESTORED:
+			detail = "restored"
+		case VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT:
+			detail = "snapshot"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_RESUMED:
+		event = "resumed"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_RESUMED_UNPAUSED:
+			detail = "unpaused"
+		case VIR_DOMAIN_EVENT_RESUMED_MIGRATED:
+			detail = "migrated"
+		case VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT:
+			detail = "snapshot"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_STOPPED:
+		event = "stopped"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN:
+			detail = "shutdown"
+		case VIR_DOMAIN_EVENT_STOPPED_DESTROYED:
+			detail = "destroyed"
+		case VIR_DOMAIN_EVENT_STOPPED_CRASHED:
+			detail = "crashed"
+		case VIR_DOMAIN_EVENT_STOPPED_MIGRATED:
+			detail = "migrated"
+		case VIR_DOMAIN_EVENT_STOPPED_SAVED:
+			detail = "saved"
+		case VIR_DOMAIN_EVENT_STOPPED_FAILED:
+			detail = "failed"
+		case VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT:
+			detail = "snapshot"
+		default:
+			detail = "unknown"
+		}
+
+	case VIR_DOMAIN_EVENT_SHUTDOWN:
+		event = "shutdown"
+		switch e.Detail {
+		case VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED:
+			detail = "finished"
+		default:
+			detail = "unknown"
+		}
+
+	default:
+		event = "unknown"
+	}
+
+	return fmt.Sprintf("Domain event=%q detail=%q", event, detail)
+}
+
+func (e DomainRTCChangeEvent) String() string {
+	return fmt.Sprintf("RTC change offset=%d", e.Utcoffset)
+}
+
+func (e DomainWatchdogEvent) String() string {
+	return fmt.Sprintf("Watchdog action=%d", e.Action)
+}
+
+func (e DomainIOErrorEvent) String() string {
+	return fmt.Sprintf("I/O error path=%q alias=%q action=%d",
+		e.SrcPath, e.DevAlias, e.Action)
+}
+
+func (e DomainGraphicsEvent) String() string {
+	var phase string
+	switch e.Phase {
+	case VIR_DOMAIN_EVENT_GRAPHICS_CONNECT:
+		phase = "connected"
+	case VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE:
+		phase = "initialized"
+	case VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT:
+		phase = "disconnected"
+	default:
+		phase = "unknown"
+	}
+
+	return fmt.Sprintf("Graphics phase=%q", phase)
+}
+
+func (e DomainIOErrorReasonEvent) String() string {
+	return fmt.Sprintf("IO error path=%q alias=%q action=%d reason=%q",
+		e.SrcPath, e.DevAlias, e.Action, e.Reason)
+}
+
+func (e DomainBlockJobEvent) String() string {
+	return fmt.Sprintf("Block job disk=%q status=%d type=%d",
+		e.Disk, e.Status, e.Type)
+}
+
+func (e DomainDiskChangeEvent) String() string {
+	return fmt.Sprintf("Disk change old=%q new=%q alias=%q reason=%d",
+		e.OldSrcPath, e.NewSrcPath, e.DevAlias, e.Reason)
+}
+
+func (e DomainTrayChangeEvent) String() string {
+	return fmt.Sprintf("Tray change dev=%q reason=%d",
+		e.DevAlias, e.Reason)
+}
+
+func (e DomainBalloonChangeEvent) String() string {
+	return fmt.Sprintf("Ballon change %d", e.Actual)
+}
+
+func (e DomainDeviceRemovedEvent) String() string {
+	return fmt.Sprintf("Device %q removed ", e.DevAlias)
 }
