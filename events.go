@@ -10,48 +10,48 @@ import (
 #cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 
-int domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,
                                      int event, int detail, void* data);
 
-int domainEventGenericCallback_cgo(virConnectPtr c, virDomainPtr d, void* data);
+void domainEventGenericCallback_cgo(virConnectPtr c, virDomainPtr d, void* data);
 
-int domainEventRTCChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventRTCChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                      long long utcoffset, void* data);
 
-int domainEventWatchdogCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventWatchdogCallback_cgo(virConnectPtr c, virDomainPtr d,
                                     int action, void* data);
 
-int domainEventIOErrorCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventIOErrorCallback_cgo(virConnectPtr c, virDomainPtr d,
                                    const char *srcPath, const char *devAlias,
                                    int action, void* data);
 
-int domainEventGraphicsCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventGraphicsCallback_cgo(virConnectPtr c, virDomainPtr d,
                                     int phase, const virDomainEventGraphicsAddress *local,
                                     const virDomainEventGraphicsAddress *remote,
                                     const char *authScheme,
                                     const virDomainEventGraphicsSubject *subject, void* data);
 
-int domainEventIOErrorReasonCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventIOErrorReasonCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *srcPath, const char *devAlias,
                                          int action, const char *reason, void* data);
 
-int domainEventBlockJobCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventBlockJobCallback_cgo(virConnectPtr c, virDomainPtr d,
                                     const char *disk, int type, int status, void* data);
 
-int domainEventDiskChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventDiskChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                       const char *oldSrcPath, const char *newSrcPath,
                                       const char *devAlias, int reason, void* data);
 
-int domainEventTrayChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventTrayChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                       const char *devAlias, int reason, void* data);
 
-int domainEventReasonCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventReasonCallback_cgo(virConnectPtr c, virDomainPtr d,
                                   int reason, void* data);
 
-int domainEventBalloonChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventBalloonChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          unsigned long long actual, void* data);
 
-int domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *devAlias, void* data);
 
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
@@ -136,7 +136,7 @@ type DomainDeviceRemovedEvent struct {
 //export domainEventLifecycleCallback
 func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	event int, detail int,
-	opaque int) int {
+	opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -146,22 +146,22 @@ func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Detail: detail,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventGenericCallback
 func domainEventGenericCallback(c C.virConnectPtr, d C.virDomainPtr,
-	opaque int) int {
+	opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
 
-	return callDomainCallbackId(opaque, &connection, &domain, nil)
+	callDomainCallbackId(opaque, &connection, &domain, nil)
 }
 
 //export domainEventRTCChangeCallback
 func domainEventRTCChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	utcoffset int64, opaque int) int {
+	utcoffset int64, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -170,12 +170,12 @@ func domainEventRTCChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Utcoffset: utcoffset,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventWatchdogCallback
 func domainEventWatchdogCallback(c C.virConnectPtr, d C.virDomainPtr,
-	action int, opaque int) int {
+	action int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -184,12 +184,12 @@ func domainEventWatchdogCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Action: action,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventIOErrorCallback
 func domainEventIOErrorCallback(c C.virConnectPtr, d C.virDomainPtr,
-	srcPath *C.char, devAlias *C.char, action int, opaque int) int {
+	srcPath *C.char, devAlias *C.char, action int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -200,7 +200,7 @@ func domainEventIOErrorCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Action:   action,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventGraphicsCallback
@@ -210,7 +210,7 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 	remote C.virDomainEventGraphicsAddressPtr,
 	authScheme *C.char,
 	subject C.virDomainEventGraphicsSubjectPtr,
-	opaque int) int {
+	opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -243,13 +243,13 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Subject:    subjectGo,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventIOErrorReasonCallback
 func domainEventIOErrorReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 	srcPath *C.char, devAlias *C.char, action int, reason *C.char,
-	opaque int) int {
+	opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -263,12 +263,12 @@ func domainEventIOErrorReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Reason: C.GoString(reason),
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventBlockJobCallback
 func domainEventBlockJobCallback(c C.virConnectPtr, d C.virDomainPtr,
-	disk *C.char, _type int, status int, opaque int) int {
+	disk *C.char, _type int, status int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -279,13 +279,13 @@ func domainEventBlockJobCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Status: status,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventDiskChangeCallback
 func domainEventDiskChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	oldSrcPath *C.char, newSrcPath *C.char, devAlias *C.char,
-	reason int, opaque int) int {
+	reason int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -297,12 +297,12 @@ func domainEventDiskChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Reason:     reason,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventTrayChangeCallback
 func domainEventTrayChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	devAlias *C.char, reason int, opaque int) int {
+	devAlias *C.char, reason int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -312,12 +312,12 @@ func domainEventTrayChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Reason:   reason,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventReasonCallback
 func domainEventReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
-	reason int, opaque int) int {
+	reason int, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -326,12 +326,12 @@ func domainEventReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Reason: reason,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventBalloonChangeCallback
 func domainEventBalloonChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	actual uint64, opaque int) int {
+	actual uint64, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -340,12 +340,12 @@ func domainEventBalloonChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Actual: actual,
 	}
 
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
 //export domainEventDeviceRemovedCallback
 func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
-	devAlias *C.char, opaque int) int {
+	devAlias *C.char, opaque int) {
 
 	domain := VirDomain{ptr: d}
 	connection := VirConnection{ptr: c}
@@ -353,9 +353,16 @@ func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
 	eventDetails := DomainDeviceRemovedEvent{
 		DevAlias: C.GoString(devAlias),
 	}
-	return callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
+// BUG(vincentbernat): The returned value of DomainEventCallback is
+// ignored and should be removed from the signature.
+
+// DomainEventCallback is the signature of functions that can be
+// registered as a domain event callback. The event parameter should
+// be casted to the more specific event structure
+// (eg. DomainLifecycleEvent). The return code is ignored.
 type DomainEventCallback func(c *VirConnection, d *VirDomain,
 	event interface{}, f func()) int
 
@@ -388,11 +395,11 @@ func getCallbackId(goCallbackId int) interface{} {
 }
 
 func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
-	event interface{}) int {
+	event interface{}) {
 	ctx := getCallbackId(goCallbackId)
 	switch cctx := ctx.(type) {
 	case *domainCallbackContext:
-		return (*cctx.cb)(c, d, event, cctx.f)
+		(*cctx.cb)(c, d, event, cctx.f)
 	default:
 		panic("Inappropriate callback type called")
 	}
@@ -409,6 +416,11 @@ func registerCallbackId(ctx interface{}) int {
 	goCallbackLock.Unlock()
 	return goCallBackId
 }
+
+// BUG(vincentbernat): The returned value of DomainEventRegister,
+// DomainEventDeregister, EventRegisterDefaultImpl and
+// EventRunDefaultImpl should be an error instead of an int, for
+// coherence with other functions.
 
 func (c *VirConnection) DomainEventRegister(dom VirDomain,
 	eventId int,
