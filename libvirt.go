@@ -48,13 +48,6 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 	return obj, nil
 }
 
-func GetLastError() VirError {
-	err := C.virGetLastError()
-	virErr := newError(err)
-	C.virResetError(err)
-	return virErr
-}
-
 func (c *VirConnection) CloseConnection() (int, error) {
 	c.UnsetErrorFunc()
 	result := int(C.virConnectClose(c.ptr))
