@@ -102,6 +102,13 @@ const (
 	VIR_DOMAIN_SHUTDOWN_SIGNAL         = C.VIR_DOMAIN_SHUTDOWN_SIGNAL
 )
 
+// virDomainUndefineFlags
+const (
+	VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       = C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       // Also remove any managed save
+	VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA // If last use of domain, then also remove any snapshot metadata
+	VIR_DOMAIN_UNDEFINE_NVRAM              = C.VIR_DOMAIN_UNDEFINE_NVRAM              // Also remove any nvram file
+)
+
 // virDomainAttachDeviceFlags
 const (
 	VIR_DOMAIN_DEVICE_MODIFY_CONFIG  = C.VIR_DOMAIN_AFFECT_CONFIG
