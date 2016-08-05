@@ -5,6 +5,10 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+
+#ifndef VIR_DOMAIN_UNDEFINE_NVRAM
+#define VIR_DOMAIN_UNDEFINE_NVRAM (1 << 2)
+#endif
 */
 import "C"
 
