@@ -5,6 +5,10 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+
+#ifndef VIR_DOMAIN_UNDEFINE_NVRAM
+#define VIR_DOMAIN_UNDEFINE_NVRAM (1 << 2)
+#endif
 */
 import "C"
 
@@ -100,6 +104,13 @@ const (
 	VIR_DOMAIN_SHUTDOWN_GUEST_AGENT    = C.VIR_DOMAIN_SHUTDOWN_GUEST_AGENT
 	VIR_DOMAIN_SHUTDOWN_INITCTL        = C.VIR_DOMAIN_SHUTDOWN_INITCTL
 	VIR_DOMAIN_SHUTDOWN_SIGNAL         = C.VIR_DOMAIN_SHUTDOWN_SIGNAL
+)
+
+// virDomainUndefineFlags
+const (
+	VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       = C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       // Also remove any managed save
+	VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA // If last use of domain, then also remove any snapshot metadata
+	VIR_DOMAIN_UNDEFINE_NVRAM              = C.VIR_DOMAIN_UNDEFINE_NVRAM              // Also remove any nvram file
 )
 
 // virDomainAttachDeviceFlags

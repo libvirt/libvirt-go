@@ -397,6 +397,14 @@ func (d *VirDomain) Undefine() error {
 	return nil
 }
 
+func (d *VirDomain) UndefineFlags(flags uint) error {
+	result := C.virDomainUndefineFlags(d.ptr, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (d *VirDomain) SetMaxMemory(memory uint) error {
 	result := C.virDomainSetMaxMemory(d.ptr, C.ulong(memory))
 	if result == -1 {
