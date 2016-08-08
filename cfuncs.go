@@ -117,6 +117,16 @@ void virConnSetErrorFunc_cgo(virConnectPtr c, long goCallbackId, virErrorFunc cb
     virConnSetErrorFunc(c, id, cb);
 }
 
+void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque)
+{
+    closeCallback(conn, reason, (long)opaque);
+}
+
+int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId)
+{
+    void *id = (void*)goCallbackId;
+    return virConnectRegisterCloseCallback(c, cb, id, freeGoCallback_cgo);
+}
 
 */
 import "C"

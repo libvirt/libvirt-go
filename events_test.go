@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+func init() {
+	EventRegisterDefaultImpl()
+}
+
 func TestDomainEventRegister(t *testing.T) {
 
 	callbackId := -1
@@ -49,8 +53,6 @@ func TestDomainEventRegister(t *testing.T) {
 			return 0
 		},
 	)
-
-	EventRegisterDefaultImpl()
 
 	callbackId = conn.DomainEventRegister(
 		VirDomain{},
