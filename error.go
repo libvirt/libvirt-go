@@ -510,6 +510,23 @@ func (err VirError) Error() string {
 		err.Code, err.Domain, err.Message)
 }
 
+var ErrNoError = VirError{
+	Code:    VIR_ERR_OK,
+	Domain:  VIR_FROM_NONE,
+	Message: "",
+	Level:   VIR_ERR_NONE,
+}
+
+func GetLastError() VirError {
+	err := C.virGetLastError()
+	if err == nil {
+		return ErrNoError
+	}
+	virErr := newError(err)
+	C.virResetError(err)
+	return virErr
+}
+
 // Callback handling for errors
 type ErrorCallback func(error VirError, opaque func())
 type errorContext struct {
