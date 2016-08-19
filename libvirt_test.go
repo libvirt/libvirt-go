@@ -37,6 +37,31 @@ func TestConnection(t *testing.T) {
 	}
 }
 
+func TestConnectionWithAuth(t *testing.T) {
+	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "pass")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	res, err := conn.CloseConnection()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if res != 0 {
+		t.Errorf("CloseConnection() == %d, expected 0", res)
+	}
+}
+
+func TestConnectionWithWrongCredentials(t *testing.T) {
+	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "wrongpass")
+	if err == nil {
+		conn.CloseConnection()
+		t.Error(err)
+		return
+	}
+}
+
 func TestConnectionReadOnly(t *testing.T) {
 	conn, err := NewVirConnectionReadOnly("test:///default")
 	if err != nil {
