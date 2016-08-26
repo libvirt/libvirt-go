@@ -95,7 +95,6 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
-	c.UnregisterCloseCallback() // Mandatory, otherwise, we are leaking the connection
 	c.UnsetErrorFunc()
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
