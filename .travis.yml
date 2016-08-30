@@ -13,7 +13,7 @@ env:
 
 install:
   - sudo apt-get -qqy build-dep libvirt
-  - sudo apt-get -qqy install curl qemu-system-x86
+  - sudo apt-get -qqy install curl qemu-system-x86 sasl2-bin
   - sudo mkdir -p /usr/src && sudo chown $(id -u) /usr/src
   - curl -s https://libvirt.org/sources/libvirt-${LIBVIRT}.tar.gz | tar -C /usr/src -zxf -
   - pushd /usr/src/libvirt-${LIBVIRT}
@@ -24,9 +24,10 @@ install:
                     --with-qemu --with-lxc
   - make
   - sudo make install
-  - sudo libvirtd -d
-  - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
   - popd
+  - sudo libvirtd -d -l -f libvirtd.conf
+  - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
+  - echo "pass" | sudo saslpasswd2 -p -a libvirt user
 
 script:
   go test -timeout 1m -tags "${TAGS}" -v

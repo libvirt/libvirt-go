@@ -13,9 +13,7 @@ import (
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
-
-void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque);
-int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
+#include "go_libvirt.h"
 */
 import "C"
 
@@ -73,6 +71,37 @@ func NewVirConnection(uri string) (VirConnection, error) {
 		defer C.free(unsafe.Pointer(cUri))
 	}
 	ptr := C.virConnectOpen(cUri)
+	if ptr == nil {
+		return VirConnection{}, GetLastError()
+	}
+	obj := VirConnection{ptr: ptr}
+	return obj, nil
+}
+
+func NewVirConnectionWithAuth(uri string, username string, password string) (VirConnection, error) {
+	var cUri *C.char
+
+	authMechs := C.authMechs()
+	defer C.free(unsafe.Pointer(authMechs))
+	cUsername := C.CString(username)
+	defer C.free(unsafe.Pointer(cUsername))
+	cPassword := C.CString(password)
+	defer C.free(unsafe.Pointer(cPassword))
+	cbData := C.authData(cUsername, C.uint(len(username)), cPassword, C.uint(len(password)))
+	defer C.free(unsafe.Pointer(cbData))
+
+	auth := C.virConnectAuth{
+		credtype:  authMechs,
+		ncredtype: C.uint(2),
+		cb:        C.virConnectAuthCallbackPtr(unsafe.Pointer(C.authCb)),
+		cbdata:    unsafe.Pointer(cbData),
+	}
+
+	if uri != "" {
+		cUri = C.CString(uri)
+		defer C.free(unsafe.Pointer(cUri))
+	}
+	ptr := C.virConnectOpenAuth(cUri, (*C.struct__virConnectAuth)(unsafe.Pointer(&auth)), C.uint(0))
 	if ptr == nil {
 		return VirConnection{}, GetLastError()
 	}
