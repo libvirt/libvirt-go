@@ -21,6 +21,18 @@ func buildTestConnection() VirConnection {
 	return conn
 }
 
+func TestVersion(t *testing.T) {
+	version, err := GetVersion()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if version == 0 {
+		t.Error("Version was 0")
+		return
+	}
+}
+
 func TestConnection(t *testing.T) {
 	conn, err := NewVirConnection("test:///default")
 	if err != nil {
