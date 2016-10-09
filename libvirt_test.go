@@ -1,6 +1,7 @@
 package libvirt
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -181,8 +182,8 @@ func TestGetType(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if tp != "Test" {
-		t.Fatalf("type should have been test: %s", tp)
+	if strings.ToLower(tp) != "test" {
+		t.Fatalf("type should have been \"test\" but got %q", tp)
 		return
 	}
 }
