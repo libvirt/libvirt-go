@@ -6,6 +6,7 @@ sudo: require
 go:
   - 1.5
   - 1.6
+  - 1.7
 
 env:
   - LIBVIRT=1.2.2  TAGS=""
