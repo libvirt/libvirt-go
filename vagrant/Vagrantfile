@@ -79,5 +79,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   EOF
 
   config.vm.provision :unix_reboot
-  config.vm.synced_folder "..", "/libvirt-go"
+  config.vm.synced_folder "..", "/opt/go/src/libvirt"
 end

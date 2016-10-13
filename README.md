@@ -58,4 +58,4 @@ A `Vagrantfile` is included to run the integration tests:
 * `vagrant up` to provision the virtual machine
 * `vagrant ssh` to login to the virtual machine
 
-Once inside, `sudo su -`, `cd /libvirt-go` and `go test -tags integration`.
+Once inside, `sudo su -` and `go test -tags integration libvirt`.
