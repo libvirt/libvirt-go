@@ -757,3 +757,43 @@ func (d *VirDomain) QemuMonitorCommand(flags uint32, command string) (string, er
 	C.free(unsafe.Pointer(cResult))
 	return rstring, nil
 }
+
+func cpuMask(cpuMap []uint32, maxCPUs uint32) (*C.uchar, C.int) {
+	const byteSize = uint(8)
+
+	mapLen := virCpuMapLen(maxCPUs) // Length of CPUs bitmask in bytes
+	bytesCpuMap := make([]byte, mapLen)
+
+	for _, c := range cpuMap {
+		by := uint(c) / byteSize
+		bi := uint(c) % byteSize
+		bytesCpuMap[by] |= 1 << bi
+	}
+
+	return (*C.uchar)(&bytesCpuMap[0]), mapLen
+}
+
+func (d *VirDomain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
+
+	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
+
+	result := C.virDomainPinVcpu(d.ptr, C.uint(vcpu), cpumap, maplen)
+
+	if result == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) PinVcpuFlags(vcpu uint, cpuMap []uint32, flags uint, maxCPUs uint32) error {
+	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
+
+	result := C.virDomainPinVcpuFlags(d.ptr, C.uint(vcpu), cpumap, maplen, C.uint(flags))
+
+	if result == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}

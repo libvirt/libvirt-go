@@ -676,6 +676,31 @@ func TestDomainGetVcpusFlags(t *testing.T) {
 	}
 }
 
+func TestDomainPinVcpu(t *testing.T) {
+	dom, conn := buildSMPTestDomain()
+	defer func() {
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	ni, err := conn.GetNodeInfo()
+	if err != nil {
+		panic(err)
+	}
+
+	err = dom.PinVcpu(2, []uint32{2, 5}, ni.GetMaxCPUs())
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestQemuMonitorCommand(t *testing.T) {
 	dom, conn := buildTestQEMUDomain()
 	defer func() {
