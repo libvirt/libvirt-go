@@ -54,8 +54,8 @@ Integration tests are available where functionality isn't provided by the test d
 
 A `Vagrantfile` is included to run the integration tests:
 
-* `cd ./vagrant/{branch}` (i.e `./vagrant/master`, where you will find a `Vagrantfile` for the `master` branch)
+* `cd ./vagrant`
 * `vagrant up` to provision the virtual machine
 * `vagrant ssh` to login to the virtual machine
 
-Once inside, `sudo su -`, `cd /libvirt-go` and `go test -tags integration`.
+Once inside, `sudo su -` and `go test -tags integration libvirt`.
