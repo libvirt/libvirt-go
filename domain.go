@@ -677,6 +677,30 @@ func (d *VirDomain) MemoryStats(nrStats uint32, flags uint32) ([]VirDomainMemory
 	return out, nil
 }
 
+func (d *VirDomain) GetVcpus(maxInfo int32) ([]VirVcpuInfo, error) {
+	ptr := make([]C.virVcpuInfo, maxInfo)
+
+	result := C.virDomainGetVcpus(
+		d.ptr, (C.virVcpuInfoPtr)(unsafe.Pointer(&ptr[0])),
+		C.int(maxInfo), nil, C.int(0))
+
+	if result == -1 {
+		return []VirVcpuInfo{}, GetLastError()
+	}
+
+	out := make([]VirVcpuInfo, 0)
+	for i := 0; i < int(result); i++ {
+		out = append(out, VirVcpuInfo{
+			Number:  uint32(ptr[i].number),
+			State:   int32(ptr[i].state),
+			CpuTime: uint64(ptr[i].cpuTime),
+			Cpu:     int32(ptr[i].cpu),
+		})
+	}
+
+	return out, nil
+}
+
 // libvirt-domain.h: VIR_CPU_MAPLEN
 func virCpuMapLen(cpu uint32) C.int {
 	return C.int((cpu + 7) / 8)
@@ -702,7 +726,7 @@ func extractCpuMask(bytesCpuMaps []byte, n, mapLen int) []uint32 {
 	return out
 }
 
-func (d *VirDomain) GetVcpus(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, error) {
+func (d *VirDomain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, error) {
 	ptr := make([]C.virVcpuInfo, maxInfo)
 
 	mapLen := virCpuMapLen(maxCPUs)                    // Length of CPUs bitmask in bytes
