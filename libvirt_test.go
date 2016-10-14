@@ -434,7 +434,7 @@ func TestLookupDomainById(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log(ids)
+
 	if len(ids) == 0 {
 		t.Fatal("Length of ListDomains shouldn't be zero")
 		return
@@ -464,7 +464,7 @@ func TestLookupDomainByUUIDString(t *testing.T) {
 			dom.Free()
 		}
 	}()
-	t.Log(doms)
+
 	if len(doms) == 0 {
 		t.Fatal("Length of ListAllDomains shouldn't be empty")
 		return

@@ -35,6 +35,22 @@ func buildTestDomain() (VirDomain, VirConnection) {
 	return dom, conn
 }
 
+func buildSMPTestDomain() (VirDomain, VirConnection) {
+	conn := buildTestConnection()
+	dom, err := conn.DomainDefineXML(`<domain type="test">
+		<name>` + time.Now().String() + `</name>
+		<memory unit="KiB">8192</memory>
+		<vcpu>8</vcpu>
+  		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`)
+	if err != nil {
+		panic(err)
+	}
+	return dom, conn
+}
+
 func buildTransientTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainCreateXML(`<domain type="test">
@@ -631,6 +647,39 @@ func TestDomainGetVcpus(t *testing.T) {
 	}
 }
 
+func TestDomainGetVcpusCpuMap(t *testing.T) {
+	dom, conn := buildSMPTestDomain()
+	defer func() {
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	ni, err := conn.GetNodeInfo()
+	if err != nil {
+		panic(err)
+	}
+
+	stats, err := dom.GetVcpusCpuMap(8, ni.GetMaxCPUs())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(stats) != 8 {
+		t.Fatal("should have 8 cpu")
+	}
+
+	if stats[0].State != 1 {
+		t.Fatal("state should be 1")
+	}
+}
+
 func TestDomainGetVcpusFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
@@ -652,6 +701,31 @@ func TestDomainGetVcpusFlags(t *testing.T) {
 
 	if num != 1 {
 		t.Fatal("should have 1 cpu", num)
+	}
+}
+
+func TestDomainPinVcpu(t *testing.T) {
+	dom, conn := buildSMPTestDomain()
+	defer func() {
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	ni, err := conn.GetNodeInfo()
+	if err != nil {
+		panic(err)
+	}
+
+	err = dom.PinVcpu(2, []uint32{2, 5}, ni.GetMaxCPUs())
+	if err != nil {
+		t.Fatal(err)
 	}
 }
 
