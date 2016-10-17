@@ -17,9 +17,8 @@ func TestDomainEventRegister(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
 		if callbackId >= 0 {
-			ret := conn.DomainEventDeregister(callbackId)
-			if ret != 0 {
-				t.Errorf("got %d on DomainEventDeregister instead of 0", ret)
+			if err := conn.DomainEventDeregister(callbackId); err != nil {
+				t.Errorf("got `%v` on DomainEventDeregister instead of nil", err)
 			}
 		}
 		if res, _ := conn.CloseConnection(); res != 0 {
@@ -99,8 +98,8 @@ func TestDomainEventRegister(t *testing.T) {
 	goCallbackLock.Unlock()
 
 	// Deregister the event
-	if ret := conn.DomainEventDeregister(callbackId); ret < 0 {
-		t.Fatal("Event deregistration failed")
+	if err := conn.DomainEventDeregister(callbackId); err != nil {
+		t.Fatal("Event deregistration failed with: %v", err)
 	}
 	callbackId = -1 // Don't deregister twice
 
