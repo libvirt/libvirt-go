@@ -381,10 +381,8 @@ func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
 	}
 }
 
-// BUG(vincentbernat): The returned value of DomainEventRegister,
-// DomainEventDeregister, EventRegisterDefaultImpl and
-// EventRunDefaultImpl should be an error instead of an int, for
-// coherence with other functions.
+// BUG(vincentbernat): The returned value of DomainEventRegister, should be an
+// error instead of an int, for uniformity with other functions.
 
 func (c *VirConnection) DomainEventRegister(dom VirDomain,
 	eventId int,
@@ -438,17 +436,26 @@ func (c *VirConnection) DomainEventRegister(dom VirDomain,
 	return int(ret)
 }
 
-func (c *VirConnection) DomainEventDeregister(callbackId int) int {
+func (c *VirConnection) DomainEventDeregister(callbackId int) error {
 	// Deregister the callback
-	return int(C.virConnectDomainEventDeregisterAny(c.ptr, C.int(callbackId)))
+	if i := int(C.virConnectDomainEventDeregisterAny(c.ptr, C.int(callbackId))); i != 0 {
+		return GetLastError()
+	}
+	return nil
 }
 
-func EventRegisterDefaultImpl() int {
-	return int(C.virEventRegisterDefaultImpl())
+func EventRegisterDefaultImpl() error {
+	if i := int(C.virEventRegisterDefaultImpl()); i != 0 {
+		return GetLastError()
+	}
+	return nil
 }
 
-func EventRunDefaultImpl() int {
-	return int(C.virEventRunDefaultImpl())
+func EventRunDefaultImpl() error {
+	if i := int(C.virEventRunDefaultImpl()); i != 0 {
+		return GetLastError()
+	}
+	return nil
 }
 
 func (e DomainLifecycleEvent) String() string {
