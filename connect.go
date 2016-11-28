@@ -448,7 +448,7 @@ func (c *VirConnection) LookupByUUIDString(uuid string) (VirDomain, error) {
 	return VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags uint32) (VirDomain, error) {
+func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags VirDomainCreateFlags) (VirDomain, error) {
 	xmlConfig, err := ioutil.ReadFile(xmlFile)
 	if err != nil {
 		return VirDomain{}, err
@@ -456,7 +456,7 @@ func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags uint32) (V
 	return c.DomainCreateXML(string(xmlConfig), flags)
 }
 
-func (c *VirConnection) DomainCreateXML(xmlConfig string, flags uint32) (VirDomain, error) {
+func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateFlags) (VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))

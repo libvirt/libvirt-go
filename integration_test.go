@@ -206,7 +206,7 @@ func TestDomainCreateWithFlags(t *testing.T) {
 			return
 		}
 
-		if state[0] != VIR_DOMAIN_PAUSED {
+		if VirDomainState(state[0]) != VIR_DOMAIN_PAUSED {
 			t.Fatalf("Domain should be paused")
 		}
 	}

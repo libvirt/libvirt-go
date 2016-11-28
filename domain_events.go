@@ -60,7 +60,8 @@ int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
 import "C"
 
 type DomainLifecycleEvent struct {
-	Event  int
+	Event VirDomainEventType
+	// TODO: we can make Detail typesafe somehow ?
 	Detail int
 }
 
@@ -69,17 +70,17 @@ type DomainRTCChangeEvent struct {
 }
 
 type DomainWatchdogEvent struct {
-	Action int
+	Action VirDomainEventWatchdogAction
 }
 
 type DomainIOErrorEvent struct {
 	SrcPath  string
 	DevAlias string
-	Action   int
+	Action   VirDomainEventIOErrorAction
 }
 
 type DomainEventGraphicsAddress struct {
-	Family  int
+	Family  VirDomainEventGraphicsAddressType
 	Node    string
 	Service string
 }
@@ -90,7 +91,7 @@ type DomainEventGraphicsSubjectIdentity struct {
 }
 
 type DomainGraphicsEvent struct {
-	Phase      int
+	Phase      VirDomainEventGraphicsPhase
 	Local      DomainEventGraphicsAddress
 	Remote     DomainEventGraphicsAddress
 	AuthScheme string
@@ -104,20 +105,20 @@ type DomainIOErrorReasonEvent struct {
 
 type DomainBlockJobEvent struct {
 	Disk   string
-	Type   int
-	Status int
+	Type   VirDomainBlockJobType
+	Status VirConnectDomainEventBlockJobStatus
 }
 
 type DomainDiskChangeEvent struct {
 	OldSrcPath string
 	NewSrcPath string
 	DevAlias   string
-	Reason     int
+	Reason     VirConnectDomainEventDiskChangeReason
 }
 
 type DomainTrayChangeEvent struct {
 	DevAlias string
-	Reason   int
+	Reason   VirConnectDomainEventTrayChangeReason
 }
 
 type DomainReasonEvent struct {
@@ -141,7 +142,7 @@ func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	connection := VirConnection{ptr: c}
 
 	eventDetails := DomainLifecycleEvent{
-		Event:  event,
+		Event:  VirDomainEventType(event),
 		Detail: detail,
 	}
 
@@ -180,7 +181,7 @@ func domainEventWatchdogCallback(c C.virConnectPtr, d C.virDomainPtr,
 	connection := VirConnection{ptr: c}
 
 	eventDetails := DomainWatchdogEvent{
-		Action: action,
+		Action: VirDomainEventWatchdogAction(action),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -196,7 +197,7 @@ func domainEventIOErrorCallback(c C.virConnectPtr, d C.virDomainPtr,
 	eventDetails := DomainIOErrorEvent{
 		SrcPath:  C.GoString(srcPath),
 		DevAlias: C.GoString(devAlias),
-		Action:   action,
+		Action:   VirDomainEventIOErrorAction(action),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -227,14 +228,14 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 	}
 
 	eventDetails := DomainGraphicsEvent{
-		Phase: phase,
+		Phase: VirDomainEventGraphicsPhase(phase),
 		Local: DomainEventGraphicsAddress{
-			Family:  int(local.family),
+			Family:  VirDomainEventGraphicsAddressType(local.family),
 			Node:    C.GoString(local.node),
 			Service: C.GoString(local.service),
 		},
 		Remote: DomainEventGraphicsAddress{
-			Family:  int(remote.family),
+			Family:  VirDomainEventGraphicsAddressType(remote.family),
 			Node:    C.GoString(remote.node),
 			Service: C.GoString(remote.service),
 		},
@@ -257,7 +258,7 @@ func domainEventIOErrorReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 		DomainIOErrorEvent: DomainIOErrorEvent{
 			SrcPath:  C.GoString(srcPath),
 			DevAlias: C.GoString(devAlias),
-			Action:   action,
+			Action:   VirDomainEventIOErrorAction(action),
 		},
 		Reason: C.GoString(reason),
 	}
@@ -274,8 +275,8 @@ func domainEventBlockJobCallback(c C.virConnectPtr, d C.virDomainPtr,
 
 	eventDetails := DomainBlockJobEvent{
 		Disk:   C.GoString(disk),
-		Type:   _type,
-		Status: status,
+		Type:   VirDomainBlockJobType(_type),
+		Status: VirConnectDomainEventBlockJobStatus(status),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -293,7 +294,7 @@ func domainEventDiskChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 		OldSrcPath: C.GoString(oldSrcPath),
 		NewSrcPath: C.GoString(newSrcPath),
 		DevAlias:   C.GoString(devAlias),
-		Reason:     reason,
+		Reason:     VirConnectDomainEventDiskChangeReason(reason),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -308,7 +309,7 @@ func domainEventTrayChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 
 	eventDetails := DomainTrayChangeEvent{
 		DevAlias: C.GoString(devAlias),
-		Reason:   reason,
+		Reason:   VirConnectDomainEventTrayChangeReason(reason),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -385,7 +386,7 @@ func callDomainCallbackId(goCallbackId int, c *VirConnection, d *VirDomain,
 // error instead of an int, for uniformity with other functions.
 
 func (c *VirConnection) DomainEventRegister(dom VirDomain,
-	eventId int,
+	eventId VirDomainEventID,
 	callback *DomainEventCallback,
 	opaque func()) int {
 	var callbackPtr unsafe.Pointer
@@ -449,7 +450,7 @@ func (e DomainLifecycleEvent) String() string {
 	switch e.Event {
 	case VIR_DOMAIN_EVENT_DEFINED:
 		event = "defined"
-		switch e.Detail {
+		switch VirDomainEventDefinedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_DEFINED_ADDED:
 			detail = "added"
 		case VIR_DOMAIN_EVENT_DEFINED_UPDATED:
@@ -460,7 +461,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_UNDEFINED:
 		event = "undefined"
-		switch e.Detail {
+		switch VirDomainEventUndefinedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_UNDEFINED_REMOVED:
 			detail = "removed"
 		default:
@@ -469,7 +470,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_STARTED:
 		event = "started"
-		switch e.Detail {
+		switch VirDomainEventStartedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_STARTED_BOOTED:
 			detail = "booted"
 		case VIR_DOMAIN_EVENT_STARTED_MIGRATED:
@@ -484,7 +485,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_SUSPENDED:
 		event = "suspended"
-		switch e.Detail {
+		switch VirDomainEventSuspendedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_SUSPENDED_PAUSED:
 			detail = "paused"
 		case VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED:
@@ -503,7 +504,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_RESUMED:
 		event = "resumed"
-		switch e.Detail {
+		switch VirDomainEventResumedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_RESUMED_UNPAUSED:
 			detail = "unpaused"
 		case VIR_DOMAIN_EVENT_RESUMED_MIGRATED:
@@ -516,7 +517,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_STOPPED:
 		event = "stopped"
-		switch e.Detail {
+		switch VirDomainEventStoppedDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN:
 			detail = "shutdown"
 		case VIR_DOMAIN_EVENT_STOPPED_DESTROYED:
@@ -537,7 +538,7 @@ func (e DomainLifecycleEvent) String() string {
 
 	case VIR_DOMAIN_EVENT_SHUTDOWN:
 		event = "shutdown"
-		switch e.Detail {
+		switch VirDomainEventShutdownDetailType(e.Detail) {
 		case VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED:
 			detail = "finished"
 		default:

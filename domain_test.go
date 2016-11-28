@@ -286,7 +286,7 @@ func TestCreateDestroyDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if state[0] != VIR_DOMAIN_RUNNING {
+	if VirDomainState(state[0]) != VIR_DOMAIN_RUNNING {
 		t.Fatal("Domain should be running")
 		return
 	}
@@ -299,7 +299,7 @@ func TestCreateDestroyDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if state[0] != VIR_DOMAIN_SHUTOFF {
+	if VirDomainState(state[0]) != VIR_DOMAIN_SHUTOFF {
 		t.Fatal("Domain should be destroyed")
 		return
 	}
