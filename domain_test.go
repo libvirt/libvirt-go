@@ -6,20 +6,6 @@ import (
 	"time"
 )
 
-func buildTestQEMUDomain() (VirDomain, VirConnection) {
-	conn := buildTestQEMUConnection()
-	dom, err := conn.DomainDefineXML(`<domain type="qemu">
-		<name>` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
-		<memory unit="KiB">128</memory>
-		<os>
-			<type>hvm</type>
-		</os>
-	</domain>`)
-	if err != nil {
-		panic(err)
-	}
-	return dom, conn
-}
 func buildTestDomain() (VirDomain, VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
@@ -738,56 +724,5 @@ func TestDomainPinVcpu(t *testing.T) {
 	err = dom.PinVcpu(2, []uint32{2, 5}, ni.GetMaxCPUs())
 	if err != nil {
 		t.Fatal(err)
-	}
-}
-
-func TestQemuMonitorCommand(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
-	defer func() {
-		dom.Destroy()
-		dom.Undefine()
-		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
-		}
-	}()
-
-	if err := dom.Create(); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
-		t.Error(err)
-		return
-	}
-
-	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
-		t.Error(err)
-		return
-	}
-}
-
-func TestDomainCreateWithFlags(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
-	defer func() {
-		dom.Destroy()
-		dom.Undefine()
-		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
-		}
-	}()
-
-	if err := dom.CreateWithFlags(VIR_DOMAIN_START_PAUSED); err != nil {
-		state, err := dom.GetState()
-		if err != nil {
-			t.Error(err)
-			return
-		}
-
-		if state[0] != VIR_DOMAIN_PAUSED {
-			t.Fatalf("Domain should be paused")
-		}
 	}
 }

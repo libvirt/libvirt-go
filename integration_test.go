@@ -10,6 +10,208 @@ import (
 	"time"
 )
 
+func buildTestQEMUConnection() VirConnection {
+	conn, err := NewVirConnection("qemu:///system")
+	if err != nil {
+		panic(err)
+	}
+	return conn
+}
+
+func buildTestQEMUDomain() (VirDomain, VirConnection) {
+	conn := buildTestQEMUConnection()
+	dom, err := conn.DomainDefineXML(`<domain type="qemu">
+		<name>` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
+		<memory unit="KiB">128</memory>
+		<os>
+			<type>hvm</type>
+		</os>
+	</domain>`)
+	if err != nil {
+		panic(err)
+	}
+	return dom, conn
+}
+
+func TestMultipleCloseCallback(t *testing.T) {
+	nbCall1 := 0
+	nbCall2 := 0
+	nbCall3 := 0
+	conn := buildTestQEMUConnection()
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+		if nbCall1 != 0 || nbCall2 != 0 || nbCall3 != 1 {
+			t.Errorf("Wrong number of calls to callback, got %v, expected %v",
+				[]int{nbCall1, nbCall2, nbCall3},
+				[]int{0, 0, 1})
+		}
+	}()
+
+	callback := func(conn VirConnection, reason int, opaque func()) {
+		if reason != VIR_CONNECT_CLOSE_REASON_KEEPALIVE {
+			t.Errorf("Expected close reason to be %d, got %d",
+				VIR_CONNECT_CLOSE_REASON_KEEPALIVE, reason)
+		}
+		opaque()
+	}
+	err := conn.RegisterCloseCallback(callback, func() {
+		nbCall1++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.RegisterCloseCallback(callback, func() {
+		nbCall2++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.RegisterCloseCallback(callback, func() {
+		nbCall3++
+	})
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+
+	// To trigger a disconnect, we use a keepalive
+	if err := conn.SetKeepAlive(1, 1); err != nil {
+		t.Fatalf("Unable to enable keeplive: %+v", err)
+	}
+	EventRunDefaultImpl()
+	time.Sleep(2 * time.Second)
+	EventRunDefaultImpl()
+}
+
+func TestUnregisterCloseCallback(t *testing.T) {
+	nbCall := 0
+	conn := buildTestQEMUConnection()
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+		if nbCall != 0 {
+			t.Errorf("Expected no call to close callback, got %d", nbCall)
+		}
+	}()
+
+	callback := func(conn VirConnection, reason int, opaque func()) {
+		nbCall++
+	}
+	err := conn.RegisterCloseCallback(callback, nil)
+	if err != nil {
+		t.Fatalf("Unable to register close callback: %+v", err)
+	}
+	err = conn.UnregisterCloseCallback()
+	if err != nil {
+		t.Fatalf("Unable to unregister close callback: %+v", err)
+	}
+}
+
+func TestSetKeepalive(t *testing.T) {
+	EventRegisterDefaultImpl()        // We need the event loop for keepalive
+	conn := buildTestQEMUConnection() // The test driver doesn't support keepalives
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+	if err := conn.SetKeepAlive(1, 1); err != nil {
+		t.Error(err)
+		return
+	}
+
+	// It should block until we have a keepalive message
+	done := make(chan struct{})
+	timeout := time.After(5 * time.Second)
+	go func() {
+		EventRunDefaultImpl()
+		close(done)
+	}()
+	select {
+	case <-done: // OK!
+	case <-timeout:
+		t.Fatalf("timeout reached while waiting for keepalive")
+	}
+}
+
+func TestConnectionWithAuth(t *testing.T) {
+	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "pass")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	res, err := conn.CloseConnection()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if res != 0 {
+		t.Errorf("CloseConnection() == %d, expected 0", res)
+	}
+}
+
+func TestConnectionWithWrongCredentials(t *testing.T) {
+	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "wrongpass")
+	if err == nil {
+		conn.CloseConnection()
+		t.Error(err)
+		return
+	}
+}
+
+func TestQemuMonitorCommand(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+		dom.Destroy()
+		dom.Undefine()
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestDomainCreateWithFlags(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+		dom.Destroy()
+		dom.Undefine()
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+
+	if err := dom.CreateWithFlags(VIR_DOMAIN_START_PAUSED); err != nil {
+		state, err := dom.GetState()
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
+		if state[0] != VIR_DOMAIN_PAUSED {
+			t.Fatalf("Domain should be paused")
+		}
+	}
+}
+
 func defineTestLxcDomain(conn VirConnection, title string) (VirDomain, error) {
 	if title == "" {
 		title = time.Now().String()
