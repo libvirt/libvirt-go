@@ -14,6 +14,12 @@ import (
 	"unsafe"
 )
 
+// virIPAddrType
+const (
+	VIR_IP_ADDR_TYPE_IPV4 = C.VIR_IP_ADDR_TYPE_IPV4
+	VIR_IP_ADDR_TYPE_IPV6 = C.VIR_IP_ADDR_TYPE_IPV6
+)
+
 type VirNetwork struct {
 	ptr C.virNetworkPtr
 }
