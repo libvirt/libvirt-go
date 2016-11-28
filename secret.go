@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -10,6 +10,14 @@ import "C"
 
 import (
 	"unsafe"
+)
+
+// virSecretUsageType
+const (
+	VIR_SECRET_USAGE_TYPE_NONE   = C.VIR_SECRET_USAGE_TYPE_NONE
+	VIR_SECRET_USAGE_TYPE_VOLUME = C.VIR_SECRET_USAGE_TYPE_VOLUME
+	VIR_SECRET_USAGE_TYPE_CEPH   = C.VIR_SECRET_USAGE_TYPE_CEPH
+	VIR_SECRET_USAGE_TYPE_ISCSI  = C.VIR_SECRET_USAGE_TYPE_ISCSI
 )
 
 type VirSecret struct {
