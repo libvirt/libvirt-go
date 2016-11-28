@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -10,6 +10,11 @@ import "C"
 import (
 	"io"
 	"unsafe"
+)
+
+// virStreamFlags
+const (
+	VIR_STREAM_NONBLOCK = C.VIR_STREAM_NONBLOCK
 )
 
 type VirStream struct {
