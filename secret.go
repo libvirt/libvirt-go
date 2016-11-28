@@ -12,12 +12,13 @@ import (
 	"unsafe"
 )
 
-// virSecretUsageType
+type VirSecretUsageType int
+
 const (
-	VIR_SECRET_USAGE_TYPE_NONE   = C.VIR_SECRET_USAGE_TYPE_NONE
-	VIR_SECRET_USAGE_TYPE_VOLUME = C.VIR_SECRET_USAGE_TYPE_VOLUME
-	VIR_SECRET_USAGE_TYPE_CEPH   = C.VIR_SECRET_USAGE_TYPE_CEPH
-	VIR_SECRET_USAGE_TYPE_ISCSI  = C.VIR_SECRET_USAGE_TYPE_ISCSI
+	VIR_SECRET_USAGE_TYPE_NONE   = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_NONE)
+	VIR_SECRET_USAGE_TYPE_VOLUME = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_VOLUME)
+	VIR_SECRET_USAGE_TYPE_CEPH   = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_CEPH)
+	VIR_SECRET_USAGE_TYPE_ISCSI  = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_ISCSI)
 )
 
 type VirSecret struct {
@@ -67,8 +68,8 @@ func (s *VirSecret) GetUsageID() (string, error) {
 	return C.GoString(result), nil
 }
 
-func (s *VirSecret) GetUsageType() (int, error) {
-	result := int(C.virSecretGetUsageType(s.ptr))
+func (s *VirSecret) GetUsageType() (VirSecretUsageType, error) {
+	result := VirSecretUsageType(C.virSecretGetUsageType(s.ptr))
 	if result == -1 {
 		return 0, GetLastError()
 	}

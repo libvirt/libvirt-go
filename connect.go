@@ -885,7 +885,7 @@ func (c *VirConnection) LookupSecretByUUIDString(uuid string) (VirSecret, error)
 	return VirSecret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUsage(usageType int, usageID string) (VirSecret, error) {
+func (c *VirConnection) LookupSecretByUsage(usageType VirSecretUsageType, usageID string) (VirSecret, error) {
 	cUsageID := C.CString(usageID)
 	defer C.free(unsafe.Pointer(cUsageID))
 	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
