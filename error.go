@@ -6,18 +6,6 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 
-#ifndef VIR_FROM_BHYVE
-#define VIR_FROM_BHYVE 57
-#endif
-
-#ifndef VIR_FROM_CRYPTO
-#define VIR_FROM_CRYPTO 58
-#endif
-
-#ifndef VIR_FROM_FIREWALL
-#define VIR_FROM_FIREWALL 59
-#endif
-
 void errorGlobalCallback_cgo(void *userData, virErrorPtr error);
 void errorConnCallback_cgo(void *userData, virErrorPtr error);
 void virConnSetErrorFunc_cgo(virConnectPtr c, long goCallbackId, virErrorFunc cb);
@@ -312,8 +300,7 @@ const (
 	VIR_ERR_STORAGE_VOL_EXIST = C.VIR_ERR_STORAGE_VOL_EXIST
 
 	// given CPU is incompatible with host CPU
-	// added in libvirt 1.2.6
-	// VIR_ERR_CPU_INCOMPATIBLE = C.VIR_ERR_CPU_INCOMPATIBLE
+	VIR_ERR_CPU_INCOMPATIBLE = C.VIR_ERR_CPU_INCOMPATIBLE
 )
 
 // virErrorDomain

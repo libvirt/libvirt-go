@@ -6,9 +6,6 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 
-#ifndef VIR_DOMAIN_UNDEFINE_NVRAM
-#define VIR_DOMAIN_UNDEFINE_NVRAM (1 << 2)
-#endif
 */
 import "C"
 
@@ -288,9 +285,8 @@ const (
 	// event parameter in the callback is of type DomainDeviceRemovedEvent
 	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED = C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED
 
-	// TODO Post 1.2.4, enable later
 	// event parameter in the callback is of type DomainBlockJobEvent
-	// VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2 = C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2
+	VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2 = C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2
 )
 
 // virDomainEventType
@@ -383,10 +379,9 @@ const (
 	// completion
 	VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT = C.VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT
 
-	// TODO Post 1.2.4, enable later
 	// Active Block Commit (virDomainBlockCommit with flags), job
 	// exists as long as sync is active
-	// VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT = C.VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT
+	VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT = C.VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT
 )
 
 // virConnectDomainEventBlockJobStatus
@@ -540,12 +535,12 @@ const (
 
 // virDomainInterfaceAddressesSource
 const (
-	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE = 0
-	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = 1
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE = C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT
 )
 
 // virIPAddrType
 const (
-	VIR_IP_ADDR_TYPE_IPV4 = 0
-	VIR_IP_ADDR_TYPE_IPV6 = 1
+	VIR_IP_ADDR_TYPE_IPV4 = C.VIR_IP_ADDR_TYPE_IPV4
+	VIR_IP_ADDR_TYPE_IPV6 = C.VIR_IP_ADDR_TYPE_IPV6
 )
