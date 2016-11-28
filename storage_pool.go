@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -11,6 +11,24 @@ import "C"
 import (
 	"io/ioutil"
 	"unsafe"
+)
+
+// virStoragePoolState
+const (
+	VIR_STORAGE_POOL_INACTIVE     = C.VIR_STORAGE_POOL_INACTIVE     // Not running
+	VIR_STORAGE_POOL_BUILDING     = C.VIR_STORAGE_POOL_BUILDING     // Initializing pool,not available
+	VIR_STORAGE_POOL_RUNNING      = C.VIR_STORAGE_POOL_RUNNING      // Running normally
+	VIR_STORAGE_POOL_DEGRADED     = C.VIR_STORAGE_POOL_DEGRADED     // Running degraded
+	VIR_STORAGE_POOL_INACCESSIBLE = C.VIR_STORAGE_POOL_INACCESSIBLE // Running,but not accessible
+)
+
+// virStoragePoolBuildFlags
+const (
+	VIR_STORAGE_POOL_BUILD_NEW          = C.VIR_STORAGE_POOL_BUILD_NEW          // Regular build from scratch
+	VIR_STORAGE_POOL_BUILD_REPAIR       = C.VIR_STORAGE_POOL_BUILD_REPAIR       // Repair / reinitialize
+	VIR_STORAGE_POOL_BUILD_RESIZE       = C.VIR_STORAGE_POOL_BUILD_RESIZE       // Extend existing pool
+	VIR_STORAGE_POOL_BUILD_NO_OVERWRITE = C.VIR_STORAGE_POOL_BUILD_NO_OVERWRITE // Do not overwrite existing pool
+	VIR_STORAGE_POOL_BUILD_OVERWRITE    = C.VIR_STORAGE_POOL_BUILD_OVERWRITE    // Overwrite data
 )
 
 type VirStoragePool struct {
