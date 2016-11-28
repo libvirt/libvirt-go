@@ -12,9 +12,10 @@ import (
 	"unsafe"
 )
 
-// virStreamFlags
+type VirStreamFlags int
+
 const (
-	VIR_STREAM_NONBLOCK = C.VIR_STREAM_NONBLOCK
+	VIR_STREAM_NONBLOCK = VirStreamFlags(C.VIR_STREAM_NONBLOCK)
 )
 
 type VirStream struct {
