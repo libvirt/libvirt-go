@@ -6,40 +6,19 @@ Make sure to have `libvirt-dev` package (or the development files otherwise some
 
 ## Version Support
 
-The minimum supported version of libvirt is **1.2.2**. Due to the
+The minimum required version of libvirt is **2.4.0**. Due to the
 API/ABI compatibility promise of libvirt, more recent versions of
 libvirt should work too.
 
-Some features require a more recent version of libvirt. They are
-disabled by default. If you want to enable them, build using one of
-those additional tags (you need to use only the most recent one you
-are interested in):
-
- - **1.2.14**
-
-For example:
-
-    go build -tags libvirt.1.2.14
-
-### OS Compatibility Matrix
-
-To quickly see what version of libvirt your OS can easily support (may be outdated). Obviously, nothing below 1.2.2 is usable with these bindings.
-
-| OS Release   | libvirt Version                |
-| ------------ | ------------------------------ |
-| FC19         | 1.2.9 from libvirt.org/sources |
-| Debian 8     | 1.2.9 from jessie              |
-| Debian 7     | 1.2.9 from wheezy-backports    |
-| Ubuntu 14.04 | 1.2.2 from trusty              |
-| Ubuntu 16.04 | 1.3.1 from xenial              |
-| RHEL 7       | 1.2.17                         |
-| RHEL 6       | 0.10.x                         |
-| RHEL 5       | 0.8.x                          |
-
-
-### 0.9.x Support
-
-Previously there was support for libvirt 0.9.8 and below, however this is no longer being updated. These releases were tagged `v1.x` at `gopkg.in/alexzorin/libvirt-go.v1` [(docs)](http://gopkg.in/alexzorin/libvirt-go.v1).
+The master branch of libvirt-go will always aim to support all
+the APIs present in the master branch of the libvirt core library
+API. At time of release, a tag will be created, so applications
+that need build compatibility with an older version of libvirt
+should checkout the tag corresponding to the version that they
+require. This policy is appies from version 2.4.0 onwards. If
+compatibility is required against a version of libvirt prior to
+2.4.0, it will be necessary to create a branch and strip out
+APIs.
 
 ## Documentation
 
