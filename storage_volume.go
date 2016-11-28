@@ -12,44 +12,49 @@ import (
 	"unsafe"
 )
 
-// virStorageVolCreateFlags
+type VirStorageVolCreateFlags int
+
 const (
-	VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA = C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA
+	VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA = VirStorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA)
 )
 
-// virStorageVolDeleteFlags
+type VirStorageVolDeleteFlags int
+
 const (
-	VIR_STORAGE_VOL_DELETE_NORMAL = C.VIR_STORAGE_VOL_DELETE_NORMAL // Delete metadata only (fast)
-	VIR_STORAGE_VOL_DELETE_ZEROED = C.VIR_STORAGE_VOL_DELETE_ZEROED // Clear all data to zeros (slow)
+	VIR_STORAGE_VOL_DELETE_NORMAL = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_NORMAL) // Delete metadata only (fast)
+	VIR_STORAGE_VOL_DELETE_ZEROED = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_ZEROED) // Clear all data to zeros (slow)
 )
 
-// virStorageVolResizeFlags
+type VirStorageVolResizeFlags int
+
 const (
-	VIR_STORAGE_VOL_RESIZE_ALLOCATE = C.VIR_STORAGE_VOL_RESIZE_ALLOCATE // force allocation of new size
-	VIR_STORAGE_VOL_RESIZE_DELTA    = C.VIR_STORAGE_VOL_RESIZE_DELTA    // size is relative to current
-	VIR_STORAGE_VOL_RESIZE_SHRINK   = C.VIR_STORAGE_VOL_RESIZE_SHRINK   // allow decrease in capacity
+	VIR_STORAGE_VOL_RESIZE_ALLOCATE = VirStorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_ALLOCATE) // force allocation of new size
+	VIR_STORAGE_VOL_RESIZE_DELTA    = VirStorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_DELTA)    // size is relative to current
+	VIR_STORAGE_VOL_RESIZE_SHRINK   = VirStorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_SHRINK)   // allow decrease in capacity
 )
 
-// virStorageVolType
+type VirStorageVolType int
+
 const (
-	VIR_STORAGE_VOL_FILE    = C.VIR_STORAGE_VOL_FILE    // Regular file based volumes
-	VIR_STORAGE_VOL_BLOCK   = C.VIR_STORAGE_VOL_BLOCK   // Block based volumes
-	VIR_STORAGE_VOL_DIR     = C.VIR_STORAGE_VOL_DIR     // Directory-passthrough based volume
-	VIR_STORAGE_VOL_NETWORK = C.VIR_STORAGE_VOL_NETWORK //Network volumes like RBD (RADOS Block Device)
-	VIR_STORAGE_VOL_NETDIR  = C.VIR_STORAGE_VOL_NETDIR  // Network accessible directory that can contain other network volumes
+	VIR_STORAGE_VOL_FILE    = VirStorageVolType(C.VIR_STORAGE_VOL_FILE)    // Regular file based volumes
+	VIR_STORAGE_VOL_BLOCK   = VirStorageVolType(C.VIR_STORAGE_VOL_BLOCK)   // Block based volumes
+	VIR_STORAGE_VOL_DIR     = VirStorageVolType(C.VIR_STORAGE_VOL_DIR)     // Directory-passthrough based volume
+	VIR_STORAGE_VOL_NETWORK = VirStorageVolType(C.VIR_STORAGE_VOL_NETWORK) //Network volumes like RBD (RADOS Block Device)
+	VIR_STORAGE_VOL_NETDIR  = VirStorageVolType(C.VIR_STORAGE_VOL_NETDIR)  // Network accessible directory that can contain other network volumes
 )
 
-// virStorageVolWipeAlgorithm
+type VirStorageVolWipeAlgorithm int
+
 const (
-	VIR_STORAGE_VOL_WIPE_ALG_ZERO       = C.VIR_STORAGE_VOL_WIPE_ALG_ZERO       // 1-pass, all zeroes
-	VIR_STORAGE_VOL_WIPE_ALG_NNSA       = C.VIR_STORAGE_VOL_WIPE_ALG_NNSA       // 4-pass NNSA Policy Letter NAP-14.1-C (XVI-8)
-	VIR_STORAGE_VOL_WIPE_ALG_DOD        = C.VIR_STORAGE_VOL_WIPE_ALG_DOD        // 4-pass DoD 5220.22-M section 8-306 procedure
-	VIR_STORAGE_VOL_WIPE_ALG_BSI        = C.VIR_STORAGE_VOL_WIPE_ALG_BSI        // 9-pass method recommended by the German Center of Security in Information Technologies
-	VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    = C.VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    // The canonical 35-pass sequence
-	VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   = C.VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   // 7-pass method described by Bruce Schneier in "Applied Cryptography" (1996)
-	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  = C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  // 7-pass random
-	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 = C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 // 33-pass random
-	VIR_STORAGE_VOL_WIPE_ALG_RANDOM     = C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM     // 1-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_ZERO       = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_ZERO)       // 1-pass, all zeroes
+	VIR_STORAGE_VOL_WIPE_ALG_NNSA       = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_NNSA)       // 4-pass NNSA Policy Letter NAP-14.1-C (XVI-8)
+	VIR_STORAGE_VOL_WIPE_ALG_DOD        = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_DOD)        // 4-pass DoD 5220.22-M section 8-306 procedure
+	VIR_STORAGE_VOL_WIPE_ALG_BSI        = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_BSI)        // 9-pass method recommended by the German Center of Security in Information Technologies
+	VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_GUTMANN)    // The canonical 35-pass sequence
+	VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER)   // 7-pass method described by Bruce Schneier in "Applied Cryptography" (1996)
+	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7)  // 7-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33) // 33-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_RANDOM     = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM)     // 1-pass random
 )
 
 type VirStorageVol struct {
@@ -60,7 +65,7 @@ type VirStorageVolInfo struct {
 	ptr C.virStorageVolInfo
 }
 
-func (v *VirStorageVol) Delete(flags uint32) error {
+func (v *VirStorageVol) Delete(flags VirStorageVolDeleteFlags) error {
 	result := C.virStorageVolDelete(v.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -86,8 +91,8 @@ func (v *VirStorageVol) GetInfo() (VirStorageVolInfo, error) {
 	return vi, nil
 }
 
-func (i *VirStorageVolInfo) GetType() int {
-	return int(i.ptr._type)
+func (i *VirStorageVolInfo) GetType() VirStorageVolType {
+	return VirStorageVolType(i.ptr._type)
 }
 
 func (i *VirStorageVolInfo) GetCapacityInBytes() uint64 {
@@ -134,7 +139,7 @@ func (v *VirStorageVol) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (v *VirStorageVol) Resize(capacity uint64, flags uint32) error {
+func (v *VirStorageVol) Resize(capacity uint64, flags VirStorageVolResizeFlags) error {
 	result := C.virStorageVolResize(v.ptr, C.ulonglong(capacity), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -149,7 +154,7 @@ func (v *VirStorageVol) Wipe(flags uint32) error {
 	}
 	return nil
 }
-func (v *VirStorageVol) WipePattern(algorithm uint32, flags uint32) error {
+func (v *VirStorageVol) WipePattern(algorithm VirStorageVolWipeAlgorithm, flags uint32) error {
 	result := C.virStorageVolWipePattern(v.ptr, C.uint(algorithm), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
