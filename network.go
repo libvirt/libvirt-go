@@ -14,10 +14,11 @@ import (
 	"unsafe"
 )
 
-// virIPAddrType
+type VirIPAddrType int
+
 const (
-	VIR_IP_ADDR_TYPE_IPV4 = C.VIR_IP_ADDR_TYPE_IPV4
-	VIR_IP_ADDR_TYPE_IPV6 = C.VIR_IP_ADDR_TYPE_IPV6
+	VIR_IP_ADDR_TYPE_IPV4 = VirIPAddrType(C.VIR_IP_ADDR_TYPE_IPV4)
+	VIR_IP_ADDR_TYPE_IPV6 = VirIPAddrType(C.VIR_IP_ADDR_TYPE_IPV6)
 )
 
 type VirNetwork struct {
