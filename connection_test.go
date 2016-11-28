@@ -994,7 +994,7 @@ func TestListAllStoragePools(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	pools, err := conn.ListAllStoragePools(VIR_STORAGE_POOL_INACTIVE)
+	pools, err := conn.ListAllStoragePools(VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE)
 	if err != nil {
 		t.Fatal(err)
 	}

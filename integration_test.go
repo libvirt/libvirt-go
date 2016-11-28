@@ -49,7 +49,7 @@ func TestMultipleCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn VirConnection, reason int, opaque func()) {
+	callback := func(conn VirConnection, reason VirConnectCloseReason, opaque func()) {
 		if reason != VIR_CONNECT_CLOSE_REASON_KEEPALIVE {
 			t.Errorf("Expected close reason to be %d, got %d",
 				VIR_CONNECT_CLOSE_REASON_KEEPALIVE, reason)
@@ -96,7 +96,7 @@ func TestUnregisterCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn VirConnection, reason int, opaque func()) {
+	callback := func(conn VirConnection, reason VirConnectCloseReason, opaque func()) {
 		nbCall++
 	}
 	err := conn.RegisterCloseCallback(callback, nil)
