@@ -13,22 +13,24 @@ import (
 	"unsafe"
 )
 
-// virStoragePoolState
+type VirStoragePoolState int
+
 const (
-	VIR_STORAGE_POOL_INACTIVE     = C.VIR_STORAGE_POOL_INACTIVE     // Not running
-	VIR_STORAGE_POOL_BUILDING     = C.VIR_STORAGE_POOL_BUILDING     // Initializing pool,not available
-	VIR_STORAGE_POOL_RUNNING      = C.VIR_STORAGE_POOL_RUNNING      // Running normally
-	VIR_STORAGE_POOL_DEGRADED     = C.VIR_STORAGE_POOL_DEGRADED     // Running degraded
-	VIR_STORAGE_POOL_INACCESSIBLE = C.VIR_STORAGE_POOL_INACCESSIBLE // Running,but not accessible
+	VIR_STORAGE_POOL_INACTIVE     = VirStoragePoolState(C.VIR_STORAGE_POOL_INACTIVE)     // Not running
+	VIR_STORAGE_POOL_BUILDING     = VirStoragePoolState(C.VIR_STORAGE_POOL_BUILDING)     // Initializing pool,not available
+	VIR_STORAGE_POOL_RUNNING      = VirStoragePoolState(C.VIR_STORAGE_POOL_RUNNING)      // Running normally
+	VIR_STORAGE_POOL_DEGRADED     = VirStoragePoolState(C.VIR_STORAGE_POOL_DEGRADED)     // Running degraded
+	VIR_STORAGE_POOL_INACCESSIBLE = VirStoragePoolState(C.VIR_STORAGE_POOL_INACCESSIBLE) // Running,but not accessible
 )
 
-// virStoragePoolBuildFlags
+type VirStoragePoolBuildFlags int
+
 const (
-	VIR_STORAGE_POOL_BUILD_NEW          = C.VIR_STORAGE_POOL_BUILD_NEW          // Regular build from scratch
-	VIR_STORAGE_POOL_BUILD_REPAIR       = C.VIR_STORAGE_POOL_BUILD_REPAIR       // Repair / reinitialize
-	VIR_STORAGE_POOL_BUILD_RESIZE       = C.VIR_STORAGE_POOL_BUILD_RESIZE       // Extend existing pool
-	VIR_STORAGE_POOL_BUILD_NO_OVERWRITE = C.VIR_STORAGE_POOL_BUILD_NO_OVERWRITE // Do not overwrite existing pool
-	VIR_STORAGE_POOL_BUILD_OVERWRITE    = C.VIR_STORAGE_POOL_BUILD_OVERWRITE    // Overwrite data
+	VIR_STORAGE_POOL_BUILD_NEW          = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NEW)          // Regular build from scratch
+	VIR_STORAGE_POOL_BUILD_REPAIR       = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_REPAIR)       // Repair / reinitialize
+	VIR_STORAGE_POOL_BUILD_RESIZE       = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_RESIZE)       // Extend existing pool
+	VIR_STORAGE_POOL_BUILD_NO_OVERWRITE = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NO_OVERWRITE) // Do not overwrite existing pool
+	VIR_STORAGE_POOL_BUILD_OVERWRITE    = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_OVERWRITE)    // Overwrite data
 )
 
 type VirStoragePool struct {
@@ -39,7 +41,7 @@ type VirStoragePoolInfo struct {
 	ptr C.virStoragePoolInfo
 }
 
-func (p *VirStoragePool) Build(flags uint32) error {
+func (p *VirStoragePool) Build(flags VirStoragePoolBuildFlags) error {
 	result := C.virStoragePoolBuild(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -183,8 +185,8 @@ func (p *VirStoragePool) Undefine() error {
 	return nil
 }
 
-func (i *VirStoragePoolInfo) GetState() uint8 {
-	return uint8(i.ptr.state)
+func (i *VirStoragePoolInfo) GetState() VirStoragePoolState {
+	return VirStoragePoolState(i.ptr.state)
 }
 
 func (i *VirStoragePoolInfo) GetCapacityInBytes() uint64 {
