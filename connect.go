@@ -1128,3 +1128,27 @@ func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsF
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
 }
+
+func (c *VirConnection) InterfaceChangeBegin(flags uint) error {
+	ret := C.virInterfaceChangeBegin(c.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (c *VirConnection) InterfaceChangeCommit(flags uint) error {
+	ret := C.virInterfaceChangeCommit(c.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (c *VirConnection) InterfaceChangeRollback(flags uint) error {
+	ret := C.virInterfaceChangeRollback(c.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
