@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -10,6 +10,12 @@ import "C"
 
 import (
 	"unsafe"
+)
+
+type VirInterfaceXMLFlags int
+
+const (
+	VIR_INTERFACE_XML_INACTIVE = VirInterfaceXMLFlags(C.VIR_INTERFACE_XML_INACTIVE)
 )
 
 type VirInterface struct {
