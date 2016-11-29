@@ -16,13 +16,15 @@ type VirStorageVolCreateFlags int
 
 const (
 	VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA = VirStorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA)
+	VIR_STORAGE_VOL_CREATE_REFLINK           = VirStorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_REFLINK)
 )
 
 type VirStorageVolDeleteFlags int
 
 const (
-	VIR_STORAGE_VOL_DELETE_NORMAL = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_NORMAL) // Delete metadata only (fast)
-	VIR_STORAGE_VOL_DELETE_ZEROED = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_ZEROED) // Clear all data to zeros (slow)
+	VIR_STORAGE_VOL_DELETE_NORMAL         = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_NORMAL)         // Delete metadata only (fast)
+	VIR_STORAGE_VOL_DELETE_ZEROED         = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_ZEROED)         // Clear all data to zeros (slow)
+	VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS = VirStorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS) // Force removal of volume, even if in use
 )
 
 type VirStorageVolResizeFlags int
@@ -41,6 +43,7 @@ const (
 	VIR_STORAGE_VOL_DIR     = VirStorageVolType(C.VIR_STORAGE_VOL_DIR)     // Directory-passthrough based volume
 	VIR_STORAGE_VOL_NETWORK = VirStorageVolType(C.VIR_STORAGE_VOL_NETWORK) //Network volumes like RBD (RADOS Block Device)
 	VIR_STORAGE_VOL_NETDIR  = VirStorageVolType(C.VIR_STORAGE_VOL_NETDIR)  // Network accessible directory that can contain other network volumes
+	VIR_STORAGE_VOL_PLOOP   = VirStorageVolType(C.VIR_STORAGE_VOL_PLOOP)   // Ploop directory based volumes
 )
 
 type VirStorageVolWipeAlgorithm int
@@ -55,6 +58,13 @@ const (
 	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7)  // 7-pass random
 	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33) // 33-pass random
 	VIR_STORAGE_VOL_WIPE_ALG_RANDOM     = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM)     // 1-pass random
+	VIR_STORAGE_VOL_WIPE_ALG_TRIM       = VirStorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_TRIM)       // Trim the underlying storage
+)
+
+type VirStorageXMLFlags int
+
+const (
+	VIR_STORAGE_XML_INACTIVE = VirStorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
 )
 
 type VirStorageVol struct {
