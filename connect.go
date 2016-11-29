@@ -116,13 +116,13 @@ const (
 	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC  = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC)
 )
 
-type VirConnectListAllSecrets int
+type VirConnectListAllSecretsFlags int
 
 const (
-	VIR_CONNECT_LIST_SECRETS_EPHEMERAL    = VirConnectListAllSecrets(C.VIR_CONNECT_LIST_SECRETS_EPHEMERAL)
-	VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL = VirConnectListAllSecrets(C.VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL)
-	VIR_CONNECT_LIST_SECRETS_PRIVATE      = VirConnectListAllSecrets(C.VIR_CONNECT_LIST_SECRETS_PRIVATE)
-	VIR_CONNECT_LIST_SECRETS_NO_PRIVATE   = VirConnectListAllSecrets(C.VIR_CONNECT_LIST_SECRETS_NO_PRIVATE)
+	VIR_CONNECT_LIST_SECRETS_EPHEMERAL    = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_EPHEMERAL)
+	VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL)
+	VIR_CONNECT_LIST_SECRETS_PRIVATE      = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_PRIVATE)
+	VIR_CONNECT_LIST_SECRETS_NO_PRIVATE   = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_PRIVATE)
 )
 
 type VirConnectGetAllDomainStatsFlags int
@@ -556,6 +556,25 @@ func (c *VirConnection) ListStoragePools() ([]string, error) {
 		C.free(unsafe.Pointer(names[k]))
 	}
 	return goNames, nil
+}
+
+func (c *VirConnection) ListSecrets() ([]string, error) {
+	const maxSecrets = 1024
+	var uuids [maxSecrets](*C.char)
+	uuidsPtr := unsafe.Pointer(&uuids)
+	numSecrets := C.virConnectListSecrets(
+		c.ptr,
+		(**C.char)(uuidsPtr),
+		maxSecrets)
+	if numSecrets == -1 {
+		return nil, GetLastError()
+	}
+	goUuids := make([]string, numSecrets)
+	for k := 0; k < int(numSecrets); k++ {
+		goUuids[k] = C.GoString(uuids[k])
+		C.free(unsafe.Pointer(uuids[k]))
+	}
+	return goUuids, nil
 }
 
 func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
@@ -1143,6 +1162,26 @@ func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsF
 	slice := *(*[]C.virStoragePoolPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
 		pools = append(pools, VirStoragePool{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
+}
+
+func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]VirSecret, error) {
+	var cList *C.virSecretPtr
+	numPools := C.virConnectListAllSecrets(c.ptr, (**C.virSecretPtr)(&cList), C.uint(flags))
+	if numPools == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numPools),
+		Cap:  int(numPools),
+	}
+	var pools []VirSecret
+	slice := *(*[]C.virSecretPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirSecret{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
