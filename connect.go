@@ -539,6 +539,25 @@ func (c *VirConnection) ListNetworks() ([]string, error) {
 	return goNames, nil
 }
 
+func (c *VirConnection) ListNWFilters() ([]string, error) {
+	const maxFilters = 1024
+	var names [maxFilters](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numNWFilters := C.virConnectListNWFilters(
+		c.ptr,
+		(**C.char)(namesPtr),
+		maxFilters)
+	if numNWFilters == -1 {
+		return nil, GetLastError()
+	}
+	goNames := make([]string, numNWFilters)
+	for k := 0; k < int(numNWFilters); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
 func (c *VirConnection) ListStoragePools() ([]string, error) {
 	const maxPools = 1024
 	var names [maxPools](*C.char)
