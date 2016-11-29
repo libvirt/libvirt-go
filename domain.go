@@ -1723,3 +1723,69 @@ func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, e
 	C.free(unsafe.Pointer(cList))
 	return ifaces, nil
 }
+
+func (d *VirDomain) SnapshotCurrent(flags uint32) (VirDomainSnapshot, error) {
+	result := C.virDomainSnapshotCurrent(d.ptr, C.uint(flags))
+	if result == nil {
+		return VirDomainSnapshot{}, GetLastError()
+	}
+	return VirDomainSnapshot{ptr: result}, nil
+
+}
+
+func (d *VirDomain) SnapshotNum(flags VirDomainSnapshotListFlags) (int, error) {
+	result := int(C.virDomainSnapshotNum(d.ptr, C.uint(flags)))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
+func (d *VirDomain) SnapshotLookupByName(name string, flags uint32) (VirDomainSnapshot, error) {
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virDomainSnapshotLookupByName(d.ptr, cName, C.uint(flags))
+	if ptr == nil {
+		return VirDomainSnapshot{}, GetLastError()
+	}
+	return VirDomainSnapshot{ptr: ptr}, nil
+}
+
+func (d *VirDomain) SnapshotListNames(flags VirDomainSnapshotListFlags) ([]string, error) {
+	const maxNames = 1024
+	var names [maxNames](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numNames := C.virDomainSnapshotListNames(
+		d.ptr,
+		(**C.char)(namesPtr),
+		maxNames, C.uint(flags))
+	if numNames == -1 {
+		return nil, GetLastError()
+	}
+	goNames := make([]string, numNames)
+	for k := 0; k < int(numNames); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (d *VirDomain) ListAllSnapshots(flags VirDomainSnapshotListFlags) ([]VirDomainSnapshot, error) {
+	var cList *C.virDomainSnapshotPtr
+	numVols := C.virDomainListAllSnapshots(d.ptr, (**C.virDomainSnapshotPtr)(&cList), C.uint(flags))
+	if numVols == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numVols),
+		Cap:  int(numVols),
+	}
+	var pools []VirDomainSnapshot
+	slice := *(*[]C.virDomainSnapshotPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirDomainSnapshot{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
+}

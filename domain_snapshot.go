@@ -9,6 +9,7 @@ package libvirt
 import "C"
 
 import (
+	"reflect"
 	"unsafe"
 )
 
@@ -138,4 +139,99 @@ func (conn VirConnection) RestoreFlags(srcFile, xmlConf string, flags uint32) er
 		return GetLastError()
 	}
 	return nil
+}
+
+func (s *VirDomainSnapshot) IsCurrent(flags uint32) (bool, error) {
+	result := C.virDomainSnapshotIsCurrent(s.ptr, C.uint(flags))
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (s *VirDomainSnapshot) HasMetadata(flags uint32) (bool, error) {
+	result := C.virDomainSnapshotHasMetadata(s.ptr, C.uint(flags))
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (s *VirDomainSnapshot) GetXMLDesc(flags uint32) (string, error) {
+	result := C.virDomainSnapshotGetXMLDesc(s.ptr, C.uint(flags))
+	if result == nil {
+		return "", GetLastError()
+	}
+	xml := C.GoString(result)
+	C.free(unsafe.Pointer(result))
+	return xml, nil
+}
+
+func (s *VirDomainSnapshot) GetName() (string, error) {
+	name := C.virDomainSnapshotGetName(s.ptr)
+	if name == nil {
+		return "", GetLastError()
+	}
+	return C.GoString(name), nil
+}
+
+func (s *VirDomainSnapshot) GetParent(flags uint32) (VirDomainSnapshot, error) {
+	ptr := C.virDomainSnapshotGetParent(s.ptr, C.uint(flags))
+	if ptr == nil {
+		return VirDomainSnapshot{}, GetLastError()
+	}
+	return VirDomainSnapshot{ptr: ptr}, nil
+}
+
+func (s *VirDomainSnapshot) NumChildren(flags VirDomainSnapshotListFlags) (int, error) {
+	result := int(C.virDomainSnapshotNumChildren(s.ptr, C.uint(flags)))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
+func (s *VirDomainSnapshot) ListChildrenNames(flags VirDomainSnapshotListFlags) ([]string, error) {
+	const maxNames = 1024
+	var names [maxNames](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numNames := C.virDomainSnapshotListChildrenNames(
+		s.ptr,
+		(**C.char)(namesPtr),
+		maxNames, C.uint(flags))
+	if numNames == -1 {
+		return nil, GetLastError()
+	}
+	goNames := make([]string, numNames)
+	for k := 0; k < int(numNames); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (d *VirDomainSnapshot) ListAllChildren(flags VirDomainSnapshotListFlags) ([]VirDomainSnapshot, error) {
+	var cList *C.virDomainSnapshotPtr
+	numVols := C.virDomainSnapshotListAllChildren(d.ptr, (**C.virDomainSnapshotPtr)(&cList), C.uint(flags))
+	if numVols == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numVols),
+		Cap:  int(numVols),
+	}
+	var pools []VirDomainSnapshot
+	slice := *(*[]C.virDomainSnapshotPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirDomainSnapshot{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
 }
