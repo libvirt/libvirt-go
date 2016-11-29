@@ -162,6 +162,56 @@ const (
 	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL        = VirConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL)
 )
 
+type VirConnectCompareResult int
+
+const (
+	VIR_CPU_COMPARE_ERROR        = VirConnectCompareResult(C.VIR_CPU_COMPARE_ERROR)
+	VIR_CPU_COMPARE_INCOMPATIBLE = VirConnectCompareResult(C.VIR_CPU_COMPARE_INCOMPATIBLE)
+	VIR_CPU_COMPARE_IDENTICAL    = VirConnectCompareResult(C.VIR_CPU_COMPARE_IDENTICAL)
+	VIR_CPU_COMPARE_SUPERSET     = VirConnectCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
+)
+
+type VirNodeAllocPagesFlags int
+
+const (
+	VIR_NODE_ALLOC_PAGES_ADD = VirNodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_ADD)
+	VIR_NODE_ALLOC_PAGES_SET = VirNodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_SET)
+)
+
+type VirNodeSuspendTarget int
+
+const (
+	VIR_NODE_SUSPEND_TARGET_MEM    = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_MEM)
+	VIR_NODE_SUSPEND_TARGET_DISK   = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_DISK)
+	VIR_NODE_SUSPEND_TARGET_HYBRID = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_HYBRID)
+)
+
+type VirNodeGetCPUStatsAllCPUs int
+
+const (
+	VIR_NODE_CPU_STATS_ALL_CPUS = VirNodeGetCPUStatsAllCPUs(C.VIR_NODE_CPU_STATS_ALL_CPUS)
+)
+
+type VirNodeGetMemoryStatsAllCells int
+
+const (
+	VIR_NODE_MEMORY_STATS_ALL_CELLS = VirNodeGetMemoryStatsAllCells(C.VIR_NODE_MEMORY_STATS_ALL_CELLS)
+)
+
+type VirConnectCredentialType int
+
+const (
+	VIR_CRED_USERNAME     = VirConnectCredentialType(C.VIR_CRED_USERNAME)
+	VIR_CRED_AUTHNAME     = VirConnectCredentialType(C.VIR_CRED_AUTHNAME)
+	VIR_CRED_LANGUAGE     = VirConnectCredentialType(C.VIR_CRED_LANGUAGE)
+	VIR_CRED_CNONCE       = VirConnectCredentialType(C.VIR_CRED_CNONCE)
+	VIR_CRED_PASSPHRASE   = VirConnectCredentialType(C.VIR_CRED_PASSPHRASE)
+	VIR_CRED_ECHOPROMPT   = VirConnectCredentialType(C.VIR_CRED_ECHOPROMPT)
+	VIR_CRED_NOECHOPROMPT = VirConnectCredentialType(C.VIR_CRED_NOECHOPROMPT)
+	VIR_CRED_REALM        = VirConnectCredentialType(C.VIR_CRED_REALM)
+	VIR_CRED_EXTERNAL     = VirConnectCredentialType(C.VIR_CRED_EXTERNAL)
+)
+
 type VirConnection struct {
 	ptr C.virConnectPtr
 }
