@@ -303,6 +303,27 @@ const (
 
 	// given CPU is incompatible with host CPU
 	VIR_ERR_CPU_INCOMPATIBLE = ErrorNumber(C.VIR_ERR_CPU_INCOMPATIBLE)
+
+	// XML document doesn't validate against schema
+	VIR_ERR_XML_INVALID_SCHEMA = ErrorNumber(C.VIR_ERR_XML_INVALID_SCHEMA)
+
+	// Finish API succeeded but it is expected to return NULL */
+	VIR_ERR_MIGRATE_FINISH_OK = ErrorNumber(C.VIR_ERR_MIGRATE_FINISH_OK)
+
+	// authentication unavailable
+	VIR_ERR_AUTH_UNAVAILABLE = ErrorNumber(C.VIR_ERR_AUTH_UNAVAILABLE)
+
+	// Server was not found
+	VIR_ERR_NO_SERVER = ErrorNumber(C.VIR_ERR_NO_SERVER)
+
+	// Client was not found
+	VIR_ERR_NO_CLIENT = ErrorNumber(C.VIR_ERR_NO_CLIENT)
+
+	// guest agent replies with wrong id to guest sync command
+	VIR_ERR_AGENT_UNSYNCED = ErrorNumber(C.VIR_ERR_AGENT_UNSYNCED)
+
+	// error in libssh transport driver
+	VIR_ERR_LIBSSH = ErrorNumber(C.VIR_ERR_LIBSSH)
 )
 
 type ErrorDomain int
@@ -486,6 +507,27 @@ const (
 
 	// Error from firewall
 	VIR_FROM_FIREWALL = ErrorDomain(C.VIR_FROM_FIREWALL)
+
+	// Erorr from polkit code
+	VIR_FROM_POLKIT = ErrorDomain(C.VIR_FROM_POLKIT)
+
+	// Error from thread utils
+	VIR_FROM_THREAD = ErrorDomain(C.VIR_FROM_THREAD)
+
+	// Error from admin backend
+	VIR_FROM_ADMIN = ErrorDomain(C.VIR_FROM_ADMIN)
+
+	// Error from log manager
+	VIR_FROM_LOGGING = ErrorDomain(C.VIR_FROM_LOGGING)
+
+	// Error from Xen xl config code
+	VIR_FROM_XENXL = ErrorDomain(C.VIR_FROM_XENXL)
+
+	// Error from perf
+	VIR_FROM_PERF = ErrorDomain(C.VIR_FROM_PERF)
+
+	// Error from libssh
+	VIR_FROM_LIBSSH = ErrorDomain(C.VIR_FROM_LIBSSH)
 )
 
 type VirError struct {
