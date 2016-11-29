@@ -948,6 +948,20 @@ func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (VirNWFilter, er
 	return VirNWFilter{ptr: ptr}, nil
 }
 
+func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (VirNWFilter, error) {
+	if len(uuid) != C.VIR_UUID_BUFLEN {
+		return VirNWFilter{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+			int(C.VIR_UUID_BUFLEN))
+	}
+	cUuid := C.CBytes(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virNWFilterLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	if ptr == nil {
+		return VirNWFilter{}, GetLastError()
+	}
+	return VirNWFilter{ptr: ptr}, nil
+}
+
 func (c *VirConnection) LookupStorageVolByKey(key string) (VirStorageVol, error) {
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
