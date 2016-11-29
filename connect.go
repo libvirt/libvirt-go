@@ -596,6 +596,27 @@ func (c *VirConnection) ListSecrets() ([]string, error) {
 	return goUuids, nil
 }
 
+func (c *VirConnection) ListDevices(cap string, flags uint32) ([]string, error) {
+	ccap := C.CString(cap)
+	defer C.free(ccap)
+	const maxNodeDevices = 1024
+	var uuids [maxNodeDevices](*C.char)
+	uuidsPtr := unsafe.Pointer(&uuids)
+	numNodeDevices := C.virNodeListDevices(
+		c.ptr, ccap,
+		(**C.char)(uuidsPtr),
+		maxNodeDevices, C.uint(flags))
+	if numNodeDevices == -1 {
+		return nil, GetLastError()
+	}
+	goUuids := make([]string, numNodeDevices)
+	for k := 0; k < int(numNodeDevices); k++ {
+		goUuids[k] = C.GoString(uuids[k])
+		C.free(unsafe.Pointer(uuids[k]))
+	}
+	return goUuids, nil
+}
+
 func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
@@ -791,6 +812,16 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 
 func (c *VirConnection) NumOfSecrets() (int, error) {
 	result := int(C.virConnectNumOfSecrets(c.ptr))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
+	ccap := C.CString(cap)
+	defer C.free(ccap)
+	result := int(C.virNodeNumOfDevices(c.ptr, ccap, C.uint(flags)))
 	if result == -1 {
 		return 0, GetLastError()
 	}
@@ -1126,6 +1157,38 @@ func (c *VirConnection) LookupSecretByUsage(usageType VirSecretUsageType, usageI
 	return VirSecret{ptr: ptr}, nil
 }
 
+func (c *VirConnection) LookupDeviceByName(id string) (VirNodeDevice, error) {
+	cName := C.CString(id)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virNodeDeviceLookupByName(c.ptr, cName)
+	if ptr == nil {
+		return VirNodeDevice{}, GetLastError()
+	}
+	return VirNodeDevice{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (VirNodeDevice, error) {
+	cWwnn := C.CString(wwnn)
+	cWwpn := C.CString(wwpn)
+	defer C.free(unsafe.Pointer(cWwnn))
+	defer C.free(unsafe.Pointer(cWwpn))
+	ptr := C.virNodeDeviceLookupSCSIHostByWWN(c.ptr, cWwnn, cWwpn, C.uint(flags))
+	if ptr == nil {
+		return VirNodeDevice{}, GetLastError()
+	}
+	return VirNodeDevice{ptr: ptr}, nil
+}
+
+func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (VirNodeDevice, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virNodeDeviceCreateXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirNodeDevice{}, GetLastError()
+	}
+	return VirNodeDevice{ptr: ptr}, nil
+}
+
 func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
 	var cList *C.virInterfacePtr
 	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
@@ -1241,6 +1304,26 @@ func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]V
 	slice := *(*[]C.virSecretPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
 		pools = append(pools, VirSecret{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
+}
+
+func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlags) ([]VirNodeDevice, error) {
+	var cList *C.virNodeDevicePtr
+	numPools := C.virConnectListAllNodeDevices(c.ptr, (**C.virNodeDevicePtr)(&cList), C.uint(flags))
+	if numPools == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numPools),
+		Cap:  int(numPools),
+	}
+	var pools []VirNodeDevice
+	slice := *(*[]C.virNodeDevicePtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirNodeDevice{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
