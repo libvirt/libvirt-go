@@ -958,6 +958,16 @@ func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (Vi
 	return VirStoragePool{ptr: ptr}, nil
 }
 
+func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (VirStoragePool, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virStoragePoolCreateXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirStoragePool{}, GetLastError()
+	}
+	return VirStoragePool{ptr: ptr}, nil
+}
+
 func (c *VirConnection) LookupStoragePoolByName(name string) (VirStoragePool, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
@@ -972,6 +982,20 @@ func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (VirStoragePo
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
+	if ptr == nil {
+		return VirStoragePool{}, GetLastError()
+	}
+	return VirStoragePool{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (VirStoragePool, error) {
+	if len(uuid) != C.VIR_UUID_BUFLEN {
+		return VirStoragePool{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+			int(C.VIR_UUID_BUFLEN))
+	}
+	cUuid := C.CBytes(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virStoragePoolLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
 		return VirStoragePool{}, GetLastError()
 	}

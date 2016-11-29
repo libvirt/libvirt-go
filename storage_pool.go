@@ -10,6 +10,7 @@ import "C"
 
 import (
 	"io/ioutil"
+	"reflect"
 	"unsafe"
 )
 
@@ -186,6 +187,17 @@ func (p *VirStoragePool) IsActive() (bool, error) {
 	return false, nil
 }
 
+func (p *VirStoragePool) IsPersistent() (bool, error) {
+	result := C.virStoragePoolIsPersistent(p.ptr)
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
 func (p *VirStoragePool) SetAutostart(autostart bool) error {
 	var cAutostart C.int
 	switch autostart {
@@ -269,4 +281,51 @@ func (p *VirStoragePool) LookupStorageVolByName(name string) (VirStorageVol, err
 		return VirStorageVol{}, GetLastError()
 	}
 	return VirStorageVol{ptr: ptr}, nil
+}
+
+func (p *VirStoragePool) NumOfStorageVolumes() (int, error) {
+	result := int(C.virStoragePoolNumOfVolumes(p.ptr))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
+func (p *VirStoragePool) ListStorageVolumes() ([]string, error) {
+	const maxVols = 1024
+	var names [maxVols](*C.char)
+	namesPtr := unsafe.Pointer(&names)
+	numStorageVols := C.virStoragePoolListVolumes(
+		p.ptr,
+		(**C.char)(namesPtr),
+		maxVols)
+	if numStorageVols == -1 {
+		return nil, GetLastError()
+	}
+	goNames := make([]string, numStorageVols)
+	for k := 0; k < int(numStorageVols); k++ {
+		goNames[k] = C.GoString(names[k])
+		C.free(unsafe.Pointer(names[k]))
+	}
+	return goNames, nil
+}
+
+func (p *VirStoragePool) ListAllStorageVolumes(flags uint32) ([]VirStorageVol, error) {
+	var cList *C.virStorageVolPtr
+	numVols := C.virStoragePoolListAllVolumes(p.ptr, (**C.virStorageVolPtr)(&cList), C.uint(flags))
+	if numVols == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numVols),
+		Cap:  int(numVols),
+	}
+	var pools []VirStorageVol
+	slice := *(*[]C.virStorageVolPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		pools = append(pools, VirStorageVol{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return pools, nil
 }
