@@ -140,6 +140,13 @@ const (
 	VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS)
 )
 
+type VirConnectFlags int
+
+const (
+	VIR_CONNECT_RO         = VirConnectFlags(C.VIR_CONNECT_RO)
+	VIR_CONNECT_NO_ALIASES = VirConnectFlags(C.VIR_CONNECT_NO_ALIASES)
+)
+
 type VirConnection struct {
 	ptr C.virConnectPtr
 }
