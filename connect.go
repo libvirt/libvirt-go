@@ -576,7 +576,7 @@ func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
 	return VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupByUUIDString(uuid string) (VirDomain, error) {
+func (c *VirConnection) LookupDomainByUUIDString(uuid string) (VirDomain, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virDomainLookupByUUIDString(c.ptr, cUuid)

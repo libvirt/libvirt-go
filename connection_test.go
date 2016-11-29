@@ -338,7 +338,7 @@ func TestLookupDomainByUUIDString(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	dom, err := conn.LookupByUUIDString(uuid)
+	dom, err := conn.LookupDomainByUUIDString(uuid)
 	if err != nil {
 		t.Error(err)
 		return
