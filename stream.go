@@ -18,6 +18,15 @@ const (
 	VIR_STREAM_NONBLOCK = VirStreamFlags(C.VIR_STREAM_NONBLOCK)
 )
 
+type VirStreamEventType int
+
+const (
+	VIR_STREAM_EVENT_READABLE = VirStreamEventType(C.VIR_STREAM_EVENT_READABLE)
+	VIR_STREAM_EVENT_WRITABLE = VirStreamEventType(C.VIR_STREAM_EVENT_WRITABLE)
+	VIR_STREAM_EVENT_ERROR    = VirStreamEventType(C.VIR_STREAM_EVENT_ERROR)
+	VIR_STREAM_EVENT_HANGUP   = VirStreamEventType(C.VIR_STREAM_EVENT_HANGUP)
+)
+
 type VirStream struct {
 	ptr C.virStreamPtr
 }
