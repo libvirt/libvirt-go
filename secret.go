@@ -86,3 +86,30 @@ func (s *VirSecret) GetXMLDesc(flags uint32) (string, error) {
 	C.free(unsafe.Pointer(result))
 	return xml, nil
 }
+
+func (s *VirSecret) GetValue(flags uint32) ([]byte, error) {
+	var cvalue_size C.size_t
+
+	cvalue := C.virSecretGetValue(s.ptr, &cvalue_size, C.uint(flags))
+	if cvalue == nil {
+		return nil, GetLastError()
+	}
+	defer C.free(cvalue)
+	ret := C.GoBytes(unsafe.Pointer(cvalue), C.int(cvalue_size))
+	return ret, nil
+}
+
+func (s *VirSecret) SetValue(value []byte, flags uint32) error {
+	var cvalue_size C.size_t = C.size_t(len(value))
+	var cvalue *C.uchar = (*C.uchar)(C.CBytes(value))
+
+	defer C.free(cvalue)
+
+	result := C.virSecretSetValue(s.ptr, cvalue, cvalue_size, C.uint(flags))
+
+	if result == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}

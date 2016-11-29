@@ -1,6 +1,7 @@
 package libvirt
 
 import (
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"sync"
@@ -979,6 +980,20 @@ func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (VirSecr
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return VirSecret{}, GetLastError()
+	}
+	return VirSecret{ptr: ptr}, nil
+}
+
+func (c *VirConnection) LookupSecretByUUID(uuid []byte) (VirSecret, error) {
+	if len(uuid) != C.VIR_UUID_BUFLEN {
+		return VirSecret{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+			int(C.VIR_UUID_BUFLEN))
+	}
+	cUuid := C.CBytes(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virSecretLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
 		return VirSecret{}, GetLastError()
 	}
