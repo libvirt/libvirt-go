@@ -78,6 +78,19 @@ const (
 	VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER      = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER)
 )
 
+type VirConnectBaselineCPUFlags int
+
+const (
+	VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES = VirConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES)
+	VIR_CONNECT_BASELINE_CPU_MIGRATABLE      = VirConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_MIGRATABLE)
+)
+
+type VirConnectCompareCPUFlags int
+
+const (
+	VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE = VirConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE)
+)
+
 type VirConnection struct {
 	ptr C.virConnectPtr
 }
