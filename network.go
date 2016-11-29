@@ -212,6 +212,16 @@ func (n *VirNetwork) Undefine() error {
 	return nil
 }
 
+func (n *VirNetwork) Update(cmd VirNetworkUpdateCommand, section VirNetworkUpdateSection, parentIndex int, xml string, flags uint32) error {
+	cxml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cxml))
+	result := C.virNetworkUpdate(n.ptr, C.uint(cmd), C.uint(section), C.int(parentIndex), cxml, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (n *VirNetwork) GetDHCPLeases() ([]VirNetworkDHCPLease, error) {
 	var cLeases *C.virNetworkDHCPLeasePtr
 	numLeases := C.virNetworkGetDHCPLeases(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
@@ -234,6 +244,10 @@ func (n *VirNetwork) GetDHCPLeases() ([]VirNetworkDHCPLease, error) {
 
 type VirNetworkDHCPLease struct {
 	ptr C.virNetworkDHCPLeasePtr
+}
+
+func (l *VirNetworkDHCPLease) Free() {
+	C.virNetworkDHCPLeaseFree(l.ptr)
 }
 
 func (l *VirNetworkDHCPLease) GetIface() string {

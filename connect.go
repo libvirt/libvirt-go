@@ -791,6 +791,20 @@ func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (VirNetwork, erro
 	return VirNetwork{ptr: ptr}, nil
 }
 
+func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (VirNetwork, error) {
+	if len(uuid) != C.VIR_UUID_BUFLEN {
+		return VirNetwork{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+			int(C.VIR_UUID_BUFLEN))
+	}
+	cUuid := C.CBytes(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virNetworkLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	if ptr == nil {
+		return VirNetwork{}, GetLastError()
+	}
+	return VirNetwork{ptr: ptr}, nil
+}
+
 func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
 	res := int(C.virConnectSetKeepAlive(c.ptr, C.int(interval), C.uint(count)))
 	switch res {
