@@ -717,6 +717,14 @@ func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
 	return goNames, nil
 }
 
+func (c *VirConnection) NumOfDefinedDomains() (int, error) {
+	result := int(C.virConnectNumOfDefinedDomains(c.ptr))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
 func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
 	result := int(C.virConnectNumOfDefinedInterfaces(c.ptr))
 	if result == -1 {
@@ -743,6 +751,14 @@ func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
 
 func (c *VirConnection) NumOfDomains() (int, error) {
 	result := int(C.virConnectNumOfDomains(c.ptr))
+	if result == -1 {
+		return 0, GetLastError()
+	}
+	return result, nil
+}
+
+func (c *VirConnection) NumOfStoragePools() (int, error) {
+	result := int(C.virConnectNumOfStoragePools(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
 	}
