@@ -162,6 +162,24 @@ const (
 
 	// event parameter in the callback is of type DomainBlockJobEvent
 	VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2 = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2)
+
+	// event parameter in the callback is of type DomainTunableEvent
+	VIR_DOMAIN_EVENT_ID_TUNABLE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_TUNABLE)
+
+	// event parameter in the callback is of type DomainAgentLifecycleEvent
+	VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE)
+
+	// event parameter in the callback is of type DomainDeviceAddedEvent
+	VIR_DOMAIN_EVENT_ID_DEVICE_ADDED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_ADDED)
+
+	// event parameter in the callback is of type DomainMigrationIterationEvent
+	VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION)
+
+	// event parameter in the callback is of type DomainJobCompletedEvent
+	VIR_DOMAIN_EVENT_ID_JOB_COMPLETED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_JOB_COMPLETED)
+
+	// event parameter in the callback is of type DomainDeviceRemovalFailedEvent
+	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED)
 )
 
 type VirDomainEventType int
@@ -199,6 +217,9 @@ const (
 
 	// No action, a debug message logged
 	VIR_DOMAIN_EVENT_WATCHDOG_DEBUG = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_DEBUG)
+
+	// Inject a non-maskable interrupt into guest
+	VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI)
 )
 
 type VirDomainEventIOErrorAction int
@@ -278,22 +299,26 @@ const (
 	VIR_DOMAIN_RUNNING_SAVE_CANCELED      = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_SAVE_CANCELED)      /* returned from failed save process */
 	VIR_DOMAIN_RUNNING_WAKEUP             = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_WAKEUP)             /* returned from pmsuspended due to wakeup event */
 	VIR_DOMAIN_RUNNING_CRASHED            = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_CRASHED)            /* resumed from crashed */
+	VIR_DOMAIN_RUNNING_POSTCOPY           = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_POSTCOPY)           /* running in post-copy migration mode */
 )
 
 type VirDomainPausedReason int
 
 const (
-	VIR_DOMAIN_PAUSED_UNKNOWN       = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_UNKNOWN)       /* the reason is unknown */
-	VIR_DOMAIN_PAUSED_USER          = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_USER)          /* paused on user request */
-	VIR_DOMAIN_PAUSED_MIGRATION     = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_MIGRATION)     /* paused for offline migration */
-	VIR_DOMAIN_PAUSED_SAVE          = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SAVE)          /* paused for save */
-	VIR_DOMAIN_PAUSED_DUMP          = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_DUMP)          /* paused for offline core dump */
-	VIR_DOMAIN_PAUSED_IOERROR       = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_IOERROR)       /* paused due to a disk I/O error */
-	VIR_DOMAIN_PAUSED_WATCHDOG      = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_WATCHDOG)      /* paused due to a watchdog event */
-	VIR_DOMAIN_PAUSED_FROM_SNAPSHOT = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_FROM_SNAPSHOT) /* paused after restoring from snapshot */
-	VIR_DOMAIN_PAUSED_SHUTTING_DOWN = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SHUTTING_DOWN) /* paused during shutdown process */
-	VIR_DOMAIN_PAUSED_SNAPSHOT      = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SNAPSHOT)      /* paused while creating a snapshot */
-	VIR_DOMAIN_PAUSED_CRASHED       = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_CRASHED)       /* paused due to a guest crash */
+	VIR_DOMAIN_PAUSED_UNKNOWN         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_UNKNOWN)         /* the reason is unknown */
+	VIR_DOMAIN_PAUSED_USER            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_USER)            /* paused on user request */
+	VIR_DOMAIN_PAUSED_MIGRATION       = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_MIGRATION)       /* paused for offline migration */
+	VIR_DOMAIN_PAUSED_SAVE            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SAVE)            /* paused for save */
+	VIR_DOMAIN_PAUSED_DUMP            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_DUMP)            /* paused for offline core dump */
+	VIR_DOMAIN_PAUSED_IOERROR         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_IOERROR)         /* paused due to a disk I/O error */
+	VIR_DOMAIN_PAUSED_WATCHDOG        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_WATCHDOG)        /* paused due to a watchdog event */
+	VIR_DOMAIN_PAUSED_FROM_SNAPSHOT   = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_FROM_SNAPSHOT)   /* paused after restoring from snapshot */
+	VIR_DOMAIN_PAUSED_SHUTTING_DOWN   = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SHUTTING_DOWN)   /* paused during shutdown process */
+	VIR_DOMAIN_PAUSED_SNAPSHOT        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SNAPSHOT)        /* paused while creating a snapshot */
+	VIR_DOMAIN_PAUSED_CRASHED         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_CRASHED)         /* paused due to a guest crash */
+	VIR_DOMAIN_PAUSED_STARTING_UP     = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_STARTING_UP)     /* the domainis being started */
+	VIR_DOMAIN_PAUSED_POSTCOPY        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY)        /* paused for post-copy migration */
+	VIR_DOMAIN_PAUSED_POSTCOPY_FAILED = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY_FAILED) /* paused after failed post-copy */
 )
 
 type VirDomainXMLFlags int
@@ -308,14 +333,17 @@ const (
 type VirDomainEventDefinedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_DEFINED_ADDED   = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_ADDED)
-	VIR_DOMAIN_EVENT_DEFINED_UPDATED = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_UPDATED)
+	VIR_DOMAIN_EVENT_DEFINED_ADDED         = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_ADDED)
+	VIR_DOMAIN_EVENT_DEFINED_UPDATED       = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_UPDATED)
+	VIR_DOMAIN_EVENT_DEFINED_RENAMED       = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_RENAMED)
+	VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT)
 )
 
 type VirDomainEventUndefinedDetailType int
 
 const (
 	VIR_DOMAIN_EVENT_UNDEFINED_REMOVED = VirDomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_REMOVED)
+	VIR_DOMAIN_EVENT_UNDEFINED_RENAMED = VirDomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_RENAMED)
 )
 
 type VirDomainEventStartedDetailType int
@@ -331,13 +359,15 @@ const (
 type VirDomainEventSuspendedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_SUSPENDED_PAUSED        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_PAUSED)
-	VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED      = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED)
-	VIR_DOMAIN_EVENT_SUSPENDED_IOERROR       = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_IOERROR)
-	VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG      = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG)
-	VIR_DOMAIN_EVENT_SUSPENDED_RESTORED      = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_RESTORED)
-	VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT)
-	VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR     = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR)
+	VIR_DOMAIN_EVENT_SUSPENDED_PAUSED          = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_PAUSED)
+	VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED)
+	VIR_DOMAIN_EVENT_SUSPENDED_IOERROR         = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_IOERROR)
+	VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG)
+	VIR_DOMAIN_EVENT_SUSPENDED_RESTORED        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_RESTORED)
+	VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT   = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR       = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR)
+	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY)
+	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED)
 )
 
 type VirDomainEventResumedDetailType int
@@ -346,6 +376,7 @@ const (
 	VIR_DOMAIN_EVENT_RESUMED_UNPAUSED      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_UNPAUSED)
 	VIR_DOMAIN_EVENT_RESUMED_MIGRATED      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_MIGRATED)
 	VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_RESUMED_POSTCOPY      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_POSTCOPY)
 )
 
 type VirDomainEventStoppedDetailType int
@@ -525,6 +556,88 @@ const (
 	VIR_DOMAIN_PROCESS_SIGNAL_RT30 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT30)
 	VIR_DOMAIN_PROCESS_SIGNAL_RT31 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT31)
 	VIR_DOMAIN_PROCESS_SIGNAL_RT32 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT32)
+)
+
+type VirDomainBlockedReason int
+
+const (
+	VIR_DOMAIN_BLOCKED_UNKNOWN = VirDomainBlockedReason(C.VIR_DOMAIN_BLOCKED_UNKNOWN)
+)
+
+type VirDomainControlState int
+
+const (
+	VIR_DOMAIN_CONTROL_OK       = VirDomainControlState(C.VIR_DOMAIN_CONTROL_OK)
+	VIR_DOMAIN_CONTROL_JOB      = VirDomainControlState(C.VIR_DOMAIN_CONTROL_JOB)
+	VIR_DOMAIN_CONTROL_OCCUPIED = VirDomainControlState(C.VIR_DOMAIN_CONTROL_OCCUPIED)
+	VIR_DOMAIN_CONTROL_ERROR    = VirDomainControlState(C.VIR_DOMAIN_CONTROL_ERROR)
+)
+
+type VirDomainControlErrorReason int
+
+const (
+	VIR_DOMAIN_CONTROL_ERROR_REASON_NONE     = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_NONE)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN  = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR  = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL)
+)
+
+type VirDomainCrashedReason int
+
+const (
+	VIR_DOMAIN_CRASHED_UNKNOWN  = VirDomainCrashedReason(C.VIR_DOMAIN_CRASHED_UNKNOWN)
+	VIR_DOMAIN_CRASHED_PANICKED = VirDomainCrashedReason(C.VIR_DOMAIN_CRASHED_PANICKED)
+)
+
+type VirDomainEventCrashedDetailType int
+
+const (
+	VIR_DOMAIN_EVENT_CRASHED_PANICKED = VirDomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_PANICKED)
+)
+
+type VirDomainEventPMSuspendedDetailType int
+
+const (
+	VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY = VirDomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY)
+	VIR_DOMAIN_EVENT_PMSUSPENDED_DISK   = VirDomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_DISK)
+)
+
+type VirDomainNostateReason int
+
+const (
+	VIR_DOMAIN_NOSTATE_UNKNOWN = VirDomainNostateReason(C.VIR_DOMAIN_NOSTATE_UNKNOWN)
+)
+
+type VirDomainPMSuspendedReason int
+
+const (
+	VIR_DOMAIN_PMSUSPENDED_UNKNOWN = VirDomainPMSuspendedReason(C.VIR_DOMAIN_PMSUSPENDED_UNKNOWN)
+)
+
+type VirDomainPMSuspendedDiskReason int
+
+const (
+	VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN = VirDomainPMSuspendedDiskReason(C.VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN)
+)
+
+type VirDomainShutdownReason int
+
+const (
+	VIR_DOMAIN_SHUTDOWN_UNKNOWN = VirDomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_UNKNOWN)
+	VIR_DOMAIN_SHUTDOWN_USER    = VirDomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_USER)
+)
+
+type VirDomainShutoffReason int
+
+const (
+	VIR_DOMAIN_SHUTOFF_UNKNOWN       = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_UNKNOWN)
+	VIR_DOMAIN_SHUTOFF_SHUTDOWN      = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SHUTDOWN)
+	VIR_DOMAIN_SHUTOFF_DESTROYED     = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_DESTROYED)
+	VIR_DOMAIN_SHUTOFF_CRASHED       = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_CRASHED)
+	VIR_DOMAIN_SHUTOFF_MIGRATED      = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_MIGRATED)
+	VIR_DOMAIN_SHUTOFF_SAVED         = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SAVED)
+	VIR_DOMAIN_SHUTOFF_FAILED        = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FAILED)
+	VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT)
 )
 
 type VirDomain struct {
