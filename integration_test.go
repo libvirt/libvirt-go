@@ -962,43 +962,17 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 	}
 	defer dom.Destroy()
 
-	// ... if @params is NULL and @nparams is 0 and @ncpus is 0, the
-	// number of cpus available to query is returned. From the host perspective,
-	ncpus, err := dom.GetCPUStats(nil, 0, 0, 0, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if ncpus < 1 {
-		t.Fatal("Number of CPUs should be 1, got", ncpus)
-	}
-
-	// ... if @params is NULL and @nparams is 0 and @ncpus is 1,
-	// and the return value will be how many statistics are available for the given @start_cpu.
-	nparams, err := dom.GetCPUStats(nil, 0, 0, 1, 0)
+	stats, err := dom.GetCPUStats(0, 0, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	const lxcNumParams = 1
-	const lxcParamName = "cpu_time"
-
-	if nparams != lxcNumParams {
-		t.Fatal("Number of parameters for this hypervisor should be 2, got ", nparams)
-	}
-	var params VirTypedParameters
-	if _, err = dom.GetCPUStats(&params, nparams, 0, uint32(ncpus), 0); err != nil {
-		t.Fatal(err)
+	if len(stats) < 1 {
+		t.Errorf("Expected stats for at least one CPU")
 	}
 
-	if len(params) != (lxcNumParams * ncpus) {
-		t.Fatalf("Wanted %d returned parameters, got %d", lxcNumParams*ncpus, len(params))
-	}
-	param := params[0]
-	if param.Name != lxcParamName {
-		t.Fatalf("Wanted param '%s', got '%s'", lxcParamName, param.Name)
-	}
-	if _, ok := param.Value.(uint64); !ok {
-		t.Fatalf("Wanted uint64 param, got %v instead", param.Value)
+	if !stats[0].CpuTimeSet {
+		t.Errorf("Expected CpuTime to be set")
 	}
 }
 
@@ -1096,38 +1070,6 @@ func TestIntergrationListAllNWFilters(t *testing.T) {
 	}
 	if found == false {
 		t.Fatalf("NWFilter %s not found", testNWFilterName)
-	}
-}
-
-func TestIntegrationDomainBlockStatsFlags(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
-		}
-	}()
-
-	dom, err := defineTestLxcDomain(conn, "")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		dom.Undefine()
-		dom.Free()
-	}()
-
-	if err := dom.Create(); err != nil {
-		t.Fatal(err)
-	}
-	defer dom.Destroy()
-
-	// special case, count number of parameters
-	_, err = dom.BlockStatsFlags("", nil, 0, 0)
-	if err != nil {
-		t.Fatal(err)
 	}
 }
 

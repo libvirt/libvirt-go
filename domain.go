@@ -11,7 +11,6 @@ import "C"
 
 import (
 	"reflect"
-	"strings"
 	"unsafe"
 )
 
@@ -874,11 +873,6 @@ type VirDomainInfo struct {
 	ptr C.virDomainInfo
 }
 
-type VirTypedParameter struct {
-	Name  string
-	Value interface{}
-}
-
 type VirDomainMemoryStat struct {
 	Tag int32
 	Val uint64
@@ -890,49 +884,6 @@ type VirVcpuInfo struct {
 	CpuTime uint64
 	Cpu     int32
 	CpuMap  []uint32
-}
-
-type VirTypedParameters []VirTypedParameter
-
-func (dest *VirTypedParameters) loadFromCPtr(params C.virTypedParameterPtr, nParams int) {
-	// reset slice
-	*dest = VirTypedParameters{}
-
-	// transform that C array to a go slice
-	hdr := reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(params)),
-		Len:  int(nParams),
-		Cap:  int(nParams),
-	}
-	rawParams := *(*[]C.struct__virTypedParameter)(unsafe.Pointer(&hdr))
-
-	// there is probably a more elegant way to deal with that union
-	for _, rawParam := range rawParams {
-		name := C.GoStringN(&rawParam.field[0], C.VIR_TYPED_PARAM_FIELD_LENGTH)
-		if nbIdx := strings.Index(name, "\x00"); nbIdx != -1 {
-			name = name[:nbIdx]
-		}
-		switch rawParam._type {
-		case C.VIR_TYPED_PARAM_INT:
-			*dest = append(*dest, VirTypedParameter{name, int(*(*C.int)(unsafe.Pointer(&rawParam.value[0])))})
-		case C.VIR_TYPED_PARAM_UINT:
-			*dest = append(*dest, VirTypedParameter{name, uint32(*(*C.uint)(unsafe.Pointer(&rawParam.value[0])))})
-		case C.VIR_TYPED_PARAM_LLONG:
-			*dest = append(*dest, VirTypedParameter{name, int64(*(*C.longlong)(unsafe.Pointer(&rawParam.value[0])))})
-		case C.VIR_TYPED_PARAM_ULLONG:
-			*dest = append(*dest, VirTypedParameter{name, uint64(*(*C.ulonglong)(unsafe.Pointer(&rawParam.value[0])))})
-		case C.VIR_TYPED_PARAM_DOUBLE:
-			*dest = append(*dest, VirTypedParameter{name, float64(*(*C.double)(unsafe.Pointer(&rawParam.value[0])))})
-		case C.VIR_TYPED_PARAM_BOOLEAN:
-			if int(*(*C.char)(unsafe.Pointer(&rawParam.value[0]))) == 1 {
-				*dest = append(*dest, VirTypedParameter{name, true})
-			} else {
-				*dest = append(*dest, VirTypedParameter{name, false})
-			}
-		case C.VIR_TYPED_PARAM_STRING:
-			*dest = append(*dest, VirTypedParameter{name, C.GoString((*C.char)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(&rawParam.value[0])))))})
-		}
-	}
 }
 
 func (d *VirDomain) Free() error {
@@ -1148,56 +1099,162 @@ func (i *VirDomainInfo) GetCpuTime() uint64 {
 	return uint64(i.ptr.cpuTime)
 }
 
-func (d *VirDomain) GetCPUStats(params *VirTypedParameters, nParams int, startCpu int, nCpus uint32, flags uint32) (int, error) {
-	var cParams C.virTypedParameterPtr
-	var cParamsLen int
-
-	cParamsLen = int(nCpus) * nParams
-
-	if params != nil && cParamsLen > 0 {
-		cParams = (C.virTypedParameterPtr)(C.calloc(C.size_t(cParamsLen), C.size_t(unsafe.Sizeof(C.struct__virTypedParameter{}))))
-		defer C.virTypedParamsFree(cParams, C.int(cParamsLen))
-	} else {
-		cParamsLen = 0
-		cParams = nil
-	}
-
-	result := int(C.virDomainGetCPUStats(d.ptr, (C.virTypedParameterPtr)(cParams), C.uint(nParams), C.int(startCpu), C.uint(nCpus), C.uint(flags)))
-	if result == -1 {
-		return result, GetLastError()
-	}
-
-	if cParamsLen > 0 {
-		params.loadFromCPtr(cParams, cParamsLen)
-	}
-
-	return result, nil
+type VirDomainCPUStats struct {
+	CpuTimeSet    bool
+	CpuTime       uint64
+	UserTimeSet   bool
+	UserTime      uint64
+	SystemTimeSet bool
+	SystemTime    uint64
+	VcpuTimeSet   bool
+	VcpuTime      uint64
 }
 
-// Warning: No test written for this function
-func (d *VirDomain) GetInterfaceParameters(device string, params *VirTypedParameters, nParams *int, flags uint32) (int, error) {
-	var cParams C.virTypedParameterPtr
+func getCPUStatsFieldInfo(params *VirDomainCPUStats) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_CPU_STATS_CPUTIME: typedParamsFieldInfo{
+			set: &params.CpuTimeSet,
+			ul:  &params.CpuTime,
+		},
+		C.VIR_DOMAIN_CPU_STATS_USERTIME: typedParamsFieldInfo{
+			set: &params.UserTimeSet,
+			ul:  &params.UserTime,
+		},
+		C.VIR_DOMAIN_CPU_STATS_SYSTEMTIME: typedParamsFieldInfo{
+			set: &params.SystemTimeSet,
+			ul:  &params.SystemTime,
+		},
+		C.VIR_DOMAIN_CPU_STATS_VCPUTIME: typedParamsFieldInfo{
+			set: &params.VcpuTimeSet,
+			ul:  &params.VcpuTime,
+		},
+	}
+}
 
-	if params != nil && *nParams > 0 {
-		cParams = (C.virTypedParameterPtr)(C.calloc(C.size_t(*nParams), C.size_t(unsafe.Sizeof(C.struct__virTypedParameter{}))))
-		defer C.virTypedParamsFree(cParams, C.int(*nParams))
+func (d *VirDomain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]VirDomainCPUStats, error) {
+	if nCpus == 0 {
+		if startCpu == -1 {
+			nCpus = 1
+		} else {
+			ret := C.virDomainGetCPUStats(d.ptr, nil, 0, 0, 0, 0)
+			if ret == -1 {
+				return []VirDomainCPUStats{}, GetLastError()
+			}
+			nCpus = uint(ret)
+		}
+	}
+
+	ret := C.virDomainGetCPUStats(d.ptr, nil, 0, C.int(startCpu), C.uint(nCpus), 0)
+	if ret == -1 {
+		return []VirDomainCPUStats{}, GetLastError()
+	}
+	nparams := uint(ret)
+
+	var cparams []C.virTypedParameter
+	var nallocparams uint
+	if startCpu == -1 {
+		nallocparams = nparams
 	} else {
-		cParams = nil
+		nallocparams = nparams * nCpus
+	}
+	cparams = make([]C.virTypedParameter, nallocparams)
+	ret = C.virDomainGetCPUStats(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), C.uint(nparams), C.int(startCpu), C.uint(nCpus), C.uint(flags))
+	if ret == -1 {
+		return []VirDomainCPUStats{}, GetLastError()
 	}
 
-	cDevice := C.CString(device)
-	defer C.free(unsafe.Pointer(cDevice))
-	result := int(C.virDomainGetInterfaceParameters(d.ptr, cDevice,
-		(C.virTypedParameterPtr)(cParams), (*C.int)(unsafe.Pointer(nParams)), C.uint(flags)))
-	if result == -1 {
-		return result, GetLastError()
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), C.int(nallocparams))
+
+	stats := make([]VirDomainCPUStats, nCpus)
+	for i := 0; i < int(nCpus); i++ {
+		offset := i * int(nparams)
+		info := getCPUStatsFieldInfo(&stats[i])
+		cparamscpu := cparams[offset : offset+int(ret)]
+		err := typedParamsUnpack(cparamscpu, info)
+		if err != nil {
+			return []VirDomainCPUStats{}, err
+		}
+	}
+	return stats, nil
+}
+
+type VirDomainInterfaceParameters struct {
+	BandwidthInAverageSet  bool
+	BandwidthInAverage     uint
+	BandwidthInPeakSet     bool
+	BandwidthInPeak        uint
+	BandwidthInBurstSet    bool
+	BandwidthInBurst       uint
+	BandwidthInFloorSet    bool
+	BandwidthInFloor       uint
+	BandwidthOutAverageSet bool
+	BandwidthOutAverage    uint
+	BandwidthOutPeakSet    bool
+	BandwidthOutPeak       uint
+	BandwidthOutBurstSet   bool
+	BandwidthOutBurst      uint
+}
+
+func getInterfaceParameterFieldInfo(params *VirDomainInterfaceParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_BANDWIDTH_IN_AVERAGE: typedParamsFieldInfo{
+			set: &params.BandwidthInAverageSet,
+			ui:  &params.BandwidthInAverage,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_IN_PEAK: typedParamsFieldInfo{
+			set: &params.BandwidthInPeakSet,
+			ui:  &params.BandwidthInPeak,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_IN_BURST: typedParamsFieldInfo{
+			set: &params.BandwidthInBurstSet,
+			ui:  &params.BandwidthInBurst,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_IN_FLOOR: typedParamsFieldInfo{
+			set: &params.BandwidthInFloorSet,
+			ui:  &params.BandwidthInFloor,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_OUT_AVERAGE: typedParamsFieldInfo{
+			set: &params.BandwidthOutAverageSet,
+			ui:  &params.BandwidthOutAverage,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_OUT_PEAK: typedParamsFieldInfo{
+			set: &params.BandwidthOutPeakSet,
+			ui:  &params.BandwidthOutPeak,
+		},
+		C.VIR_DOMAIN_BANDWIDTH_OUT_BURST: typedParamsFieldInfo{
+			set: &params.BandwidthOutBurstSet,
+			ui:  &params.BandwidthOutBurst,
+		},
+	}
+}
+
+func (d *VirDomain) GetInterfaceParameters(device string, flags uint32) (*VirDomainInterfaceParameters, error) {
+	params := &VirDomainInterfaceParameters{}
+	info := getInterfaceParameterFieldInfo(params)
+
+	var nparams C.int
+
+	cdevice := C.CString(device)
+	defer C.free(cdevice)
+	ret := C.virDomainGetInterfaceParameters(d.ptr, cdevice, nil, &nparams, C.uint(0))
+	if ret == -1 {
+		return nil, GetLastError()
 	}
 
-	if params != nil && *nParams > 0 {
-		params.loadFromCPtr(cParams, *nParams)
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetInterfaceParameters(d.ptr, cdevice, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
 	}
 
-	return result, nil
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
 }
 
 func (d *VirDomain) GetMetadata(tipus VirDomainMetadataType, uri string, flags uint32) (string, error) {
@@ -1411,51 +1468,98 @@ func (d *VirDomain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint)
 	return nil
 }
 
-func (d *VirDomain) BlockStatsFlags(disk string, params *VirTypedParameters, nParams int, flags uint32) (int, error) {
-	var cParams C.virTypedParameterPtr
-	cDisk := C.CString(disk)
-	defer C.free(unsafe.Pointer(cDisk))
-
-	cParamsLen := C.int(nParams)
-
-	if params != nil && nParams > 0 {
-		cParams = (C.virTypedParameterPtr)(C.calloc(C.size_t(nParams), C.size_t(unsafe.Sizeof(C.struct__virTypedParameter{}))))
-		defer C.virTypedParamsFree(cParams, cParamsLen)
-	} else {
-		cParams = nil
-	}
-
-	result := int(C.virDomainBlockStatsFlags(d.ptr, cDisk, (C.virTypedParameterPtr)(cParams), &cParamsLen, C.uint(flags)))
-	if result == -1 {
-		return result, GetLastError()
-	}
-
-	if cParamsLen > 0 && params != nil {
-		params.loadFromCPtr(cParams, nParams)
-	}
-
-	return int(cParamsLen), nil
-}
-
 type VirDomainBlockStats struct {
-	RdReq   int64
-	WrReq   int64
-	RdBytes int64
-	WrBytes int64
+	RdBytesSet         bool
+	RdBytes            int64
+	RdReqSet           bool
+	RdReq              int64
+	RdTotalTimesSet    bool
+	RdTotalTimes       int64
+	WrBytesSet         bool
+	WrBytes            int64
+	WrReqSet           bool
+	WrReq              int64
+	WrTotalTimesSet    bool
+	WrTotalTimes       int64
+	FlushReqSet        bool
+	FlushReq           int64
+	FlushTotalTimesSet bool
+	FlushTotalTimes    int64
+	ErrsSet            bool
+	Errs               int64
 }
 
-type VirDomainInterfaceStats struct {
-	RxBytes   int64
-	RxPackets int64
-	RxErrs    int64
-	RxDrop    int64
-	TxBytes   int64
-	TxPackets int64
-	TxErrs    int64
-	TxDrop    int64
+func getBlockStatsFieldInfo(params *VirDomainBlockStats) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_BLOCK_STATS_READ_BYTES: typedParamsFieldInfo{
+			set: &params.RdBytesSet,
+			l:   &params.RdBytes,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_READ_REQ: typedParamsFieldInfo{
+			set: &params.RdReqSet,
+			l:   &params.RdReq,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_READ_TOTAL_TIMES: typedParamsFieldInfo{
+			set: &params.RdTotalTimesSet,
+			l:   &params.RdTotalTimes,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_WRITE_BYTES: typedParamsFieldInfo{
+			set: &params.WrBytesSet,
+			l:   &params.WrBytes,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_WRITE_REQ: typedParamsFieldInfo{
+			set: &params.WrReqSet,
+			l:   &params.WrReq,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_WRITE_TOTAL_TIMES: typedParamsFieldInfo{
+			set: &params.WrTotalTimesSet,
+			l:   &params.WrTotalTimes,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_FLUSH_REQ: typedParamsFieldInfo{
+			set: &params.FlushReqSet,
+			l:   &params.FlushReq,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_FLUSH_TOTAL_TIMES: typedParamsFieldInfo{
+			set: &params.FlushTotalTimesSet,
+			l:   &params.FlushTotalTimes,
+		},
+		C.VIR_DOMAIN_BLOCK_STATS_ERRS: typedParamsFieldInfo{
+			set: &params.ErrsSet,
+			l:   &params.Errs,
+		},
+	}
 }
 
-func (d *VirDomain) BlockStats(path string) (VirDomainBlockStats, error) {
+func (d *VirDomain) BlockStatsFlags(disk string, flags uint32) (*VirDomainBlockStats, error) {
+	params := &VirDomainBlockStats{}
+	info := getBlockStatsFieldInfo(params)
+
+	var nparams C.int
+
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	ret := C.virDomainBlockStatsFlags(d.ptr, cdisk, nil, &nparams, C.uint(0))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainBlockStatsFlags(d.ptr, cdisk, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) BlockStats(path string) (*VirDomainBlockStats, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 
@@ -1467,17 +1571,40 @@ func (d *VirDomain) BlockStats(path string) (VirDomainBlockStats, error) {
 	result := C.virDomainBlockStats(d.ptr, cPath, (C.virDomainBlockStatsPtr)(cStats), size)
 
 	if result != 0 {
-		return VirDomainBlockStats{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainBlockStats{
-		WrReq:   int64(cStats.wr_req),
-		RdReq:   int64(cStats.rd_req),
-		RdBytes: int64(cStats.rd_bytes),
-		WrBytes: int64(cStats.wr_bytes),
+	return &VirDomainBlockStats{
+		WrReqSet:   true,
+		WrReq:      int64(cStats.wr_req),
+		RdReqSet:   true,
+		RdReq:      int64(cStats.rd_req),
+		RdBytesSet: true,
+		RdBytes:    int64(cStats.rd_bytes),
+		WrBytesSet: true,
+		WrBytes:    int64(cStats.wr_bytes),
 	}, nil
 }
 
-func (d *VirDomain) InterfaceStats(path string) (VirDomainInterfaceStats, error) {
+type VirDomainInterfaceStats struct {
+	RxBytesSet   bool
+	RxBytes      int64
+	RxPacketsSet bool
+	RxPackets    int64
+	RxErrsSet    bool
+	RxErrs       int64
+	RxDropSet    bool
+	RxDrop       int64
+	TxBytesSet   bool
+	TxBytes      int64
+	TxPacketsSet bool
+	TxPackets    int64
+	TxErrsSet    bool
+	TxErrs       int64
+	TxDropSet    bool
+	TxDrop       int64
+}
+
+func (d *VirDomain) InterfaceStats(path string) (*VirDomainInterfaceStats, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 
@@ -1489,17 +1616,25 @@ func (d *VirDomain) InterfaceStats(path string) (VirDomainInterfaceStats, error)
 	result := C.virDomainInterfaceStats(d.ptr, cPath, (C.virDomainInterfaceStatsPtr)(cStats), size)
 
 	if result != 0 {
-		return VirDomainInterfaceStats{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainInterfaceStats{
-		RxBytes:   int64(cStats.rx_bytes),
-		RxPackets: int64(cStats.rx_packets),
-		RxErrs:    int64(cStats.rx_errs),
-		RxDrop:    int64(cStats.rx_drop),
-		TxBytes:   int64(cStats.tx_bytes),
-		TxPackets: int64(cStats.tx_packets),
-		TxErrs:    int64(cStats.tx_errs),
-		TxDrop:    int64(cStats.tx_drop),
+	return &VirDomainInterfaceStats{
+		RxBytesSet:   true,
+		RxBytes:      int64(cStats.rx_bytes),
+		RxPacketsSet: true,
+		RxPackets:    int64(cStats.rx_packets),
+		RxErrsSet:    true,
+		RxErrs:       int64(cStats.rx_errs),
+		RxDropSet:    true,
+		RxDrop:       int64(cStats.rx_drop),
+		TxBytesSet:   true,
+		TxBytes:      int64(cStats.tx_bytes),
+		TxPacketsSet: true,
+		TxPackets:    int64(cStats.tx_packets),
+		TxErrsSet:    true,
+		TxErrs:       int64(cStats.tx_errs),
+		TxDropSet:    true,
+		TxDrop:       int64(cStats.tx_drop),
 	}, nil
 }
 
