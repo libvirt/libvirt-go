@@ -192,10 +192,8 @@ const (
 	VIR_NODE_CPU_STATS_ALL_CPUS = VirNodeGetCPUStatsAllCPUs(C.VIR_NODE_CPU_STATS_ALL_CPUS)
 )
 
-type VirNodeGetMemoryStatsAllCells int
-
 const (
-	VIR_NODE_MEMORY_STATS_ALL_CELLS = VirNodeGetMemoryStatsAllCells(C.VIR_NODE_MEMORY_STATS_ALL_CELLS)
+	VIR_NODE_MEMORY_STATS_ALL_CELLS = int(C.VIR_NODE_MEMORY_STATS_ALL_CELLS)
 )
 
 type VirConnectCredentialType int
@@ -1347,6 +1345,337 @@ func (c *VirConnection) InterfaceChangeCommit(flags uint) error {
 
 func (c *VirConnection) InterfaceChangeRollback(flags uint) error {
 	ret := C.virInterfaceChangeRollback(c.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (c *VirConnection) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags VirNodeAllocPagesFlags) (int, error) {
+	cpages := make([]C.uint, len(pageSizes))
+	ccounts := make([]C.ulonglong, len(pageSizes))
+
+	i := 0
+	for key, val := range pageSizes {
+		cpages[i] = C.uint(key)
+		ccounts[i] = C.ulonglong(val)
+		i++
+	}
+
+	ret := C.virNodeAllocPages(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpages)),
+		(*C.ulonglong)(unsafe.Pointer(&ccounts)), C.int(startCell), C.uint(cellCount), C.uint(flags))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return int(ret), nil
+}
+
+func (c *VirConnection) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
+	var ccpumap *C.uchar
+	var conline C.uint
+	ret := C.virNodeGetCPUMap(c.ptr, &ccpumap, &conline, C.uint(flags))
+	if ret == -1 {
+		return map[int]bool{}, 0, GetLastError()
+	}
+	defer C.free(ccpumap)
+
+	cpumapbytes := C.GoBytes(unsafe.Pointer(ccpumap), C.int(ret/8))
+
+	cpumap := make(map[int]bool, 0)
+	for i := 0; i < int(ret); i++ {
+		idx := int(i / 8)
+		val := byte(cpumapbytes[idx])
+		shift := i % 8
+		cpumap[i] = (val & (1 << uint(shift))) == 1
+	}
+
+	return cpumap, uint(conline), nil
+}
+
+type VirNodeCPUStats struct {
+	KernelSet      bool
+	Kernel         uint64
+	UserSet        bool
+	User           uint64
+	IdleSet        bool
+	Idle           uint64
+	IowaitSet      bool
+	Iowait         uint64
+	IntrSet        bool
+	Intr           uint64
+	UtilizationSet bool
+	Utilization    uint64
+}
+
+func (c *VirConnection) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats, error) {
+	var nparams C.int
+
+	ret := C.virNodeGetCPUStats(c.ptr, C.int(cpuNum), nil, &nparams, C.uint(0))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	params := make([]C.virNodeCPUStats, nparams)
+	ret = C.virNodeGetCPUStats(c.ptr, C.int(cpuNum), (*C.virNodeCPUStats)(unsafe.Pointer(&params)), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	stats := &VirNodeCPUStats{}
+	for i := 0; i < int(nparams); i++ {
+		param := params[i]
+		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
+		switch field {
+		case C.VIR_NODE_CPU_STATS_KERNEL:
+			stats.KernelSet = true
+			stats.Kernel = uint64(param.value)
+		case C.VIR_NODE_CPU_STATS_USER:
+			stats.UserSet = true
+			stats.User = uint64(param.value)
+		case C.VIR_NODE_CPU_STATS_IDLE:
+			stats.IdleSet = true
+			stats.Idle = uint64(param.value)
+		case C.VIR_NODE_CPU_STATS_IOWAIT:
+			stats.IowaitSet = true
+			stats.Iowait = uint64(param.value)
+		case C.VIR_NODE_CPU_STATS_INTR:
+			stats.IntrSet = true
+			stats.Intr = uint64(param.value)
+		case C.VIR_NODE_CPU_STATS_UTILIZATION:
+			stats.UtilizationSet = true
+			stats.Utilization = uint64(param.value)
+		}
+	}
+
+	return stats, nil
+}
+
+func (c *VirConnection) GetCellsFreeMemory(startCell int, maxCells int) ([]uint64, error) {
+	cmem := make([]C.ulonglong, maxCells)
+	ret := C.virNodeGetCellsFreeMemory(c.ptr, (*C.ulonglong)(unsafe.Pointer(&cmem[0])), C.int(startCell), C.int(maxCells))
+	if ret == -1 {
+		return []uint64{}, GetLastError()
+	}
+
+	mem := make([]uint64, ret)
+	for i := 0; i < int(ret); i++ {
+		mem[i] = uint64(cmem[i])
+	}
+
+	return mem, nil
+}
+
+func (c *VirConnection) GetFreeMemory() (uint64, error) {
+	ret := C.virNodeGetFreeMemory(c.ptr)
+	if ret == 0 {
+		return 0, GetLastError()
+	}
+
+	return (uint64)(ret), nil
+}
+
+func (c *VirConnection) GetFreePages(pageSizes []uint64, startCell int, maxCells uint, flags uint32) ([]uint64, error) {
+	cpageSizes := make([]C.uint, len(pageSizes))
+	ccounts := make([]C.ulonglong, len(pageSizes)*int(maxCells))
+
+	for i := 0; i < len(pageSizes); i++ {
+		cpageSizes[i] = C.uint(pageSizes[i])
+	}
+
+	ret := C.virNodeGetFreePages(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
+		C.uint(maxCells), (*C.ulonglong)(unsafe.Pointer(&ccounts)), C.uint(flags))
+	if ret == -1 {
+		return []uint64{}, GetLastError()
+	}
+
+	counts := make([]uint64, ret)
+	for i := 0; i < int(ret); i++ {
+		counts[i] = uint64(ccounts[i])
+	}
+
+	return counts, nil
+}
+
+type VirNodeMemoryParameters struct {
+	ShmPagesToScanSet      bool
+	ShmPagesToScan         uint
+	ShmSleepMillisecsSet   bool
+	ShmSleepMillisecs      uint
+	ShmPagesSharedSet      bool
+	ShmPagesShared         uint64
+	ShmPagesSharingSet     bool
+	ShmPagesSharing        uint64
+	ShmPagesUnsharedSet    bool
+	ShmPagesUnshared       uint64
+	ShmPagesVolatileSet    bool
+	ShmPagesVolatile       uint64
+	ShmFullScansSet        bool
+	ShmFullScans           uint64
+	ShmMergeAcrossNodesSet bool
+	ShmMergeAcrossNodes    uint
+}
+
+func getMemoryParameterFieldInfo(params *VirNodeMemoryParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_NODE_MEMORY_SHARED_PAGES_TO_SCAN: typedParamsFieldInfo{
+			set: &params.ShmPagesToScanSet,
+			ui:  &params.ShmPagesToScan,
+		},
+		C.VIR_NODE_MEMORY_SHARED_SLEEP_MILLISECS: typedParamsFieldInfo{
+			set: &params.ShmSleepMillisecsSet,
+			ui:  &params.ShmSleepMillisecs,
+		},
+		C.VIR_NODE_MEMORY_SHARED_MERGE_ACROSS_NODES: typedParamsFieldInfo{
+			set: &params.ShmMergeAcrossNodesSet,
+			ui:  &params.ShmMergeAcrossNodes,
+		},
+		C.VIR_NODE_MEMORY_SHARED_PAGES_SHARED: typedParamsFieldInfo{
+			set: &params.ShmPagesSharedSet,
+			ul:  &params.ShmPagesShared,
+		},
+		C.VIR_NODE_MEMORY_SHARED_PAGES_SHARING: typedParamsFieldInfo{
+			set: &params.ShmPagesSharingSet,
+			ul:  &params.ShmPagesSharing,
+		},
+		C.VIR_NODE_MEMORY_SHARED_PAGES_UNSHARED: typedParamsFieldInfo{
+			set: &params.ShmPagesUnsharedSet,
+			ul:  &params.ShmPagesUnshared,
+		},
+		C.VIR_NODE_MEMORY_SHARED_PAGES_VOLATILE: typedParamsFieldInfo{
+			set: &params.ShmPagesVolatileSet,
+			ul:  &params.ShmPagesVolatile,
+		},
+		C.VIR_NODE_MEMORY_SHARED_FULL_SCANS: typedParamsFieldInfo{
+			set: &params.ShmFullScansSet,
+			ul:  &params.ShmFullScans,
+		},
+	}
+}
+
+func (c *VirConnection) GetMemoryParameters(flags uint32) (*VirNodeMemoryParameters, error) {
+	params := &VirNodeMemoryParameters{}
+	info := getMemoryParameterFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virNodeGetMemoryParameters(c.ptr, nil, &nparams, C.uint(0))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virNodeGetMemoryParameters(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+type VirNodeMemoryStats struct {
+	TotalSet   bool
+	Total      uint64
+	FreeSet    bool
+	Free       uint64
+	BuffersSet bool
+	Buffers    uint64
+	CachedSet  bool
+	Cached     uint64
+}
+
+func (c *VirConnection) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats, error) {
+	var nparams C.int
+
+	ret := C.virNodeGetMemoryStats(c.ptr, C.int(cellNum), nil, &nparams, 0)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	params := make([]C.virNodeMemoryStats, nparams)
+	ret = C.virNodeGetMemoryStats(c.ptr, C.int(cellNum), (*C.virNodeMemoryStats)(unsafe.Pointer(&params)), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	stats := &VirNodeMemoryStats{}
+	for i := 0; i < int(nparams); i++ {
+		param := params[i]
+		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
+		switch field {
+		case C.VIR_NODE_MEMORY_STATS_TOTAL:
+			stats.TotalSet = true
+			stats.Total = uint64(param.value)
+		case C.VIR_NODE_MEMORY_STATS_FREE:
+			stats.FreeSet = true
+			stats.Free = uint64(param.value)
+		case C.VIR_NODE_MEMORY_STATS_BUFFERS:
+			stats.BuffersSet = true
+			stats.Buffers = uint64(param.value)
+		case C.VIR_NODE_MEMORY_STATS_CACHED:
+			stats.CachedSet = true
+			stats.Cached = uint64(param.value)
+		}
+	}
+
+	return stats, nil
+}
+
+type VirNodeSecurityModel struct {
+	Model string
+	Doi   string
+}
+
+func (c *VirConnection) GetSecurityModel() (*VirNodeSecurityModel, error) {
+	var cmodel C.virSecurityModel
+	ret := C.virNodeGetSecurityModel(c.ptr, &cmodel)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &VirNodeSecurityModel{
+		Model: C.GoString((*C.char)(unsafe.Pointer(&cmodel.model))),
+		Doi:   C.GoString((*C.char)(unsafe.Pointer(&cmodel.doi))),
+	}, nil
+}
+
+func (c *VirConnection) SetMemoryParameters(params *VirNodeMemoryParameters, flags uint32) error {
+	info := getMemoryParameterFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virNodeGetMemoryParameters(c.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virNodeGetMemoryParameters(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virNodeSetMemoryParameters(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+func (c *VirConnection) SuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+	ret := C.virNodeSuspendForDuration(c.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
