@@ -2062,3 +2062,307 @@ func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uin
 
 	return &data, nil
 }
+
+func (d *VirDomain) Migrate(dconn *VirConnection, flags VirDomainMigrateFlags, dname string, uri string, bandwidth uint64) (*VirDomain, error) {
+	var cdname *C.char
+	if dname != "" {
+		cdname = C.CString(dname)
+		defer C.free(cdname)
+	}
+	var curi *C.char
+	if uri != "" {
+		curi = C.CString(uri)
+		defer C.free(curi)
+	}
+
+	ret := C.virDomainMigrate(d.ptr, dconn.ptr, C.ulong(flags), cdname, curi, C.ulong(bandwidth))
+	if ret == nil {
+		return nil, GetLastError()
+	}
+
+	return &VirDomain{
+		ptr: ret,
+	}, nil
+}
+
+func (d *VirDomain) Migrate2(dconn *VirConnection, dxml string, flags VirDomainMigrateFlags, dname string, uri string, bandwidth uint64) (*VirDomain, error) {
+	var cdxml *C.char
+	if dxml != "" {
+		cdxml = C.CString(dxml)
+		defer C.free(cdxml)
+	}
+	var cdname *C.char
+	if dname != "" {
+		cdname = C.CString(dname)
+		defer C.free(cdname)
+	}
+	var curi *C.char
+	if uri != "" {
+		curi = C.CString(uri)
+		defer C.free(curi)
+	}
+
+	ret := C.virDomainMigrate2(d.ptr, dconn.ptr, cdxml, C.ulong(flags), cdname, curi, C.ulong(bandwidth))
+	if ret == nil {
+		return nil, GetLastError()
+	}
+
+	return &VirDomain{
+		ptr: ret,
+	}, nil
+}
+
+type VirDomainMigrateParameters struct {
+	URISet                    bool
+	URI                       string
+	DestNameSet               bool
+	DestName                  string
+	DestXMLSet                bool
+	DestXML                   string
+	PersistXMLSet             bool
+	PersistXML                string
+	BandwidthSet              bool
+	Bandwidth                 uint64
+	GraphicsURISet            bool
+	GraphicsURI               string
+	ListenAddressSet          bool
+	ListenAddress             string
+	MigrateDisksSet           bool
+	MigrateDisks              []string
+	DisksPortSet              bool
+	DisksPort                 int
+	CompressionSet            bool
+	Compression               string
+	CompressionMTLevelSet     bool
+	CompressionMTLevel        int
+	CompressionMTThreadsSet   bool
+	CompressionMTThreads      int
+	CompressionMTDThreadsSet  bool
+	CompressionMTDThreads     int
+	CompressionXBZRLECacheSet bool
+	CompressionXBZRLECache    uint64
+	AutoConvergeInitialSet    bool
+	AutoConvergeInitial       int
+	AutoConvergeIncrementSet  bool
+	AutoConvergeIncrement     int
+}
+
+func getMigrateParameterFieldInfo(params *VirDomainMigrateParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_MIGRATE_PARAM_URI: typedParamsFieldInfo{
+			set: &params.URISet,
+			s:   &params.URI,
+		},
+		C.VIR_MIGRATE_PARAM_DEST_NAME: typedParamsFieldInfo{
+			set: &params.DestNameSet,
+			s:   &params.DestName,
+		},
+		C.VIR_MIGRATE_PARAM_DEST_XML: typedParamsFieldInfo{
+			set: &params.DestXMLSet,
+			s:   &params.DestXML,
+		},
+		C.VIR_MIGRATE_PARAM_PERSIST_XML: typedParamsFieldInfo{
+			set: &params.PersistXMLSet,
+			s:   &params.PersistXML,
+		},
+		C.VIR_MIGRATE_PARAM_BANDWIDTH: typedParamsFieldInfo{
+			set: &params.BandwidthSet,
+			ul:  &params.Bandwidth,
+		},
+		C.VIR_MIGRATE_PARAM_GRAPHICS_URI: typedParamsFieldInfo{
+			set: &params.GraphicsURISet,
+			s:   &params.GraphicsURI,
+		},
+		C.VIR_MIGRATE_PARAM_LISTEN_ADDRESS: typedParamsFieldInfo{
+			set: &params.ListenAddressSet,
+			s:   &params.ListenAddress,
+		},
+		C.VIR_MIGRATE_PARAM_MIGRATE_DISKS: typedParamsFieldInfo{
+			set: &params.MigrateDisksSet,
+			sl:  &params.MigrateDisks,
+		},
+		C.VIR_MIGRATE_PARAM_DISKS_PORT: typedParamsFieldInfo{
+			set: &params.DisksPortSet,
+			i:   &params.DisksPort,
+		},
+		C.VIR_MIGRATE_PARAM_COMPRESSION: typedParamsFieldInfo{
+			set: &params.CompressionSet,
+			s:   &params.Compression,
+		},
+		C.VIR_MIGRATE_PARAM_COMPRESSION_MT_LEVEL: typedParamsFieldInfo{
+			set: &params.CompressionMTLevelSet,
+			i:   &params.CompressionMTLevel,
+		},
+		C.VIR_MIGRATE_PARAM_COMPRESSION_MT_THREADS: typedParamsFieldInfo{
+			set: &params.CompressionMTThreadsSet,
+			i:   &params.CompressionMTThreads,
+		},
+		C.VIR_MIGRATE_PARAM_COMPRESSION_MT_DTHREADS: typedParamsFieldInfo{
+			set: &params.CompressionMTDThreadsSet,
+			i:   &params.CompressionMTDThreads,
+		},
+		C.VIR_MIGRATE_PARAM_COMPRESSION_XBZRLE_CACHE: typedParamsFieldInfo{
+			set: &params.CompressionXBZRLECacheSet,
+			ul:  &params.CompressionXBZRLECache,
+		},
+		C.VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL: typedParamsFieldInfo{
+			set: &params.AutoConvergeInitialSet,
+			i:   &params.AutoConvergeInitial,
+		},
+		C.VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT: typedParamsFieldInfo{
+			set: &params.AutoConvergeIncrementSet,
+			i:   &params.AutoConvergeIncrement,
+		},
+	}
+}
+
+func (d *VirDomain) Migrate3(dconn *VirConnection, params *VirDomainMigrateParameters, flags VirDomainMigrateFlags) (*VirDomain, error) {
+
+	info := getMigrateParameterFieldInfo(params)
+	cparams, err := typedParamsPackNew(info)
+	if err != nil {
+		return nil, err
+	}
+	nparams := len(*cparams)
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+
+	ret := C.virDomainMigrate3(d.ptr, dconn.ptr, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.uint(nparams), C.uint(flags))
+	if ret == nil {
+		return nil, GetLastError()
+	}
+
+	return &VirDomain{
+		ptr: ret,
+	}, nil
+}
+
+func (d *VirDomain) MigrateToURI(duri string, flags VirDomainMigrateFlags, dname string, bandwidth uint64) error {
+	cduri := C.CString(duri)
+	defer C.free(cduri)
+
+	var cdname *C.char
+	if dname != "" {
+		cdname = C.CString(dname)
+		defer C.free(cdname)
+	}
+
+	ret := C.virDomainMigrateToURI(d.ptr, cduri, C.ulong(flags), cdname, C.ulong(bandwidth))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateToURI2(dconnuri string, miguri string, dxml string, flags VirDomainMigrateFlags, dname string, bandwidth uint64) error {
+	var cdconnuri *C.char
+	if dconnuri != "" {
+		cdconnuri = C.CString(dconnuri)
+		defer C.free(cdconnuri)
+	}
+	var cmiguri *C.char
+	if miguri != "" {
+		cmiguri = C.CString(miguri)
+		defer C.free(cmiguri)
+	}
+	var cdxml *C.char
+	if dxml != "" {
+		cdxml = C.CString(dxml)
+		defer C.free(cdxml)
+	}
+	var cdname *C.char
+	if dname != "" {
+		cdname = C.CString(dname)
+		defer C.free(cdname)
+	}
+
+	ret := C.virDomainMigrateToURI2(d.ptr, cdconnuri, cmiguri, cdxml, C.ulong(flags), cdname, C.ulong(bandwidth))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateToURI3(dconnuri string, params *VirDomainMigrateParameters, flags VirDomainMigrateFlags) error {
+	var cdconnuri *C.char
+	if dconnuri != "" {
+		cdconnuri = C.CString(dconnuri)
+		defer C.free(cdconnuri)
+	}
+
+	info := getMigrateParameterFieldInfo(params)
+	cparams, err := typedParamsPackNew(info)
+	if err != nil {
+		return err
+	}
+	nparams := len(*cparams)
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+
+	ret := C.virDomainMigrateToURI3(d.ptr, cdconnuri, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.uint(nparams), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateGetCompressionCache(flags uint32) (uint64, error) {
+	var cacheSize C.ulonglong
+
+	ret := C.virDomainMigrateGetCompressionCache(d.ptr, &cacheSize, C.uint(flags))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return uint64(cacheSize), nil
+}
+
+func (d *VirDomain) MigrateSetCompressionCache(size uint64, flags uint32) error {
+	ret := C.virDomainMigrateSetCompressionCache(d.ptr, C.ulonglong(size), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
+	var maxSpeed C.ulong
+
+	ret := C.virDomainMigrateGetMaxSpeed(d.ptr, &maxSpeed, C.uint(flags))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return uint64(maxSpeed), nil
+}
+
+func (d *VirDomain) MigrateSetMaxSpeed(speed uint64, flags uint32) error {
+	ret := C.virDomainMigrateSetMaxSpeed(d.ptr, C.ulong(speed), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
+	ret := C.virDomainMigrateSetMaxDowntime(d.ptr, C.ulonglong(downtime), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) MigrateStartPostCopy(flags uint32) error {
+	ret := C.virDomainMigrateStartPostCopy(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
