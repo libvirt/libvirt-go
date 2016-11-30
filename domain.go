@@ -1924,3 +1924,141 @@ func (d *VirDomain) ListAllSnapshots(flags VirDomainSnapshotListFlags) ([]VirDom
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
 }
+
+func (d *VirDomain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags uint32) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	var cbase *C.char
+	if base != "" {
+		cbase = C.CString(base)
+		defer C.free(cbase)
+	}
+	var ctop *C.char
+	if top != "" {
+		ctop = C.CString(top)
+		defer C.free(ctop)
+	}
+	ret := C.virDomainBlockCommit(d.ptr, cdisk, cbase, ctop, C.ulong(bandwidth), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+type VirDomainBlockCopyParameters struct {
+	BandwidthSet   bool
+	Bandwidth      uint64
+	GranularitySet bool
+	Granularity    uint
+	BufSizeSet     bool
+	BufSize        uint64
+}
+
+func getBlockCopyParameterFieldInfo(params *VirDomainBlockCopyParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_BLOCK_COPY_BANDWIDTH: typedParamsFieldInfo{
+			set: &params.BandwidthSet,
+			ul:  &params.Bandwidth,
+		},
+		C.VIR_DOMAIN_BLOCK_COPY_GRANULARITY: typedParamsFieldInfo{
+			set: &params.GranularitySet,
+			ui:  &params.Granularity,
+		},
+		C.VIR_DOMAIN_BLOCK_COPY_BUF_SIZE: typedParamsFieldInfo{
+			set: &params.BufSizeSet,
+			ul:  &params.BufSize,
+		},
+	}
+}
+
+func (d *VirDomain) BlockCopy(disk string, destxml string, params *VirDomainBlockCopyParameters, flags VirDomainBlockCopyFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	cdestxml := C.CString(destxml)
+	defer C.free(cdestxml)
+
+	info := getBlockCopyParameterFieldInfo(params)
+
+	cparams, err := typedParamsPackNew(info)
+	if err != nil {
+		return err
+	}
+	nparams := len(*cparams)
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+
+	ret := C.virDomainBlockCopy(d.ptr, cdisk, cdestxml, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) BlockJobAbort(disk string, flags VirDomainBlockJobAbortFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	ret := C.virDomainBlockJobAbort(d.ptr, cdisk, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) BlockJobSetSpeed(disk string, bandwidth uint64, flags VirDomainBlockJobSetSpeedFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	ret := C.virDomainBlockJobSetSpeed(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) BlockPull(disk string, bandwidth uint64, flags VirDomainBlockPullFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	ret := C.virDomainBlockPull(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) BlockRebase(disk string, base string, bandwidth uint64, flags VirDomainBlockRebaseFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	var cbase *C.char
+	if base != "" {
+		cbase := C.CString(base)
+		defer C.free(cbase)
+	}
+	ret := C.virDomainBlockRebase(d.ptr, cdisk, cbase, C.ulong(bandwidth), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) BlockResize(disk string, size uint64, flags VirDomainBlockResizeFlags) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	ret := C.virDomainBlockResize(d.ptr, cdisk, C.ulonglong(size), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) (*[]byte, error) {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+	data := make([]byte, size)
+	ret := C.virDomainBlockPeek(d.ptr, cdisk, C.ulonglong(offset), C.size_t(size),
+		unsafe.Pointer(&data[0]), C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &data, nil
+}
