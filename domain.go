@@ -1257,6 +1257,36 @@ func (d *VirDomain) GetInterfaceParameters(device string, flags uint32) (*VirDom
 	return params, nil
 }
 
+func (d *VirDomain) SetInterfaceParameters(device string, params *VirDomainInterfaceParameters, flags uint32) error {
+	info := getInterfaceParameterFieldInfo(params)
+
+	var nparams C.int
+
+	cdevice := C.CString(device)
+	defer C.free(cdevice)
+	ret := C.virDomainGetInterfaceParameters(d.ptr, cdevice, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetInterfaceParameters(d.ptr, cdevice, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetInterfaceParameters(d.ptr, cdevice, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
 func (d *VirDomain) GetMetadata(tipus VirDomainMetadataType, uri string, flags uint32) (string, error) {
 	var cUri *C.char
 	if uri != "" {
@@ -2050,17 +2080,17 @@ func (d *VirDomain) BlockResize(disk string, size uint64, flags VirDomainBlockRe
 	return nil
 }
 
-func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) (*[]byte, error) {
+func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) ([]byte, error) {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	data := make([]byte, size)
 	ret := C.virDomainBlockPeek(d.ptr, cdisk, C.ulonglong(offset), C.size_t(size),
 		unsafe.Pointer(&data[0]), C.uint(flags))
 	if ret == -1 {
-		return nil, GetLastError()
+		return []byte{}, GetLastError()
 	}
 
-	return &data, nil
+	return data, nil
 }
 
 func (d *VirDomain) Migrate(dconn *VirConnection, flags VirDomainMigrateFlags, dname string, uri string, bandwidth uint64) (*VirDomain, error) {
@@ -2360,6 +2390,1188 @@ func (d *VirDomain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 
 func (d *VirDomain) MigrateStartPostCopy(flags uint32) error {
 	ret := C.virDomainMigrateStartPostCopy(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+type VirDomainBlkioParameters struct {
+	WeightSet          bool
+	Weight             uint
+	DeviceWeightSet    bool
+	DeviceWeight       string
+	DeviceReadIopsSet  bool
+	DeviceReadIops     string
+	DeviceWriteIopsSet bool
+	DeviceWriteIops    string
+	DeviceReadBpsSet   bool
+	DeviceReadBps      string
+	DeviceWriteBpsSet  bool
+	DeviceWriteBps     string
+}
+
+func getBlkioParametersFieldInfo(params *VirDomainBlkioParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_BLKIO_WEIGHT: typedParamsFieldInfo{
+			set: &params.WeightSet,
+			ui:  &params.Weight,
+		},
+		C.VIR_DOMAIN_BLKIO_DEVICE_WEIGHT: typedParamsFieldInfo{
+			set: &params.DeviceWeightSet,
+			s:   &params.DeviceWeight,
+		},
+		C.VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS: typedParamsFieldInfo{
+			set: &params.DeviceReadIopsSet,
+			s:   &params.DeviceReadIops,
+		},
+		C.VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS: typedParamsFieldInfo{
+			set: &params.DeviceWriteIopsSet,
+			s:   &params.DeviceWriteIops,
+		},
+		C.VIR_DOMAIN_BLKIO_DEVICE_READ_BPS: typedParamsFieldInfo{
+			set: &params.DeviceReadBpsSet,
+			s:   &params.DeviceReadBps,
+		},
+		C.VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS: typedParamsFieldInfo{
+			set: &params.DeviceWriteBpsSet,
+			s:   &params.DeviceWriteBps,
+		},
+	}
+}
+
+func (d *VirDomain) GetBlkioParameters(flags VirDomainModificationImpact) (*VirDomainBlkioParameters, error) {
+	params := &VirDomainBlkioParameters{}
+	info := getBlkioParametersFieldInfo(params)
+
+	var nparams C.int
+	ret := C.virDomainGetBlkioParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetBlkioParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetBlkioParameters(params *VirDomainBlkioParameters, flags VirDomainModificationImpact) error {
+	info := getBlkioParametersFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virDomainGetBlkioParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetBlkioParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetBlkioParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirDomainBlockIoTuneParameters struct {
+	TotalBytesSecSet          bool
+	TotalBytesSec             uint64
+	ReadBytesSecSet           bool
+	ReadBytesSec              uint64
+	WriteBytesSecSet          bool
+	WriteBytesSec             uint64
+	TotalIopsSecSet           bool
+	TotalIopsSec              uint64
+	ReadIopsSecSet            bool
+	ReadIopsSec               uint64
+	WriteIopsSecSet           bool
+	WriteIopsSec              uint64
+	TotalBytesSecMaxSet       bool
+	TotalBytesSecMax          uint64
+	ReadBytesSecMaxSet        bool
+	ReadBytesSecMax           uint64
+	WriteBytesSecMaxSet       bool
+	WriteBytesSecMax          uint64
+	TotalIopsSecMaxSet        bool
+	TotalIopsSecMax           uint64
+	ReadIopsSecMaxSet         bool
+	ReadIopsSecMax            uint64
+	WriteIopsSecMaxSet        bool
+	WriteIopsSecMax           uint64
+	TotalBytesSecMaxLengthSet bool
+	TotalBytesSecMaxLength    uint64
+	ReadBytesSecMaxLengthSet  bool
+	ReadBytesSecMaxLength     uint64
+	WriteBytesSecMaxLengthSet bool
+	WriteBytesSecMaxLength    uint64
+	TotalIopsSecMaxLengthSet  bool
+	TotalIopsSecMaxLength     uint64
+	ReadIopsSecMaxLengthSet   bool
+	ReadIopsSecMaxLength      uint64
+	WriteIopsSecMaxLengthSet  bool
+	WriteIopsSecMaxLength     uint64
+	SizeIopsSecSet            bool
+	SizeIopsSec               uint64
+}
+
+func getBlockIoTuneParametersFieldInfo(params *VirDomainBlockIoTuneParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.TotalBytesSecSet,
+			ul:  &params.TotalBytesSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.ReadBytesSecSet,
+			ul:  &params.ReadBytesSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.WriteBytesSecSet,
+			ul:  &params.WriteBytesSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.TotalIopsSecSet,
+			ul:  &params.TotalIopsSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.ReadIopsSecSet,
+			ul:  &params.ReadIopsSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.WriteIopsSecSet,
+			ul:  &params.WriteIopsSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.TotalBytesSecMaxSet,
+			ul:  &params.TotalBytesSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.ReadBytesSecMaxSet,
+			ul:  &params.ReadBytesSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.WriteBytesSecMaxSet,
+			ul:  &params.WriteBytesSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.TotalIopsSecMaxSet,
+			ul:  &params.TotalIopsSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.ReadIopsSecMaxSet,
+			ul:  &params.ReadIopsSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.WriteIopsSecMaxSet,
+			ul:  &params.WriteIopsSecMax,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.TotalBytesSecMaxLengthSet,
+			ul:  &params.TotalBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.ReadBytesSecMaxLengthSet,
+			ul:  &params.ReadBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.WriteBytesSecMaxLengthSet,
+			ul:  &params.WriteBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.TotalIopsSecMaxLengthSet,
+			ul:  &params.TotalIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_READ_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.ReadIopsSecMaxLengthSet,
+			ul:  &params.ReadIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_WRITE_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.WriteIopsSecMaxLengthSet,
+			ul:  &params.WriteIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_SIZE_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.SizeIopsSecSet,
+			ul:  &params.SizeIopsSec,
+		},
+	}
+}
+
+func (d *VirDomain) GetBlockIoTune(disk string, flags VirDomainModificationImpact) (*VirDomainBlockIoTuneParameters, error) {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+
+	params := &VirDomainBlockIoTuneParameters{}
+	info := getBlockIoTuneParametersFieldInfo(params)
+
+	var nparams C.int
+	ret := C.virDomainGetBlockIoTune(d.ptr, cdisk, nil, &nparams, 0)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetBlockIoTune(d.ptr, cdisk, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetBlockIoTune(disk string, params *VirDomainBlockIoTuneParameters, flags uint32) error {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+
+	info := getBlockIoTuneParametersFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virDomainGetBlockIoTune(d.ptr, cdisk, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetBlockIoTune(d.ptr, cdisk, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetBlockIoTune(d.ptr, cdisk, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirDomainBlockJobInfo struct {
+	Type      VirDomainBlockJobType
+	Bandwidth uint64
+	Cur       uint64
+	End       uint64
+}
+
+func (d *VirDomain) GetBlockJobInfo(disk string, flags VirDomainBlockJobInfoFlags) (*VirDomainBlockJobInfo, error) {
+	cdisk := C.CString(disk)
+	defer C.free(cdisk)
+
+	var cinfo C.virDomainBlockJobInfo
+
+	ret := C.virDomainGetBlockJobInfo(d.ptr, cdisk, &cinfo, C.uint(flags))
+
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &VirDomainBlockJobInfo{
+		Type:      VirDomainBlockJobType(cinfo._type),
+		Bandwidth: uint64(cinfo.bandwidth),
+		Cur:       uint64(cinfo.cur),
+		End:       uint64(cinfo.end),
+	}, nil
+}
+
+type VirDomainControlInfo struct {
+	State     VirDomainControlState
+	Details   int
+	StateTime uint64
+}
+
+func (d *VirDomain) GetControlInfo(flags uint32) (*VirDomainControlInfo, error) {
+
+	var cinfo C.virDomainControlInfo
+
+	ret := C.virDomainGetControlInfo(d.ptr, &cinfo, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &VirDomainControlInfo{
+		State:     VirDomainControlState(cinfo.state),
+		Details:   int(cinfo.details),
+		StateTime: uint64(cinfo.stateTime),
+	}, nil
+}
+
+type VirDomainDiskError struct {
+	Disk  string
+	Error VirDomainDiskErrorCode
+}
+
+func (d *VirDomain) GetDiskErrors(flags uint32) ([]VirDomainDiskError, error) {
+	ret := C.virDomainGetDiskErrors(d.ptr, nil, 0, 0)
+	if ret == -1 {
+		return []VirDomainDiskError{}, GetLastError()
+	}
+
+	maxerrors := ret
+	cerrors := make([]C.virDomainDiskError, maxerrors)
+
+	ret = C.virDomainGetDiskErrors(d.ptr, (*C.virDomainDiskError)(unsafe.Pointer(&cerrors[0])), C.uint(maxerrors), C.uint(flags))
+	if ret == -1 {
+		return []VirDomainDiskError{}, GetLastError()
+	}
+
+	errors := make([]VirDomainDiskError, maxerrors)
+
+	for i, cerror := range cerrors {
+		errors[i] = VirDomainDiskError{
+			Disk:  C.GoString(cerror.disk),
+			Error: VirDomainDiskErrorCode(cerror.error),
+		}
+		C.free(unsafe.Pointer(cerror.disk))
+	}
+
+	return errors, nil
+}
+
+func (d *VirDomain) GetHostname(flags uint32) (string, error) {
+	ret := C.virDomainGetHostname(d.ptr, C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+type VirDomainJobInfo struct {
+	Type                      VirDomainJobType
+	TimeElapsedSet            bool
+	TimeElapsed               uint64
+	TimeElapsedNetSet         bool
+	TimeElapsedNet            uint64
+	TimeRemainingSet          bool
+	TimeRemaining             uint64
+	DowntimeSet               bool
+	Downtime                  uint64
+	DowntimeNetSet            bool
+	DowntimeNet               uint64
+	SetupTimeSet              bool
+	SetupTime                 uint64
+	DataTotalSet              bool
+	DataTotal                 uint64
+	DataProcessedSet          bool
+	DataProcessed             uint64
+	DataRemainingSet          bool
+	DataRemaining             uint64
+	MemTotalSet               bool
+	MemTotal                  uint64
+	MemProcessedSet           bool
+	MemProcessed              uint64
+	MemRemainingSet           bool
+	MemRemaining              uint64
+	MemConstantSet            bool
+	MemConstant               uint64
+	MemNormalSet              bool
+	MemNormal                 uint64
+	MemNormalBytesSet         bool
+	MemNormalBytes            uint64
+	MemBpsSet                 bool
+	MemBps                    uint64
+	MemDirtyRateSet           bool
+	MemDirtyRate              uint64
+	MemIterationSet           bool
+	MemIteration              uint64
+	DiskTotalSet              bool
+	DiskTotal                 uint64
+	DiskProcessedSet          bool
+	DiskProcessed             uint64
+	DiskRemainingSet          bool
+	DiskRemaining             uint64
+	DiskBpsSet                bool
+	DiskBps                   uint64
+	CompressionCacheSet       bool
+	CompressionCache          uint64
+	CompressionBytesSet       bool
+	CompressionBytes          uint64
+	CompressionPagesSet       bool
+	CompressionPages          uint64
+	CompressionCacheMissesSet bool
+	CompressionCacheMisses    uint64
+	CompressionOverflowSet    bool
+	CompressionOverflow       uint64
+	AutoConvergeThrottleSet   bool
+	AutoConvergeThrottle      int
+}
+
+func (d *VirDomain) GetJobInfo() (*VirDomainJobInfo, error) {
+	var cinfo C.virDomainJobInfo
+
+	ret := C.virDomainGetJobInfo(d.ptr, &cinfo)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &VirDomainJobInfo{
+		Type:             VirDomainJobType(cinfo._type),
+		TimeElapsedSet:   true,
+		TimeElapsed:      uint64(cinfo.timeElapsed),
+		TimeRemainingSet: true,
+		TimeRemaining:    uint64(cinfo.timeRemaining),
+		DataTotalSet:     true,
+		DataTotal:        uint64(cinfo.dataTotal),
+		DataProcessedSet: true,
+		DataProcessed:    uint64(cinfo.dataProcessed),
+		DataRemainingSet: true,
+		DataRemaining:    uint64(cinfo.dataRemaining),
+		MemTotalSet:      true,
+		MemTotal:         uint64(cinfo.memTotal),
+		MemProcessedSet:  true,
+		MemProcessed:     uint64(cinfo.memProcessed),
+		MemRemainingSet:  true,
+		MemRemaining:     uint64(cinfo.memRemaining),
+		DiskTotalSet:     true,
+		DiskTotal:        uint64(cinfo.fileTotal),
+		DiskProcessedSet: true,
+		DiskProcessed:    uint64(cinfo.fileProcessed),
+		DiskRemainingSet: true,
+		DiskRemaining:    uint64(cinfo.fileRemaining),
+	}, nil
+}
+
+func getDomainJobInfoFieldInfo(params *VirDomainJobInfo) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_JOB_TIME_ELAPSED: typedParamsFieldInfo{
+			set: &params.TimeElapsedSet,
+			ul:  &params.TimeElapsed,
+		},
+		C.VIR_DOMAIN_JOB_TIME_ELAPSED_NET: typedParamsFieldInfo{
+			set: &params.TimeElapsedNetSet,
+			ul:  &params.TimeElapsedNet,
+		},
+		C.VIR_DOMAIN_JOB_TIME_REMAINING: typedParamsFieldInfo{
+			set: &params.TimeRemainingSet,
+			ul:  &params.TimeRemaining,
+		},
+		C.VIR_DOMAIN_JOB_DOWNTIME: typedParamsFieldInfo{
+			set: &params.DowntimeSet,
+			ul:  &params.Downtime,
+		},
+		C.VIR_DOMAIN_JOB_DOWNTIME_NET: typedParamsFieldInfo{
+			set: &params.DowntimeNetSet,
+			ul:  &params.DowntimeNet,
+		},
+		C.VIR_DOMAIN_JOB_SETUP_TIME: typedParamsFieldInfo{
+			set: &params.SetupTimeSet,
+			ul:  &params.SetupTime,
+		},
+		C.VIR_DOMAIN_JOB_DATA_TOTAL: typedParamsFieldInfo{
+			set: &params.DataTotalSet,
+			ul:  &params.DataTotal,
+		},
+		C.VIR_DOMAIN_JOB_DATA_PROCESSED: typedParamsFieldInfo{
+			set: &params.DataProcessedSet,
+			ul:  &params.DataProcessed,
+		},
+		C.VIR_DOMAIN_JOB_DATA_REMAINING: typedParamsFieldInfo{
+			set: &params.DataRemainingSet,
+			ul:  &params.DataRemaining,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_TOTAL: typedParamsFieldInfo{
+			set: &params.MemTotalSet,
+			ul:  &params.MemTotal,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_PROCESSED: typedParamsFieldInfo{
+			set: &params.MemProcessedSet,
+			ul:  &params.MemProcessed,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_REMAINING: typedParamsFieldInfo{
+			set: &params.MemRemainingSet,
+			ul:  &params.MemRemaining,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_CONSTANT: typedParamsFieldInfo{
+			set: &params.MemConstantSet,
+			ul:  &params.MemConstant,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_NORMAL: typedParamsFieldInfo{
+			set: &params.MemNormalSet,
+			ul:  &params.MemNormal,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_NORMAL_BYTES: typedParamsFieldInfo{
+			set: &params.MemNormalBytesSet,
+			ul:  &params.MemNormalBytes,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_BPS: typedParamsFieldInfo{
+			set: &params.MemBpsSet,
+			ul:  &params.MemBps,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE: typedParamsFieldInfo{
+			set: &params.MemDirtyRateSet,
+			ul:  &params.MemDirtyRate,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_ITERATION: typedParamsFieldInfo{
+			set: &params.MemIterationSet,
+			ul:  &params.MemIteration,
+		},
+		C.VIR_DOMAIN_JOB_DISK_TOTAL: typedParamsFieldInfo{
+			set: &params.DiskTotalSet,
+			ul:  &params.DiskTotal,
+		},
+		C.VIR_DOMAIN_JOB_DISK_PROCESSED: typedParamsFieldInfo{
+			set: &params.DiskProcessedSet,
+			ul:  &params.DiskProcessed,
+		},
+		C.VIR_DOMAIN_JOB_DISK_REMAINING: typedParamsFieldInfo{
+			set: &params.DiskRemainingSet,
+			ul:  &params.DiskRemaining,
+		},
+		C.VIR_DOMAIN_JOB_DISK_BPS: typedParamsFieldInfo{
+			set: &params.DiskBpsSet,
+			ul:  &params.DiskBps,
+		},
+		C.VIR_DOMAIN_JOB_COMPRESSION_CACHE: typedParamsFieldInfo{
+			set: &params.CompressionCacheSet,
+			ul:  &params.CompressionCache,
+		},
+		C.VIR_DOMAIN_JOB_COMPRESSION_BYTES: typedParamsFieldInfo{
+			set: &params.CompressionBytesSet,
+			ul:  &params.CompressionBytes,
+		},
+		C.VIR_DOMAIN_JOB_COMPRESSION_PAGES: typedParamsFieldInfo{
+			set: &params.CompressionPagesSet,
+			ul:  &params.CompressionPages,
+		},
+		C.VIR_DOMAIN_JOB_COMPRESSION_CACHE_MISSES: typedParamsFieldInfo{
+			set: &params.CompressionCacheMissesSet,
+			ul:  &params.CompressionCacheMisses,
+		},
+		C.VIR_DOMAIN_JOB_COMPRESSION_OVERFLOW: typedParamsFieldInfo{
+			set: &params.CompressionOverflowSet,
+			ul:  &params.CompressionOverflow,
+		},
+		C.VIR_DOMAIN_JOB_AUTO_CONVERGE_THROTTLE: typedParamsFieldInfo{
+			set: &params.AutoConvergeThrottleSet,
+			i:   &params.AutoConvergeThrottle,
+		},
+	}
+}
+
+func (d *VirDomain) GetJobStats(flags VirDomainGetJobStatsFlags) (*VirDomainJobInfo, error) {
+	var cparams *C.virTypedParameter
+	var nparams C.int
+	var jobtype C.int
+	ret := C.virDomainGetJobStats(d.ptr, &jobtype, &cparams, &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	params := VirDomainJobInfo{}
+	info := getDomainJobInfoFieldInfo(&params)
+
+	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	if err != nil {
+		return nil, GetLastError()
+	}
+
+	return &params, nil
+}
+
+func (d *VirDomain) GetMaxMemory() (uint64, error) {
+	ret := C.virDomainGetMaxMemory(d.ptr)
+	if ret == 0 {
+		return 0, GetLastError()
+	}
+
+	return uint64(ret), nil
+}
+
+func (d *VirDomain) GetMaxVcpus() (uint, error) {
+	ret := C.virDomainGetMaxVcpus(d.ptr)
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return uint(ret), nil
+}
+
+func (d *VirDomain) GetOSType() (string, error) {
+	ret := C.virDomainGetOSType(d.ptr)
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+type VirDomainMemoryParameters struct {
+	HardLimitSet     bool
+	HardLimit        uint64
+	SoftLimitSet     bool
+	SoftLimit        uint64
+	MinGuaranteeSet  bool
+	MinGuarantee     uint64
+	SwapHardLimitSet bool
+	SwapHardLimit    uint64
+}
+
+func getDomainMemoryParametersFieldInfo(params *VirDomainMemoryParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_MEMORY_HARD_LIMIT: typedParamsFieldInfo{
+			set: &params.HardLimitSet,
+			ul:  &params.HardLimit,
+		},
+		C.VIR_DOMAIN_MEMORY_SOFT_LIMIT: typedParamsFieldInfo{
+			set: &params.SoftLimitSet,
+			ul:  &params.SoftLimit,
+		},
+		C.VIR_DOMAIN_MEMORY_MIN_GUARANTEE: typedParamsFieldInfo{
+			set: &params.MinGuaranteeSet,
+			ul:  &params.MinGuarantee,
+		},
+		C.VIR_DOMAIN_MEMORY_SWAP_HARD_LIMIT: typedParamsFieldInfo{
+			set: &params.SwapHardLimitSet,
+			ul:  &params.SwapHardLimit,
+		},
+	}
+}
+
+func (d *VirDomain) GetMemoryParameters(flags VirDomainModificationImpact) (*VirDomainMemoryParameters, error) {
+	params := &VirDomainMemoryParameters{}
+	info := getDomainMemoryParametersFieldInfo(params)
+
+	var nparams C.int
+	ret := C.virDomainGetMemoryParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetMemoryParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetMemoryParameters(params *VirDomainMemoryParameters, flags uint32) error {
+	info := getDomainMemoryParametersFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virDomainGetMemoryParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetMemoryParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetMemoryParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirDomainNumaParameters struct {
+	NodesetSet bool
+	Nodeset    string
+	ModeSet    bool
+	Mode       VirDomainNumatuneMemMode
+}
+
+func getDomainNumaParametersFieldInfo(params *VirDomainNumaParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_NUMA_NODESET: typedParamsFieldInfo{
+			set: &params.NodesetSet,
+			s:   &params.Nodeset,
+		},
+		C.VIR_DOMAIN_NUMA_MODE: typedParamsFieldInfo{
+			set: &params.ModeSet,
+			i:   (*int)(&params.Mode),
+		},
+	}
+}
+
+func (d *VirDomain) GetNumaParameters(flags VirDomainModificationImpact) (*VirDomainNumaParameters, error) {
+	params := &VirDomainNumaParameters{}
+	info := getDomainNumaParametersFieldInfo(params)
+
+	var nparams C.int
+	ret := C.virDomainGetNumaParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetNumaParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetNumaParameters(params *VirDomainNumaParameters, flags uint32) error {
+	info := getDomainNumaParametersFieldInfo(params)
+
+	var nparams C.int
+
+	ret := C.virDomainGetNumaParameters(d.ptr, nil, &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret = C.virDomainGetNumaParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetNumaParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirDomainPerfEvents struct {
+	CmtSet             bool
+	Cmt                bool
+	MbmtSet            bool
+	Mbmt               bool
+	MbmlSet            bool
+	Mbml               bool
+	CacheMissesSet     bool
+	CacheMisses        bool
+	CacheReferencesSet bool
+	CacheReferences    bool
+	InstructionsSet    bool
+	Instructions       bool
+	CpuCyclesSet       bool
+	CpuCycles          bool
+}
+
+func getDomainPerfEventsFieldInfo(params *VirDomainPerfEvents) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_PERF_PARAM_CMT: typedParamsFieldInfo{
+			set: &params.CmtSet,
+			b:   &params.Cmt,
+		},
+		C.VIR_PERF_PARAM_MBMT: typedParamsFieldInfo{
+			set: &params.MbmtSet,
+			b:   &params.Mbmt,
+		},
+		C.VIR_PERF_PARAM_MBML: typedParamsFieldInfo{
+			set: &params.MbmlSet,
+			b:   &params.Mbml,
+		},
+		C.VIR_PERF_PARAM_CACHE_MISSES: typedParamsFieldInfo{
+			set: &params.CacheMissesSet,
+			b:   &params.CacheMisses,
+		},
+		C.VIR_PERF_PARAM_CACHE_REFERENCES: typedParamsFieldInfo{
+			set: &params.CacheReferencesSet,
+			b:   &params.CacheReferences,
+		},
+		C.VIR_PERF_PARAM_INSTRUCTIONS: typedParamsFieldInfo{
+			set: &params.InstructionsSet,
+			b:   &params.Instructions,
+		},
+		C.VIR_PERF_PARAM_CPU_CYCLES: typedParamsFieldInfo{
+			set: &params.CpuCyclesSet,
+			b:   &params.CpuCycles,
+		},
+	}
+}
+
+func (d *VirDomain) GetPerfEvents(flags VirDomainModificationImpact) (*VirDomainPerfEvents, error) {
+	params := &VirDomainPerfEvents{}
+	info := getDomainPerfEventsFieldInfo(params)
+
+	var cparams *C.virTypedParameter
+	var nparams C.int
+	ret := C.virDomainGetPerfEvents(d.ptr, &cparams, &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetPerfEvents(params *VirDomainPerfEvents, flags uint32) error {
+	info := getDomainPerfEventsFieldInfo(params)
+
+	var cparams *C.virTypedParameter
+	var nparams C.int
+	ret := C.virDomainGetPerfEvents(d.ptr, &cparams, &nparams, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	err := typedParamsPackLen(cparams, int(nparams), info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetPerfEvents(d.ptr, cparams, nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirDomainSchedulerParameters struct {
+	Type              string
+	CpuSharesSet      bool
+	CpuShares         uint64
+	GlobalPeriodSet   bool
+	GlobalPeriod      uint64
+	GlobalQuotaSet    bool
+	GlobalQuota       uint64
+	VcpuPeriodSet     bool
+	VcpuPeriod        uint64
+	VcpuQuotaSet      bool
+	VcpuQuota         uint64
+	EmulatorPeriodSet bool
+	EmulatorPeriod    uint64
+	EmulatorQuotaSet  bool
+	EmulatorQuota     uint64
+	IothreadPeriodSet bool
+	IothreadPeriod    uint64
+	IothreadQuotaSet  bool
+	IothreadQuota     uint64
+	WeightSet         bool
+	Weight            uint
+	CapSet            bool
+	Cap               uint
+	ReservationSet    bool
+	Reservation       int64
+	LimitSet          bool
+	Limit             int64
+	SharesSet         bool
+	Shares            int
+}
+
+func getDomainSchedulerParametersFieldInfo(params *VirDomainSchedulerParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_SCHEDULER_CPU_SHARES: typedParamsFieldInfo{
+			set: &params.CpuSharesSet,
+			ul:  &params.CpuShares,
+		},
+		C.VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD: typedParamsFieldInfo{
+			set: &params.GlobalPeriodSet,
+			ul:  &params.GlobalPeriod,
+		},
+		C.VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA: typedParamsFieldInfo{
+			set: &params.GlobalQuotaSet,
+			ul:  &params.GlobalQuota,
+		},
+		C.VIR_DOMAIN_SCHEDULER_EMULATOR_PERIOD: typedParamsFieldInfo{
+			set: &params.EmulatorPeriodSet,
+			ul:  &params.EmulatorPeriod,
+		},
+		C.VIR_DOMAIN_SCHEDULER_EMULATOR_QUOTA: typedParamsFieldInfo{
+			set: &params.EmulatorQuotaSet,
+			ul:  &params.EmulatorQuota,
+		},
+		C.VIR_DOMAIN_SCHEDULER_VCPU_PERIOD: typedParamsFieldInfo{
+			set: &params.VcpuPeriodSet,
+			ul:  &params.VcpuPeriod,
+		},
+		C.VIR_DOMAIN_SCHEDULER_VCPU_QUOTA: typedParamsFieldInfo{
+			set: &params.VcpuQuotaSet,
+			ul:  &params.VcpuQuota,
+		},
+		C.VIR_DOMAIN_SCHEDULER_IOTHREAD_PERIOD: typedParamsFieldInfo{
+			set: &params.IothreadPeriodSet,
+			ul:  &params.IothreadPeriod,
+		},
+		C.VIR_DOMAIN_SCHEDULER_IOTHREAD_QUOTA: typedParamsFieldInfo{
+			set: &params.IothreadQuotaSet,
+			ul:  &params.IothreadQuota,
+		},
+		C.VIR_DOMAIN_SCHEDULER_WEIGHT: typedParamsFieldInfo{
+			set: &params.WeightSet,
+			ui:  &params.Weight,
+		},
+		C.VIR_DOMAIN_SCHEDULER_CAP: typedParamsFieldInfo{
+			set: &params.CapSet,
+			ui:  &params.Cap,
+		},
+		C.VIR_DOMAIN_SCHEDULER_RESERVATION: typedParamsFieldInfo{
+			set: &params.ReservationSet,
+			l:   &params.Reservation,
+		},
+		C.VIR_DOMAIN_SCHEDULER_LIMIT: typedParamsFieldInfo{
+			set: &params.LimitSet,
+			l:   &params.Limit,
+		},
+		C.VIR_DOMAIN_SCHEDULER_SHARES: typedParamsFieldInfo{
+			set: &params.SharesSet,
+			i:   &params.Shares,
+		},
+	}
+}
+
+func (d *VirDomain) GetSchedulerParameters() (*VirDomainSchedulerParameters, error) {
+	params := &VirDomainSchedulerParameters{}
+	info := getDomainSchedulerParametersFieldInfo(params)
+
+	var nparams C.int
+	schedtype := C.virDomainGetSchedulerType(d.ptr, &nparams)
+	if schedtype == nil {
+		return nil, GetLastError()
+	}
+
+	defer C.free(schedtype)
+	if nparams == 0 {
+		return &VirDomainSchedulerParameters{
+			Type: C.GoString(schedtype),
+		}, nil
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret := C.virDomainGetSchedulerParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) GetSchedulerParametersFlags(flags VirDomainModificationImpact) (*VirDomainSchedulerParameters, error) {
+	params := &VirDomainSchedulerParameters{}
+	info := getDomainSchedulerParametersFieldInfo(params)
+
+	var nparams C.int
+	schedtype := C.virDomainGetSchedulerType(d.ptr, &nparams)
+	if schedtype == nil {
+		return nil, GetLastError()
+	}
+
+	defer C.free(schedtype)
+	if nparams == 0 {
+		return &VirDomainSchedulerParameters{
+			Type: C.GoString(schedtype),
+		}, nil
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret := C.virDomainGetSchedulerParametersFlags(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsUnpack(cparams, info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}
+
+func (d *VirDomain) SetSchedulerParameters(params *VirDomainSchedulerParameters) error {
+	info := getDomainSchedulerParametersFieldInfo(params)
+
+	var nparams C.int
+	schedtype := C.virDomainGetSchedulerType(d.ptr, &nparams)
+	if schedtype == nil {
+		return GetLastError()
+	}
+
+	defer C.free(schedtype)
+	if nparams == 0 {
+		return nil
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret := C.virDomainGetSchedulerParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams)
+	if ret == -1 {
+		return GetLastError()
+	}
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetSchedulerParameters(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	return nil
+}
+
+func (d *VirDomain) SetSchedulerParametersFlags(params *VirDomainSchedulerParameters, flags VirDomainModificationImpact) error {
+	info := getDomainSchedulerParametersFieldInfo(params)
+
+	var nparams C.int
+	schedtype := C.virDomainGetSchedulerType(d.ptr, &nparams)
+	if schedtype == nil {
+		return GetLastError()
+	}
+
+	defer C.free(schedtype)
+	if nparams == 0 {
+		return nil
+	}
+
+	cparams := make([]C.virTypedParameter, nparams)
+	ret := C.virDomainGetSchedulerParametersFlags(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0)
+	if ret == -1 {
+		return GetLastError()
+	}
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+
+	err := typedParamsPack(cparams, info)
+	if err != nil {
+		return err
+	}
+
+	ret = C.virDomainSetSchedulerParametersFlags(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags))
+
+	return nil
+}
+
+type VirSecurityLabel struct {
+	Label     string
+	Enforcing bool
+}
+
+func (d *VirDomain) GetSecurityLabel() (*VirSecurityLabel, error) {
+	var clabel C.virSecurityLabel
+
+	ret := C.virDomainGetSecurityLabel(d.ptr, &clabel)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &VirSecurityLabel{
+		Label:     C.GoString((*C.char)(unsafe.Pointer(&clabel.label))),
+		Enforcing: clabel.enforcing == 1,
+	}, nil
+}
+
+func (d *VirDomain) GetSecurityLabelList() ([]VirSecurityLabel, error) {
+	var clabels *C.virSecurityLabel
+
+	ret := C.virDomainGetSecurityLabelList(d.ptr, &clabels)
+	if ret == -1 {
+		return []VirSecurityLabel{}, GetLastError()
+	}
+
+	labels := make([]VirSecurityLabel, ret)
+	for i := 0; i < int(ret); i++ {
+		var clabel *C.virSecurityLabel
+		clabel = (*C.virSecurityLabel)(unsafe.Pointer(uintptr(unsafe.Pointer(clabels)) + (unsafe.Sizeof(*clabel) * uintptr(i))))
+		labels[i] = VirSecurityLabel{
+			Label:     C.GoString((*C.char)(unsafe.Pointer(&clabel.label))),
+			Enforcing: clabel.enforcing == 1,
+		}
+	}
+
+	return labels, nil
+}
+
+func (d *VirDomain) GetTime(flags uint32) (int64, uint, error) {
+	var secs C.longlong
+	var nsecs C.uint
+	ret := C.virDomainGetTime(d.ptr, &secs, &nsecs, C.uint(flags))
+	if ret == -1 {
+		return 0, 0, GetLastError()
+	}
+
+	return int64(secs), uint(nsecs), nil
+}
+
+func (d *VirDomain) SetTime(secs int64, nsecs uint, flags uint32) error {
+
+	ret := C.virDomainSetTime(d.ptr, C.longlong(secs), C.uint(nsecs), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) SetUserPassword(user string, password string, flags VirDomainSetUserPasswordFlags) error {
+	cuser := C.CString(user)
+	cpassword := C.CString(password)
+
+	defer C.free(cuser)
+	defer C.free(cpassword)
+
+	ret := C.virDomainSetUserPassword(d.ptr, cuser, cpassword, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
