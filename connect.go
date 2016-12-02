@@ -1119,17 +1119,17 @@ func (c *VirConnection) LookupStorageVolByPath(path string) (*VirStorageVol, err
 	return &VirStorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*VirSecret, error) {
+func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*Secret, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirSecret{ptr: ptr}, nil
+	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*VirSecret, error) {
+func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*Secret, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1140,27 +1140,27 @@ func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*VirSecret, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirSecret{ptr: ptr}, nil
+	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUIDString(uuid string) (*VirSecret, error) {
+func (c *VirConnection) LookupSecretByUUIDString(uuid string) (*Secret, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virSecretLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirSecret{ptr: ptr}, nil
+	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUsage(usageType VirSecretUsageType, usageID string) (*VirSecret, error) {
+func (c *VirConnection) LookupSecretByUsage(usageType SecretUsageType, usageID string) (*Secret, error) {
 	cUsageID := C.CString(usageID)
 	defer C.free(unsafe.Pointer(cUsageID))
 	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirSecret{ptr: ptr}, nil
+	return &Secret{ptr: ptr}, nil
 }
 
 func (c *VirConnection) LookupDeviceByName(id string) (*VirNodeDevice, error) {
@@ -1295,7 +1295,7 @@ func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsF
 	return pools, nil
 }
 
-func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]VirSecret, error) {
+func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]Secret, error) {
 	var cList *C.virSecretPtr
 	numPools := C.virConnectListAllSecrets(c.ptr, (**C.virSecretPtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1306,10 +1306,10 @@ func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]V
 		Len:  int(numPools),
 		Cap:  int(numPools),
 	}
-	var pools []VirSecret
+	var pools []Secret
 	slice := *(*[]C.virSecretPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirSecret{ptr})
+		pools = append(pools, Secret{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil

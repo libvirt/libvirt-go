@@ -12,21 +12,21 @@ import (
 	"unsafe"
 )
 
-type VirSecretUsageType int
+type SecretUsageType int
 
 const (
-	VIR_SECRET_USAGE_TYPE_NONE   = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_NONE)
-	VIR_SECRET_USAGE_TYPE_VOLUME = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_VOLUME)
-	VIR_SECRET_USAGE_TYPE_CEPH   = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_CEPH)
-	VIR_SECRET_USAGE_TYPE_ISCSI  = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_ISCSI)
-	VIR_SECRET_USAGE_TYPE_TLS    = VirSecretUsageType(C.VIR_SECRET_USAGE_TYPE_TLS)
+	VIR_SECRET_USAGE_TYPE_NONE   = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_NONE)
+	VIR_SECRET_USAGE_TYPE_VOLUME = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_VOLUME)
+	VIR_SECRET_USAGE_TYPE_CEPH   = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_CEPH)
+	VIR_SECRET_USAGE_TYPE_ISCSI  = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_ISCSI)
+	VIR_SECRET_USAGE_TYPE_TLS    = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_TLS)
 )
 
-type VirSecret struct {
+type Secret struct {
 	ptr C.virSecretPtr
 }
 
-func (s *VirSecret) Free() error {
+func (s *Secret) Free() error {
 	if result := C.virSecretFree(s.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -34,7 +34,7 @@ func (s *VirSecret) Free() error {
 	return nil
 }
 
-func (s *VirSecret) Undefine() error {
+func (s *Secret) Undefine() error {
 	result := C.virSecretUndefine(s.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -42,7 +42,7 @@ func (s *VirSecret) Undefine() error {
 	return nil
 }
 
-func (s *VirSecret) GetUUID() ([]byte, error) {
+func (s *Secret) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virSecretGetUUID(s.ptr, (*C.uchar)(cuidPtr))
@@ -52,7 +52,7 @@ func (s *VirSecret) GetUUID() ([]byte, error) {
 	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
 }
 
-func (s *VirSecret) GetUUIDString() (string, error) {
+func (s *Secret) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virSecretGetUUIDString(s.ptr, (*C.char)(cuidPtr))
@@ -62,7 +62,7 @@ func (s *VirSecret) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (s *VirSecret) GetUsageID() (string, error) {
+func (s *Secret) GetUsageID() (string, error) {
 	result := C.virSecretGetUsageID(s.ptr)
 	if result == nil {
 		return "", GetLastError()
@@ -70,15 +70,15 @@ func (s *VirSecret) GetUsageID() (string, error) {
 	return C.GoString(result), nil
 }
 
-func (s *VirSecret) GetUsageType() (VirSecretUsageType, error) {
-	result := VirSecretUsageType(C.virSecretGetUsageType(s.ptr))
+func (s *Secret) GetUsageType() (SecretUsageType, error) {
+	result := SecretUsageType(C.virSecretGetUsageType(s.ptr))
 	if result == -1 {
 		return 0, GetLastError()
 	}
 	return result, nil
 }
 
-func (s *VirSecret) GetXMLDesc(flags uint32) (string, error) {
+func (s *Secret) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virSecretGetXMLDesc(s.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -88,7 +88,7 @@ func (s *VirSecret) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (s *VirSecret) GetValue(flags uint32) ([]byte, error) {
+func (s *Secret) GetValue(flags uint32) ([]byte, error) {
 	var cvalue_size C.size_t
 
 	cvalue := C.virSecretGetValue(s.ptr, &cvalue_size, C.uint(flags))
@@ -100,7 +100,7 @@ func (s *VirSecret) GetValue(flags uint32) ([]byte, error) {
 	return ret, nil
 }
 
-func (s *VirSecret) SetValue(value []byte, flags uint32) error {
+func (s *Secret) SetValue(value []byte, flags uint32) error {
 	var cvalue_size C.size_t = C.size_t(len(value))
 	var cvalue *C.uchar = (*C.uchar)(C.CBytes(value))
 
