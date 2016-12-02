@@ -1099,24 +1099,24 @@ func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByKey(key string) (*VirStorageVol, error) {
+func (c *VirConnection) LookupStorageVolByKey(key string) (*StorageVol, error) {
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
 	ptr := C.virStorageVolLookupByKey(c.ptr, cKey)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStorageVol{ptr: ptr}, nil
+	return &StorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByPath(path string) (*VirStorageVol, error) {
+func (c *VirConnection) LookupStorageVolByPath(path string) (*StorageVol, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 	ptr := C.virStorageVolLookupByPath(c.ptr, cPath)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStorageVol{ptr: ptr}, nil
+	return &StorageVol{ptr: ptr}, nil
 }
 
 func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*Secret, error) {

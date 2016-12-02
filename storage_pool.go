@@ -235,34 +235,34 @@ func (p *VirStoragePool) Undefine() error {
 	return nil
 }
 
-func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*VirStorageVol, error) {
+func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXML(p.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStorageVol{ptr: ptr}, nil
+	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *VirStorageVol, flags uint32) (*VirStorageVol, error) {
+func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *StorageVol, flags uint32) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXMLFrom(p.ptr, cXml, clonevol.ptr, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStorageVol{ptr: ptr}, nil
+	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) LookupStorageVolByName(name string) (*VirStorageVol, error) {
+func (p *VirStoragePool) LookupStorageVolByName(name string) (*StorageVol, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStorageVolLookupByName(p.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStorageVol{ptr: ptr}, nil
+	return &StorageVol{ptr: ptr}, nil
 }
 
 func (p *VirStoragePool) NumOfStorageVolumes() (int, error) {
@@ -292,7 +292,7 @@ func (p *VirStoragePool) ListStorageVolumes() ([]string, error) {
 	return goNames, nil
 }
 
-func (p *VirStoragePool) ListAllStorageVolumes(flags uint32) ([]VirStorageVol, error) {
+func (p *VirStoragePool) ListAllStorageVolumes(flags uint32) ([]StorageVol, error) {
 	var cList *C.virStorageVolPtr
 	numVols := C.virStoragePoolListAllVolumes(p.ptr, (**C.virStorageVolPtr)(&cList), C.uint(flags))
 	if numVols == -1 {
@@ -303,10 +303,10 @@ func (p *VirStoragePool) ListAllStorageVolumes(flags uint32) ([]VirStorageVol, e
 		Len:  int(numVols),
 		Cap:  int(numVols),
 	}
-	var pools []VirStorageVol
+	var pools []StorageVol
 	slice := *(*[]C.virStorageVolPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirStorageVol{ptr})
+		pools = append(pools, StorageVol{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
