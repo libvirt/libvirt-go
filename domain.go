@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt-qemu -lvirt
+#cgo pkg-config: libvirt libvirt-qemu
 #include <libvirt/libvirt.h>
 #include <libvirt/libvirt-qemu.h>
 #include <libvirt/virterror.h>

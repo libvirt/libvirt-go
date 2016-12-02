@@ -6,7 +6,7 @@ import (
 )
 
 /*
-#cgo LDFLAGS: -lvirt
+#cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 
 void domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,

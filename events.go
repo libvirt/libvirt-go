@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt
+#cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 
 */
