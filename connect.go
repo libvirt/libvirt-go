@@ -1055,37 +1055,37 @@ func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*VirStoragePool, e
 	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*VirNWFilter, error) {
+func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*NWFilter, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNWFilterDefineXML(c.ptr, cXml)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNWFilter{ptr: ptr}, nil
+	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByName(name string) (*VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByName(name string) (*NWFilter, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNWFilterLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNWFilter{ptr: ptr}, nil
+	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (*VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (*NWFilter, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNWFilterLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNWFilter{ptr: ptr}, nil
+	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1096,7 +1096,7 @@ func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*VirNWFilter, error) 
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNWFilter{ptr: ptr}, nil
+	return &NWFilter{ptr: ptr}, nil
 }
 
 func (c *VirConnection) LookupStorageVolByKey(key string) (*VirStorageVol, error) {
@@ -1255,7 +1255,7 @@ func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]D
 	return domains, nil
 }
 
-func (c *VirConnection) ListAllNWFilters(flags uint32) ([]VirNWFilter, error) {
+func (c *VirConnection) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	var cList *C.virNWFilterPtr
 	numNWFilters := C.virConnectListAllNWFilters(c.ptr, (**C.virNWFilterPtr)(&cList), C.uint(flags))
 	if numNWFilters == -1 {
@@ -1266,10 +1266,10 @@ func (c *VirConnection) ListAllNWFilters(flags uint32) ([]VirNWFilter, error) {
 		Len:  int(numNWFilters),
 		Cap:  int(numNWFilters),
 	}
-	var filters []VirNWFilter
+	var filters []NWFilter
 	slice := *(*[]C.virNWFilterPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		filters = append(filters, VirNWFilter{ptr})
+		filters = append(filters, NWFilter{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return filters, nil

@@ -12,11 +12,11 @@ import (
 	"unsafe"
 )
 
-type VirNWFilter struct {
+type NWFilter struct {
 	ptr C.virNWFilterPtr
 }
 
-func (f *VirNWFilter) Free() error {
+func (f *NWFilter) Free() error {
 	if result := C.virNWFilterFree(f.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -24,7 +24,7 @@ func (f *VirNWFilter) Free() error {
 	return nil
 }
 
-func (f *VirNWFilter) GetName() (string, error) {
+func (f *NWFilter) GetName() (string, error) {
 	name := C.virNWFilterGetName(f.ptr)
 	if name == nil {
 		return "", GetLastError()
@@ -32,7 +32,7 @@ func (f *VirNWFilter) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (f *VirNWFilter) Undefine() error {
+func (f *NWFilter) Undefine() error {
 	result := C.virNWFilterUndefine(f.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -40,7 +40,7 @@ func (f *VirNWFilter) Undefine() error {
 	return nil
 }
 
-func (f *VirNWFilter) GetUUID() ([]byte, error) {
+func (f *NWFilter) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virNWFilterGetUUID(f.ptr, (*C.uchar)(cuidPtr))
@@ -50,7 +50,7 @@ func (f *VirNWFilter) GetUUID() ([]byte, error) {
 	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
 }
 
-func (f *VirNWFilter) GetUUIDString() (string, error) {
+func (f *NWFilter) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virNWFilterGetUUIDString(f.ptr, (*C.char)(cuidPtr))
@@ -60,7 +60,7 @@ func (f *VirNWFilter) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (f *VirNWFilter) GetXMLDesc(flags uint32) (string, error) {
+func (f *NWFilter) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virNWFilterGetXMLDesc(f.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()

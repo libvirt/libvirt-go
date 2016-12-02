@@ -1057,7 +1057,7 @@ func TestIntergrationListAllNWFilters(t *testing.T) {
 
 	filters, err := conn.ListAllNWFilters(0)
 	if len(filters) == 0 {
-		t.Fatal("length of []VirNWFilter shouldn't be 0")
+		t.Fatal("length of []NWFilter shouldn't be 0")
 	}
 
 	found := false
