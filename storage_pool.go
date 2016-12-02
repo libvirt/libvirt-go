@@ -70,7 +70,10 @@ type VirStoragePool struct {
 }
 
 type VirStoragePoolInfo struct {
-	ptr C.virStoragePoolInfo
+	State      VirStoragePoolState
+	Capacity   uint64
+	Allocation uint64
+	Available  uint64
 }
 
 func (p *VirStoragePool) Build(flags VirStoragePoolBuildFlags) error {
@@ -127,12 +130,17 @@ func (p *VirStoragePool) GetAutostart() (bool, error) {
 }
 
 func (p *VirStoragePool) GetInfo() (*VirStoragePoolInfo, error) {
-	var ptr C.virStoragePoolInfo
-	result := C.virStoragePoolGetInfo(p.ptr, (*C.virStoragePoolInfo)(unsafe.Pointer(&ptr)))
+	var cinfo C.virStoragePoolInfo
+	result := C.virStoragePoolGetInfo(p.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirStoragePoolInfo{ptr: ptr}, nil
+	return &VirStoragePoolInfo{
+		State:      VirStoragePoolState(cinfo.state),
+		Capacity:   uint64(cinfo.capacity),
+		Allocation: uint64(cinfo.allocation),
+		Available:  uint64(cinfo.available),
+	}, nil
 }
 
 func (p *VirStoragePool) GetName() (string, error) {
@@ -224,22 +232,6 @@ func (p *VirStoragePool) Undefine() error {
 		return GetLastError()
 	}
 	return nil
-}
-
-func (i *VirStoragePoolInfo) GetState() VirStoragePoolState {
-	return VirStoragePoolState(i.ptr.state)
-}
-
-func (i *VirStoragePoolInfo) GetCapacityInBytes() uint64 {
-	return uint64(i.ptr.capacity)
-}
-
-func (i *VirStoragePoolInfo) GetAllocationInBytes() uint64 {
-	return uint64(i.ptr.allocation)
-}
-
-func (i *VirStoragePoolInfo) GetAvailableInBytes() uint64 {
-	return uint64(i.ptr.available)
 }
 
 func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*VirStorageVol, error) {

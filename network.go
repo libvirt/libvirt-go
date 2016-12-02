@@ -82,6 +82,18 @@ type VirNetwork struct {
 	ptr C.virNetworkPtr
 }
 
+type VirNetworkDHCPLease struct {
+	Iface      string
+	ExpiryTime time.Time
+	Type       VirIPAddrType
+	Mac        string
+	Iaid       string
+	IPaddr     string
+	Prefix     uint
+	Hostname   string
+	Clientid   string
+}
+
 func (n *VirNetwork) Free() error {
 	if result := C.virNetworkFree(n.ptr); result != 0 {
 		return GetLastError()
@@ -235,45 +247,20 @@ func (n *VirNetwork) GetDHCPLeases() ([]VirNetworkDHCPLease, error) {
 	}
 	var leases []VirNetworkDHCPLease
 	slice := *(*[]C.virNetworkDHCPLeasePtr)(unsafe.Pointer(&hdr))
-	for _, ptr := range slice {
-		leases = append(leases, VirNetworkDHCPLease{ptr})
+	for _, clease := range slice {
+		leases = append(leases, VirNetworkDHCPLease{
+			Iface:      C.GoString(clease.iface),
+			ExpiryTime: time.Unix(int64(clease.expirytime), 0),
+			Type:       VirIPAddrType(clease._type),
+			Mac:        C.GoString(clease.mac),
+			Iaid:       C.GoString(clease.iaid),
+			IPaddr:     C.GoString(clease.ipaddr),
+			Prefix:     uint(clease.prefix),
+			Hostname:   C.GoString(clease.hostname),
+			Clientid:   C.GoString(clease.clientid),
+		})
+		C.virNetworkDHCPLeaseFree(clease)
 	}
 	C.free(unsafe.Pointer(cLeases))
 	return leases, nil
-}
-
-type VirNetworkDHCPLease struct {
-	ptr C.virNetworkDHCPLeasePtr
-}
-
-func (l *VirNetworkDHCPLease) Free() {
-	C.virNetworkDHCPLeaseFree(l.ptr)
-}
-
-func (l *VirNetworkDHCPLease) GetIface() string {
-	return C.GoString(l.ptr.iface)
-}
-
-func (l *VirNetworkDHCPLease) GetExpiryTime() time.Time {
-	return time.Unix(int64(l.ptr.expirytime), 0)
-}
-
-func (l *VirNetworkDHCPLease) GetMACAddress() string {
-	return C.GoString(l.ptr.mac)
-}
-
-func (l *VirNetworkDHCPLease) GetIPAddress() string {
-	return C.GoString(l.ptr.ipaddr)
-}
-
-func (l *VirNetworkDHCPLease) GetIPPrefix() uint {
-	return uint(l.ptr.prefix)
-}
-
-func (l *VirNetworkDHCPLease) GetHostname() string {
-	return C.GoString(l.ptr.hostname)
-}
-
-func (l *VirNetworkDHCPLease) GetClientID() string {
-	return C.GoString(l.ptr.clientid)
 }

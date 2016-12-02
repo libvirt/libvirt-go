@@ -72,7 +72,9 @@ type VirStorageVol struct {
 }
 
 type VirStorageVolInfo struct {
-	ptr C.virStorageVolInfo
+	Type       VirStorageVolType
+	Capacity   uint64
+	Allocation uint64
 }
 
 func (v *VirStorageVol) Delete(flags VirStorageVolDeleteFlags) error {
@@ -91,24 +93,16 @@ func (v *VirStorageVol) Free() error {
 }
 
 func (v *VirStorageVol) GetInfo() (*VirStorageVolInfo, error) {
-	var ptr C.virStorageVolInfo
-	result := C.virStorageVolGetInfo(v.ptr, (*C.virStorageVolInfo)(unsafe.Pointer(&ptr)))
+	var cinfo C.virStorageVolInfo
+	result := C.virStorageVolGetInfo(v.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirStorageVolInfo{ptr: ptr}, nil
-}
-
-func (i *VirStorageVolInfo) GetType() VirStorageVolType {
-	return VirStorageVolType(i.ptr._type)
-}
-
-func (i *VirStorageVolInfo) GetCapacityInBytes() uint64 {
-	return uint64(i.ptr.capacity)
-}
-
-func (i *VirStorageVolInfo) GetAllocationInBytes() uint64 {
-	return uint64(i.ptr.allocation)
+	return &VirStorageVolInfo{
+		Type:       VirStorageVolType(cinfo._type),
+		Capacity:   uint64(cinfo.capacity),
+		Allocation: uint64(cinfo.allocation),
+	}, nil
 }
 
 func (v *VirStorageVol) GetKey() (string, error) {

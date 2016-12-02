@@ -164,12 +164,12 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	state, err := pool.GetInfo()
+	info, err := pool.GetInfo()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if state.GetState() != VIR_STORAGE_POOL_RUNNING {
+	if info.State != VIR_STORAGE_POOL_RUNNING {
 		t.Fatal("Storage pool should be running")
 	}
 	if err = pool.Destroy(); err != nil {
@@ -177,12 +177,12 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 		return
 	}
 
-	state, err = pool.GetInfo()
+	info, err = pool.GetInfo()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if state.GetState() != VIR_STORAGE_POOL_INACTIVE {
+	if info.State != VIR_STORAGE_POOL_INACTIVE {
 		t.Fatal("Storage pool should be inactive")
 	}
 }

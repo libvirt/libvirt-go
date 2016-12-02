@@ -867,11 +867,17 @@ const (
 )
 
 type VirDomainBlockInfo struct {
-	ptr C.virDomainBlockInfo
+	Capacity   uint64
+	Allocation uint64
+	Physical   uint64
 }
 
 type VirDomainInfo struct {
-	ptr C.virDomainInfo
+	State     VirDomainState
+	MaxMem    uint64
+	Memory    uint64
+	NrVirtCpu uint
+	CpuTime   uint64
 }
 
 type VirDomainMemoryStat struct {
@@ -1009,27 +1015,19 @@ func (d *VirDomain) GetAutostart() (bool, error) {
 }
 
 func (d *VirDomain) GetBlockInfo(disk string, flag uint) (*VirDomainBlockInfo, error) {
-	var ptr C.virDomainBlockInfo
+	var cinfo C.virDomainBlockInfo
 	cDisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cDisk))
-	result := C.virDomainGetBlockInfo(d.ptr, cDisk, (*C.virDomainBlockInfo)(unsafe.Pointer(&ptr)), C.uint(flag))
+	result := C.virDomainGetBlockInfo(d.ptr, cDisk, &cinfo, C.uint(flag))
 	if result == -1 {
 		return nil, GetLastError()
 	}
 
-	return &VirDomainBlockInfo{ptr: ptr}, nil
-}
-
-func (b *VirDomainBlockInfo) Allocation() uint64 {
-	return uint64(b.ptr.allocation)
-}
-
-func (b *VirDomainBlockInfo) Capacity() uint64 {
-	return uint64(b.ptr.capacity)
-}
-
-func (b *VirDomainBlockInfo) Physical() uint64 {
-	return uint64(b.ptr.physical)
+	return &VirDomainBlockInfo{
+		Capacity:   uint64(cinfo.capacity),
+		Allocation: uint64(cinfo.allocation),
+		Physical:   uint64(cinfo.physical),
+	}, nil
 }
 
 func (d *VirDomain) GetName() (string, error) {
@@ -1082,12 +1080,18 @@ func (d *VirDomain) GetUUIDString() (string, error) {
 }
 
 func (d *VirDomain) GetInfo() (*VirDomainInfo, error) {
-	var ptr C.virDomainInfo
-	result := C.virDomainGetInfo(d.ptr, (*C.virDomainInfo)(unsafe.Pointer(&ptr)))
+	var cinfo C.virDomainInfo
+	result := C.virDomainGetInfo(d.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirDomainInfo{ptr: ptr}, nil
+	return &VirDomainInfo{
+		State:     VirDomainState(cinfo.state),
+		MaxMem:    uint64(cinfo.maxMem),
+		Memory:    uint64(cinfo.memory),
+		NrVirtCpu: uint(cinfo.nrVirtCpu),
+		CpuTime:   uint64(cinfo.cpuTime),
+	}, nil
 }
 
 func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
@@ -1098,26 +1102,6 @@ func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
 	xml := C.GoString(result)
 	C.free(unsafe.Pointer(result))
 	return xml, nil
-}
-
-func (i *VirDomainInfo) GetState() uint8 {
-	return uint8(i.ptr.state)
-}
-
-func (i *VirDomainInfo) GetMaxMem() uint64 {
-	return uint64(i.ptr.maxMem)
-}
-
-func (i *VirDomainInfo) GetMemory() uint64 {
-	return uint64(i.ptr.memory)
-}
-
-func (i *VirDomainInfo) GetNrVirtCpu() uint16 {
-	return uint16(i.ptr.nrVirtCpu)
-}
-
-func (i *VirDomainInfo) GetCpuTime() uint64 {
-	return uint64(i.ptr.cpuTime)
 }
 
 type VirDomainCPUStats struct {

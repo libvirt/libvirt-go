@@ -222,6 +222,17 @@ type VirConnection struct {
 	ptr C.virConnectPtr
 }
 
+type VirNodeInfo struct {
+	Model   string
+	Memory  uint64
+	Cpus    uint
+	MHz     uint
+	Nodes   uint32
+	Sockets uint32
+	Cores   uint32
+	Threads uint32
+}
+
 // Additional data associated to the connection.
 type virConnectionData struct {
 	errCallbackId   *int
@@ -404,12 +415,25 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 }
 
 func (c *VirConnection) GetNodeInfo() (*VirNodeInfo, error) {
-	var ptr C.virNodeInfo
-	result := C.virNodeGetInfo(c.ptr, (*C.virNodeInfo)(unsafe.Pointer(&ptr)))
+	var cinfo C.virNodeInfo
+	result := C.virNodeGetInfo(c.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirNodeInfo{ptr: ptr}, nil
+	return &VirNodeInfo{
+		Model:   C.GoString((*C.char)(unsafe.Pointer(&cinfo.model[0]))),
+		Memory:  uint64(cinfo.memory),
+		Cpus:    uint(cinfo.cpus),
+		MHz:     uint(cinfo.mhz),
+		Nodes:   uint32(cinfo.nodes),
+		Sockets: uint32(cinfo.sockets),
+		Cores:   uint32(cinfo.cores),
+		Threads: uint32(cinfo.threads),
+	}, nil
+}
+
+func (ni *VirNodeInfo) GetMaxCPUs() uint32 {
+	return ni.Nodes * ni.Sockets * ni.Cores * ni.Threads
 }
 
 func (c *VirConnection) GetHostname() (string, error) {

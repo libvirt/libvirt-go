@@ -166,7 +166,7 @@ func TestGetNodeInfo(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if ni.GetModel() != "i686" {
+	if ni.Model != "i686" {
 		t.Error("Expected i686 model in test transport")
 		return
 	}
