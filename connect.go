@@ -1163,17 +1163,17 @@ func (c *VirConnection) LookupSecretByUsage(usageType SecretUsageType, usageID s
 	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceByName(id string) (*VirNodeDevice, error) {
+func (c *VirConnection) LookupDeviceByName(id string) (*NodeDevice, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNodeDeviceLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNodeDevice{ptr: ptr}, nil
+	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (*VirNodeDevice, error) {
+func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (*NodeDevice, error) {
 	cWwnn := C.CString(wwnn)
 	cWwpn := C.CString(wwpn)
 	defer C.free(unsafe.Pointer(cWwnn))
@@ -1182,17 +1182,17 @@ func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint3
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNodeDevice{ptr: ptr}, nil
+	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (*VirNodeDevice, error) {
+func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNodeDeviceCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNodeDevice{ptr: ptr}, nil
+	return &NodeDevice{ptr: ptr}, nil
 }
 
 func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
@@ -1315,7 +1315,7 @@ func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]S
 	return pools, nil
 }
 
-func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlags) ([]VirNodeDevice, error) {
+func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlags) ([]NodeDevice, error) {
 	var cList *C.virNodeDevicePtr
 	numPools := C.virConnectListAllNodeDevices(c.ptr, (**C.virNodeDevicePtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1326,10 +1326,10 @@ func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlag
 		Len:  int(numPools),
 		Cap:  int(numPools),
 	}
-	var pools []VirNodeDevice
+	var pools []NodeDevice
 	slice := *(*[]C.virNodeDevicePtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirNodeDevice{ptr})
+		pools = append(pools, NodeDevice{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil

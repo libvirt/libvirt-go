@@ -12,25 +12,25 @@ import (
 	"unsafe"
 )
 
-type VirNodeDeviceEventID int
+type NodeDeviceEventID int
 
 const (
-	VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE = VirNodeDeviceEventID(C.VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE)
-	VIR_NODE_DEVICE_EVENT_ID_UPDATE    = VirNodeDeviceEventID(C.VIR_NODE_DEVICE_EVENT_ID_UPDATE)
+	VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE = NodeDeviceEventID(C.VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE)
+	VIR_NODE_DEVICE_EVENT_ID_UPDATE    = NodeDeviceEventID(C.VIR_NODE_DEVICE_EVENT_ID_UPDATE)
 )
 
-type VirNodeDeviceEventLifecycleType int
+type NodeDeviceEventLifecycleType int
 
 const (
-	VIR_NODE_DEVICE_EVENT_CREATED = VirNodeDeviceEventLifecycleType(C.VIR_NODE_DEVICE_EVENT_CREATED)
-	VIR_NODE_DEVICE_EVENT_DELETED = VirNodeDeviceEventLifecycleType(C.VIR_NODE_DEVICE_EVENT_DELETED)
+	VIR_NODE_DEVICE_EVENT_CREATED = NodeDeviceEventLifecycleType(C.VIR_NODE_DEVICE_EVENT_CREATED)
+	VIR_NODE_DEVICE_EVENT_DELETED = NodeDeviceEventLifecycleType(C.VIR_NODE_DEVICE_EVENT_DELETED)
 )
 
-type VirNodeDevice struct {
+type NodeDevice struct {
 	ptr C.virNodeDevicePtr
 }
 
-func (n *VirNodeDevice) Free() error {
+func (n *NodeDevice) Free() error {
 	if result := C.virNodeDeviceFree(n.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -38,7 +38,7 @@ func (n *VirNodeDevice) Free() error {
 	return nil
 }
 
-func (n *VirNodeDevice) Destroy() error {
+func (n *NodeDevice) Destroy() error {
 	result := C.virNodeDeviceDestroy(n.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -46,7 +46,7 @@ func (n *VirNodeDevice) Destroy() error {
 	return nil
 }
 
-func (n *VirNodeDevice) Reset() error {
+func (n *NodeDevice) Reset() error {
 	result := C.virNodeDeviceReset(n.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -54,7 +54,7 @@ func (n *VirNodeDevice) Reset() error {
 	return nil
 }
 
-func (n *VirNodeDevice) Detach() error {
+func (n *NodeDevice) Detach() error {
 	result := C.virNodeDeviceDettach(n.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -62,7 +62,7 @@ func (n *VirNodeDevice) Detach() error {
 	return nil
 }
 
-func (n *VirNodeDevice) DetachFlags(driverName string, flags uint32) error {
+func (n *NodeDevice) DetachFlags(driverName string, flags uint32) error {
 	cDriverName := C.CString(driverName)
 	defer C.free(cDriverName)
 	result := C.virNodeDeviceDetachFlags(n.ptr, cDriverName, C.uint(flags))
@@ -72,7 +72,7 @@ func (n *VirNodeDevice) DetachFlags(driverName string, flags uint32) error {
 	return nil
 }
 
-func (n *VirNodeDevice) ReAttach() error {
+func (n *NodeDevice) ReAttach() error {
 	result := C.virNodeDeviceReAttach(n.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -80,7 +80,7 @@ func (n *VirNodeDevice) ReAttach() error {
 	return nil
 }
 
-func (n *VirNodeDevice) GetName() (string, error) {
+func (n *NodeDevice) GetName() (string, error) {
 	name := C.virNodeDeviceGetName(n.ptr)
 	if name == nil {
 		return "", GetLastError()
@@ -88,7 +88,7 @@ func (n *VirNodeDevice) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (n *VirNodeDevice) GetXMLDesc(flags uint32) (string, error) {
+func (n *NodeDevice) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virNodeDeviceGetXMLDesc(n.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -98,7 +98,7 @@ func (n *VirNodeDevice) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (n *VirNodeDevice) GetParent() (string, error) {
+func (n *NodeDevice) GetParent() (string, error) {
 	result := C.virNodeDeviceGetParent(n.ptr)
 	if result == nil {
 		return "", GetLastError()
@@ -107,7 +107,7 @@ func (n *VirNodeDevice) GetParent() (string, error) {
 	return C.GoString(result), nil
 }
 
-func (p *VirNodeDevice) NumOfStorageCaps() (int, error) {
+func (p *NodeDevice) NumOfStorageCaps() (int, error) {
 	result := int(C.virNodeDeviceNumOfCaps(p.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -115,7 +115,7 @@ func (p *VirNodeDevice) NumOfStorageCaps() (int, error) {
 	return result, nil
 }
 
-func (p *VirNodeDevice) ListStorageCaps() ([]string, error) {
+func (p *NodeDevice) ListStorageCaps() ([]string, error) {
 	const maxCaps = 1024
 	var names [maxCaps](*C.char)
 	namesPtr := unsafe.Pointer(&names)
