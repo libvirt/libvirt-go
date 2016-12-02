@@ -13,70 +13,70 @@ import (
 	"unsafe"
 )
 
-type VirStoragePoolState int
+type StoragePoolState int
 
 const (
-	VIR_STORAGE_POOL_INACTIVE     = VirStoragePoolState(C.VIR_STORAGE_POOL_INACTIVE)     // Not running
-	VIR_STORAGE_POOL_BUILDING     = VirStoragePoolState(C.VIR_STORAGE_POOL_BUILDING)     // Initializing pool,not available
-	VIR_STORAGE_POOL_RUNNING      = VirStoragePoolState(C.VIR_STORAGE_POOL_RUNNING)      // Running normally
-	VIR_STORAGE_POOL_DEGRADED     = VirStoragePoolState(C.VIR_STORAGE_POOL_DEGRADED)     // Running degraded
-	VIR_STORAGE_POOL_INACCESSIBLE = VirStoragePoolState(C.VIR_STORAGE_POOL_INACCESSIBLE) // Running,but not accessible
+	VIR_STORAGE_POOL_INACTIVE     = StoragePoolState(C.VIR_STORAGE_POOL_INACTIVE)     // Not running
+	VIR_STORAGE_POOL_BUILDING     = StoragePoolState(C.VIR_STORAGE_POOL_BUILDING)     // Initializing pool,not available
+	VIR_STORAGE_POOL_RUNNING      = StoragePoolState(C.VIR_STORAGE_POOL_RUNNING)      // Running normally
+	VIR_STORAGE_POOL_DEGRADED     = StoragePoolState(C.VIR_STORAGE_POOL_DEGRADED)     // Running degraded
+	VIR_STORAGE_POOL_INACCESSIBLE = StoragePoolState(C.VIR_STORAGE_POOL_INACCESSIBLE) // Running,but not accessible
 )
 
-type VirStoragePoolBuildFlags int
+type StoragePoolBuildFlags int
 
 const (
-	VIR_STORAGE_POOL_BUILD_NEW          = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NEW)          // Regular build from scratch
-	VIR_STORAGE_POOL_BUILD_REPAIR       = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_REPAIR)       // Repair / reinitialize
-	VIR_STORAGE_POOL_BUILD_RESIZE       = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_RESIZE)       // Extend existing pool
-	VIR_STORAGE_POOL_BUILD_NO_OVERWRITE = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NO_OVERWRITE) // Do not overwrite existing pool
-	VIR_STORAGE_POOL_BUILD_OVERWRITE    = VirStoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_OVERWRITE)    // Overwrite data
+	VIR_STORAGE_POOL_BUILD_NEW          = StoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NEW)          // Regular build from scratch
+	VIR_STORAGE_POOL_BUILD_REPAIR       = StoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_REPAIR)       // Repair / reinitialize
+	VIR_STORAGE_POOL_BUILD_RESIZE       = StoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_RESIZE)       // Extend existing pool
+	VIR_STORAGE_POOL_BUILD_NO_OVERWRITE = StoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_NO_OVERWRITE) // Do not overwrite existing pool
+	VIR_STORAGE_POOL_BUILD_OVERWRITE    = StoragePoolBuildFlags(C.VIR_STORAGE_POOL_BUILD_OVERWRITE)    // Overwrite data
 )
 
-type VirStoragePoolCreateFlags int
+type StoragePoolCreateFlags int
 
 const (
-	VIR_STORAGE_POOL_CREATE_NORMAL                  = VirStoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_NORMAL)
-	VIR_STORAGE_POOL_CREATE_WITH_BUILD              = VirStoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD)
-	VIR_STORAGE_POOL_CREATE_WITH_BUILD_OVERWRITE    = VirStoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD_OVERWRITE)
-	VIR_STORAGE_POOL_CREATE_WITH_BUILD_NO_OVERWRITE = VirStoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD_NO_OVERWRITE)
+	VIR_STORAGE_POOL_CREATE_NORMAL                  = StoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_NORMAL)
+	VIR_STORAGE_POOL_CREATE_WITH_BUILD              = StoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD)
+	VIR_STORAGE_POOL_CREATE_WITH_BUILD_OVERWRITE    = StoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD_OVERWRITE)
+	VIR_STORAGE_POOL_CREATE_WITH_BUILD_NO_OVERWRITE = StoragePoolCreateFlags(C.VIR_STORAGE_POOL_CREATE_WITH_BUILD_NO_OVERWRITE)
 )
 
-type VirStoragePoolDeleteFlags int
+type StoragePoolDeleteFlags int
 
 const (
-	VIR_STORAGE_POOL_DELETE_NORMAL = VirStoragePoolDeleteFlags(C.VIR_STORAGE_POOL_DELETE_NORMAL)
-	VIR_STORAGE_POOL_DELETE_ZEROED = VirStoragePoolDeleteFlags(C.VIR_STORAGE_POOL_DELETE_ZEROED)
+	VIR_STORAGE_POOL_DELETE_NORMAL = StoragePoolDeleteFlags(C.VIR_STORAGE_POOL_DELETE_NORMAL)
+	VIR_STORAGE_POOL_DELETE_ZEROED = StoragePoolDeleteFlags(C.VIR_STORAGE_POOL_DELETE_ZEROED)
 )
 
-type VirStoragePoolEventID int
+type StoragePoolEventID int
 
 const (
-	VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE = VirStoragePoolEventID(C.VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE)
-	VIR_STORAGE_POOL_EVENT_ID_REFRESH   = VirStoragePoolEventID(C.VIR_STORAGE_POOL_EVENT_ID_REFRESH)
+	VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE = StoragePoolEventID(C.VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE)
+	VIR_STORAGE_POOL_EVENT_ID_REFRESH   = StoragePoolEventID(C.VIR_STORAGE_POOL_EVENT_ID_REFRESH)
 )
 
-type VirStoragePoolEventLifecycleType int
+type StoragePoolEventLifecycleType int
 
 const (
-	VIR_STORAGE_POOL_EVENT_DEFINED   = VirStoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_DEFINED)
-	VIR_STORAGE_POOL_EVENT_UNDEFINED = VirStoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_UNDEFINED)
-	VIR_STORAGE_POOL_EVENT_STARTED   = VirStoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_STARTED)
-	VIR_STORAGE_POOL_EVENT_STOPPED   = VirStoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_STOPPED)
+	VIR_STORAGE_POOL_EVENT_DEFINED   = StoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_DEFINED)
+	VIR_STORAGE_POOL_EVENT_UNDEFINED = StoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_UNDEFINED)
+	VIR_STORAGE_POOL_EVENT_STARTED   = StoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_STARTED)
+	VIR_STORAGE_POOL_EVENT_STOPPED   = StoragePoolEventLifecycleType(C.VIR_STORAGE_POOL_EVENT_STOPPED)
 )
 
-type VirStoragePool struct {
+type StoragePool struct {
 	ptr C.virStoragePoolPtr
 }
 
-type VirStoragePoolInfo struct {
-	State      VirStoragePoolState
+type StoragePoolInfo struct {
+	State      StoragePoolState
 	Capacity   uint64
 	Allocation uint64
 	Available  uint64
 }
 
-func (p *VirStoragePool) Build(flags VirStoragePoolBuildFlags) error {
+func (p *StoragePool) Build(flags StoragePoolBuildFlags) error {
 	result := C.virStoragePoolBuild(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -84,7 +84,7 @@ func (p *VirStoragePool) Build(flags VirStoragePoolBuildFlags) error {
 	return nil
 }
 
-func (p *VirStoragePool) Create(flags uint32) error {
+func (p *StoragePool) Create(flags uint32) error {
 	result := C.virStoragePoolCreate(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -92,7 +92,7 @@ func (p *VirStoragePool) Create(flags uint32) error {
 	return nil
 }
 
-func (p *VirStoragePool) Delete(flags uint32) error {
+func (p *StoragePool) Delete(flags uint32) error {
 	result := C.virStoragePoolDelete(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -100,7 +100,7 @@ func (p *VirStoragePool) Delete(flags uint32) error {
 	return nil
 }
 
-func (p *VirStoragePool) Destroy() error {
+func (p *StoragePool) Destroy() error {
 	result := C.virStoragePoolDestroy(p.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -108,7 +108,7 @@ func (p *VirStoragePool) Destroy() error {
 	return nil
 }
 
-func (p *VirStoragePool) Free() error {
+func (p *StoragePool) Free() error {
 	if result := C.virStoragePoolFree(p.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -116,7 +116,7 @@ func (p *VirStoragePool) Free() error {
 	return nil
 }
 
-func (p *VirStoragePool) GetAutostart() (bool, error) {
+func (p *StoragePool) GetAutostart() (bool, error) {
 	var out C.int
 	result := C.virStoragePoolGetAutostart(p.ptr, (*C.int)(unsafe.Pointer(&out)))
 	if result == -1 {
@@ -130,21 +130,21 @@ func (p *VirStoragePool) GetAutostart() (bool, error) {
 	}
 }
 
-func (p *VirStoragePool) GetInfo() (*VirStoragePoolInfo, error) {
+func (p *StoragePool) GetInfo() (*StoragePoolInfo, error) {
 	var cinfo C.virStoragePoolInfo
 	result := C.virStoragePoolGetInfo(p.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirStoragePoolInfo{
-		State:      VirStoragePoolState(cinfo.state),
+	return &StoragePoolInfo{
+		State:      StoragePoolState(cinfo.state),
 		Capacity:   uint64(cinfo.capacity),
 		Allocation: uint64(cinfo.allocation),
 		Available:  uint64(cinfo.available),
 	}, nil
 }
 
-func (p *VirStoragePool) GetName() (string, error) {
+func (p *StoragePool) GetName() (string, error) {
 	name := C.virStoragePoolGetName(p.ptr)
 	if name == nil {
 		return "", GetLastError()
@@ -152,7 +152,7 @@ func (p *VirStoragePool) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (p *VirStoragePool) GetUUID() ([]byte, error) {
+func (p *StoragePool) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virStoragePoolGetUUID(p.ptr, (*C.uchar)(cuidPtr))
@@ -162,7 +162,7 @@ func (p *VirStoragePool) GetUUID() ([]byte, error) {
 	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
 }
 
-func (p *VirStoragePool) GetUUIDString() (string, error) {
+func (p *StoragePool) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virStoragePoolGetUUIDString(p.ptr, (*C.char)(cuidPtr))
@@ -172,7 +172,7 @@ func (p *VirStoragePool) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (p *VirStoragePool) GetXMLDesc(flags uint32) (string, error) {
+func (p *StoragePool) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virStoragePoolGetXMLDesc(p.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -182,7 +182,7 @@ func (p *VirStoragePool) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (p *VirStoragePool) IsActive() (bool, error) {
+func (p *StoragePool) IsActive() (bool, error) {
 	result := C.virStoragePoolIsActive(p.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -193,7 +193,7 @@ func (p *VirStoragePool) IsActive() (bool, error) {
 	return false, nil
 }
 
-func (p *VirStoragePool) IsPersistent() (bool, error) {
+func (p *StoragePool) IsPersistent() (bool, error) {
 	result := C.virStoragePoolIsPersistent(p.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -204,7 +204,7 @@ func (p *VirStoragePool) IsPersistent() (bool, error) {
 	return false, nil
 }
 
-func (p *VirStoragePool) SetAutostart(autostart bool) error {
+func (p *StoragePool) SetAutostart(autostart bool) error {
 	var cAutostart C.int
 	switch autostart {
 	case true:
@@ -219,7 +219,7 @@ func (p *VirStoragePool) SetAutostart(autostart bool) error {
 	return nil
 }
 
-func (p *VirStoragePool) Refresh(flags uint32) error {
+func (p *StoragePool) Refresh(flags uint32) error {
 	result := C.virStoragePoolRefresh(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -227,7 +227,7 @@ func (p *VirStoragePool) Refresh(flags uint32) error {
 	return nil
 }
 
-func (p *VirStoragePool) Undefine() error {
+func (p *StoragePool) Undefine() error {
 	result := C.virStoragePoolUndefine(p.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -235,7 +235,7 @@ func (p *VirStoragePool) Undefine() error {
 	return nil
 }
 
-func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*StorageVol, error) {
+func (p *StoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXML(p.ptr, cXml, C.uint(flags))
@@ -245,7 +245,7 @@ func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*S
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *StorageVol, flags uint32) (*StorageVol, error) {
+func (p *StoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *StorageVol, flags uint32) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXMLFrom(p.ptr, cXml, clonevol.ptr, C.uint(flags))
@@ -255,7 +255,7 @@ func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *Sto
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) LookupStorageVolByName(name string) (*StorageVol, error) {
+func (p *StoragePool) LookupStorageVolByName(name string) (*StorageVol, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStorageVolLookupByName(p.ptr, cName)
@@ -265,7 +265,7 @@ func (p *VirStoragePool) LookupStorageVolByName(name string) (*StorageVol, error
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) NumOfStorageVolumes() (int, error) {
+func (p *StoragePool) NumOfStorageVolumes() (int, error) {
 	result := int(C.virStoragePoolNumOfVolumes(p.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -273,7 +273,7 @@ func (p *VirStoragePool) NumOfStorageVolumes() (int, error) {
 	return result, nil
 }
 
-func (p *VirStoragePool) ListStorageVolumes() ([]string, error) {
+func (p *StoragePool) ListStorageVolumes() ([]string, error) {
 	const maxVols = 1024
 	var names [maxVols](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -292,7 +292,7 @@ func (p *VirStoragePool) ListStorageVolumes() ([]string, error) {
 	return goNames, nil
 }
 
-func (p *VirStoragePool) ListAllStorageVolumes(flags uint32) ([]StorageVol, error) {
+func (p *StoragePool) ListAllStorageVolumes(flags uint32) ([]StorageVol, error) {
 	var cList *C.virStorageVolPtr
 	numVols := C.virStoragePoolListAllVolumes(p.ptr, (**C.virStorageVolPtr)(&cList), C.uint(flags))
 	if numVols == -1 {

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func buildTestStoragePool(poolName string) (*VirStoragePool, *VirConnection) {
+func buildTestStoragePool(poolName string) (*StoragePool, *VirConnection) {
 	conn := buildTestConnection()
 	var name string
 	if poolName == "" {

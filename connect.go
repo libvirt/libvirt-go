@@ -1001,47 +1001,47 @@ func (c *VirConnection) LookupInterfaceByMACString(mac string) (*VirInterface, e
 	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (*VirStoragePool, error) {
+func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (*StoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: ptr}, nil
+	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (*VirStoragePool, error) {
+func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (*StoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: ptr}, nil
+	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByName(name string) (*VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByName(name string) (*StoragePool, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStoragePoolLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: ptr}, nil
+	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (*VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (*StoragePool, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: ptr}, nil
+	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*StoragePool, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1052,7 +1052,7 @@ func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*VirStoragePool, e
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: ptr}, nil
+	return &StoragePool{ptr: ptr}, nil
 }
 
 func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*NWFilter, error) {
@@ -1275,7 +1275,7 @@ func (c *VirConnection) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	return filters, nil
 }
 
-func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsFlags) ([]VirStoragePool, error) {
+func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsFlags) ([]StoragePool, error) {
 	var cList *C.virStoragePoolPtr
 	numPools := C.virConnectListAllStoragePools(c.ptr, (**C.virStoragePoolPtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1286,10 +1286,10 @@ func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsF
 		Len:  int(numPools),
 		Cap:  int(numPools),
 	}
-	var pools []VirStoragePool
+	var pools []StoragePool
 	slice := *(*[]C.virStoragePoolPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirStoragePool{ptr})
+		pools = append(pools, StoragePool{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil

@@ -181,10 +181,10 @@ func (v *StorageVol) Download(stream *Stream, offset, length uint64, flags uint3
 	return nil
 }
 
-func (v *StorageVol) LookupPoolByVolume() (*VirStoragePool, error) {
+func (v *StorageVol) LookupPoolByVolume() (*StoragePool, error) {
 	poolPtr := C.virStoragePoolLookupByVolume(v.ptr)
 	if poolPtr == nil {
 		return nil, GetLastError()
 	}
-	return &VirStoragePool{ptr: poolPtr}, nil
+	return &StoragePool{ptr: poolPtr}, nil
 }

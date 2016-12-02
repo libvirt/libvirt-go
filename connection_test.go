@@ -998,7 +998,7 @@ func TestListAllStoragePools(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(pools) == 0 {
-		t.Fatal("length of []VirStoragePool shouldn't be 0")
+		t.Fatal("length of []StoragePool shouldn't be 0")
 	}
 	found := false
 	for _, p := range pools {
