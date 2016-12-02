@@ -170,34 +170,34 @@ const (
 	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL        = ConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL)
 )
 
-type VirCPUCompareResult int
+type CPUCompareResult int
 
 const (
-	VIR_CPU_COMPARE_ERROR        = VirCPUCompareResult(C.VIR_CPU_COMPARE_ERROR)
-	VIR_CPU_COMPARE_INCOMPATIBLE = VirCPUCompareResult(C.VIR_CPU_COMPARE_INCOMPATIBLE)
-	VIR_CPU_COMPARE_IDENTICAL    = VirCPUCompareResult(C.VIR_CPU_COMPARE_IDENTICAL)
-	VIR_CPU_COMPARE_SUPERSET     = VirCPUCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
+	VIR_CPU_COMPARE_ERROR        = CPUCompareResult(C.VIR_CPU_COMPARE_ERROR)
+	VIR_CPU_COMPARE_INCOMPATIBLE = CPUCompareResult(C.VIR_CPU_COMPARE_INCOMPATIBLE)
+	VIR_CPU_COMPARE_IDENTICAL    = CPUCompareResult(C.VIR_CPU_COMPARE_IDENTICAL)
+	VIR_CPU_COMPARE_SUPERSET     = CPUCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
 )
 
-type VirNodeAllocPagesFlags int
+type NodeAllocPagesFlags int
 
 const (
-	VIR_NODE_ALLOC_PAGES_ADD = VirNodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_ADD)
-	VIR_NODE_ALLOC_PAGES_SET = VirNodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_SET)
+	VIR_NODE_ALLOC_PAGES_ADD = NodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_ADD)
+	VIR_NODE_ALLOC_PAGES_SET = NodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_SET)
 )
 
-type VirNodeSuspendTarget int
+type NodeSuspendTarget int
 
 const (
-	VIR_NODE_SUSPEND_TARGET_MEM    = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_MEM)
-	VIR_NODE_SUSPEND_TARGET_DISK   = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_DISK)
-	VIR_NODE_SUSPEND_TARGET_HYBRID = VirNodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_HYBRID)
+	VIR_NODE_SUSPEND_TARGET_MEM    = NodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_MEM)
+	VIR_NODE_SUSPEND_TARGET_DISK   = NodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_DISK)
+	VIR_NODE_SUSPEND_TARGET_HYBRID = NodeSuspendTarget(C.VIR_NODE_SUSPEND_TARGET_HYBRID)
 )
 
-type VirNodeGetCPUStatsAllCPUs int
+type NodeGetCPUStatsAllCPUs int
 
 const (
-	VIR_NODE_CPU_STATS_ALL_CPUS = VirNodeGetCPUStatsAllCPUs(C.VIR_NODE_CPU_STATS_ALL_CPUS)
+	VIR_NODE_CPU_STATS_ALL_CPUS = NodeGetCPUStatsAllCPUs(C.VIR_NODE_CPU_STATS_ALL_CPUS)
 )
 
 const (
@@ -222,7 +222,7 @@ type Connect struct {
 	ptr C.virConnectPtr
 }
 
-type VirNodeInfo struct {
+type NodeInfo struct {
 	Model   string
 	Memory  uint64
 	Cpus    uint
@@ -414,13 +414,13 @@ func (c *Connect) GetCapabilities() (string, error) {
 	return capabilities, nil
 }
 
-func (c *Connect) GetNodeInfo() (*VirNodeInfo, error) {
+func (c *Connect) GetNodeInfo() (*NodeInfo, error) {
 	var cinfo C.virNodeInfo
 	result := C.virNodeGetInfo(c.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirNodeInfo{
+	return &NodeInfo{
 		Model:   C.GoString((*C.char)(unsafe.Pointer(&cinfo.model[0]))),
 		Memory:  uint64(cinfo.memory),
 		Cpus:    uint(cinfo.cpus),
@@ -432,7 +432,7 @@ func (c *Connect) GetNodeInfo() (*VirNodeInfo, error) {
 	}, nil
 }
 
-func (ni *VirNodeInfo) GetMaxCPUs() uint32 {
+func (ni *NodeInfo) GetMaxCPUs() uint32 {
 	return ni.Nodes * ni.Sockets * ni.Cores * ni.Threads
 }
 
@@ -1359,7 +1359,7 @@ func (c *Connect) InterfaceChangeRollback(flags uint) error {
 	return nil
 }
 
-func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags VirNodeAllocPagesFlags) (int, error) {
+func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags NodeAllocPagesFlags) (int, error) {
 	cpages := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes))
 
@@ -1401,7 +1401,7 @@ func (c *Connect) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
 	return cpumap, uint(conline), nil
 }
 
-type VirNodeCPUStats struct {
+type NodeCPUStats struct {
 	KernelSet      bool
 	Kernel         uint64
 	UserSet        bool
@@ -1416,7 +1416,7 @@ type VirNodeCPUStats struct {
 	Utilization    uint64
 }
 
-func (c *Connect) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats, error) {
+func (c *Connect) GetCPUStats(cpuNum int, flags uint32) (*NodeCPUStats, error) {
 	var nparams C.int
 
 	ret := C.virNodeGetCPUStats(c.ptr, C.int(cpuNum), nil, &nparams, C.uint(0))
@@ -1430,7 +1430,7 @@ func (c *Connect) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats, error
 		return nil, GetLastError()
 	}
 
-	stats := &VirNodeCPUStats{}
+	stats := &NodeCPUStats{}
 	for i := 0; i < int(nparams); i++ {
 		param := params[i]
 		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
@@ -1505,7 +1505,7 @@ func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint,
 	return counts, nil
 }
 
-type VirNodeMemoryParameters struct {
+type NodeMemoryParameters struct {
 	ShmPagesToScanSet      bool
 	ShmPagesToScan         uint
 	ShmSleepMillisecsSet   bool
@@ -1524,7 +1524,7 @@ type VirNodeMemoryParameters struct {
 	ShmMergeAcrossNodes    uint
 }
 
-func getMemoryParameterFieldInfo(params *VirNodeMemoryParameters) map[string]typedParamsFieldInfo {
+func getMemoryParameterFieldInfo(params *NodeMemoryParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_NODE_MEMORY_SHARED_PAGES_TO_SCAN: typedParamsFieldInfo{
 			set: &params.ShmPagesToScanSet,
@@ -1561,8 +1561,8 @@ func getMemoryParameterFieldInfo(params *VirNodeMemoryParameters) map[string]typ
 	}
 }
 
-func (c *Connect) GetMemoryParameters(flags uint32) (*VirNodeMemoryParameters, error) {
-	params := &VirNodeMemoryParameters{}
+func (c *Connect) GetMemoryParameters(flags uint32) (*NodeMemoryParameters, error) {
+	params := &NodeMemoryParameters{}
 	info := getMemoryParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1588,7 +1588,7 @@ func (c *Connect) GetMemoryParameters(flags uint32) (*VirNodeMemoryParameters, e
 	return params, nil
 }
 
-type VirNodeMemoryStats struct {
+type NodeMemoryStats struct {
 	TotalSet   bool
 	Total      uint64
 	FreeSet    bool
@@ -1599,7 +1599,7 @@ type VirNodeMemoryStats struct {
 	Cached     uint64
 }
 
-func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats, error) {
+func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*NodeMemoryStats, error) {
 	var nparams C.int
 
 	ret := C.virNodeGetMemoryStats(c.ptr, C.int(cellNum), nil, &nparams, 0)
@@ -1613,7 +1613,7 @@ func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats
 		return nil, GetLastError()
 	}
 
-	stats := &VirNodeMemoryStats{}
+	stats := &NodeMemoryStats{}
 	for i := 0; i < int(nparams); i++ {
 		param := params[i]
 		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
@@ -1636,25 +1636,25 @@ func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats
 	return stats, nil
 }
 
-type VirNodeSecurityModel struct {
+type NodeSecurityModel struct {
 	Model string
 	Doi   string
 }
 
-func (c *Connect) GetSecurityModel() (*VirNodeSecurityModel, error) {
+func (c *Connect) GetSecurityModel() (*NodeSecurityModel, error) {
 	var cmodel C.virSecurityModel
 	ret := C.virNodeGetSecurityModel(c.ptr, &cmodel)
 	if ret == -1 {
 		return nil, GetLastError()
 	}
 
-	return &VirNodeSecurityModel{
+	return &NodeSecurityModel{
 		Model: C.GoString((*C.char)(unsafe.Pointer(&cmodel.model))),
 		Doi:   C.GoString((*C.char)(unsafe.Pointer(&cmodel.doi))),
 	}, nil
 }
 
-func (c *Connect) SetMemoryParameters(params *VirNodeMemoryParameters, flags uint32) error {
+func (c *Connect) SetMemoryParameters(params *NodeMemoryParameters, flags uint32) error {
 	info := getMemoryParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1682,7 +1682,7 @@ func (c *Connect) SetMemoryParameters(params *VirNodeMemoryParameters, flags uin
 	return nil
 }
 
-func (c *Connect) SuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+func (c *Connect) SuspendForDuration(target NodeSuspendTarget, duration uint64, flags uint32) error {
 	ret := C.virNodeSuspendForDuration(c.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1737,7 +1737,7 @@ func (c *Connect) BaselineCPU(xmlCPUs []string, flags ConnectBaselineCPUFlags) (
 	return C.GoString(ret), nil
 }
 
-func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (VirCPUCompareResult, error) {
+func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (CPUCompareResult, error) {
 	cxmlDesc := C.CString(xmlDesc)
 	defer C.free(cxmlDesc)
 
@@ -1746,7 +1746,7 @@ func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (VirC
 		return VIR_CPU_COMPARE_ERROR, GetLastError()
 	}
 
-	return VirCPUCompareResult(ret), nil
+	return CPUCompareResult(ret), nil
 }
 
 func (c *Connect) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {

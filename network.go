@@ -14,11 +14,11 @@ import (
 	"unsafe"
 )
 
-type VirIPAddrType int
+type IPAddrType int
 
 const (
-	VIR_IP_ADDR_TYPE_IPV4 = VirIPAddrType(C.VIR_IP_ADDR_TYPE_IPV4)
-	VIR_IP_ADDR_TYPE_IPV6 = VirIPAddrType(C.VIR_IP_ADDR_TYPE_IPV6)
+	VIR_IP_ADDR_TYPE_IPV4 = IPAddrType(C.VIR_IP_ADDR_TYPE_IPV4)
+	VIR_IP_ADDR_TYPE_IPV6 = IPAddrType(C.VIR_IP_ADDR_TYPE_IPV6)
 )
 
 type NetworkXMLFlags int
@@ -85,7 +85,7 @@ type Network struct {
 type NetworkDHCPLease struct {
 	Iface      string
 	ExpiryTime time.Time
-	Type       VirIPAddrType
+	Type       IPAddrType
 	Mac        string
 	Iaid       string
 	IPaddr     string
@@ -252,7 +252,7 @@ func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 		leases = append(leases, NetworkDHCPLease{
 			Iface:      C.GoString(clease.iface),
 			ExpiryTime: time.Unix(int64(clease.expirytime), 0),
-			Type:       VirIPAddrType(clease._type),
+			Type:       IPAddrType(clease._type),
 			Mac:        C.GoString(clease.mac),
 			Iaid:       C.GoString(clease.iaid),
 			IPaddr:     C.GoString(clease.ipaddr),

@@ -61,10 +61,10 @@ const (
 	VIR_STORAGE_VOL_WIPE_ALG_TRIM       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_TRIM)       // Trim the underlying storage
 )
 
-type VirStorageXMLFlags int
+type StorageXMLFlags int
 
 const (
-	VIR_STORAGE_XML_INACTIVE = VirStorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
+	VIR_STORAGE_XML_INACTIVE = StorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
 )
 
 type StorageVol struct {

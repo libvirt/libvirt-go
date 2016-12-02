@@ -533,31 +533,31 @@ const (
 	VIR_FROM_LIBSSH = ErrorDomain(C.VIR_FROM_LIBSSH)
 )
 
-type VirError struct {
+type Error struct {
 	Code    ErrorNumber
 	Domain  ErrorDomain
 	Message string
 	Level   ErrorLevel
 }
 
-func (err VirError) Error() string {
+func (err Error) Error() string {
 	return fmt.Sprintf("[Code-%d] [Domain-%d] %s",
 		err.Code, err.Domain, err.Message)
 }
 
-var ErrNoError = VirError{
+var ErrNoError = Error{
 	Code:    VIR_ERR_OK,
 	Domain:  VIR_FROM_NONE,
 	Message: "",
 	Level:   VIR_ERR_NONE,
 }
 
-func GetLastError() VirError {
+func GetLastError() Error {
 	err := C.virGetLastError()
 	if err == nil {
 		return ErrNoError
 	}
-	virErr := VirError{
+	virErr := Error{
 		Code:    ErrorNumber(err.code),
 		Domain:  ErrorDomain(err.domain),
 		Message: C.GoString(err.message),

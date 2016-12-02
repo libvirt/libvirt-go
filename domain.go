@@ -434,19 +434,19 @@ const (
 	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = DomainInterfaceAddressesSource(C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
 )
 
-type VirKeycodeSet int
+type KeycodeSet int
 
 const (
-	VIR_KEYCODE_SET_LINUX  = VirKeycodeSet(C.VIR_KEYCODE_SET_LINUX)
-	VIR_KEYCODE_SET_XT     = VirKeycodeSet(C.VIR_KEYCODE_SET_XT)
-	VIR_KEYCODE_SET_ATSET1 = VirKeycodeSet(C.VIR_KEYCODE_SET_ATSET1)
-	VIR_KEYCODE_SET_ATSET2 = VirKeycodeSet(C.VIR_KEYCODE_SET_ATSET2)
-	VIR_KEYCODE_SET_ATSET3 = VirKeycodeSet(C.VIR_KEYCODE_SET_ATSET3)
-	VIR_KEYCODE_SET_OSX    = VirKeycodeSet(C.VIR_KEYCODE_SET_OSX)
-	VIR_KEYCODE_SET_XT_KBD = VirKeycodeSet(C.VIR_KEYCODE_SET_XT_KBD)
-	VIR_KEYCODE_SET_USB    = VirKeycodeSet(C.VIR_KEYCODE_SET_USB)
-	VIR_KEYCODE_SET_WIN32  = VirKeycodeSet(C.VIR_KEYCODE_SET_WIN32)
-	VIR_KEYCODE_SET_RFB    = VirKeycodeSet(C.VIR_KEYCODE_SET_RFB)
+	VIR_KEYCODE_SET_LINUX  = KeycodeSet(C.VIR_KEYCODE_SET_LINUX)
+	VIR_KEYCODE_SET_XT     = KeycodeSet(C.VIR_KEYCODE_SET_XT)
+	VIR_KEYCODE_SET_ATSET1 = KeycodeSet(C.VIR_KEYCODE_SET_ATSET1)
+	VIR_KEYCODE_SET_ATSET2 = KeycodeSet(C.VIR_KEYCODE_SET_ATSET2)
+	VIR_KEYCODE_SET_ATSET3 = KeycodeSet(C.VIR_KEYCODE_SET_ATSET3)
+	VIR_KEYCODE_SET_OSX    = KeycodeSet(C.VIR_KEYCODE_SET_OSX)
+	VIR_KEYCODE_SET_XT_KBD = KeycodeSet(C.VIR_KEYCODE_SET_XT_KBD)
+	VIR_KEYCODE_SET_USB    = KeycodeSet(C.VIR_KEYCODE_SET_USB)
+	VIR_KEYCODE_SET_WIN32  = KeycodeSet(C.VIR_KEYCODE_SET_WIN32)
+	VIR_KEYCODE_SET_RFB    = KeycodeSet(C.VIR_KEYCODE_SET_RFB)
 )
 
 type ConnectDomainEventBlockJobStatus int
@@ -858,12 +858,12 @@ const (
 	VIR_MIGRATE_POSTCOPY          = DomainMigrateFlags(C.VIR_MIGRATE_POSTCOPY)
 )
 
-type VirVcpuState int
+type VcpuState int
 
 const (
-	VIR_VCPU_OFFLINE = VirVcpuState(C.VIR_VCPU_OFFLINE)
-	VIR_VCPU_RUNNING = VirVcpuState(C.VIR_VCPU_RUNNING)
-	VIR_VCPU_BLOCKED = VirVcpuState(C.VIR_VCPU_BLOCKED)
+	VIR_VCPU_OFFLINE = VcpuState(C.VIR_VCPU_OFFLINE)
+	VIR_VCPU_RUNNING = VcpuState(C.VIR_VCPU_RUNNING)
+	VIR_VCPU_BLOCKED = VcpuState(C.VIR_VCPU_BLOCKED)
 )
 
 type DomainBlockInfo struct {
@@ -885,7 +885,7 @@ type DomainMemoryStat struct {
 	Val uint64
 }
 
-type VirVcpuInfo struct {
+type VcpuInfo struct {
 	Number  uint32
 	State   int32
 	CpuTime uint64
@@ -1695,7 +1695,7 @@ func (d *Domain) MemoryStats(nrStats uint32, flags uint32) ([]DomainMemoryStat, 
 	return out, nil
 }
 
-func (d *Domain) GetVcpus(maxInfo int32) ([]VirVcpuInfo, error) {
+func (d *Domain) GetVcpus(maxInfo int32) ([]VcpuInfo, error) {
 	ptr := make([]C.virVcpuInfo, maxInfo)
 
 	result := C.virDomainGetVcpus(
@@ -1703,12 +1703,12 @@ func (d *Domain) GetVcpus(maxInfo int32) ([]VirVcpuInfo, error) {
 		C.int(maxInfo), nil, C.int(0))
 
 	if result == -1 {
-		return []VirVcpuInfo{}, GetLastError()
+		return []VcpuInfo{}, GetLastError()
 	}
 
-	out := make([]VirVcpuInfo, 0)
+	out := make([]VcpuInfo, 0)
 	for i := 0; i < int(result); i++ {
-		out = append(out, VirVcpuInfo{
+		out = append(out, VcpuInfo{
 			Number:  uint32(ptr[i].number),
 			State:   int32(ptr[i].state),
 			CpuTime: uint64(ptr[i].cpuTime),
@@ -1744,7 +1744,7 @@ func extractCpuMask(bytesCpuMaps []byte, n, mapLen int) []uint32 {
 	return out
 }
 
-func (d *Domain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, error) {
+func (d *Domain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VcpuInfo, error) {
 	ptr := make([]C.virVcpuInfo, maxInfo)
 
 	mapLen := virCpuMapLen(maxCPUs)                    // Length of CPUs bitmask in bytes
@@ -1763,9 +1763,9 @@ func (d *Domain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, err
 	// Convert to golang []byte for easier handling
 	bytesCpuMaps := C.GoBytes(unsafe.Pointer(cpuMaps), C.int(bufSize))
 
-	out := make([]VirVcpuInfo, 0)
+	out := make([]VcpuInfo, 0)
 	for i := 0; i < int(result); i++ {
-		out = append(out, VirVcpuInfo{
+		out = append(out, VcpuInfo{
 			Number:  uint32(ptr[i].number),
 			State:   int32(ptr[i].state),
 			CpuTime: uint64(ptr[i].cpuTime),
@@ -3520,12 +3520,12 @@ func (d *Domain) SetSchedulerParametersFlags(params *DomainSchedulerParameters, 
 	return nil
 }
 
-type VirSecurityLabel struct {
+type SecurityLabel struct {
 	Label     string
 	Enforcing bool
 }
 
-func (d *Domain) GetSecurityLabel() (*VirSecurityLabel, error) {
+func (d *Domain) GetSecurityLabel() (*SecurityLabel, error) {
 	var clabel C.virSecurityLabel
 
 	ret := C.virDomainGetSecurityLabel(d.ptr, &clabel)
@@ -3533,25 +3533,25 @@ func (d *Domain) GetSecurityLabel() (*VirSecurityLabel, error) {
 		return nil, GetLastError()
 	}
 
-	return &VirSecurityLabel{
+	return &SecurityLabel{
 		Label:     C.GoString((*C.char)(unsafe.Pointer(&clabel.label))),
 		Enforcing: clabel.enforcing == 1,
 	}, nil
 }
 
-func (d *Domain) GetSecurityLabelList() ([]VirSecurityLabel, error) {
+func (d *Domain) GetSecurityLabelList() ([]SecurityLabel, error) {
 	var clabels *C.virSecurityLabel
 
 	ret := C.virDomainGetSecurityLabelList(d.ptr, &clabels)
 	if ret == -1 {
-		return []VirSecurityLabel{}, GetLastError()
+		return []SecurityLabel{}, GetLastError()
 	}
 
-	labels := make([]VirSecurityLabel, ret)
+	labels := make([]SecurityLabel, ret)
 	for i := 0; i < int(ret); i++ {
 		var clabel *C.virSecurityLabel
 		clabel = (*C.virSecurityLabel)(unsafe.Pointer(uintptr(unsafe.Pointer(clabels)) + (unsafe.Sizeof(*clabel) * uintptr(i))))
-		labels[i] = VirSecurityLabel{
+		labels[i] = SecurityLabel{
 			Label:     C.GoString((*C.char)(unsafe.Pointer(&clabel.label))),
 			Enforcing: clabel.enforcing == 1,
 		}
@@ -3783,7 +3783,7 @@ func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
 	return fsinfo, nil
 }
 
-func (d *Domain) PMSuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+func (d *Domain) PMSuspendForDuration(target NodeSuspendTarget, duration uint64, flags uint32) error {
 	ret := C.virDomainPMSuspendForDuration(d.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
