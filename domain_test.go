@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func buildTestDomain() (VirDomain, VirConnection) {
+func buildTestDomain() (*VirDomain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -21,7 +21,7 @@ func buildTestDomain() (VirDomain, VirConnection) {
 	return dom, conn
 }
 
-func buildSMPTestDomain() (VirDomain, VirConnection) {
+func buildSMPTestDomain() (*VirDomain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -37,7 +37,7 @@ func buildSMPTestDomain() (VirDomain, VirConnection) {
 	return dom, conn
 }
 
-func buildTransientTestDomain() (VirDomain, VirConnection) {
+func buildTransientTestDomain() (*VirDomain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainCreateXML(`<domain type="test">
 		<name>`+time.Now().String()+`</name>
@@ -603,7 +603,7 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	stream, err := NewVirStream(&conn, 0)
+	stream, err := NewVirStream(conn, 0)
 	if err != nil {
 		t.Fatalf("failed to create new stream: %s", err)
 	}

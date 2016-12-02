@@ -126,15 +126,13 @@ func (p *VirStoragePool) GetAutostart() (bool, error) {
 	}
 }
 
-func (p *VirStoragePool) GetInfo() (VirStoragePoolInfo, error) {
-	pi := VirStoragePoolInfo{}
+func (p *VirStoragePool) GetInfo() (*VirStoragePoolInfo, error) {
 	var ptr C.virStoragePoolInfo
 	result := C.virStoragePoolGetInfo(p.ptr, (*C.virStoragePoolInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
-		return pi, GetLastError()
+		return nil, GetLastError()
 	}
-	pi.ptr = ptr
-	return pi, nil
+	return &VirStoragePoolInfo{ptr: ptr}, nil
 }
 
 func (p *VirStoragePool) GetName() (string, error) {
@@ -244,34 +242,34 @@ func (i *VirStoragePoolInfo) GetAvailableInBytes() uint64 {
 	return uint64(i.ptr.available)
 }
 
-func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (VirStorageVol, error) {
+func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*VirStorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXML(p.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirStorageVol{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStorageVol{ptr: ptr}, nil
+	return &VirStorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol VirStorageVol, flags uint32) (VirStorageVol, error) {
+func (p *VirStoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *VirStorageVol, flags uint32) (*VirStorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXMLFrom(p.ptr, cXml, clonevol.ptr, C.uint(flags))
 	if ptr == nil {
-		return VirStorageVol{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStorageVol{ptr: ptr}, nil
+	return &VirStorageVol{ptr: ptr}, nil
 }
 
-func (p *VirStoragePool) LookupStorageVolByName(name string) (VirStorageVol, error) {
+func (p *VirStoragePool) LookupStorageVolByName(name string) (*VirStorageVol, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStorageVolLookupByName(p.ptr, cName)
 	if ptr == nil {
-		return VirStorageVol{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStorageVol{ptr: ptr}, nil
+	return &VirStorageVol{ptr: ptr}, nil
 }
 
 func (p *VirStoragePool) NumOfStorageVolumes() (int, error) {

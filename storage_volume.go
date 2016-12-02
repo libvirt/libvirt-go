@@ -90,15 +90,13 @@ func (v *VirStorageVol) Free() error {
 	return nil
 }
 
-func (v *VirStorageVol) GetInfo() (VirStorageVolInfo, error) {
-	vi := VirStorageVolInfo{}
+func (v *VirStorageVol) GetInfo() (*VirStorageVolInfo, error) {
 	var ptr C.virStorageVolInfo
 	result := C.virStorageVolGetInfo(v.ptr, (*C.virStorageVolInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
-		return vi, GetLastError()
+		return nil, GetLastError()
 	}
-	vi.ptr = ptr
-	return vi, nil
+	return &VirStorageVolInfo{ptr: ptr}, nil
 }
 
 func (i *VirStorageVolInfo) GetType() VirStorageVolType {
@@ -188,10 +186,10 @@ func (v *VirStorageVol) Download(stream *VirStream, offset, length uint64, flags
 	return nil
 }
 
-func (v *VirStorageVol) LookupPoolByVolume() (VirStoragePool, error) {
+func (v *VirStorageVol) LookupPoolByVolume() (*VirStoragePool, error) {
 	poolPtr := C.virStoragePoolLookupByVolume(v.ptr)
 	if poolPtr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: poolPtr}, nil
+	return &VirStoragePool{ptr: poolPtr}, nil
 }

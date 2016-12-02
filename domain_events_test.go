@@ -26,7 +26,6 @@ func TestDomainEventRegister(t *testing.T) {
 		}
 	}()
 
-	nodom := VirDomain{}
 	defName := time.Now().String()
 
 	nbEvents := 0
@@ -83,10 +82,8 @@ func TestDomainEventRegister(t *testing.T) {
 	}
 
 	defer func() {
-		if dom != nodom {
-			dom.Destroy()
-			dom.Free()
-		}
+		dom.Destroy()
+		dom.Free()
 	}()
 
 	// Check that the internal context entry was added, and that there only is

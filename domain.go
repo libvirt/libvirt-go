@@ -1008,17 +1008,16 @@ func (d *VirDomain) GetAutostart() (bool, error) {
 	}
 }
 
-func (d *VirDomain) GetBlockInfo(disk string, flag uint) (VirDomainBlockInfo, error) {
-	bi := VirDomainBlockInfo{}
+func (d *VirDomain) GetBlockInfo(disk string, flag uint) (*VirDomainBlockInfo, error) {
 	var ptr C.virDomainBlockInfo
 	cDisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cDisk))
 	result := C.virDomainGetBlockInfo(d.ptr, cDisk, (*C.virDomainBlockInfo)(unsafe.Pointer(&ptr)), C.uint(flag))
 	if result == -1 {
-		return bi, GetLastError()
+		return nil, GetLastError()
 	}
-	bi.ptr = ptr
-	return bi, nil
+
+	return &VirDomainBlockInfo{ptr: ptr}, nil
 }
 
 func (b *VirDomainBlockInfo) Allocation() uint64 {
@@ -1082,15 +1081,13 @@ func (d *VirDomain) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (d *VirDomain) GetInfo() (VirDomainInfo, error) {
-	di := VirDomainInfo{}
+func (d *VirDomain) GetInfo() (*VirDomainInfo, error) {
 	var ptr C.virDomainInfo
 	result := C.virDomainGetInfo(d.ptr, (*C.virDomainInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
-		return di, GetLastError()
+		return nil, GetLastError()
 	}
-	di.ptr = ptr
-	return di, nil
+	return &VirDomainInfo{ptr: ptr}, nil
 }
 
 func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
@@ -1913,12 +1910,12 @@ func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, e
 	return ifaces, nil
 }
 
-func (d *VirDomain) SnapshotCurrent(flags uint32) (VirDomainSnapshot, error) {
+func (d *VirDomain) SnapshotCurrent(flags uint32) (*VirDomainSnapshot, error) {
 	result := C.virDomainSnapshotCurrent(d.ptr, C.uint(flags))
 	if result == nil {
-		return VirDomainSnapshot{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainSnapshot{ptr: result}, nil
+	return &VirDomainSnapshot{ptr: result}, nil
 
 }
 
@@ -1930,14 +1927,14 @@ func (d *VirDomain) SnapshotNum(flags VirDomainSnapshotListFlags) (int, error) {
 	return result, nil
 }
 
-func (d *VirDomain) SnapshotLookupByName(name string, flags uint32) (VirDomainSnapshot, error) {
+func (d *VirDomain) SnapshotLookupByName(name string, flags uint32) (*VirDomainSnapshot, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainSnapshotLookupByName(d.ptr, cName, C.uint(flags))
 	if ptr == nil {
-		return VirDomainSnapshot{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainSnapshot{ptr: ptr}, nil
+	return &VirDomainSnapshot{ptr: ptr}, nil
 }
 
 func (d *VirDomain) SnapshotListNames(flags VirDomainSnapshotListFlags) ([]string, error) {

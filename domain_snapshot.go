@@ -86,14 +86,14 @@ func (s *VirDomainSnapshot) RevertToSnapshot(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) CreateSnapshotXML(xml string, flags uint32) (VirDomainSnapshot, error) {
+func (d *VirDomain) CreateSnapshotXML(xml string, flags uint32) (*VirDomainSnapshot, error) {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainSnapshotCreateXML(d.ptr, cXml, C.uint(flags))
 	if result == nil {
-		return VirDomainSnapshot{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainSnapshot{ptr: result}, nil
+	return &VirDomainSnapshot{ptr: result}, nil
 }
 
 func (d *VirDomain) Save(destFile string) error {
@@ -181,12 +181,12 @@ func (s *VirDomainSnapshot) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (s *VirDomainSnapshot) GetParent(flags uint32) (VirDomainSnapshot, error) {
+func (s *VirDomainSnapshot) GetParent(flags uint32) (*VirDomainSnapshot, error) {
 	ptr := C.virDomainSnapshotGetParent(s.ptr, C.uint(flags))
 	if ptr == nil {
-		return VirDomainSnapshot{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomainSnapshot{ptr: ptr}, nil
+	return &VirDomainSnapshot{ptr: ptr}, nil
 }
 
 func (s *VirDomainSnapshot) NumChildren(flags VirDomainSnapshotListFlags) (int, error) {

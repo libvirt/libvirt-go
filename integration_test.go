@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func buildTestQEMUConnection() VirConnection {
+func buildTestQEMUConnection() *VirConnection {
 	conn, err := NewVirConnection("qemu:///system")
 	if err != nil {
 		panic(err)
@@ -18,7 +18,7 @@ func buildTestQEMUConnection() VirConnection {
 	return conn
 }
 
-func buildTestQEMUDomain() (VirDomain, VirConnection) {
+func buildTestQEMUDomain() (*VirDomain, *VirConnection) {
 	conn := buildTestQEMUConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="qemu">
 		<name>libvirt-go-test-` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
@@ -212,7 +212,7 @@ func TestDomainCreateWithFlags(t *testing.T) {
 	}
 }
 
-func defineTestLxcDomain(conn VirConnection, title string) (VirDomain, error) {
+func defineTestLxcDomain(conn *VirConnection, title string) (*VirDomain, error) {
 	if title == "" {
 		title = time.Now().String()
 	}
@@ -1165,7 +1165,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 
 	// write above data to the vol
 	// 1. create a stream
-	stream, err := NewVirStream(&conn, 0)
+	stream, err := NewVirStream(conn, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1191,7 +1191,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 
 	// read back the data
 	// 1. create a stream
-	downStream, err := NewVirStream(&conn, 0)
+	downStream, err := NewVirStream(conn, 0)
 	if err != nil {
 		t.Fatal(err)
 	}

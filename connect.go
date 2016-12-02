@@ -273,7 +273,7 @@ func GetVersion() (uint32, error) {
 	return uint32(version), nil
 }
 
-func NewVirConnection(uri string) (VirConnection, error) {
+func NewVirConnection(uri string) (*VirConnection, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -281,13 +281,12 @@ func NewVirConnection(uri string) (VirConnection, error) {
 	}
 	ptr := C.virConnectOpen(cUri)
 	if ptr == nil {
-		return VirConnection{}, GetLastError()
+		return nil, GetLastError()
 	}
-	obj := VirConnection{ptr: ptr}
-	return obj, nil
+	return &VirConnection{ptr: ptr}, nil
 }
 
-func NewVirConnectionWithAuth(uri string, username string, password string) (VirConnection, error) {
+func NewVirConnectionWithAuth(uri string, username string, password string) (*VirConnection, error) {
 	var cUri *C.char
 
 	authMechs := C.authMechs()
@@ -312,13 +311,12 @@ func NewVirConnectionWithAuth(uri string, username string, password string) (Vir
 	}
 	ptr := C.virConnectOpenAuth(cUri, (*C.struct__virConnectAuth)(unsafe.Pointer(&auth)), C.uint(0))
 	if ptr == nil {
-		return VirConnection{}, GetLastError()
+		return nil, GetLastError()
 	}
-	obj := VirConnection{ptr: ptr}
-	return obj, nil
+	return &VirConnection{ptr: ptr}, nil
 }
 
-func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
+func NewVirConnectionReadOnly(uri string) (*VirConnection, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -326,10 +324,9 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 	}
 	ptr := C.virConnectOpenReadOnly(cUri)
 	if ptr == nil {
-		return VirConnection{}, GetLastError()
+		return nil, GetLastError()
 	}
-	obj := VirConnection{ptr: ptr}
-	return obj, nil
+	return &VirConnection{ptr: ptr}, nil
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
@@ -406,15 +403,13 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 	return capabilities, nil
 }
 
-func (c *VirConnection) GetNodeInfo() (VirNodeInfo, error) {
-	ni := VirNodeInfo{}
+func (c *VirConnection) GetNodeInfo() (*VirNodeInfo, error) {
 	var ptr C.virNodeInfo
 	result := C.virNodeGetInfo(c.ptr, (*C.virNodeInfo)(unsafe.Pointer(&ptr)))
 	if result == -1 {
-		return ni, GetLastError()
+		return nil, GetLastError()
 	}
-	ni.ptr = ptr
-	return ni, nil
+	return &VirNodeInfo{ptr: ptr}, nil
 }
 
 func (c *VirConnection) GetHostname() (string, error) {
@@ -622,59 +617,59 @@ func (c *VirConnection) ListDevices(cap string, flags uint32) ([]string, error) 
 	return goUuids, nil
 }
 
-func (c *VirConnection) LookupDomainById(id uint32) (VirDomain, error) {
+func (c *VirConnection) LookupDomainById(id uint32) (*VirDomain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByName(id string) (VirDomain, error) {
+func (c *VirConnection) LookupDomainByName(id string) (*VirDomain, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUIDString(uuid string) (VirDomain, error) {
+func (c *VirConnection) LookupDomainByUUIDString(uuid string) (*VirDomain, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virDomainLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUID(uuid []byte) (VirDomain, error) {
+func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*VirDomain, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
-		return VirDomain{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
 	cUuid := C.CBytes(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virDomainLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateFlags) (VirDomain, error) {
+func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateFlags) (*VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags VirDomainCreateFlags) (VirDomain, error) {
+func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags VirDomainCreateFlags) (*VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	cfiles := make([]C.int, len(files))
@@ -683,29 +678,29 @@ func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.Fi
 	}
 	ptr := C.virDomainCreateXMLWithFiles(c.ptr, cXml, C.uint(len(files)), (&cfiles[0]), C.uint(flags))
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXML(xmlConfig string) (VirDomain, error) {
+func (c *VirConnection) DomainDefineXML(xmlConfig string) (*VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags VirDomainDefineFlags) (VirDomain, error) {
+func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags VirDomainDefineFlags) (*VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXMLFlags(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirDomain{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirDomain{ptr: ptr}, nil
+	return &VirDomain{ptr: ptr}, nil
 }
 
 func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
@@ -855,58 +850,58 @@ func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NetworkDefineXML(xmlConfig string) (VirNetwork, error) {
+func (c *VirConnection) NetworkDefineXML(xmlConfig string) (*VirNetwork, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirNetwork{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNetwork{ptr: ptr}, nil
+	return &VirNetwork{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NetworkCreateXML(xmlConfig string) (VirNetwork, error) {
+func (c *VirConnection) NetworkCreateXML(xmlConfig string) (*VirNetwork, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkCreateXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirNetwork{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNetwork{ptr: ptr}, nil
+	return &VirNetwork{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByName(name string) (VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByName(name string) (*VirNetwork, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNetworkLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirNetwork{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNetwork{ptr: ptr}, nil
+	return &VirNetwork{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (*VirNetwork, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNetworkLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirNetwork{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNetwork{ptr: ptr}, nil
+	return &VirNetwork{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*VirNetwork, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
-		return VirNetwork{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
 	cUuid := C.CBytes(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNetworkLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
-		return VirNetwork{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNetwork{ptr: ptr}, nil
+	return &VirNetwork{ptr: ptr}, nil
 }
 
 func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
@@ -952,228 +947,228 @@ func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (VirInterface, error) {
+func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (*VirInterface, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virInterfaceDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirInterface{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirInterface{ptr: ptr}, nil
+	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupInterfaceByName(name string) (VirInterface, error) {
+func (c *VirConnection) LookupInterfaceByName(name string) (*VirInterface, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirInterface{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirInterface{ptr: ptr}, nil
+	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupInterfaceByMACString(mac string) (VirInterface, error) {
+func (c *VirConnection) LookupInterfaceByMACString(mac string) (*VirInterface, error) {
 	cName := C.CString(mac)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByMACString(c.ptr, cName)
 	if ptr == nil {
-		return VirInterface{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirInterface{ptr: ptr}, nil
+	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (VirStoragePool, error) {
+func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (*VirStoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: ptr}, nil
+	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (VirStoragePool, error) {
+func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (*VirStoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: ptr}, nil
+	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByName(name string) (VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByName(name string) (*VirStoragePool, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStoragePoolLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: ptr}, nil
+	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (*VirStoragePool, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: ptr}, nil
+	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (VirStoragePool, error) {
+func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*VirStoragePool, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
-		return VirStoragePool{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
 	cUuid := C.CBytes(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
-		return VirStoragePool{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStoragePool{ptr: ptr}, nil
+	return &VirStoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (VirNWFilter, error) {
+func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*VirNWFilter, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNWFilterDefineXML(c.ptr, cXml)
 	if ptr == nil {
-		return VirNWFilter{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNWFilter{ptr: ptr}, nil
+	return &VirNWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByName(name string) (VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByName(name string) (*VirNWFilter, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNWFilterLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirNWFilter{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNWFilter{ptr: ptr}, nil
+	return &VirNWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (*VirNWFilter, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNWFilterLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirNWFilter{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNWFilter{ptr: ptr}, nil
+	return &VirNWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (VirNWFilter, error) {
+func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*VirNWFilter, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
-		return VirNWFilter{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
 	cUuid := C.CBytes(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNWFilterLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
-		return VirNWFilter{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNWFilter{ptr: ptr}, nil
+	return &VirNWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByKey(key string) (VirStorageVol, error) {
+func (c *VirConnection) LookupStorageVolByKey(key string) (*VirStorageVol, error) {
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
 	ptr := C.virStorageVolLookupByKey(c.ptr, cKey)
 	if ptr == nil {
-		return VirStorageVol{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStorageVol{ptr: ptr}, nil
+	return &VirStorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByPath(path string) (VirStorageVol, error) {
+func (c *VirConnection) LookupStorageVolByPath(path string) (*VirStorageVol, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 	ptr := C.virStorageVolLookupByPath(c.ptr, cPath)
 	if ptr == nil {
-		return VirStorageVol{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirStorageVol{ptr: ptr}, nil
+	return &VirStorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (VirSecret, error) {
+func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*VirSecret, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirSecret{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirSecret{ptr: ptr}, nil
+	return &VirSecret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUID(uuid []byte) (VirSecret, error) {
+func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*VirSecret, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
-		return VirSecret{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
 	cUuid := C.CBytes(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virSecretLookupByUUID(c.ptr, (*C.uchar)(cUuid))
 	if ptr == nil {
-		return VirSecret{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirSecret{ptr: ptr}, nil
+	return &VirSecret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUIDString(uuid string) (VirSecret, error) {
+func (c *VirConnection) LookupSecretByUUIDString(uuid string) (*VirSecret, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virSecretLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
-		return VirSecret{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirSecret{ptr: ptr}, nil
+	return &VirSecret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUsage(usageType VirSecretUsageType, usageID string) (VirSecret, error) {
+func (c *VirConnection) LookupSecretByUsage(usageType VirSecretUsageType, usageID string) (*VirSecret, error) {
 	cUsageID := C.CString(usageID)
 	defer C.free(unsafe.Pointer(cUsageID))
 	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
 	if ptr == nil {
-		return VirSecret{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirSecret{ptr: ptr}, nil
+	return &VirSecret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceByName(id string) (VirNodeDevice, error) {
+func (c *VirConnection) LookupDeviceByName(id string) (*VirNodeDevice, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNodeDeviceLookupByName(c.ptr, cName)
 	if ptr == nil {
-		return VirNodeDevice{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNodeDevice{ptr: ptr}, nil
+	return &VirNodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (VirNodeDevice, error) {
+func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (*VirNodeDevice, error) {
 	cWwnn := C.CString(wwnn)
 	cWwpn := C.CString(wwpn)
 	defer C.free(unsafe.Pointer(cWwnn))
 	defer C.free(unsafe.Pointer(cWwpn))
 	ptr := C.virNodeDeviceLookupSCSIHostByWWN(c.ptr, cWwnn, cWwpn, C.uint(flags))
 	if ptr == nil {
-		return VirNodeDevice{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNodeDevice{ptr: ptr}, nil
+	return &VirNodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (VirNodeDevice, error) {
+func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (*VirNodeDevice, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNodeDeviceCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
-		return VirNodeDevice{}, GetLastError()
+		return nil, GetLastError()
 	}
-	return VirNodeDevice{ptr: ptr}, nil
+	return &VirNodeDevice{ptr: ptr}, nil
 }
 
 func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
