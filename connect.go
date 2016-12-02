@@ -971,34 +971,34 @@ func (c *Connect) GetMaxVcpus(typeAttr string) (int, error) {
 	return result, nil
 }
 
-func (c *Connect) InterfaceDefineXML(xmlConfig string, flags uint32) (*VirInterface, error) {
+func (c *Connect) InterfaceDefineXML(xmlConfig string, flags uint32) (*Interface, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virInterfaceDefineXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirInterface{ptr: ptr}, nil
+	return &Interface{ptr: ptr}, nil
 }
 
-func (c *Connect) LookupInterfaceByName(name string) (*VirInterface, error) {
+func (c *Connect) LookupInterfaceByName(name string) (*Interface, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirInterface{ptr: ptr}, nil
+	return &Interface{ptr: ptr}, nil
 }
 
-func (c *Connect) LookupInterfaceByMACString(mac string) (*VirInterface, error) {
+func (c *Connect) LookupInterfaceByMACString(mac string) (*Interface, error) {
 	cName := C.CString(mac)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByMACString(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirInterface{ptr: ptr}, nil
+	return &Interface{ptr: ptr}, nil
 }
 
 func (c *Connect) StoragePoolDefineXML(xmlConfig string, flags uint32) (*StoragePool, error) {
@@ -1195,7 +1195,7 @@ func (c *Connect) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, 
 	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *Connect) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
+func (c *Connect) ListAllInterfaces(flags uint32) ([]Interface, error) {
 	var cList *C.virInterfacePtr
 	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
 	if numIfaces == -1 {
@@ -1206,10 +1206,10 @@ func (c *Connect) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
 		Len:  int(numIfaces),
 		Cap:  int(numIfaces),
 	}
-	var ifaces []VirInterface
+	var ifaces []Interface
 	slice := *(*[]C.virInterfacePtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		ifaces = append(ifaces, VirInterface{ptr})
+		ifaces = append(ifaces, Interface{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return ifaces, nil

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func buildTestInterface(mac string) (*VirInterface, *Connect) {
+func buildTestInterface(mac string) (*Interface, *Connect) {
 	conn := buildTestConnection()
 	xml := `<interface type='ethernet' name='ethTest0'><mac address='` + mac + `'/></interface>`
 	iface, err := conn.InterfaceDefineXML(xml, 0)

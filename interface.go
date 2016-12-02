@@ -12,17 +12,17 @@ import (
 	"unsafe"
 )
 
-type VirInterfaceXMLFlags int
+type InterfaceXMLFlags int
 
 const (
-	VIR_INTERFACE_XML_INACTIVE = VirInterfaceXMLFlags(C.VIR_INTERFACE_XML_INACTIVE)
+	VIR_INTERFACE_XML_INACTIVE = InterfaceXMLFlags(C.VIR_INTERFACE_XML_INACTIVE)
 )
 
-type VirInterface struct {
+type Interface struct {
 	ptr C.virInterfacePtr
 }
 
-func (n *VirInterface) Create(flags uint32) error {
+func (n *Interface) Create(flags uint32) error {
 	result := C.virInterfaceCreate(n.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -30,7 +30,7 @@ func (n *VirInterface) Create(flags uint32) error {
 	return nil
 }
 
-func (n *VirInterface) Destroy(flags uint32) error {
+func (n *Interface) Destroy(flags uint32) error {
 	result := C.virInterfaceDestroy(n.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -38,7 +38,7 @@ func (n *VirInterface) Destroy(flags uint32) error {
 	return nil
 }
 
-func (n *VirInterface) IsActive() (bool, error) {
+func (n *Interface) IsActive() (bool, error) {
 	result := C.virInterfaceIsActive(n.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -49,7 +49,7 @@ func (n *VirInterface) IsActive() (bool, error) {
 	return false, nil
 }
 
-func (n *VirInterface) GetMACString() (string, error) {
+func (n *Interface) GetMACString() (string, error) {
 	result := C.virInterfaceGetMACString(n.ptr)
 	if result == nil {
 		return "", GetLastError()
@@ -58,7 +58,7 @@ func (n *VirInterface) GetMACString() (string, error) {
 	return mac, nil
 }
 
-func (n *VirInterface) GetName() (string, error) {
+func (n *Interface) GetName() (string, error) {
 	result := C.virInterfaceGetName(n.ptr)
 	if result == nil {
 		return "", GetLastError()
@@ -67,7 +67,7 @@ func (n *VirInterface) GetName() (string, error) {
 	return name, nil
 }
 
-func (n *VirInterface) GetXMLDesc(flags uint32) (string, error) {
+func (n *Interface) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virInterfaceGetXMLDesc(n.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -77,7 +77,7 @@ func (n *VirInterface) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (n *VirInterface) Undefine() error {
+func (n *Interface) Undefine() error {
 	result := C.virInterfaceUndefine(n.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -85,7 +85,7 @@ func (n *VirInterface) Undefine() error {
 	return nil
 }
 
-func (n *VirInterface) Free() error {
+func (n *Interface) Free() error {
 	if result := C.virInterfaceFree(n.ptr); result != 0 {
 		return GetLastError()
 	}
