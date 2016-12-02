@@ -17,6 +17,10 @@ import (
 */
 import "C"
 
+func init() {
+	C.virInitialize()
+}
+
 type VirConnectCloseReason int
 
 const (
@@ -325,7 +329,6 @@ func NewVirConnectionReadOnly(uri string) (VirConnection, error) {
 }
 
 func (c *VirConnection) CloseConnection() (int, error) {
-	c.UnsetErrorFunc()
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return result, GetLastError()
