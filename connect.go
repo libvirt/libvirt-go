@@ -162,13 +162,13 @@ const (
 	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL        = VirConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL)
 )
 
-type VirConnectCompareResult int
+type VirCPUCompareResult int
 
 const (
-	VIR_CPU_COMPARE_ERROR        = VirConnectCompareResult(C.VIR_CPU_COMPARE_ERROR)
-	VIR_CPU_COMPARE_INCOMPATIBLE = VirConnectCompareResult(C.VIR_CPU_COMPARE_INCOMPATIBLE)
-	VIR_CPU_COMPARE_IDENTICAL    = VirConnectCompareResult(C.VIR_CPU_COMPARE_IDENTICAL)
-	VIR_CPU_COMPARE_SUPERSET     = VirConnectCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
+	VIR_CPU_COMPARE_ERROR        = VirCPUCompareResult(C.VIR_CPU_COMPARE_ERROR)
+	VIR_CPU_COMPARE_INCOMPATIBLE = VirCPUCompareResult(C.VIR_CPU_COMPARE_INCOMPATIBLE)
+	VIR_CPU_COMPARE_IDENTICAL    = VirCPUCompareResult(C.VIR_CPU_COMPARE_IDENTICAL)
+	VIR_CPU_COMPARE_SUPERSET     = VirCPUCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
 )
 
 type VirNodeAllocPagesFlags int
@@ -1685,6 +1685,149 @@ func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags VirDomainXM
 
 	ret := C.virDomainSaveImageGetXMLDesc(c.ptr, cfile, C.uint(flags))
 
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+func (c *VirConnection) BaselineCPU(xmlCPUs []string, flags VirConnectBaselineCPUFlags) (string, error) {
+	cxmlCPUs := make([]*C.char, len(xmlCPUs))
+	for i := 0; i < len(xmlCPUs); i++ {
+		cxmlCPUs[i] = C.CString(xmlCPUs[i])
+		defer C.free(cxmlCPUs[i])
+	}
+
+	ret := C.virConnectBaselineCPU(c.ptr, &cxmlCPUs[0], C.uint(len(xmlCPUs)), C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+func (c *VirConnection) CompareCPU(xmlDesc string, flags VirConnectCompareCPUFlags) (VirCPUCompareResult, error) {
+	cxmlDesc := C.CString(xmlDesc)
+	defer C.free(cxmlDesc)
+
+	ret := C.virConnectCompareCPU(c.ptr, cxmlDesc, C.uint(flags))
+	if ret == C.VIR_CPU_COMPARE_ERROR {
+		return VIR_CPU_COMPARE_ERROR, GetLastError()
+	}
+
+	return VirCPUCompareResult(ret), nil
+}
+
+func (c *VirConnection) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {
+	cnativeFormat := C.CString(nativeFormat)
+	defer C.free(cnativeFormat)
+	cnativeConfig := C.CString(nativeConfig)
+	defer C.free(cnativeConfig)
+
+	ret := C.virConnectDomainXMLFromNative(c.ptr, cnativeFormat, cnativeConfig, C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+func (c *VirConnection) DomainXMLToNative(nativeFormat string, domainXml string, flags uint32) (string, error) {
+	cnativeFormat := C.CString(nativeFormat)
+	defer C.free(cnativeFormat)
+	cdomainXml := C.CString(domainXml)
+	defer C.free(cdomainXml)
+
+	ret := C.virConnectDomainXMLToNative(c.ptr, cnativeFormat, cdomainXml, C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+func (c *VirConnection) GetCPUModelNames(arch string, flags uint32) ([]string, error) {
+	carch := C.CString(arch)
+	defer C.free(carch)
+
+	var cmodels **C.char
+	ret := C.virConnectGetCPUModelNames(c.ptr, carch, &cmodels, C.uint(flags))
+	if ret == -1 {
+		return []string{}, GetLastError()
+	}
+
+	models := make([]string, int(ret))
+	for i := 0; i < int(ret); i++ {
+		cmodel := *(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cmodels)) + (unsafe.Sizeof(*cmodels) * uintptr(i))))
+
+		defer C.free(cmodel)
+		models[i] = C.GoString(cmodel)
+	}
+	defer C.free(cmodels)
+
+	return models, nil
+}
+
+func (c *VirConnection) GetDomainCapabilities(emulatorbin string, arch string, machine string, virttype string, flags uint32) (string, error) {
+	var cemulatorbin *C.char
+	if emulatorbin != "" {
+		cemulatorbin = C.CString(emulatorbin)
+		defer C.free(cemulatorbin)
+	}
+	var carch *C.char
+	if arch != "" {
+		carch = C.CString(arch)
+		defer C.free(carch)
+	}
+	var cmachine *C.char
+	if machine != "" {
+		cmachine = C.CString(machine)
+		defer C.free(cmachine)
+	}
+	var cvirttype *C.char
+	if virttype != "" {
+		cvirttype = C.CString(virttype)
+		defer C.free(cvirttype)
+	}
+
+	ret := C.virConnectGetDomainCapabilities(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
+}
+
+func (c *VirConnection) GetVersion() (uint32, error) {
+	var hvVer C.ulong
+	ret := C.virConnectGetVersion(c.ptr, &hvVer)
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return uint32(hvVer), nil
+}
+
+func (c *VirConnection) FindStoragePoolSources(pooltype string, srcSpec string, flags uint32) (string, error) {
+	cpooltype := C.CString(pooltype)
+	defer C.free(cpooltype)
+	var csrcSpec *C.char
+	if srcSpec != "" {
+		csrcSpec := C.CString(srcSpec)
+		defer C.free(csrcSpec)
+	}
+	ret := C.virConnectFindStoragePoolSources(c.ptr, cpooltype, csrcSpec, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}
