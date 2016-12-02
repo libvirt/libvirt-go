@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func buildTestDomain() (*VirDomain, *VirConnection) {
+func buildTestDomain() (*Domain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -21,7 +21,7 @@ func buildTestDomain() (*VirDomain, *VirConnection) {
 	return dom, conn
 }
 
-func buildSMPTestDomain() (*VirDomain, *VirConnection) {
+func buildSMPTestDomain() (*Domain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -37,7 +37,7 @@ func buildSMPTestDomain() (*VirDomain, *VirConnection) {
 	return dom, conn
 }
 
-func buildTransientTestDomain() (*VirDomain, *VirConnection) {
+func buildTransientTestDomain() (*Domain, *VirConnection) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainCreateXML(`<domain type="test">
 		<name>`+time.Now().String()+`</name>
@@ -286,7 +286,7 @@ func TestCreateDestroyDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if VirDomainState(state[0]) != VIR_DOMAIN_RUNNING {
+	if DomainState(state[0]) != VIR_DOMAIN_RUNNING {
 		t.Fatal("Domain should be running")
 		return
 	}
@@ -299,7 +299,7 @@ func TestCreateDestroyDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if VirDomainState(state[0]) != VIR_DOMAIN_SHUTOFF {
+	if DomainState(state[0]) != VIR_DOMAIN_SHUTOFF {
 		t.Fatal("Domain should be destroyed")
 		return
 	}

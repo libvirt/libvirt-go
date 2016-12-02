@@ -18,7 +18,7 @@ func buildTestQEMUConnection() *VirConnection {
 	return conn
 }
 
-func buildTestQEMUDomain() (*VirDomain, *VirConnection) {
+func buildTestQEMUDomain() (*Domain, *VirConnection) {
 	conn := buildTestQEMUConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="qemu">
 		<name>libvirt-go-test-` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
@@ -206,13 +206,13 @@ func TestDomainCreateWithFlags(t *testing.T) {
 			return
 		}
 
-		if VirDomainState(state[0]) != VIR_DOMAIN_PAUSED {
+		if DomainState(state[0]) != VIR_DOMAIN_PAUSED {
 			t.Fatalf("Domain should be paused")
 		}
 	}
 }
 
-func defineTestLxcDomain(conn *VirConnection, title string) (*VirDomain, error) {
+func defineTestLxcDomain(conn *VirConnection, title string) (*Domain, error) {
 	if title == "" {
 		title = time.Now().String()
 	}

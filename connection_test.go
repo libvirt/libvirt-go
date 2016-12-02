@@ -934,7 +934,7 @@ func TestListAllDomains(t *testing.T) {
 		return
 	}
 	if len(doms) == 0 {
-		t.Fatal("length of []VirDomain shouldn't be 0")
+		t.Fatal("length of []Domain shouldn't be 0")
 	}
 	testDomName := "test"
 	found := false

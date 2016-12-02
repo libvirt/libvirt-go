@@ -641,35 +641,35 @@ func (c *VirConnection) ListDevices(cap string, flags uint32) ([]string, error) 
 	return goUuids, nil
 }
 
-func (c *VirConnection) LookupDomainById(id uint32) (*VirDomain, error) {
+func (c *VirConnection) LookupDomainById(id uint32) (*Domain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByName(id string) (*VirDomain, error) {
+func (c *VirConnection) LookupDomainByName(id string) (*Domain, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUIDString(uuid string) (*VirDomain, error) {
+func (c *VirConnection) LookupDomainByUUIDString(uuid string) (*Domain, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virDomainLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*VirDomain, error) {
+func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*Domain, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -680,20 +680,20 @@ func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*VirDomain, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateFlags) (*VirDomain, error) {
+func (c *VirConnection) DomainCreateXML(xmlConfig string, flags DomainCreateFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags VirDomainCreateFlags) (*VirDomain, error) {
+func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags DomainCreateFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	cfiles := make([]C.int, len(files))
@@ -704,27 +704,27 @@ func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.Fi
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXML(xmlConfig string) (*VirDomain, error) {
+func (c *VirConnection) DomainDefineXML(xmlConfig string) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXML(c.ptr, cXml)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags VirDomainDefineFlags) (*VirDomain, error) {
+func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXMLFlags(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomain{ptr: ptr}, nil
+	return &Domain{ptr: ptr}, nil
 }
 
 func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
@@ -1235,7 +1235,7 @@ func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([
 	return nets, nil
 }
 
-func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]VirDomain, error) {
+func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]Domain, error) {
 	var cList *C.virDomainPtr
 	numDomains := C.virConnectListAllDomains(c.ptr, (**C.virDomainPtr)(&cList), C.uint(flags))
 	if numDomains == -1 {
@@ -1246,10 +1246,10 @@ func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]V
 		Len:  int(numDomains),
 		Cap:  int(numDomains),
 	}
-	var domains []VirDomain
+	var domains []Domain
 	slice := *(*[]C.virDomainPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		domains = append(domains, VirDomain{ptr})
+		domains = append(domains, Domain{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return domains, nil
@@ -1690,7 +1690,7 @@ func (c *VirConnection) SuspendForDuration(target VirNodeSuspendTarget, duration
 	return nil
 }
 
-func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags VirDomainSaveRestoreFlags) error {
+func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags DomainSaveRestoreFlags) error {
 	cfile := C.CString(file)
 	defer C.free(cfile)
 	cxml := C.CString(xml)
@@ -1705,7 +1705,7 @@ func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags 
 	return nil
 }
 
-func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags VirDomainXMLFlags) (string, error) {
+func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (string, error) {
 	cfile := C.CString(file)
 	defer C.free(cfile)
 

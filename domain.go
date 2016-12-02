@@ -15,423 +15,423 @@ import (
 	"unsafe"
 )
 
-type VirDomainState int
+type DomainState int
 
 const (
-	VIR_DOMAIN_NOSTATE     = VirDomainState(C.VIR_DOMAIN_NOSTATE)
-	VIR_DOMAIN_RUNNING     = VirDomainState(C.VIR_DOMAIN_RUNNING)
-	VIR_DOMAIN_BLOCKED     = VirDomainState(C.VIR_DOMAIN_BLOCKED)
-	VIR_DOMAIN_PAUSED      = VirDomainState(C.VIR_DOMAIN_PAUSED)
-	VIR_DOMAIN_SHUTDOWN    = VirDomainState(C.VIR_DOMAIN_SHUTDOWN)
-	VIR_DOMAIN_CRASHED     = VirDomainState(C.VIR_DOMAIN_CRASHED)
-	VIR_DOMAIN_PMSUSPENDED = VirDomainState(C.VIR_DOMAIN_PMSUSPENDED)
-	VIR_DOMAIN_SHUTOFF     = VirDomainState(C.VIR_DOMAIN_SHUTOFF)
+	VIR_DOMAIN_NOSTATE     = DomainState(C.VIR_DOMAIN_NOSTATE)
+	VIR_DOMAIN_RUNNING     = DomainState(C.VIR_DOMAIN_RUNNING)
+	VIR_DOMAIN_BLOCKED     = DomainState(C.VIR_DOMAIN_BLOCKED)
+	VIR_DOMAIN_PAUSED      = DomainState(C.VIR_DOMAIN_PAUSED)
+	VIR_DOMAIN_SHUTDOWN    = DomainState(C.VIR_DOMAIN_SHUTDOWN)
+	VIR_DOMAIN_CRASHED     = DomainState(C.VIR_DOMAIN_CRASHED)
+	VIR_DOMAIN_PMSUSPENDED = DomainState(C.VIR_DOMAIN_PMSUSPENDED)
+	VIR_DOMAIN_SHUTOFF     = DomainState(C.VIR_DOMAIN_SHUTOFF)
 )
 
-type VirDomainMetadataType int
+type DomainMetadataType int
 
 const (
-	VIR_DOMAIN_METADATA_DESCRIPTION = VirDomainMetadataType(C.VIR_DOMAIN_METADATA_DESCRIPTION)
-	VIR_DOMAIN_METADATA_TITLE       = VirDomainMetadataType(C.VIR_DOMAIN_METADATA_TITLE)
-	VIR_DOMAIN_METADATA_ELEMENT     = VirDomainMetadataType(C.VIR_DOMAIN_METADATA_ELEMENT)
+	VIR_DOMAIN_METADATA_DESCRIPTION = DomainMetadataType(C.VIR_DOMAIN_METADATA_DESCRIPTION)
+	VIR_DOMAIN_METADATA_TITLE       = DomainMetadataType(C.VIR_DOMAIN_METADATA_TITLE)
+	VIR_DOMAIN_METADATA_ELEMENT     = DomainMetadataType(C.VIR_DOMAIN_METADATA_ELEMENT)
 )
 
-type VirDomainVcpuFlags int
+type DomainVcpuFlags int
 
 const (
-	VIR_DOMAIN_VCPU_CONFIG       = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_CONFIG)
-	VIR_DOMAIN_VCPU_CURRENT      = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_CURRENT)
-	VIR_DOMAIN_VCPU_LIVE         = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_LIVE)
-	VIR_DOMAIN_VCPU_MAXIMUM      = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_MAXIMUM)
-	VIR_DOMAIN_VCPU_GUEST        = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_GUEST)
-	VIR_DOMAIN_VCPU_HOTPLUGGABLE = VirDomainVcpuFlags(C.VIR_DOMAIN_VCPU_HOTPLUGGABLE)
+	VIR_DOMAIN_VCPU_CONFIG       = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_CONFIG)
+	VIR_DOMAIN_VCPU_CURRENT      = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_CURRENT)
+	VIR_DOMAIN_VCPU_LIVE         = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_LIVE)
+	VIR_DOMAIN_VCPU_MAXIMUM      = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_MAXIMUM)
+	VIR_DOMAIN_VCPU_GUEST        = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_GUEST)
+	VIR_DOMAIN_VCPU_HOTPLUGGABLE = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_HOTPLUGGABLE)
 )
 
-type VirDomainModificationImpact int
+type DomainModificationImpact int
 
 const (
-	VIR_DOMAIN_AFFECT_CONFIG  = VirDomainModificationImpact(C.VIR_DOMAIN_AFFECT_CONFIG)
-	VIR_DOMAIN_AFFECT_CURRENT = VirDomainModificationImpact(C.VIR_DOMAIN_AFFECT_CURRENT)
-	VIR_DOMAIN_AFFECT_LIVE    = VirDomainModificationImpact(C.VIR_DOMAIN_AFFECT_LIVE)
+	VIR_DOMAIN_AFFECT_CONFIG  = DomainModificationImpact(C.VIR_DOMAIN_AFFECT_CONFIG)
+	VIR_DOMAIN_AFFECT_CURRENT = DomainModificationImpact(C.VIR_DOMAIN_AFFECT_CURRENT)
+	VIR_DOMAIN_AFFECT_LIVE    = DomainModificationImpact(C.VIR_DOMAIN_AFFECT_LIVE)
 )
 
-type VirDomainMemoryModFlags int
+type DomainMemoryModFlags int
 
 const (
-	VIR_DOMAIN_MEM_CONFIG  = VirDomainMemoryModFlags(C.VIR_DOMAIN_MEM_CONFIG)
-	VIR_DOMAIN_MEM_CURRENT = VirDomainMemoryModFlags(C.VIR_DOMAIN_MEM_CURRENT)
-	VIR_DOMAIN_MEM_LIVE    = VirDomainMemoryModFlags(C.VIR_DOMAIN_MEM_LIVE)
-	VIR_DOMAIN_MEM_MAXIMUM = VirDomainMemoryModFlags(C.VIR_DOMAIN_MEM_MAXIMUM)
+	VIR_DOMAIN_MEM_CONFIG  = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_CONFIG)
+	VIR_DOMAIN_MEM_CURRENT = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_CURRENT)
+	VIR_DOMAIN_MEM_LIVE    = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_LIVE)
+	VIR_DOMAIN_MEM_MAXIMUM = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_MAXIMUM)
 )
 
-type VirDomainDestroyFlags int
+type DomainDestroyFlags int
 
 const (
-	VIR_DOMAIN_DESTROY_DEFAULT  = VirDomainDestroyFlags(C.VIR_DOMAIN_DESTROY_DEFAULT)
-	VIR_DOMAIN_DESTROY_GRACEFUL = VirDomainDestroyFlags(C.VIR_DOMAIN_DESTROY_GRACEFUL)
+	VIR_DOMAIN_DESTROY_DEFAULT  = DomainDestroyFlags(C.VIR_DOMAIN_DESTROY_DEFAULT)
+	VIR_DOMAIN_DESTROY_GRACEFUL = DomainDestroyFlags(C.VIR_DOMAIN_DESTROY_GRACEFUL)
 )
 
-type VirDomainShutdownFlags int
+type DomainShutdownFlags int
 
 const (
-	VIR_DOMAIN_SHUTDOWN_DEFAULT        = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_DEFAULT)
-	VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN)
-	VIR_DOMAIN_SHUTDOWN_GUEST_AGENT    = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_GUEST_AGENT)
-	VIR_DOMAIN_SHUTDOWN_INITCTL        = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_INITCTL)
-	VIR_DOMAIN_SHUTDOWN_SIGNAL         = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_SIGNAL)
-	VIR_DOMAIN_SHUTDOWN_PARAVIRT       = VirDomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_PARAVIRT)
+	VIR_DOMAIN_SHUTDOWN_DEFAULT        = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_DEFAULT)
+	VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN)
+	VIR_DOMAIN_SHUTDOWN_GUEST_AGENT    = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_GUEST_AGENT)
+	VIR_DOMAIN_SHUTDOWN_INITCTL        = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_INITCTL)
+	VIR_DOMAIN_SHUTDOWN_SIGNAL         = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_SIGNAL)
+	VIR_DOMAIN_SHUTDOWN_PARAVIRT       = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_PARAVIRT)
 )
 
-type VirDomainUndefineFlags int
+type DomainUndefineFlags int
 
 const (
-	VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       = VirDomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)       // Also remove any managed save
-	VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = VirDomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA) // If last use of domain, then also remove any snapshot metadata
-	VIR_DOMAIN_UNDEFINE_NVRAM              = VirDomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_NVRAM)              // Also remove any nvram file
-	VIR_DOMAIN_UNDEFINE_KEEP_NVRAM         = VirDomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)         // Keep nvram file
+	VIR_DOMAIN_UNDEFINE_MANAGED_SAVE       = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)       // Also remove any managed save
+	VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA) // If last use of domain, then also remove any snapshot metadata
+	VIR_DOMAIN_UNDEFINE_NVRAM              = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_NVRAM)              // Also remove any nvram file
+	VIR_DOMAIN_UNDEFINE_KEEP_NVRAM         = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)         // Keep nvram file
 )
 
-type VirDomainAttachDeviceFlags int
+type DomainAttachDeviceFlags int
 
 const (
-	VIR_DOMAIN_DEVICE_MODIFY_CONFIG  = VirDomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CONFIG)
-	VIR_DOMAIN_DEVICE_MODIFY_CURRENT = VirDomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CURRENT)
-	VIR_DOMAIN_DEVICE_MODIFY_LIVE    = VirDomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_LIVE)
-	VIR_DOMAIN_DEVICE_MODIFY_FORCE   = VirDomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_FORCE)
+	VIR_DOMAIN_DEVICE_MODIFY_CONFIG  = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CONFIG)
+	VIR_DOMAIN_DEVICE_MODIFY_CURRENT = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CURRENT)
+	VIR_DOMAIN_DEVICE_MODIFY_LIVE    = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_LIVE)
+	VIR_DOMAIN_DEVICE_MODIFY_FORCE   = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_FORCE)
 )
 
-type VirDomainCreateFlags int
+type DomainCreateFlags int
 
 const (
-	VIR_DOMAIN_NONE               = VirDomainCreateFlags(C.VIR_DOMAIN_NONE)
-	VIR_DOMAIN_START_PAUSED       = VirDomainCreateFlags(C.VIR_DOMAIN_START_PAUSED)
-	VIR_DOMAIN_START_AUTODESTROY  = VirDomainCreateFlags(C.VIR_DOMAIN_START_AUTODESTROY)
-	VIR_DOMAIN_START_BYPASS_CACHE = VirDomainCreateFlags(C.VIR_DOMAIN_START_BYPASS_CACHE)
-	VIR_DOMAIN_START_FORCE_BOOT   = VirDomainCreateFlags(C.VIR_DOMAIN_START_FORCE_BOOT)
-	VIR_DOMAIN_START_VALIDATE     = VirDomainCreateFlags(C.VIR_DOMAIN_START_VALIDATE)
+	VIR_DOMAIN_NONE               = DomainCreateFlags(C.VIR_DOMAIN_NONE)
+	VIR_DOMAIN_START_PAUSED       = DomainCreateFlags(C.VIR_DOMAIN_START_PAUSED)
+	VIR_DOMAIN_START_AUTODESTROY  = DomainCreateFlags(C.VIR_DOMAIN_START_AUTODESTROY)
+	VIR_DOMAIN_START_BYPASS_CACHE = DomainCreateFlags(C.VIR_DOMAIN_START_BYPASS_CACHE)
+	VIR_DOMAIN_START_FORCE_BOOT   = DomainCreateFlags(C.VIR_DOMAIN_START_FORCE_BOOT)
+	VIR_DOMAIN_START_VALIDATE     = DomainCreateFlags(C.VIR_DOMAIN_START_VALIDATE)
 )
 
 const VIR_DOMAIN_MEMORY_PARAM_UNLIMITED = C.VIR_DOMAIN_MEMORY_PARAM_UNLIMITED
 
-type VirDomainEventID int
+type DomainEventID int
 
 const (
 	// event parameter in the callback is of type DomainLifecycleEvent
-	VIR_DOMAIN_EVENT_ID_LIFECYCLE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_LIFECYCLE)
+	VIR_DOMAIN_EVENT_ID_LIFECYCLE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_LIFECYCLE)
 
 	// event parameter in the callback is nil
-	VIR_DOMAIN_EVENT_ID_REBOOT = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_REBOOT)
+	VIR_DOMAIN_EVENT_ID_REBOOT = DomainEventID(C.VIR_DOMAIN_EVENT_ID_REBOOT)
 
 	// event parameter in the callback is of type DomainRTCChangeEvent
-	VIR_DOMAIN_EVENT_ID_RTC_CHANGE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_RTC_CHANGE)
+	VIR_DOMAIN_EVENT_ID_RTC_CHANGE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_RTC_CHANGE)
 
 	// event parameter in the callback is of type DomainWatchdogEvent
-	VIR_DOMAIN_EVENT_ID_WATCHDOG = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_WATCHDOG)
+	VIR_DOMAIN_EVENT_ID_WATCHDOG = DomainEventID(C.VIR_DOMAIN_EVENT_ID_WATCHDOG)
 
 	// event parameter in the callback is of type DomainIOErrorEvent
-	VIR_DOMAIN_EVENT_ID_IO_ERROR = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_IO_ERROR)
+	VIR_DOMAIN_EVENT_ID_IO_ERROR = DomainEventID(C.VIR_DOMAIN_EVENT_ID_IO_ERROR)
 
 	// event parameter in the callback is of type DomainGraphicsEvent
-	VIR_DOMAIN_EVENT_ID_GRAPHICS = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_GRAPHICS)
+	VIR_DOMAIN_EVENT_ID_GRAPHICS = DomainEventID(C.VIR_DOMAIN_EVENT_ID_GRAPHICS)
 
 	// virConnectDomainEventIOErrorReasonCallback
-	VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON)
+	VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON = DomainEventID(C.VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON)
 
 	// event parameter in the callback is nil
-	VIR_DOMAIN_EVENT_ID_CONTROL_ERROR = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_CONTROL_ERROR)
+	VIR_DOMAIN_EVENT_ID_CONTROL_ERROR = DomainEventID(C.VIR_DOMAIN_EVENT_ID_CONTROL_ERROR)
 
 	// event parameter in the callback is of type DomainBlockJobEvent
-	VIR_DOMAIN_EVENT_ID_BLOCK_JOB = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB)
+	VIR_DOMAIN_EVENT_ID_BLOCK_JOB = DomainEventID(C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB)
 
 	// event parameter in the callback is of type DomainDiskChangeEvent
-	VIR_DOMAIN_EVENT_ID_DISK_CHANGE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DISK_CHANGE)
+	VIR_DOMAIN_EVENT_ID_DISK_CHANGE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_DISK_CHANGE)
 
 	// event parameter in the callback is of type DomainTrayChangeEvent
-	VIR_DOMAIN_EVENT_ID_TRAY_CHANGE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_TRAY_CHANGE)
+	VIR_DOMAIN_EVENT_ID_TRAY_CHANGE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_TRAY_CHANGE)
 
 	// event parameter in the callback is of type DomainReasonEvent
-	VIR_DOMAIN_EVENT_ID_PMWAKEUP = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_PMWAKEUP)
+	VIR_DOMAIN_EVENT_ID_PMWAKEUP = DomainEventID(C.VIR_DOMAIN_EVENT_ID_PMWAKEUP)
 
 	// event parameter in the callback is of type DomainReasonEvent
-	VIR_DOMAIN_EVENT_ID_PMSUSPEND = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_PMSUSPEND)
+	VIR_DOMAIN_EVENT_ID_PMSUSPEND = DomainEventID(C.VIR_DOMAIN_EVENT_ID_PMSUSPEND)
 
 	// event parameter in the callback is of type DomainBalloonChangeEvent
-	VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE)
+	VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE)
 
 	// event parameter in the callback is of type DomainReasonEvent
-	VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK)
+	VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK = DomainEventID(C.VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK)
 
 	// event parameter in the callback is of type DomainDeviceRemovedEvent
-	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED)
+	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED = DomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED)
 
 	// event parameter in the callback is of type DomainBlockJobEvent
-	VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2 = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2)
+	VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2 = DomainEventID(C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2)
 
 	// event parameter in the callback is of type DomainTunableEvent
-	VIR_DOMAIN_EVENT_ID_TUNABLE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_TUNABLE)
+	VIR_DOMAIN_EVENT_ID_TUNABLE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_TUNABLE)
 
 	// event parameter in the callback is of type DomainAgentLifecycleEvent
-	VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE)
+	VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE = DomainEventID(C.VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE)
 
 	// event parameter in the callback is of type DomainDeviceAddedEvent
-	VIR_DOMAIN_EVENT_ID_DEVICE_ADDED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_ADDED)
+	VIR_DOMAIN_EVENT_ID_DEVICE_ADDED = DomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_ADDED)
 
 	// event parameter in the callback is of type DomainMigrationIterationEvent
-	VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION)
+	VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION = DomainEventID(C.VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION)
 
 	// event parameter in the callback is of type DomainJobCompletedEvent
-	VIR_DOMAIN_EVENT_ID_JOB_COMPLETED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_JOB_COMPLETED)
+	VIR_DOMAIN_EVENT_ID_JOB_COMPLETED = DomainEventID(C.VIR_DOMAIN_EVENT_ID_JOB_COMPLETED)
 
 	// event parameter in the callback is of type DomainDeviceRemovalFailedEvent
-	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED = VirDomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED)
+	VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED = DomainEventID(C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED)
 )
 
-type VirDomainEventType int
+type DomainEventType int
 
 const (
-	VIR_DOMAIN_EVENT_DEFINED     = VirDomainEventType(C.VIR_DOMAIN_EVENT_DEFINED)
-	VIR_DOMAIN_EVENT_UNDEFINED   = VirDomainEventType(C.VIR_DOMAIN_EVENT_UNDEFINED)
-	VIR_DOMAIN_EVENT_STARTED     = VirDomainEventType(C.VIR_DOMAIN_EVENT_STARTED)
-	VIR_DOMAIN_EVENT_SUSPENDED   = VirDomainEventType(C.VIR_DOMAIN_EVENT_SUSPENDED)
-	VIR_DOMAIN_EVENT_RESUMED     = VirDomainEventType(C.VIR_DOMAIN_EVENT_RESUMED)
-	VIR_DOMAIN_EVENT_STOPPED     = VirDomainEventType(C.VIR_DOMAIN_EVENT_STOPPED)
-	VIR_DOMAIN_EVENT_SHUTDOWN    = VirDomainEventType(C.VIR_DOMAIN_EVENT_SHUTDOWN)
-	VIR_DOMAIN_EVENT_PMSUSPENDED = VirDomainEventType(C.VIR_DOMAIN_EVENT_PMSUSPENDED)
-	VIR_DOMAIN_EVENT_CRASHED     = VirDomainEventType(C.VIR_DOMAIN_EVENT_CRASHED)
+	VIR_DOMAIN_EVENT_DEFINED     = DomainEventType(C.VIR_DOMAIN_EVENT_DEFINED)
+	VIR_DOMAIN_EVENT_UNDEFINED   = DomainEventType(C.VIR_DOMAIN_EVENT_UNDEFINED)
+	VIR_DOMAIN_EVENT_STARTED     = DomainEventType(C.VIR_DOMAIN_EVENT_STARTED)
+	VIR_DOMAIN_EVENT_SUSPENDED   = DomainEventType(C.VIR_DOMAIN_EVENT_SUSPENDED)
+	VIR_DOMAIN_EVENT_RESUMED     = DomainEventType(C.VIR_DOMAIN_EVENT_RESUMED)
+	VIR_DOMAIN_EVENT_STOPPED     = DomainEventType(C.VIR_DOMAIN_EVENT_STOPPED)
+	VIR_DOMAIN_EVENT_SHUTDOWN    = DomainEventType(C.VIR_DOMAIN_EVENT_SHUTDOWN)
+	VIR_DOMAIN_EVENT_PMSUSPENDED = DomainEventType(C.VIR_DOMAIN_EVENT_PMSUSPENDED)
+	VIR_DOMAIN_EVENT_CRASHED     = DomainEventType(C.VIR_DOMAIN_EVENT_CRASHED)
 )
 
-type VirDomainEventWatchdogAction int
+type DomainEventWatchdogAction int
 
 // The action that is to be taken due to the watchdog device firing
 const (
 	// No action, watchdog ignored
-	VIR_DOMAIN_EVENT_WATCHDOG_NONE = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_NONE)
+	VIR_DOMAIN_EVENT_WATCHDOG_NONE = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_NONE)
 
 	// Guest CPUs are paused
-	VIR_DOMAIN_EVENT_WATCHDOG_PAUSE = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_PAUSE)
+	VIR_DOMAIN_EVENT_WATCHDOG_PAUSE = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_PAUSE)
 
 	// Guest CPUs are reset
-	VIR_DOMAIN_EVENT_WATCHDOG_RESET = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_RESET)
+	VIR_DOMAIN_EVENT_WATCHDOG_RESET = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_RESET)
 
 	// Guest is forcibly powered off
-	VIR_DOMAIN_EVENT_WATCHDOG_POWEROFF = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_POWEROFF)
+	VIR_DOMAIN_EVENT_WATCHDOG_POWEROFF = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_POWEROFF)
 
 	// Guest is requested to gracefully shutdown
-	VIR_DOMAIN_EVENT_WATCHDOG_SHUTDOWN = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_SHUTDOWN)
+	VIR_DOMAIN_EVENT_WATCHDOG_SHUTDOWN = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_SHUTDOWN)
 
 	// No action, a debug message logged
-	VIR_DOMAIN_EVENT_WATCHDOG_DEBUG = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_DEBUG)
+	VIR_DOMAIN_EVENT_WATCHDOG_DEBUG = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_DEBUG)
 
 	// Inject a non-maskable interrupt into guest
-	VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI = VirDomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI)
+	VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI = DomainEventWatchdogAction(C.VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI)
 )
 
-type VirDomainEventIOErrorAction int
+type DomainEventIOErrorAction int
 
 // The action that is to be taken due to an IO error occurring
 const (
 	// No action, IO error ignored
-	VIR_DOMAIN_EVENT_IO_ERROR_NONE = VirDomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_NONE)
+	VIR_DOMAIN_EVENT_IO_ERROR_NONE = DomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_NONE)
 
 	// Guest CPUs are paused
-	VIR_DOMAIN_EVENT_IO_ERROR_PAUSE = VirDomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_PAUSE)
+	VIR_DOMAIN_EVENT_IO_ERROR_PAUSE = DomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_PAUSE)
 
 	// IO error reported to guest OS
-	VIR_DOMAIN_EVENT_IO_ERROR_REPORT = VirDomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_REPORT)
+	VIR_DOMAIN_EVENT_IO_ERROR_REPORT = DomainEventIOErrorAction(C.VIR_DOMAIN_EVENT_IO_ERROR_REPORT)
 )
 
-type VirDomainEventGraphicsPhase int
+type DomainEventGraphicsPhase int
 
 // The phase of the graphics client connection
 const (
 	// Initial socket connection established
-	VIR_DOMAIN_EVENT_GRAPHICS_CONNECT = VirDomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_CONNECT)
+	VIR_DOMAIN_EVENT_GRAPHICS_CONNECT = DomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_CONNECT)
 
 	// Authentication & setup completed
-	VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE = VirDomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE)
+	VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE = DomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE)
 
 	// Final socket disconnection
-	VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT = VirDomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT)
+	VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT = DomainEventGraphicsPhase(C.VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT)
 )
 
-type VirDomainEventGraphicsAddressType int
+type DomainEventGraphicsAddressType int
 
 const (
 	// IPv4 address
-	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV4 = VirDomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV4)
+	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV4 = DomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV4)
 
 	// IPv6 address
-	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV6 = VirDomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV6)
+	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV6 = DomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_IPV6)
 
 	// UNIX socket path
-	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_UNIX = VirDomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_UNIX)
+	VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_UNIX = DomainEventGraphicsAddressType(C.VIR_DOMAIN_EVENT_GRAPHICS_ADDRESS_UNIX)
 )
 
-type VirDomainBlockJobType int
+type DomainBlockJobType int
 
 const (
 	// Placeholder
-	VIR_DOMAIN_BLOCK_JOB_TYPE_UNKNOWN = VirDomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_UNKNOWN)
+	VIR_DOMAIN_BLOCK_JOB_TYPE_UNKNOWN = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_UNKNOWN)
 
 	// Block Pull (virDomainBlockPull, or virDomainBlockRebase without
 	// flags), job ends on completion
-	VIR_DOMAIN_BLOCK_JOB_TYPE_PULL = VirDomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_PULL)
+	VIR_DOMAIN_BLOCK_JOB_TYPE_PULL = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_PULL)
 
 	// Block Copy (virDomainBlockCopy, or virDomainBlockRebase with
 	// flags), job exists as long as mirroring is active
-	VIR_DOMAIN_BLOCK_JOB_TYPE_COPY = VirDomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_COPY)
+	VIR_DOMAIN_BLOCK_JOB_TYPE_COPY = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_COPY)
 
 	// Block Commit (virDomainBlockCommit without flags), job ends on
 	// completion
-	VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT = VirDomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT)
+	VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT)
 
 	// Active Block Commit (virDomainBlockCommit with flags), job
 	// exists as long as sync is active
-	VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT = VirDomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT)
+	VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT)
 )
 
-type VirDomainRunningReason int
+type DomainRunningReason int
 
 const (
-	VIR_DOMAIN_RUNNING_UNKNOWN            = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_UNKNOWN)
-	VIR_DOMAIN_RUNNING_BOOTED             = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_BOOTED)             /* normal startup from boot */
-	VIR_DOMAIN_RUNNING_MIGRATED           = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_MIGRATED)           /* migrated from another host */
-	VIR_DOMAIN_RUNNING_RESTORED           = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_RESTORED)           /* restored from a state file */
-	VIR_DOMAIN_RUNNING_FROM_SNAPSHOT      = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_FROM_SNAPSHOT)      /* restored from snapshot */
-	VIR_DOMAIN_RUNNING_UNPAUSED           = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_UNPAUSED)           /* returned from paused state */
-	VIR_DOMAIN_RUNNING_MIGRATION_CANCELED = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_MIGRATION_CANCELED) /* returned from migration */
-	VIR_DOMAIN_RUNNING_SAVE_CANCELED      = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_SAVE_CANCELED)      /* returned from failed save process */
-	VIR_DOMAIN_RUNNING_WAKEUP             = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_WAKEUP)             /* returned from pmsuspended due to wakeup event */
-	VIR_DOMAIN_RUNNING_CRASHED            = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_CRASHED)            /* resumed from crashed */
-	VIR_DOMAIN_RUNNING_POSTCOPY           = VirDomainRunningReason(C.VIR_DOMAIN_RUNNING_POSTCOPY)           /* running in post-copy migration mode */
+	VIR_DOMAIN_RUNNING_UNKNOWN            = DomainRunningReason(C.VIR_DOMAIN_RUNNING_UNKNOWN)
+	VIR_DOMAIN_RUNNING_BOOTED             = DomainRunningReason(C.VIR_DOMAIN_RUNNING_BOOTED)             /* normal startup from boot */
+	VIR_DOMAIN_RUNNING_MIGRATED           = DomainRunningReason(C.VIR_DOMAIN_RUNNING_MIGRATED)           /* migrated from another host */
+	VIR_DOMAIN_RUNNING_RESTORED           = DomainRunningReason(C.VIR_DOMAIN_RUNNING_RESTORED)           /* restored from a state file */
+	VIR_DOMAIN_RUNNING_FROM_SNAPSHOT      = DomainRunningReason(C.VIR_DOMAIN_RUNNING_FROM_SNAPSHOT)      /* restored from snapshot */
+	VIR_DOMAIN_RUNNING_UNPAUSED           = DomainRunningReason(C.VIR_DOMAIN_RUNNING_UNPAUSED)           /* returned from paused state */
+	VIR_DOMAIN_RUNNING_MIGRATION_CANCELED = DomainRunningReason(C.VIR_DOMAIN_RUNNING_MIGRATION_CANCELED) /* returned from migration */
+	VIR_DOMAIN_RUNNING_SAVE_CANCELED      = DomainRunningReason(C.VIR_DOMAIN_RUNNING_SAVE_CANCELED)      /* returned from failed save process */
+	VIR_DOMAIN_RUNNING_WAKEUP             = DomainRunningReason(C.VIR_DOMAIN_RUNNING_WAKEUP)             /* returned from pmsuspended due to wakeup event */
+	VIR_DOMAIN_RUNNING_CRASHED            = DomainRunningReason(C.VIR_DOMAIN_RUNNING_CRASHED)            /* resumed from crashed */
+	VIR_DOMAIN_RUNNING_POSTCOPY           = DomainRunningReason(C.VIR_DOMAIN_RUNNING_POSTCOPY)           /* running in post-copy migration mode */
 )
 
-type VirDomainPausedReason int
+type DomainPausedReason int
 
 const (
-	VIR_DOMAIN_PAUSED_UNKNOWN         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_UNKNOWN)         /* the reason is unknown */
-	VIR_DOMAIN_PAUSED_USER            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_USER)            /* paused on user request */
-	VIR_DOMAIN_PAUSED_MIGRATION       = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_MIGRATION)       /* paused for offline migration */
-	VIR_DOMAIN_PAUSED_SAVE            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SAVE)            /* paused for save */
-	VIR_DOMAIN_PAUSED_DUMP            = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_DUMP)            /* paused for offline core dump */
-	VIR_DOMAIN_PAUSED_IOERROR         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_IOERROR)         /* paused due to a disk I/O error */
-	VIR_DOMAIN_PAUSED_WATCHDOG        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_WATCHDOG)        /* paused due to a watchdog event */
-	VIR_DOMAIN_PAUSED_FROM_SNAPSHOT   = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_FROM_SNAPSHOT)   /* paused after restoring from snapshot */
-	VIR_DOMAIN_PAUSED_SHUTTING_DOWN   = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SHUTTING_DOWN)   /* paused during shutdown process */
-	VIR_DOMAIN_PAUSED_SNAPSHOT        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_SNAPSHOT)        /* paused while creating a snapshot */
-	VIR_DOMAIN_PAUSED_CRASHED         = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_CRASHED)         /* paused due to a guest crash */
-	VIR_DOMAIN_PAUSED_STARTING_UP     = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_STARTING_UP)     /* the domainis being started */
-	VIR_DOMAIN_PAUSED_POSTCOPY        = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY)        /* paused for post-copy migration */
-	VIR_DOMAIN_PAUSED_POSTCOPY_FAILED = VirDomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY_FAILED) /* paused after failed post-copy */
+	VIR_DOMAIN_PAUSED_UNKNOWN         = DomainPausedReason(C.VIR_DOMAIN_PAUSED_UNKNOWN)         /* the reason is unknown */
+	VIR_DOMAIN_PAUSED_USER            = DomainPausedReason(C.VIR_DOMAIN_PAUSED_USER)            /* paused on user request */
+	VIR_DOMAIN_PAUSED_MIGRATION       = DomainPausedReason(C.VIR_DOMAIN_PAUSED_MIGRATION)       /* paused for offline migration */
+	VIR_DOMAIN_PAUSED_SAVE            = DomainPausedReason(C.VIR_DOMAIN_PAUSED_SAVE)            /* paused for save */
+	VIR_DOMAIN_PAUSED_DUMP            = DomainPausedReason(C.VIR_DOMAIN_PAUSED_DUMP)            /* paused for offline core dump */
+	VIR_DOMAIN_PAUSED_IOERROR         = DomainPausedReason(C.VIR_DOMAIN_PAUSED_IOERROR)         /* paused due to a disk I/O error */
+	VIR_DOMAIN_PAUSED_WATCHDOG        = DomainPausedReason(C.VIR_DOMAIN_PAUSED_WATCHDOG)        /* paused due to a watchdog event */
+	VIR_DOMAIN_PAUSED_FROM_SNAPSHOT   = DomainPausedReason(C.VIR_DOMAIN_PAUSED_FROM_SNAPSHOT)   /* paused after restoring from snapshot */
+	VIR_DOMAIN_PAUSED_SHUTTING_DOWN   = DomainPausedReason(C.VIR_DOMAIN_PAUSED_SHUTTING_DOWN)   /* paused during shutdown process */
+	VIR_DOMAIN_PAUSED_SNAPSHOT        = DomainPausedReason(C.VIR_DOMAIN_PAUSED_SNAPSHOT)        /* paused while creating a snapshot */
+	VIR_DOMAIN_PAUSED_CRASHED         = DomainPausedReason(C.VIR_DOMAIN_PAUSED_CRASHED)         /* paused due to a guest crash */
+	VIR_DOMAIN_PAUSED_STARTING_UP     = DomainPausedReason(C.VIR_DOMAIN_PAUSED_STARTING_UP)     /* the domainis being started */
+	VIR_DOMAIN_PAUSED_POSTCOPY        = DomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY)        /* paused for post-copy migration */
+	VIR_DOMAIN_PAUSED_POSTCOPY_FAILED = DomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY_FAILED) /* paused after failed post-copy */
 )
 
-type VirDomainXMLFlags int
+type DomainXMLFlags int
 
 const (
-	VIR_DOMAIN_XML_SECURE     = VirDomainXMLFlags(C.VIR_DOMAIN_XML_SECURE)     /* dump security sensitive information too */
-	VIR_DOMAIN_XML_INACTIVE   = VirDomainXMLFlags(C.VIR_DOMAIN_XML_INACTIVE)   /* dump inactive domain information */
-	VIR_DOMAIN_XML_UPDATE_CPU = VirDomainXMLFlags(C.VIR_DOMAIN_XML_UPDATE_CPU) /* update guest CPU requirements according to host CPU */
-	VIR_DOMAIN_XML_MIGRATABLE = VirDomainXMLFlags(C.VIR_DOMAIN_XML_MIGRATABLE) /* dump XML suitable for migration */
+	VIR_DOMAIN_XML_SECURE     = DomainXMLFlags(C.VIR_DOMAIN_XML_SECURE)     /* dump security sensitive information too */
+	VIR_DOMAIN_XML_INACTIVE   = DomainXMLFlags(C.VIR_DOMAIN_XML_INACTIVE)   /* dump inactive domain information */
+	VIR_DOMAIN_XML_UPDATE_CPU = DomainXMLFlags(C.VIR_DOMAIN_XML_UPDATE_CPU) /* update guest CPU requirements according to host CPU */
+	VIR_DOMAIN_XML_MIGRATABLE = DomainXMLFlags(C.VIR_DOMAIN_XML_MIGRATABLE) /* dump XML suitable for migration */
 )
 
-type VirDomainEventDefinedDetailType int
+type DomainEventDefinedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_DEFINED_ADDED         = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_ADDED)
-	VIR_DOMAIN_EVENT_DEFINED_UPDATED       = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_UPDATED)
-	VIR_DOMAIN_EVENT_DEFINED_RENAMED       = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_RENAMED)
-	VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT = VirDomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_DEFINED_ADDED         = DomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_ADDED)
+	VIR_DOMAIN_EVENT_DEFINED_UPDATED       = DomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_UPDATED)
+	VIR_DOMAIN_EVENT_DEFINED_RENAMED       = DomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_RENAMED)
+	VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT = DomainEventDefinedDetailType(C.VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT)
 )
 
-type VirDomainEventUndefinedDetailType int
+type DomainEventUndefinedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_UNDEFINED_REMOVED = VirDomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_REMOVED)
-	VIR_DOMAIN_EVENT_UNDEFINED_RENAMED = VirDomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_RENAMED)
+	VIR_DOMAIN_EVENT_UNDEFINED_REMOVED = DomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_REMOVED)
+	VIR_DOMAIN_EVENT_UNDEFINED_RENAMED = DomainEventUndefinedDetailType(C.VIR_DOMAIN_EVENT_UNDEFINED_RENAMED)
 )
 
-type VirDomainEventStartedDetailType int
+type DomainEventStartedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_STARTED_BOOTED        = VirDomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_BOOTED)
-	VIR_DOMAIN_EVENT_STARTED_MIGRATED      = VirDomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_MIGRATED)
-	VIR_DOMAIN_EVENT_STARTED_RESTORED      = VirDomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_RESTORED)
-	VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT = VirDomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT)
-	VIR_DOMAIN_EVENT_STARTED_WAKEUP        = VirDomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_WAKEUP)
+	VIR_DOMAIN_EVENT_STARTED_BOOTED        = DomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_BOOTED)
+	VIR_DOMAIN_EVENT_STARTED_MIGRATED      = DomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_MIGRATED)
+	VIR_DOMAIN_EVENT_STARTED_RESTORED      = DomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_RESTORED)
+	VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT = DomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_STARTED_WAKEUP        = DomainEventStartedDetailType(C.VIR_DOMAIN_EVENT_STARTED_WAKEUP)
 )
 
-type VirDomainEventSuspendedDetailType int
+type DomainEventSuspendedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_SUSPENDED_PAUSED          = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_PAUSED)
-	VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED)
-	VIR_DOMAIN_EVENT_SUSPENDED_IOERROR         = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_IOERROR)
-	VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG)
-	VIR_DOMAIN_EVENT_SUSPENDED_RESTORED        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_RESTORED)
-	VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT   = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT)
-	VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR       = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR)
-	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY        = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY)
-	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED = VirDomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED)
+	VIR_DOMAIN_EVENT_SUSPENDED_PAUSED          = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_PAUSED)
+	VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED        = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED)
+	VIR_DOMAIN_EVENT_SUSPENDED_IOERROR         = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_IOERROR)
+	VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG        = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG)
+	VIR_DOMAIN_EVENT_SUSPENDED_RESTORED        = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_RESTORED)
+	VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT   = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR       = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR)
+	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY        = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY)
+	VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED = DomainEventSuspendedDetailType(C.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED)
 )
 
-type VirDomainEventResumedDetailType int
+type DomainEventResumedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_RESUMED_UNPAUSED      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_UNPAUSED)
-	VIR_DOMAIN_EVENT_RESUMED_MIGRATED      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_MIGRATED)
-	VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT)
-	VIR_DOMAIN_EVENT_RESUMED_POSTCOPY      = VirDomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_POSTCOPY)
+	VIR_DOMAIN_EVENT_RESUMED_UNPAUSED      = DomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_UNPAUSED)
+	VIR_DOMAIN_EVENT_RESUMED_MIGRATED      = DomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_MIGRATED)
+	VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT = DomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_RESUMED_POSTCOPY      = DomainEventResumedDetailType(C.VIR_DOMAIN_EVENT_RESUMED_POSTCOPY)
 )
 
-type VirDomainEventStoppedDetailType int
+type DomainEventStoppedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN      = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN)
-	VIR_DOMAIN_EVENT_STOPPED_DESTROYED     = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_DESTROYED)
-	VIR_DOMAIN_EVENT_STOPPED_CRASHED       = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_CRASHED)
-	VIR_DOMAIN_EVENT_STOPPED_MIGRATED      = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_MIGRATED)
-	VIR_DOMAIN_EVENT_STOPPED_SAVED         = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_SAVED)
-	VIR_DOMAIN_EVENT_STOPPED_FAILED        = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_FAILED)
-	VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT = VirDomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT)
+	VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN      = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN)
+	VIR_DOMAIN_EVENT_STOPPED_DESTROYED     = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_DESTROYED)
+	VIR_DOMAIN_EVENT_STOPPED_CRASHED       = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_CRASHED)
+	VIR_DOMAIN_EVENT_STOPPED_MIGRATED      = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_MIGRATED)
+	VIR_DOMAIN_EVENT_STOPPED_SAVED         = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_SAVED)
+	VIR_DOMAIN_EVENT_STOPPED_FAILED        = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_FAILED)
+	VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT = DomainEventStoppedDetailType(C.VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT)
 )
 
-type VirDomainEventShutdownDetailType int
+type DomainEventShutdownDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED = VirDomainEventShutdownDetailType(C.VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED)
+	VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED = DomainEventShutdownDetailType(C.VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED)
 )
 
-type VirDomainMemoryStatTags int
+type DomainMemoryStatTags int
 
 const (
-	VIR_DOMAIN_MEMORY_STAT_LAST           = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_NR)
-	VIR_DOMAIN_MEMORY_STAT_SWAP_IN        = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_SWAP_IN)
-	VIR_DOMAIN_MEMORY_STAT_SWAP_OUT       = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_SWAP_OUT)
-	VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT    = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT)
-	VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT    = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT)
-	VIR_DOMAIN_MEMORY_STAT_UNUSED         = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_UNUSED)
-	VIR_DOMAIN_MEMORY_STAT_AVAILABLE      = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_AVAILABLE)
-	VIR_DOMAIN_MEMORY_STAT_ACTUAL_BALLOON = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_ACTUAL_BALLOON)
-	VIR_DOMAIN_MEMORY_STAT_RSS            = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_RSS)
-	VIR_DOMAIN_MEMORY_STAT_USABLE         = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_USABLE)
-	VIR_DOMAIN_MEMORY_STAT_LAST_UPDATE    = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_LAST_UPDATE)
-	VIR_DOMAIN_MEMORY_STAT_NR             = VirDomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_NR)
+	VIR_DOMAIN_MEMORY_STAT_LAST           = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_NR)
+	VIR_DOMAIN_MEMORY_STAT_SWAP_IN        = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_SWAP_IN)
+	VIR_DOMAIN_MEMORY_STAT_SWAP_OUT       = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_SWAP_OUT)
+	VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT    = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT)
+	VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT    = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT)
+	VIR_DOMAIN_MEMORY_STAT_UNUSED         = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_UNUSED)
+	VIR_DOMAIN_MEMORY_STAT_AVAILABLE      = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_AVAILABLE)
+	VIR_DOMAIN_MEMORY_STAT_ACTUAL_BALLOON = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_ACTUAL_BALLOON)
+	VIR_DOMAIN_MEMORY_STAT_RSS            = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_RSS)
+	VIR_DOMAIN_MEMORY_STAT_USABLE         = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_USABLE)
+	VIR_DOMAIN_MEMORY_STAT_LAST_UPDATE    = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_LAST_UPDATE)
+	VIR_DOMAIN_MEMORY_STAT_NR             = DomainMemoryStatTags(C.VIR_DOMAIN_MEMORY_STAT_NR)
 )
 
-type VirDomainCPUStatsTags string
+type DomainCPUStatsTags string
 
 const (
-	VIR_DOMAIN_CPU_STATS_CPUTIME    = VirDomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_CPUTIME)
-	VIR_DOMAIN_CPU_STATS_SYSTEMTIME = VirDomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_SYSTEMTIME)
-	VIR_DOMAIN_CPU_STATS_USERTIME   = VirDomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_USERTIME)
-	VIR_DOMAIN_CPU_STATS_VCPUTIME   = VirDomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_VCPUTIME)
+	VIR_DOMAIN_CPU_STATS_CPUTIME    = DomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_CPUTIME)
+	VIR_DOMAIN_CPU_STATS_SYSTEMTIME = DomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_SYSTEMTIME)
+	VIR_DOMAIN_CPU_STATS_USERTIME   = DomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_USERTIME)
+	VIR_DOMAIN_CPU_STATS_VCPUTIME   = DomainCPUStatsTags(C.VIR_DOMAIN_CPU_STATS_VCPUTIME)
 )
 
-type VirDomainInterfaceAddressesSource int
+type DomainInterfaceAddressesSource int
 
 const (
-	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE = VirDomainInterfaceAddressesSource(C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE)
-	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = VirDomainInterfaceAddressesSource(C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE = DomainInterfaceAddressesSource(C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE)
+	VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT = DomainInterfaceAddressesSource(C.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
 )
 
 type VirKeycodeSet int
@@ -488,374 +488,374 @@ const (
 	VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP     = (1 << 0)
 )
 
-type VirDomainProcessSignal int
+type DomainProcessSignal int
 
 const (
-	VIR_DOMAIN_PROCESS_SIGNAL_NOP  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_NOP)
-	VIR_DOMAIN_PROCESS_SIGNAL_HUP  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_HUP)
-	VIR_DOMAIN_PROCESS_SIGNAL_INT  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_INT)
-	VIR_DOMAIN_PROCESS_SIGNAL_QUIT = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_QUIT)
-	VIR_DOMAIN_PROCESS_SIGNAL_ILL  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ILL)
-	VIR_DOMAIN_PROCESS_SIGNAL_TRAP = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TRAP)
-	VIR_DOMAIN_PROCESS_SIGNAL_ABRT = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ABRT)
-	VIR_DOMAIN_PROCESS_SIGNAL_BUS  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_BUS)
-	VIR_DOMAIN_PROCESS_SIGNAL_FPE  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_FPE)
-	VIR_DOMAIN_PROCESS_SIGNAL_KILL = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_KILL)
+	VIR_DOMAIN_PROCESS_SIGNAL_NOP  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_NOP)
+	VIR_DOMAIN_PROCESS_SIGNAL_HUP  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_HUP)
+	VIR_DOMAIN_PROCESS_SIGNAL_INT  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_INT)
+	VIR_DOMAIN_PROCESS_SIGNAL_QUIT = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_QUIT)
+	VIR_DOMAIN_PROCESS_SIGNAL_ILL  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ILL)
+	VIR_DOMAIN_PROCESS_SIGNAL_TRAP = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TRAP)
+	VIR_DOMAIN_PROCESS_SIGNAL_ABRT = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ABRT)
+	VIR_DOMAIN_PROCESS_SIGNAL_BUS  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_BUS)
+	VIR_DOMAIN_PROCESS_SIGNAL_FPE  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_FPE)
+	VIR_DOMAIN_PROCESS_SIGNAL_KILL = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_KILL)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_USR1   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_USR1)
-	VIR_DOMAIN_PROCESS_SIGNAL_SEGV   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_SEGV)
-	VIR_DOMAIN_PROCESS_SIGNAL_USR2   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_USR2)
-	VIR_DOMAIN_PROCESS_SIGNAL_PIPE   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PIPE)
-	VIR_DOMAIN_PROCESS_SIGNAL_ALRM   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ALRM)
-	VIR_DOMAIN_PROCESS_SIGNAL_TERM   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TERM)
-	VIR_DOMAIN_PROCESS_SIGNAL_STKFLT = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_STKFLT)
-	VIR_DOMAIN_PROCESS_SIGNAL_CHLD   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_CHLD)
-	VIR_DOMAIN_PROCESS_SIGNAL_CONT   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_CONT)
-	VIR_DOMAIN_PROCESS_SIGNAL_STOP   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_STOP)
+	VIR_DOMAIN_PROCESS_SIGNAL_USR1   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_USR1)
+	VIR_DOMAIN_PROCESS_SIGNAL_SEGV   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_SEGV)
+	VIR_DOMAIN_PROCESS_SIGNAL_USR2   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_USR2)
+	VIR_DOMAIN_PROCESS_SIGNAL_PIPE   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PIPE)
+	VIR_DOMAIN_PROCESS_SIGNAL_ALRM   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_ALRM)
+	VIR_DOMAIN_PROCESS_SIGNAL_TERM   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TERM)
+	VIR_DOMAIN_PROCESS_SIGNAL_STKFLT = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_STKFLT)
+	VIR_DOMAIN_PROCESS_SIGNAL_CHLD   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_CHLD)
+	VIR_DOMAIN_PROCESS_SIGNAL_CONT   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_CONT)
+	VIR_DOMAIN_PROCESS_SIGNAL_STOP   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_STOP)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_TSTP   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TSTP)
-	VIR_DOMAIN_PROCESS_SIGNAL_TTIN   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TTIN)
-	VIR_DOMAIN_PROCESS_SIGNAL_TTOU   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TTOU)
-	VIR_DOMAIN_PROCESS_SIGNAL_URG    = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_URG)
-	VIR_DOMAIN_PROCESS_SIGNAL_XCPU   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_XCPU)
-	VIR_DOMAIN_PROCESS_SIGNAL_XFSZ   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_XFSZ)
-	VIR_DOMAIN_PROCESS_SIGNAL_VTALRM = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_VTALRM)
-	VIR_DOMAIN_PROCESS_SIGNAL_PROF   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PROF)
-	VIR_DOMAIN_PROCESS_SIGNAL_WINCH  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_WINCH)
-	VIR_DOMAIN_PROCESS_SIGNAL_POLL   = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_POLL)
+	VIR_DOMAIN_PROCESS_SIGNAL_TSTP   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TSTP)
+	VIR_DOMAIN_PROCESS_SIGNAL_TTIN   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TTIN)
+	VIR_DOMAIN_PROCESS_SIGNAL_TTOU   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_TTOU)
+	VIR_DOMAIN_PROCESS_SIGNAL_URG    = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_URG)
+	VIR_DOMAIN_PROCESS_SIGNAL_XCPU   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_XCPU)
+	VIR_DOMAIN_PROCESS_SIGNAL_XFSZ   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_XFSZ)
+	VIR_DOMAIN_PROCESS_SIGNAL_VTALRM = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_VTALRM)
+	VIR_DOMAIN_PROCESS_SIGNAL_PROF   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PROF)
+	VIR_DOMAIN_PROCESS_SIGNAL_WINCH  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_WINCH)
+	VIR_DOMAIN_PROCESS_SIGNAL_POLL   = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_POLL)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_PWR = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PWR)
-	VIR_DOMAIN_PROCESS_SIGNAL_SYS = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_SYS)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT0 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT0)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT1 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT1)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT2 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT2)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT3 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT3)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT4 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT4)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT5 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT5)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT6 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT6)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT7 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT7)
+	VIR_DOMAIN_PROCESS_SIGNAL_PWR = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_PWR)
+	VIR_DOMAIN_PROCESS_SIGNAL_SYS = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_SYS)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT0 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT0)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT1 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT1)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT2 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT2)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT3 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT3)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT4 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT4)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT5 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT5)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT6 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT6)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT7 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT7)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_RT8  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT8)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT9  = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT9)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT10 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT10)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT11 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT11)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT12 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT12)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT13 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT13)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT14 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT14)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT15 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT15)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT16 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT16)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT17 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT17)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT18 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT18)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT8  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT8)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT9  = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT9)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT10 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT10)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT11 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT11)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT12 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT12)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT13 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT13)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT14 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT14)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT15 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT15)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT16 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT16)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT17 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT17)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT18 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT18)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_RT19 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT19)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT20 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT20)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT21 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT21)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT22 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT22)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT23 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT23)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT24 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT24)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT25 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT25)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT26 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT26)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT27 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT27)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT19 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT19)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT20 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT20)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT21 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT21)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT22 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT22)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT23 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT23)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT24 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT24)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT25 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT25)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT26 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT26)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT27 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT27)
 
-	VIR_DOMAIN_PROCESS_SIGNAL_RT28 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT28)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT29 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT29)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT30 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT30)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT31 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT31)
-	VIR_DOMAIN_PROCESS_SIGNAL_RT32 = VirDomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT32)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT28 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT28)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT29 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT29)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT30 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT30)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT31 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT31)
+	VIR_DOMAIN_PROCESS_SIGNAL_RT32 = DomainProcessSignal(C.VIR_DOMAIN_PROCESS_SIGNAL_RT32)
 )
 
-type VirDomainBlockedReason int
+type DomainBlockedReason int
 
 const (
-	VIR_DOMAIN_BLOCKED_UNKNOWN = VirDomainBlockedReason(C.VIR_DOMAIN_BLOCKED_UNKNOWN)
+	VIR_DOMAIN_BLOCKED_UNKNOWN = DomainBlockedReason(C.VIR_DOMAIN_BLOCKED_UNKNOWN)
 )
 
-type VirDomainControlState int
+type DomainControlState int
 
 const (
-	VIR_DOMAIN_CONTROL_OK       = VirDomainControlState(C.VIR_DOMAIN_CONTROL_OK)
-	VIR_DOMAIN_CONTROL_JOB      = VirDomainControlState(C.VIR_DOMAIN_CONTROL_JOB)
-	VIR_DOMAIN_CONTROL_OCCUPIED = VirDomainControlState(C.VIR_DOMAIN_CONTROL_OCCUPIED)
-	VIR_DOMAIN_CONTROL_ERROR    = VirDomainControlState(C.VIR_DOMAIN_CONTROL_ERROR)
+	VIR_DOMAIN_CONTROL_OK       = DomainControlState(C.VIR_DOMAIN_CONTROL_OK)
+	VIR_DOMAIN_CONTROL_JOB      = DomainControlState(C.VIR_DOMAIN_CONTROL_JOB)
+	VIR_DOMAIN_CONTROL_OCCUPIED = DomainControlState(C.VIR_DOMAIN_CONTROL_OCCUPIED)
+	VIR_DOMAIN_CONTROL_ERROR    = DomainControlState(C.VIR_DOMAIN_CONTROL_ERROR)
 )
 
-type VirDomainControlErrorReason int
+type DomainControlErrorReason int
 
 const (
-	VIR_DOMAIN_CONTROL_ERROR_REASON_NONE     = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_NONE)
-	VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN  = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN)
-	VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR  = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR)
-	VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL = VirDomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_NONE     = DomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_NONE)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN  = DomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR  = DomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR)
+	VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL = DomainControlErrorReason(C.VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL)
 )
 
-type VirDomainCrashedReason int
+type DomainCrashedReason int
 
 const (
-	VIR_DOMAIN_CRASHED_UNKNOWN  = VirDomainCrashedReason(C.VIR_DOMAIN_CRASHED_UNKNOWN)
-	VIR_DOMAIN_CRASHED_PANICKED = VirDomainCrashedReason(C.VIR_DOMAIN_CRASHED_PANICKED)
+	VIR_DOMAIN_CRASHED_UNKNOWN  = DomainCrashedReason(C.VIR_DOMAIN_CRASHED_UNKNOWN)
+	VIR_DOMAIN_CRASHED_PANICKED = DomainCrashedReason(C.VIR_DOMAIN_CRASHED_PANICKED)
 )
 
-type VirDomainEventCrashedDetailType int
+type DomainEventCrashedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_CRASHED_PANICKED = VirDomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_PANICKED)
+	VIR_DOMAIN_EVENT_CRASHED_PANICKED = DomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_PANICKED)
 )
 
-type VirDomainEventPMSuspendedDetailType int
+type DomainEventPMSuspendedDetailType int
 
 const (
-	VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY = VirDomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY)
-	VIR_DOMAIN_EVENT_PMSUSPENDED_DISK   = VirDomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_DISK)
+	VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY = DomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY)
+	VIR_DOMAIN_EVENT_PMSUSPENDED_DISK   = DomainEventPMSuspendedDetailType(C.VIR_DOMAIN_EVENT_PMSUSPENDED_DISK)
 )
 
-type VirDomainNostateReason int
+type DomainNostateReason int
 
 const (
-	VIR_DOMAIN_NOSTATE_UNKNOWN = VirDomainNostateReason(C.VIR_DOMAIN_NOSTATE_UNKNOWN)
+	VIR_DOMAIN_NOSTATE_UNKNOWN = DomainNostateReason(C.VIR_DOMAIN_NOSTATE_UNKNOWN)
 )
 
-type VirDomainPMSuspendedReason int
+type DomainPMSuspendedReason int
 
 const (
-	VIR_DOMAIN_PMSUSPENDED_UNKNOWN = VirDomainPMSuspendedReason(C.VIR_DOMAIN_PMSUSPENDED_UNKNOWN)
+	VIR_DOMAIN_PMSUSPENDED_UNKNOWN = DomainPMSuspendedReason(C.VIR_DOMAIN_PMSUSPENDED_UNKNOWN)
 )
 
-type VirDomainPMSuspendedDiskReason int
+type DomainPMSuspendedDiskReason int
 
 const (
-	VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN = VirDomainPMSuspendedDiskReason(C.VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN)
+	VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN = DomainPMSuspendedDiskReason(C.VIR_DOMAIN_PMSUSPENDED_DISK_UNKNOWN)
 )
 
-type VirDomainShutdownReason int
+type DomainShutdownReason int
 
 const (
-	VIR_DOMAIN_SHUTDOWN_UNKNOWN = VirDomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_UNKNOWN)
-	VIR_DOMAIN_SHUTDOWN_USER    = VirDomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_USER)
+	VIR_DOMAIN_SHUTDOWN_UNKNOWN = DomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_UNKNOWN)
+	VIR_DOMAIN_SHUTDOWN_USER    = DomainShutdownReason(C.VIR_DOMAIN_SHUTDOWN_USER)
 )
 
-type VirDomainShutoffReason int
+type DomainShutoffReason int
 
 const (
-	VIR_DOMAIN_SHUTOFF_UNKNOWN       = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_UNKNOWN)
-	VIR_DOMAIN_SHUTOFF_SHUTDOWN      = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SHUTDOWN)
-	VIR_DOMAIN_SHUTOFF_DESTROYED     = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_DESTROYED)
-	VIR_DOMAIN_SHUTOFF_CRASHED       = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_CRASHED)
-	VIR_DOMAIN_SHUTOFF_MIGRATED      = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_MIGRATED)
-	VIR_DOMAIN_SHUTOFF_SAVED         = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SAVED)
-	VIR_DOMAIN_SHUTOFF_FAILED        = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FAILED)
-	VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT = VirDomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT)
+	VIR_DOMAIN_SHUTOFF_UNKNOWN       = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_UNKNOWN)
+	VIR_DOMAIN_SHUTOFF_SHUTDOWN      = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SHUTDOWN)
+	VIR_DOMAIN_SHUTOFF_DESTROYED     = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_DESTROYED)
+	VIR_DOMAIN_SHUTOFF_CRASHED       = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_CRASHED)
+	VIR_DOMAIN_SHUTOFF_MIGRATED      = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_MIGRATED)
+	VIR_DOMAIN_SHUTOFF_SAVED         = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_SAVED)
+	VIR_DOMAIN_SHUTOFF_FAILED        = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FAILED)
+	VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_FROM_SNAPSHOT)
 )
 
-type VirDomainBlockCommitFlags int
+type DomainBlockCommitFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_COMMIT_SHALLOW         = VirDomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_SHALLOW)
-	VIR_DOMAIN_BLOCK_COMMIT_DELETE          = VirDomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_DELETE)
-	VIR_DOMAIN_BLOCK_COMMIT_ACTIVE          = VirDomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_ACTIVE)
-	VIR_DOMAIN_BLOCK_COMMIT_RELATIVE        = VirDomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_RELATIVE)
-	VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES = VirDomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES)
+	VIR_DOMAIN_BLOCK_COMMIT_SHALLOW         = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_SHALLOW)
+	VIR_DOMAIN_BLOCK_COMMIT_DELETE          = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_DELETE)
+	VIR_DOMAIN_BLOCK_COMMIT_ACTIVE          = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_ACTIVE)
+	VIR_DOMAIN_BLOCK_COMMIT_RELATIVE        = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_RELATIVE)
+	VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES)
 )
 
-type VirDomainBlockCopyFlags int
+type DomainBlockCopyFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_COPY_SHALLOW   = VirDomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_SHALLOW)
-	VIR_DOMAIN_BLOCK_COPY_REUSE_EXT = VirDomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_REUSE_EXT)
+	VIR_DOMAIN_BLOCK_COPY_SHALLOW   = DomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_SHALLOW)
+	VIR_DOMAIN_BLOCK_COPY_REUSE_EXT = DomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_REUSE_EXT)
 )
 
-type VirDomainBlockRebaseFlags int
+type DomainBlockRebaseFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_REBASE_SHALLOW         = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_SHALLOW)
-	VIR_DOMAIN_BLOCK_REBASE_REUSE_EXT       = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_REUSE_EXT)
-	VIR_DOMAIN_BLOCK_REBASE_COPY_RAW        = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY_RAW)
-	VIR_DOMAIN_BLOCK_REBASE_COPY            = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY)
-	VIR_DOMAIN_BLOCK_REBASE_RELATIVE        = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_RELATIVE)
-	VIR_DOMAIN_BLOCK_REBASE_COPY_DEV        = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY_DEV)
-	VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES = VirDomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES)
+	VIR_DOMAIN_BLOCK_REBASE_SHALLOW         = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_SHALLOW)
+	VIR_DOMAIN_BLOCK_REBASE_REUSE_EXT       = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_REUSE_EXT)
+	VIR_DOMAIN_BLOCK_REBASE_COPY_RAW        = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY_RAW)
+	VIR_DOMAIN_BLOCK_REBASE_COPY            = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY)
+	VIR_DOMAIN_BLOCK_REBASE_RELATIVE        = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_RELATIVE)
+	VIR_DOMAIN_BLOCK_REBASE_COPY_DEV        = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_COPY_DEV)
+	VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES)
 )
 
-type VirDomainBlockJobAbortFlags int
+type DomainBlockJobAbortFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC = VirDomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC)
-	VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT = VirDomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT)
+	VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC = DomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC)
+	VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT = DomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT)
 )
 
-type VirDomainBlockJobInfoFlags int
+type DomainBlockJobInfoFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES = VirDomainBlockJobInfoFlags(C.VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES)
+	VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES = DomainBlockJobInfoFlags(C.VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES)
 )
 
-type VirDomainBlockJobSetSpeedFlags int
+type DomainBlockJobSetSpeedFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES = VirDomainBlockJobSetSpeedFlags(C.VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES)
+	VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES = DomainBlockJobSetSpeedFlags(C.VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES)
 )
 
-type VirDomainBlockPullFlags int
+type DomainBlockPullFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES = VirDomainBlockPullFlags(C.VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES)
+	VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES = DomainBlockPullFlags(C.VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES)
 )
 
-type VirDomainBlockResizeFlags int
+type DomainBlockResizeFlags int
 
 const (
-	VIR_DOMAIN_BLOCK_RESIZE_BYTES = VirDomainBlockResizeFlags(C.VIR_DOMAIN_BLOCK_RESIZE_BYTES)
+	VIR_DOMAIN_BLOCK_RESIZE_BYTES = DomainBlockResizeFlags(C.VIR_DOMAIN_BLOCK_RESIZE_BYTES)
 )
 
-type VirDomain struct {
+type Domain struct {
 	ptr C.virDomainPtr
 }
 
-type VirDomainChannelFlags int
+type DomainChannelFlags int
 
 const (
-	VIR_DOMAIN_CHANNEL_FORCE = VirDomainChannelFlags(C.VIR_DOMAIN_CHANNEL_FORCE)
+	VIR_DOMAIN_CHANNEL_FORCE = DomainChannelFlags(C.VIR_DOMAIN_CHANNEL_FORCE)
 )
 
-type VirDomainConsoleFlags int
+type DomainConsoleFlags int
 
 const (
-	VIR_DOMAIN_CONSOLE_FORCE = VirDomainConsoleFlags(C.VIR_DOMAIN_CONSOLE_FORCE)
-	VIR_DOMAIN_CONSOLE_SAFE  = VirDomainConsoleFlags(C.VIR_DOMAIN_CONSOLE_SAFE)
+	VIR_DOMAIN_CONSOLE_FORCE = DomainConsoleFlags(C.VIR_DOMAIN_CONSOLE_FORCE)
+	VIR_DOMAIN_CONSOLE_SAFE  = DomainConsoleFlags(C.VIR_DOMAIN_CONSOLE_SAFE)
 )
 
-type VirDomainCoreDumpFormat int
+type DomainCoreDumpFormat int
 
 const (
-	VIR_DOMAIN_CORE_DUMP_FORMAT_RAW          = VirDomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_RAW)
-	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB   = VirDomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB)
-	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO    = VirDomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO)
-	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY = VirDomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY)
+	VIR_DOMAIN_CORE_DUMP_FORMAT_RAW          = DomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_RAW)
+	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB   = DomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB)
+	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO    = DomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO)
+	VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY = DomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY)
 )
 
-type VirDomainDefineFlags int
+type DomainDefineFlags int
 
 const (
-	VIR_DOMAIN_DEFINE_VALIDATE = VirDomainDefineFlags(C.VIR_DOMAIN_DEFINE_VALIDATE)
+	VIR_DOMAIN_DEFINE_VALIDATE = DomainDefineFlags(C.VIR_DOMAIN_DEFINE_VALIDATE)
 )
 
-type VirDomainJobType int
+type DomainJobType int
 
 const (
-	VIR_DOMAIN_JOB_NONE      = VirDomainJobType(C.VIR_DOMAIN_JOB_NONE)
-	VIR_DOMAIN_JOB_BOUNDED   = VirDomainJobType(C.VIR_DOMAIN_JOB_BOUNDED)
-	VIR_DOMAIN_JOB_UNBOUNDED = VirDomainJobType(C.VIR_DOMAIN_JOB_UNBOUNDED)
-	VIR_DOMAIN_JOB_COMPLETED = VirDomainJobType(C.VIR_DOMAIN_JOB_COMPLETED)
-	VIR_DOMAIN_JOB_FAILED    = VirDomainJobType(C.VIR_DOMAIN_JOB_FAILED)
-	VIR_DOMAIN_JOB_CANCELLED = VirDomainJobType(C.VIR_DOMAIN_JOB_CANCELLED)
+	VIR_DOMAIN_JOB_NONE      = DomainJobType(C.VIR_DOMAIN_JOB_NONE)
+	VIR_DOMAIN_JOB_BOUNDED   = DomainJobType(C.VIR_DOMAIN_JOB_BOUNDED)
+	VIR_DOMAIN_JOB_UNBOUNDED = DomainJobType(C.VIR_DOMAIN_JOB_UNBOUNDED)
+	VIR_DOMAIN_JOB_COMPLETED = DomainJobType(C.VIR_DOMAIN_JOB_COMPLETED)
+	VIR_DOMAIN_JOB_FAILED    = DomainJobType(C.VIR_DOMAIN_JOB_FAILED)
+	VIR_DOMAIN_JOB_CANCELLED = DomainJobType(C.VIR_DOMAIN_JOB_CANCELLED)
 )
 
-type VirDomainGetJobStatsFlags int
+type DomainGetJobStatsFlags int
 
 const (
-	VIR_DOMAIN_JOB_STATS_COMPLETED = VirDomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_COMPLETED)
+	VIR_DOMAIN_JOB_STATS_COMPLETED = DomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_COMPLETED)
 )
 
-type VirDomainNumatuneMemMode int
+type DomainNumatuneMemMode int
 
 const (
-	VIR_DOMAIN_NUMATUNE_MEM_STRICT     = VirDomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_STRICT)
-	VIR_DOMAIN_NUMATUNE_MEM_PREFERRED  = VirDomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_PREFERRED)
-	VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE = VirDomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE)
+	VIR_DOMAIN_NUMATUNE_MEM_STRICT     = DomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_STRICT)
+	VIR_DOMAIN_NUMATUNE_MEM_PREFERRED  = DomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_PREFERRED)
+	VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE = DomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE)
 )
 
-type VirDomainOpenGraphicsFlags int
+type DomainOpenGraphicsFlags int
 
 const (
-	VIR_DOMAIN_OPEN_GRAPHICS_SKIPAUTH = VirDomainOpenGraphicsFlags(C.VIR_DOMAIN_OPEN_GRAPHICS_SKIPAUTH)
+	VIR_DOMAIN_OPEN_GRAPHICS_SKIPAUTH = DomainOpenGraphicsFlags(C.VIR_DOMAIN_OPEN_GRAPHICS_SKIPAUTH)
 )
 
-type VirDomainSetUserPasswordFlags int
+type DomainSetUserPasswordFlags int
 
 const (
-	VIR_DOMAIN_PASSWORD_ENCRYPTED = VirDomainSetUserPasswordFlags(C.VIR_DOMAIN_PASSWORD_ENCRYPTED)
+	VIR_DOMAIN_PASSWORD_ENCRYPTED = DomainSetUserPasswordFlags(C.VIR_DOMAIN_PASSWORD_ENCRYPTED)
 )
 
-type VirDomainRebootFlagValues int
+type DomainRebootFlagValues int
 
 const (
-	VIR_DOMAIN_REBOOT_DEFAULT        = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_DEFAULT)
-	VIR_DOMAIN_REBOOT_ACPI_POWER_BTN = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_ACPI_POWER_BTN)
-	VIR_DOMAIN_REBOOT_GUEST_AGENT    = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_GUEST_AGENT)
-	VIR_DOMAIN_REBOOT_INITCTL        = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_INITCTL)
-	VIR_DOMAIN_REBOOT_SIGNAL         = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_SIGNAL)
-	VIR_DOMAIN_REBOOT_PARAVIRT       = VirDomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_PARAVIRT)
+	VIR_DOMAIN_REBOOT_DEFAULT        = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_DEFAULT)
+	VIR_DOMAIN_REBOOT_ACPI_POWER_BTN = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_ACPI_POWER_BTN)
+	VIR_DOMAIN_REBOOT_GUEST_AGENT    = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_GUEST_AGENT)
+	VIR_DOMAIN_REBOOT_INITCTL        = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_INITCTL)
+	VIR_DOMAIN_REBOOT_SIGNAL         = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_SIGNAL)
+	VIR_DOMAIN_REBOOT_PARAVIRT       = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_PARAVIRT)
 )
 
-type VirDomainSaveRestoreFlags int
+type DomainSaveRestoreFlags int
 
 const (
-	VIR_DOMAIN_SAVE_BYPASS_CACHE = VirDomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_BYPASS_CACHE)
-	VIR_DOMAIN_SAVE_RUNNING      = VirDomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_RUNNING)
-	VIR_DOMAIN_SAVE_PAUSED       = VirDomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_PAUSED)
+	VIR_DOMAIN_SAVE_BYPASS_CACHE = DomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_BYPASS_CACHE)
+	VIR_DOMAIN_SAVE_RUNNING      = DomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_RUNNING)
+	VIR_DOMAIN_SAVE_PAUSED       = DomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_PAUSED)
 )
 
-type VirDomainSetTimeFlags int
+type DomainSetTimeFlags int
 
 const (
-	VIR_DOMAIN_TIME_SYNC = VirDomainSetTimeFlags(C.VIR_DOMAIN_TIME_SYNC)
+	VIR_DOMAIN_TIME_SYNC = DomainSetTimeFlags(C.VIR_DOMAIN_TIME_SYNC)
 )
 
-type VirDomainDiskErrorCode int
+type DomainDiskErrorCode int
 
 const (
-	VIR_DOMAIN_DISK_ERROR_NONE     = VirDomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_NONE)
-	VIR_DOMAIN_DISK_ERROR_UNSPEC   = VirDomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_UNSPEC)
-	VIR_DOMAIN_DISK_ERROR_NO_SPACE = VirDomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_NO_SPACE)
+	VIR_DOMAIN_DISK_ERROR_NONE     = DomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_NONE)
+	VIR_DOMAIN_DISK_ERROR_UNSPEC   = DomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_UNSPEC)
+	VIR_DOMAIN_DISK_ERROR_NO_SPACE = DomainDiskErrorCode(C.VIR_DOMAIN_DISK_ERROR_NO_SPACE)
 )
 
-type VirDomainStatsTypes int
+type DomainStatsTypes int
 
 const (
-	VIR_DOMAIN_STATS_STATE     = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_STATE)
-	VIR_DOMAIN_STATS_CPU_TOTAL = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_CPU_TOTAL)
-	VIR_DOMAIN_STATS_BALLOON   = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_BALLOON)
-	VIR_DOMAIN_STATS_VCPU      = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_VCPU)
-	VIR_DOMAIN_STATS_INTERFACE = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_INTERFACE)
-	VIR_DOMAIN_STATS_BLOCK     = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_BLOCK)
-	VIR_DOMAIN_STATS_PERF      = VirDomainStatsTypes(C.VIR_DOMAIN_STATS_PERF)
+	VIR_DOMAIN_STATS_STATE     = DomainStatsTypes(C.VIR_DOMAIN_STATS_STATE)
+	VIR_DOMAIN_STATS_CPU_TOTAL = DomainStatsTypes(C.VIR_DOMAIN_STATS_CPU_TOTAL)
+	VIR_DOMAIN_STATS_BALLOON   = DomainStatsTypes(C.VIR_DOMAIN_STATS_BALLOON)
+	VIR_DOMAIN_STATS_VCPU      = DomainStatsTypes(C.VIR_DOMAIN_STATS_VCPU)
+	VIR_DOMAIN_STATS_INTERFACE = DomainStatsTypes(C.VIR_DOMAIN_STATS_INTERFACE)
+	VIR_DOMAIN_STATS_BLOCK     = DomainStatsTypes(C.VIR_DOMAIN_STATS_BLOCK)
+	VIR_DOMAIN_STATS_PERF      = DomainStatsTypes(C.VIR_DOMAIN_STATS_PERF)
 )
 
-type VirDomainCoreDumpFlags int
+type DomainCoreDumpFlags int
 
 const (
-	VIR_DUMP_CRASH        = VirDomainCoreDumpFlags(C.VIR_DUMP_CRASH)
-	VIR_DUMP_LIVE         = VirDomainCoreDumpFlags(C.VIR_DUMP_LIVE)
-	VIR_DUMP_BYPASS_CACHE = VirDomainCoreDumpFlags(C.VIR_DUMP_BYPASS_CACHE)
-	VIR_DUMP_RESET        = VirDomainCoreDumpFlags(C.VIR_DUMP_RESET)
-	VIR_DUMP_MEMORY_ONLY  = VirDomainCoreDumpFlags(C.VIR_DUMP_MEMORY_ONLY)
+	VIR_DUMP_CRASH        = DomainCoreDumpFlags(C.VIR_DUMP_CRASH)
+	VIR_DUMP_LIVE         = DomainCoreDumpFlags(C.VIR_DUMP_LIVE)
+	VIR_DUMP_BYPASS_CACHE = DomainCoreDumpFlags(C.VIR_DUMP_BYPASS_CACHE)
+	VIR_DUMP_RESET        = DomainCoreDumpFlags(C.VIR_DUMP_RESET)
+	VIR_DUMP_MEMORY_ONLY  = DomainCoreDumpFlags(C.VIR_DUMP_MEMORY_ONLY)
 )
 
-type VirDomainMemoryFlags int
+type DomainMemoryFlags int
 
 const (
-	VIR_MEMORY_VIRTUAL  = VirDomainMemoryFlags(C.VIR_MEMORY_VIRTUAL)
-	VIR_MEMORY_PHYSICAL = VirDomainMemoryFlags(C.VIR_MEMORY_PHYSICAL)
+	VIR_MEMORY_VIRTUAL  = DomainMemoryFlags(C.VIR_MEMORY_VIRTUAL)
+	VIR_MEMORY_PHYSICAL = DomainMemoryFlags(C.VIR_MEMORY_PHYSICAL)
 )
 
-type VirDomainMigrateFlags int
+type DomainMigrateFlags int
 
 const (
-	VIR_MIGRATE_LIVE              = VirDomainMigrateFlags(C.VIR_MIGRATE_LIVE)
-	VIR_MIGRATE_PEER2PEER         = VirDomainMigrateFlags(C.VIR_MIGRATE_PEER2PEER)
-	VIR_MIGRATE_TUNNELLED         = VirDomainMigrateFlags(C.VIR_MIGRATE_TUNNELLED)
-	VIR_MIGRATE_PERSIST_DEST      = VirDomainMigrateFlags(C.VIR_MIGRATE_PERSIST_DEST)
-	VIR_MIGRATE_UNDEFINE_SOURCE   = VirDomainMigrateFlags(C.VIR_MIGRATE_UNDEFINE_SOURCE)
-	VIR_MIGRATE_PAUSED            = VirDomainMigrateFlags(C.VIR_MIGRATE_PAUSED)
-	VIR_MIGRATE_NON_SHARED_DISK   = VirDomainMigrateFlags(C.VIR_MIGRATE_NON_SHARED_DISK)
-	VIR_MIGRATE_NON_SHARED_INC    = VirDomainMigrateFlags(C.VIR_MIGRATE_NON_SHARED_INC)
-	VIR_MIGRATE_CHANGE_PROTECTION = VirDomainMigrateFlags(C.VIR_MIGRATE_CHANGE_PROTECTION)
-	VIR_MIGRATE_UNSAFE            = VirDomainMigrateFlags(C.VIR_MIGRATE_UNSAFE)
-	VIR_MIGRATE_OFFLINE           = VirDomainMigrateFlags(C.VIR_MIGRATE_OFFLINE)
-	VIR_MIGRATE_COMPRESSED        = VirDomainMigrateFlags(C.VIR_MIGRATE_COMPRESSED)
-	VIR_MIGRATE_ABORT_ON_ERROR    = VirDomainMigrateFlags(C.VIR_MIGRATE_ABORT_ON_ERROR)
-	VIR_MIGRATE_AUTO_CONVERGE     = VirDomainMigrateFlags(C.VIR_MIGRATE_AUTO_CONVERGE)
-	VIR_MIGRATE_RDMA_PIN_ALL      = VirDomainMigrateFlags(C.VIR_MIGRATE_RDMA_PIN_ALL)
-	VIR_MIGRATE_POSTCOPY          = VirDomainMigrateFlags(C.VIR_MIGRATE_POSTCOPY)
+	VIR_MIGRATE_LIVE              = DomainMigrateFlags(C.VIR_MIGRATE_LIVE)
+	VIR_MIGRATE_PEER2PEER         = DomainMigrateFlags(C.VIR_MIGRATE_PEER2PEER)
+	VIR_MIGRATE_TUNNELLED         = DomainMigrateFlags(C.VIR_MIGRATE_TUNNELLED)
+	VIR_MIGRATE_PERSIST_DEST      = DomainMigrateFlags(C.VIR_MIGRATE_PERSIST_DEST)
+	VIR_MIGRATE_UNDEFINE_SOURCE   = DomainMigrateFlags(C.VIR_MIGRATE_UNDEFINE_SOURCE)
+	VIR_MIGRATE_PAUSED            = DomainMigrateFlags(C.VIR_MIGRATE_PAUSED)
+	VIR_MIGRATE_NON_SHARED_DISK   = DomainMigrateFlags(C.VIR_MIGRATE_NON_SHARED_DISK)
+	VIR_MIGRATE_NON_SHARED_INC    = DomainMigrateFlags(C.VIR_MIGRATE_NON_SHARED_INC)
+	VIR_MIGRATE_CHANGE_PROTECTION = DomainMigrateFlags(C.VIR_MIGRATE_CHANGE_PROTECTION)
+	VIR_MIGRATE_UNSAFE            = DomainMigrateFlags(C.VIR_MIGRATE_UNSAFE)
+	VIR_MIGRATE_OFFLINE           = DomainMigrateFlags(C.VIR_MIGRATE_OFFLINE)
+	VIR_MIGRATE_COMPRESSED        = DomainMigrateFlags(C.VIR_MIGRATE_COMPRESSED)
+	VIR_MIGRATE_ABORT_ON_ERROR    = DomainMigrateFlags(C.VIR_MIGRATE_ABORT_ON_ERROR)
+	VIR_MIGRATE_AUTO_CONVERGE     = DomainMigrateFlags(C.VIR_MIGRATE_AUTO_CONVERGE)
+	VIR_MIGRATE_RDMA_PIN_ALL      = DomainMigrateFlags(C.VIR_MIGRATE_RDMA_PIN_ALL)
+	VIR_MIGRATE_POSTCOPY          = DomainMigrateFlags(C.VIR_MIGRATE_POSTCOPY)
 )
 
 type VirVcpuState int
@@ -866,21 +866,21 @@ const (
 	VIR_VCPU_BLOCKED = VirVcpuState(C.VIR_VCPU_BLOCKED)
 )
 
-type VirDomainBlockInfo struct {
+type DomainBlockInfo struct {
 	Capacity   uint64
 	Allocation uint64
 	Physical   uint64
 }
 
-type VirDomainInfo struct {
-	State     VirDomainState
+type DomainInfo struct {
+	State     DomainState
 	MaxMem    uint64
 	Memory    uint64
 	NrVirtCpu uint
 	CpuTime   uint64
 }
 
-type VirDomainMemoryStat struct {
+type DomainMemoryStat struct {
 	Tag int32
 	Val uint64
 }
@@ -893,7 +893,7 @@ type VirVcpuInfo struct {
 	CpuMap  []uint32
 }
 
-func (d *VirDomain) Free() error {
+func (d *Domain) Free() error {
 	if result := C.virDomainFree(d.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -901,7 +901,7 @@ func (d *VirDomain) Free() error {
 	return nil
 }
 
-func (d *VirDomain) Create() error {
+func (d *Domain) Create() error {
 	result := C.virDomainCreate(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -909,7 +909,7 @@ func (d *VirDomain) Create() error {
 	return nil
 }
 
-func (d *VirDomain) CreateWithFlags(flags VirDomainCreateFlags) error {
+func (d *Domain) CreateWithFlags(flags DomainCreateFlags) error {
 	result := C.virDomainCreateWithFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -917,7 +917,7 @@ func (d *VirDomain) CreateWithFlags(flags VirDomainCreateFlags) error {
 	return nil
 }
 
-func (d *VirDomain) CreateWithFiles(files []os.File, flags VirDomainCreateFlags) error {
+func (d *Domain) CreateWithFiles(files []os.File, flags DomainCreateFlags) error {
 	cfiles := make([]C.int, len(files))
 	for i := 0; i < len(files); i++ {
 		cfiles[i] = C.int(files[i].Fd())
@@ -929,7 +929,7 @@ func (d *VirDomain) CreateWithFiles(files []os.File, flags VirDomainCreateFlags)
 	return nil
 }
 
-func (d *VirDomain) Destroy() error {
+func (d *Domain) Destroy() error {
 	result := C.virDomainDestroy(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -937,7 +937,7 @@ func (d *VirDomain) Destroy() error {
 	return nil
 }
 
-func (d *VirDomain) Shutdown() error {
+func (d *Domain) Shutdown() error {
 	result := C.virDomainShutdown(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -945,7 +945,7 @@ func (d *VirDomain) Shutdown() error {
 	return nil
 }
 
-func (d *VirDomain) Reboot(flags uint) error {
+func (d *Domain) Reboot(flags uint) error {
 	result := C.virDomainReboot(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -953,7 +953,7 @@ func (d *VirDomain) Reboot(flags uint) error {
 	return nil
 }
 
-func (d *VirDomain) IsActive() (bool, error) {
+func (d *Domain) IsActive() (bool, error) {
 	result := C.virDomainIsActive(d.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -964,7 +964,7 @@ func (d *VirDomain) IsActive() (bool, error) {
 	return false, nil
 }
 
-func (d *VirDomain) IsPersistent() (bool, error) {
+func (d *Domain) IsPersistent() (bool, error) {
 	result := C.virDomainIsPersistent(d.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -975,7 +975,7 @@ func (d *VirDomain) IsPersistent() (bool, error) {
 	return false, nil
 }
 
-func (d *VirDomain) IsUpdated() (bool, error) {
+func (d *Domain) IsUpdated() (bool, error) {
 	result := C.virDomainIsUpdated(d.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -986,7 +986,7 @@ func (d *VirDomain) IsUpdated() (bool, error) {
 	return false, nil
 }
 
-func (d *VirDomain) SetAutostart(autostart bool) error {
+func (d *Domain) SetAutostart(autostart bool) error {
 	var cAutostart C.int
 	switch autostart {
 	case true:
@@ -1001,7 +1001,7 @@ func (d *VirDomain) SetAutostart(autostart bool) error {
 	return nil
 }
 
-func (d *VirDomain) GetAutostart() (bool, error) {
+func (d *Domain) GetAutostart() (bool, error) {
 	var out C.int
 	result := C.virDomainGetAutostart(d.ptr, (*C.int)(unsafe.Pointer(&out)))
 	if result == -1 {
@@ -1015,7 +1015,7 @@ func (d *VirDomain) GetAutostart() (bool, error) {
 	}
 }
 
-func (d *VirDomain) GetBlockInfo(disk string, flag uint) (*VirDomainBlockInfo, error) {
+func (d *Domain) GetBlockInfo(disk string, flag uint) (*DomainBlockInfo, error) {
 	var cinfo C.virDomainBlockInfo
 	cDisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cDisk))
@@ -1024,14 +1024,14 @@ func (d *VirDomain) GetBlockInfo(disk string, flag uint) (*VirDomainBlockInfo, e
 		return nil, GetLastError()
 	}
 
-	return &VirDomainBlockInfo{
+	return &DomainBlockInfo{
 		Capacity:   uint64(cinfo.capacity),
 		Allocation: uint64(cinfo.allocation),
 		Physical:   uint64(cinfo.physical),
 	}, nil
 }
 
-func (d *VirDomain) GetName() (string, error) {
+func (d *Domain) GetName() (string, error) {
 	name := C.virDomainGetName(d.ptr)
 	if name == nil {
 		return "", GetLastError()
@@ -1039,7 +1039,7 @@ func (d *VirDomain) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (d *VirDomain) GetState() ([]int, error) {
+func (d *Domain) GetState() ([]int, error) {
 	var cState C.int
 	var cReason C.int
 	result := C.virDomainGetState(d.ptr,
@@ -1052,7 +1052,7 @@ func (d *VirDomain) GetState() ([]int, error) {
 	return []int{int(cState), int(cReason)}, nil
 }
 
-func (d *VirDomain) GetID() (uint, error) {
+func (d *Domain) GetID() (uint, error) {
 	id := uint(C.virDomainGetID(d.ptr))
 	if id == ^uint(0) {
 		return id, GetLastError()
@@ -1060,7 +1060,7 @@ func (d *VirDomain) GetID() (uint, error) {
 	return id, nil
 }
 
-func (d *VirDomain) GetUUID() ([]byte, error) {
+func (d *Domain) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virDomainGetUUID(d.ptr, (*C.uchar)(cuidPtr))
@@ -1070,7 +1070,7 @@ func (d *VirDomain) GetUUID() ([]byte, error) {
 	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
 }
 
-func (d *VirDomain) GetUUIDString() (string, error) {
+func (d *Domain) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
 	result := C.virDomainGetUUIDString(d.ptr, (*C.char)(cuidPtr))
@@ -1080,14 +1080,14 @@ func (d *VirDomain) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (d *VirDomain) GetInfo() (*VirDomainInfo, error) {
+func (d *Domain) GetInfo() (*DomainInfo, error) {
 	var cinfo C.virDomainInfo
 	result := C.virDomainGetInfo(d.ptr, &cinfo)
 	if result == -1 {
 		return nil, GetLastError()
 	}
-	return &VirDomainInfo{
-		State:     VirDomainState(cinfo.state),
+	return &DomainInfo{
+		State:     DomainState(cinfo.state),
 		MaxMem:    uint64(cinfo.maxMem),
 		Memory:    uint64(cinfo.memory),
 		NrVirtCpu: uint(cinfo.nrVirtCpu),
@@ -1095,7 +1095,7 @@ func (d *VirDomain) GetInfo() (*VirDomainInfo, error) {
 	}, nil
 }
 
-func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
+func (d *Domain) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virDomainGetXMLDesc(d.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -1105,7 +1105,7 @@ func (d *VirDomain) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-type VirDomainCPUStats struct {
+type DomainCPUStats struct {
 	CpuTimeSet    bool
 	CpuTime       uint64
 	UserTimeSet   bool
@@ -1116,7 +1116,7 @@ type VirDomainCPUStats struct {
 	VcpuTime      uint64
 }
 
-func getCPUStatsFieldInfo(params *VirDomainCPUStats) map[string]typedParamsFieldInfo {
+func getCPUStatsFieldInfo(params *DomainCPUStats) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_CPU_STATS_CPUTIME: typedParamsFieldInfo{
 			set: &params.CpuTimeSet,
@@ -1137,14 +1137,14 @@ func getCPUStatsFieldInfo(params *VirDomainCPUStats) map[string]typedParamsField
 	}
 }
 
-func (d *VirDomain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]VirDomainCPUStats, error) {
+func (d *Domain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]DomainCPUStats, error) {
 	if nCpus == 0 {
 		if startCpu == -1 {
 			nCpus = 1
 		} else {
 			ret := C.virDomainGetCPUStats(d.ptr, nil, 0, 0, 0, 0)
 			if ret == -1 {
-				return []VirDomainCPUStats{}, GetLastError()
+				return []DomainCPUStats{}, GetLastError()
 			}
 			nCpus = uint(ret)
 		}
@@ -1152,7 +1152,7 @@ func (d *VirDomain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]VirDo
 
 	ret := C.virDomainGetCPUStats(d.ptr, nil, 0, C.int(startCpu), C.uint(nCpus), 0)
 	if ret == -1 {
-		return []VirDomainCPUStats{}, GetLastError()
+		return []DomainCPUStats{}, GetLastError()
 	}
 	nparams := uint(ret)
 
@@ -1166,25 +1166,25 @@ func (d *VirDomain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]VirDo
 	cparams = make([]C.virTypedParameter, nallocparams)
 	ret = C.virDomainGetCPUStats(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), C.uint(nparams), C.int(startCpu), C.uint(nCpus), C.uint(flags))
 	if ret == -1 {
-		return []VirDomainCPUStats{}, GetLastError()
+		return []DomainCPUStats{}, GetLastError()
 	}
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), C.int(nallocparams))
 
-	stats := make([]VirDomainCPUStats, nCpus)
+	stats := make([]DomainCPUStats, nCpus)
 	for i := 0; i < int(nCpus); i++ {
 		offset := i * int(nparams)
 		info := getCPUStatsFieldInfo(&stats[i])
 		cparamscpu := cparams[offset : offset+int(ret)]
 		err := typedParamsUnpack(cparamscpu, info)
 		if err != nil {
-			return []VirDomainCPUStats{}, err
+			return []DomainCPUStats{}, err
 		}
 	}
 	return stats, nil
 }
 
-type VirDomainInterfaceParameters struct {
+type DomainInterfaceParameters struct {
 	BandwidthInAverageSet  bool
 	BandwidthInAverage     uint
 	BandwidthInPeakSet     bool
@@ -1201,7 +1201,7 @@ type VirDomainInterfaceParameters struct {
 	BandwidthOutBurst      uint
 }
 
-func getInterfaceParameterFieldInfo(params *VirDomainInterfaceParameters) map[string]typedParamsFieldInfo {
+func getInterfaceParameterFieldInfo(params *DomainInterfaceParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_BANDWIDTH_IN_AVERAGE: typedParamsFieldInfo{
 			set: &params.BandwidthInAverageSet,
@@ -1234,8 +1234,8 @@ func getInterfaceParameterFieldInfo(params *VirDomainInterfaceParameters) map[st
 	}
 }
 
-func (d *VirDomain) GetInterfaceParameters(device string, flags uint32) (*VirDomainInterfaceParameters, error) {
-	params := &VirDomainInterfaceParameters{}
+func (d *Domain) GetInterfaceParameters(device string, flags uint32) (*DomainInterfaceParameters, error) {
+	params := &DomainInterfaceParameters{}
 	info := getInterfaceParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1263,7 +1263,7 @@ func (d *VirDomain) GetInterfaceParameters(device string, flags uint32) (*VirDom
 	return params, nil
 }
 
-func (d *VirDomain) SetInterfaceParameters(device string, params *VirDomainInterfaceParameters, flags uint32) error {
+func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfaceParameters, flags uint32) error {
 	info := getInterfaceParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1293,7 +1293,7 @@ func (d *VirDomain) SetInterfaceParameters(device string, params *VirDomainInter
 	return nil
 }
 
-func (d *VirDomain) GetMetadata(tipus VirDomainMetadataType, uri string, flags uint32) (string, error) {
+func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags uint32) (string, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -1309,7 +1309,7 @@ func (d *VirDomain) GetMetadata(tipus VirDomainMetadataType, uri string, flags u
 	return C.GoString(result), nil
 }
 
-func (d *VirDomain) SetMetadata(metaDataType VirDomainMetadataType, metaDataCont, uriKey, uri string, flags uint32) error {
+func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriKey, uri string, flags uint32) error {
 	var cMetaDataCont *C.char
 	var cUriKey *C.char
 	var cUri *C.char
@@ -1330,7 +1330,7 @@ func (d *VirDomain) SetMetadata(metaDataType VirDomainMetadataType, metaDataCont
 	return nil
 }
 
-func (d *VirDomain) Undefine() error {
+func (d *Domain) Undefine() error {
 	result := C.virDomainUndefine(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -1338,7 +1338,7 @@ func (d *VirDomain) Undefine() error {
 	return nil
 }
 
-func (d *VirDomain) UndefineFlags(flags uint) error {
+func (d *Domain) UndefineFlags(flags uint) error {
 	result := C.virDomainUndefineFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1346,7 +1346,7 @@ func (d *VirDomain) UndefineFlags(flags uint) error {
 	return nil
 }
 
-func (d *VirDomain) SetMaxMemory(memory uint) error {
+func (d *Domain) SetMaxMemory(memory uint) error {
 	result := C.virDomainSetMaxMemory(d.ptr, C.ulong(memory))
 	if result == -1 {
 		return GetLastError()
@@ -1354,7 +1354,7 @@ func (d *VirDomain) SetMaxMemory(memory uint) error {
 	return nil
 }
 
-func (d *VirDomain) SetMemory(memory uint64) error {
+func (d *Domain) SetMemory(memory uint64) error {
 	result := C.virDomainSetMemory(d.ptr, C.ulong(memory))
 	if result == -1 {
 		return GetLastError()
@@ -1362,7 +1362,7 @@ func (d *VirDomain) SetMemory(memory uint64) error {
 	return nil
 }
 
-func (d *VirDomain) SetMemoryFlags(memory uint64, flags uint32) error {
+func (d *Domain) SetMemoryFlags(memory uint64, flags uint32) error {
 	result := C.virDomainSetMemoryFlags(d.ptr, C.ulong(memory), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1370,7 +1370,7 @@ func (d *VirDomain) SetMemoryFlags(memory uint64, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) SetMemoryStatsPeriod(period int, flags uint) error {
+func (d *Domain) SetMemoryStatsPeriod(period int, flags uint) error {
 	result := C.virDomainSetMemoryStatsPeriod(d.ptr, C.int(period), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1378,7 +1378,7 @@ func (d *VirDomain) SetMemoryStatsPeriod(period int, flags uint) error {
 	return nil
 }
 
-func (d *VirDomain) SetVcpus(vcpu uint16) error {
+func (d *Domain) SetVcpus(vcpu uint16) error {
 	result := C.virDomainSetVcpus(d.ptr, C.uint(vcpu))
 	if result == -1 {
 		return GetLastError()
@@ -1386,7 +1386,7 @@ func (d *VirDomain) SetVcpus(vcpu uint16) error {
 	return nil
 }
 
-func (d *VirDomain) SetVcpusFlags(vcpu uint16, flags VirDomainVcpuFlags) error {
+func (d *Domain) SetVcpusFlags(vcpu uint16, flags DomainVcpuFlags) error {
 	result := C.virDomainSetVcpusFlags(d.ptr, C.uint(vcpu), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1394,7 +1394,7 @@ func (d *VirDomain) SetVcpusFlags(vcpu uint16, flags VirDomainVcpuFlags) error {
 	return nil
 }
 
-func (d *VirDomain) Suspend() error {
+func (d *Domain) Suspend() error {
 	result := C.virDomainSuspend(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -1402,7 +1402,7 @@ func (d *VirDomain) Suspend() error {
 	return nil
 }
 
-func (d *VirDomain) Resume() error {
+func (d *Domain) Resume() error {
 	result := C.virDomainResume(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -1410,7 +1410,7 @@ func (d *VirDomain) Resume() error {
 	return nil
 }
 
-func (d *VirDomain) AbortJob() error {
+func (d *Domain) AbortJob() error {
 	result := C.virDomainAbortJob(d.ptr)
 	if result == -1 {
 		return GetLastError()
@@ -1418,7 +1418,7 @@ func (d *VirDomain) AbortJob() error {
 	return nil
 }
 
-func (d *VirDomain) DestroyFlags(flags VirDomainDestroyFlags) error {
+func (d *Domain) DestroyFlags(flags DomainDestroyFlags) error {
 	result := C.virDomainDestroyFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1426,7 +1426,7 @@ func (d *VirDomain) DestroyFlags(flags VirDomainDestroyFlags) error {
 	return nil
 }
 
-func (d *VirDomain) ShutdownFlags(flags VirDomainShutdownFlags) error {
+func (d *Domain) ShutdownFlags(flags DomainShutdownFlags) error {
 	result := C.virDomainShutdownFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1434,7 +1434,7 @@ func (d *VirDomain) ShutdownFlags(flags VirDomainShutdownFlags) error {
 	return nil
 }
 
-func (d *VirDomain) AttachDevice(xml string) error {
+func (d *Domain) AttachDevice(xml string) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainAttachDevice(d.ptr, cXml)
@@ -1444,7 +1444,7 @@ func (d *VirDomain) AttachDevice(xml string) error {
 	return nil
 }
 
-func (d *VirDomain) AttachDeviceFlags(xml string, flags VirDomainAttachDeviceFlags) error {
+func (d *Domain) AttachDeviceFlags(xml string, flags DomainAttachDeviceFlags) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainAttachDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1454,7 +1454,7 @@ func (d *VirDomain) AttachDeviceFlags(xml string, flags VirDomainAttachDeviceFla
 	return nil
 }
 
-func (d *VirDomain) DetachDevice(xml string) error {
+func (d *Domain) DetachDevice(xml string) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainDetachDevice(d.ptr, cXml)
@@ -1464,7 +1464,7 @@ func (d *VirDomain) DetachDevice(xml string) error {
 	return nil
 }
 
-func (d *VirDomain) DetachDeviceFlags(xml string, flags VirDomainAttachDeviceFlags) error {
+func (d *Domain) DetachDeviceFlags(xml string, flags DomainAttachDeviceFlags) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainDetachDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1474,7 +1474,7 @@ func (d *VirDomain) DetachDeviceFlags(xml string, flags VirDomainAttachDeviceFla
 	return nil
 }
 
-func (d *VirDomain) UpdateDeviceFlags(xml string, flags uint) error {
+func (d *Domain) UpdateDeviceFlags(xml string, flags uint) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainUpdateDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1484,7 +1484,7 @@ func (d *VirDomain) UpdateDeviceFlags(xml string, flags uint) error {
 	return nil
 }
 
-func (d *VirDomain) Screenshot(stream *Stream, screen, flags uint) (string, error) {
+func (d *Domain) Screenshot(stream *Stream, screen, flags uint) (string, error) {
 	cType := C.virDomainScreenshot(d.ptr, stream.ptr, C.uint(screen), C.uint(flags))
 	if cType == nil {
 		return "", GetLastError()
@@ -1495,7 +1495,7 @@ func (d *VirDomain) Screenshot(stream *Stream, screen, flags uint) (string, erro
 	return mimeType, nil
 }
 
-func (d *VirDomain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint) error {
+func (d *Domain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint) error {
 	result := C.virDomainSendKey(d.ptr, C.uint(codeset), C.uint(holdtime), (*C.uint)(unsafe.Pointer(&keycodes[0])), C.int(len(keycodes)), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1504,7 +1504,7 @@ func (d *VirDomain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint)
 	return nil
 }
 
-type VirDomainBlockStats struct {
+type DomainBlockStats struct {
 	RdBytesSet         bool
 	RdBytes            int64
 	RdReqSet           bool
@@ -1525,7 +1525,7 @@ type VirDomainBlockStats struct {
 	Errs               int64
 }
 
-func getBlockStatsFieldInfo(params *VirDomainBlockStats) map[string]typedParamsFieldInfo {
+func getBlockStatsFieldInfo(params *DomainBlockStats) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_BLOCK_STATS_READ_BYTES: typedParamsFieldInfo{
 			set: &params.RdBytesSet,
@@ -1566,8 +1566,8 @@ func getBlockStatsFieldInfo(params *VirDomainBlockStats) map[string]typedParamsF
 	}
 }
 
-func (d *VirDomain) BlockStatsFlags(disk string, flags uint32) (*VirDomainBlockStats, error) {
-	params := &VirDomainBlockStats{}
+func (d *Domain) BlockStatsFlags(disk string, flags uint32) (*DomainBlockStats, error) {
+	params := &DomainBlockStats{}
 	info := getBlockStatsFieldInfo(params)
 
 	var nparams C.int
@@ -1595,7 +1595,7 @@ func (d *VirDomain) BlockStatsFlags(disk string, flags uint32) (*VirDomainBlockS
 	return params, nil
 }
 
-func (d *VirDomain) BlockStats(path string) (*VirDomainBlockStats, error) {
+func (d *Domain) BlockStats(path string) (*DomainBlockStats, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 
@@ -1609,7 +1609,7 @@ func (d *VirDomain) BlockStats(path string) (*VirDomainBlockStats, error) {
 	if result != 0 {
 		return nil, GetLastError()
 	}
-	return &VirDomainBlockStats{
+	return &DomainBlockStats{
 		WrReqSet:   true,
 		WrReq:      int64(cStats.wr_req),
 		RdReqSet:   true,
@@ -1621,7 +1621,7 @@ func (d *VirDomain) BlockStats(path string) (*VirDomainBlockStats, error) {
 	}, nil
 }
 
-type VirDomainInterfaceStats struct {
+type DomainInterfaceStats struct {
 	RxBytesSet   bool
 	RxBytes      int64
 	RxPacketsSet bool
@@ -1640,7 +1640,7 @@ type VirDomainInterfaceStats struct {
 	TxDrop       int64
 }
 
-func (d *VirDomain) InterfaceStats(path string) (*VirDomainInterfaceStats, error) {
+func (d *Domain) InterfaceStats(path string) (*DomainInterfaceStats, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 
@@ -1654,7 +1654,7 @@ func (d *VirDomain) InterfaceStats(path string) (*VirDomainInterfaceStats, error
 	if result != 0 {
 		return nil, GetLastError()
 	}
-	return &VirDomainInterfaceStats{
+	return &DomainInterfaceStats{
 		RxBytesSet:   true,
 		RxBytes:      int64(cStats.rx_bytes),
 		RxPacketsSet: true,
@@ -1674,7 +1674,7 @@ func (d *VirDomain) InterfaceStats(path string) (*VirDomainInterfaceStats, error
 	}, nil
 }
 
-func (d *VirDomain) MemoryStats(nrStats uint32, flags uint32) ([]VirDomainMemoryStat, error) {
+func (d *Domain) MemoryStats(nrStats uint32, flags uint32) ([]DomainMemoryStat, error) {
 	ptr := make([]C.virDomainMemoryStatStruct, nrStats)
 
 	result := C.virDomainMemoryStats(
@@ -1682,12 +1682,12 @@ func (d *VirDomain) MemoryStats(nrStats uint32, flags uint32) ([]VirDomainMemory
 		C.uint(nrStats), C.uint(flags))
 
 	if result == -1 {
-		return []VirDomainMemoryStat{}, GetLastError()
+		return []DomainMemoryStat{}, GetLastError()
 	}
 
-	out := make([]VirDomainMemoryStat, result)
+	out := make([]DomainMemoryStat, result)
 	for i := 0; i < int(result); i++ {
-		out = append(out, VirDomainMemoryStat{
+		out = append(out, DomainMemoryStat{
 			Tag: int32(ptr[i].tag),
 			Val: uint64(ptr[i].val),
 		})
@@ -1695,7 +1695,7 @@ func (d *VirDomain) MemoryStats(nrStats uint32, flags uint32) ([]VirDomainMemory
 	return out, nil
 }
 
-func (d *VirDomain) GetVcpus(maxInfo int32) ([]VirVcpuInfo, error) {
+func (d *Domain) GetVcpus(maxInfo int32) ([]VirVcpuInfo, error) {
 	ptr := make([]C.virVcpuInfo, maxInfo)
 
 	result := C.virDomainGetVcpus(
@@ -1744,7 +1744,7 @@ func extractCpuMask(bytesCpuMaps []byte, n, mapLen int) []uint32 {
 	return out
 }
 
-func (d *VirDomain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, error) {
+func (d *Domain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, error) {
 	ptr := make([]C.virVcpuInfo, maxInfo)
 
 	mapLen := virCpuMapLen(maxCPUs)                    // Length of CPUs bitmask in bytes
@@ -1777,7 +1777,7 @@ func (d *VirDomain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VirVcpuInfo, 
 	return out, nil
 }
 
-func (d *VirDomain) GetVcpusFlags(flags uint32) (int32, error) {
+func (d *Domain) GetVcpusFlags(flags uint32) (int32, error) {
 	result := C.virDomainGetVcpusFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return 0, GetLastError()
@@ -1785,7 +1785,7 @@ func (d *VirDomain) GetVcpusFlags(flags uint32) (int32, error) {
 	return int32(result), nil
 }
 
-func (d *VirDomain) QemuMonitorCommand(flags uint32, command string) (string, error) {
+func (d *Domain) QemuMonitorCommand(flags uint32, command string) (string, error) {
 	var cResult *C.char
 	cCommand := C.CString(command)
 	defer C.free(unsafe.Pointer(cCommand))
@@ -1815,7 +1815,7 @@ func cpuMask(cpuMap []uint32, maxCPUs uint32) (*C.uchar, C.int) {
 	return (*C.uchar)(&bytesCpuMap[0]), mapLen
 }
 
-func (d *VirDomain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
+func (d *Domain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
 
 	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
 
@@ -1828,7 +1828,7 @@ func (d *VirDomain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
 	return nil
 }
 
-func (d *VirDomain) PinVcpuFlags(vcpu uint, cpuMap []uint32, flags uint, maxCPUs uint32) error {
+func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []uint32, flags uint, maxCPUs uint32) error {
 	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
 
 	result := C.virDomainPinVcpuFlags(d.ptr, C.uint(vcpu), cpumap, maplen, C.uint(flags))
@@ -1840,19 +1840,19 @@ func (d *VirDomain) PinVcpuFlags(vcpu uint, cpuMap []uint32, flags uint, maxCPUs
 	return nil
 }
 
-type VirDomainIPAddress struct {
+type DomainIPAddress struct {
 	Type   int
 	Addr   string
 	Prefix uint
 }
 
-type VirDomainInterface struct {
+type DomainInterface struct {
 	Name   string
 	Hwaddr string
-	Addrs  []VirDomainIPAddress
+	Addrs  []DomainIPAddress
 }
 
-func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, error) {
+func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) {
 	var cList *C.virDomainInterfacePtr
 	numIfaces := int(C.virDomainInterfaceAddresses(d.ptr, (**C.virDomainInterfacePtr)(&cList), C.uint(src), 0))
 	if numIfaces == -1 {
@@ -1865,7 +1865,7 @@ func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, e
 		Cap:  int(numIfaces),
 	}
 
-	ifaces := make([]VirDomainInterface, numIfaces)
+	ifaces := make([]DomainInterface, numIfaces)
 	ifaceSlice := *(*[]C.virDomainInterfacePtr)(unsafe.Pointer(&hdr))
 
 	for i := 0; i < numIfaces; i++ {
@@ -1879,11 +1879,11 @@ func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, e
 			Cap:  int(numAddr),
 		}
 
-		ifaces[i].Addrs = make([]VirDomainIPAddress, numAddr)
+		ifaces[i].Addrs = make([]DomainIPAddress, numAddr)
 		addrSlice := *(*[]C.virDomainIPAddressPtr)(unsafe.Pointer(&addrHdr))
 
 		for k := 0; k < numAddr; k++ {
-			ifaces[i].Addrs[k] = VirDomainIPAddress{}
+			ifaces[i].Addrs[k] = DomainIPAddress{}
 			ifaces[i].Addrs[k].Type = int(addrSlice[k]._type)
 			ifaces[i].Addrs[k].Addr = C.GoString(addrSlice[k].addr)
 			ifaces[i].Addrs[k].Prefix = uint(addrSlice[k].prefix)
@@ -1895,16 +1895,16 @@ func (d *VirDomain) ListAllInterfaceAddresses(src uint) ([]VirDomainInterface, e
 	return ifaces, nil
 }
 
-func (d *VirDomain) SnapshotCurrent(flags uint32) (*VirDomainSnapshot, error) {
+func (d *Domain) SnapshotCurrent(flags uint32) (*DomainSnapshot, error) {
 	result := C.virDomainSnapshotCurrent(d.ptr, C.uint(flags))
 	if result == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomainSnapshot{ptr: result}, nil
+	return &DomainSnapshot{ptr: result}, nil
 
 }
 
-func (d *VirDomain) SnapshotNum(flags VirDomainSnapshotListFlags) (int, error) {
+func (d *Domain) SnapshotNum(flags DomainSnapshotListFlags) (int, error) {
 	result := int(C.virDomainSnapshotNum(d.ptr, C.uint(flags)))
 	if result == -1 {
 		return 0, GetLastError()
@@ -1912,17 +1912,17 @@ func (d *VirDomain) SnapshotNum(flags VirDomainSnapshotListFlags) (int, error) {
 	return result, nil
 }
 
-func (d *VirDomain) SnapshotLookupByName(name string, flags uint32) (*VirDomainSnapshot, error) {
+func (d *Domain) SnapshotLookupByName(name string, flags uint32) (*DomainSnapshot, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainSnapshotLookupByName(d.ptr, cName, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomainSnapshot{ptr: ptr}, nil
+	return &DomainSnapshot{ptr: ptr}, nil
 }
 
-func (d *VirDomain) SnapshotListNames(flags VirDomainSnapshotListFlags) ([]string, error) {
+func (d *Domain) SnapshotListNames(flags DomainSnapshotListFlags) ([]string, error) {
 	const maxNames = 1024
 	var names [maxNames](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -1941,7 +1941,7 @@ func (d *VirDomain) SnapshotListNames(flags VirDomainSnapshotListFlags) ([]strin
 	return goNames, nil
 }
 
-func (d *VirDomain) ListAllSnapshots(flags VirDomainSnapshotListFlags) ([]VirDomainSnapshot, error) {
+func (d *Domain) ListAllSnapshots(flags DomainSnapshotListFlags) ([]DomainSnapshot, error) {
 	var cList *C.virDomainSnapshotPtr
 	numVols := C.virDomainListAllSnapshots(d.ptr, (**C.virDomainSnapshotPtr)(&cList), C.uint(flags))
 	if numVols == -1 {
@@ -1952,16 +1952,16 @@ func (d *VirDomain) ListAllSnapshots(flags VirDomainSnapshotListFlags) ([]VirDom
 		Len:  int(numVols),
 		Cap:  int(numVols),
 	}
-	var pools []VirDomainSnapshot
+	var pools []DomainSnapshot
 	slice := *(*[]C.virDomainSnapshotPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirDomainSnapshot{ptr})
+		pools = append(pools, DomainSnapshot{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
 }
 
-func (d *VirDomain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags uint32) error {
+func (d *Domain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags uint32) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	var cbase *C.char
@@ -1981,7 +1981,7 @@ func (d *VirDomain) BlockCommit(disk string, base string, top string, bandwidth 
 	return nil
 }
 
-type VirDomainBlockCopyParameters struct {
+type DomainBlockCopyParameters struct {
 	BandwidthSet   bool
 	Bandwidth      uint64
 	GranularitySet bool
@@ -1990,7 +1990,7 @@ type VirDomainBlockCopyParameters struct {
 	BufSize        uint64
 }
 
-func getBlockCopyParameterFieldInfo(params *VirDomainBlockCopyParameters) map[string]typedParamsFieldInfo {
+func getBlockCopyParameterFieldInfo(params *DomainBlockCopyParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_BLOCK_COPY_BANDWIDTH: typedParamsFieldInfo{
 			set: &params.BandwidthSet,
@@ -2007,7 +2007,7 @@ func getBlockCopyParameterFieldInfo(params *VirDomainBlockCopyParameters) map[st
 	}
 }
 
-func (d *VirDomain) BlockCopy(disk string, destxml string, params *VirDomainBlockCopyParameters, flags VirDomainBlockCopyFlags) error {
+func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyParameters, flags DomainBlockCopyFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	cdestxml := C.CString(destxml)
@@ -2031,7 +2031,7 @@ func (d *VirDomain) BlockCopy(disk string, destxml string, params *VirDomainBloc
 	return nil
 }
 
-func (d *VirDomain) BlockJobAbort(disk string, flags VirDomainBlockJobAbortFlags) error {
+func (d *Domain) BlockJobAbort(disk string, flags DomainBlockJobAbortFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	ret := C.virDomainBlockJobAbort(d.ptr, cdisk, C.uint(flags))
@@ -2041,7 +2041,7 @@ func (d *VirDomain) BlockJobAbort(disk string, flags VirDomainBlockJobAbortFlags
 	return nil
 }
 
-func (d *VirDomain) BlockJobSetSpeed(disk string, bandwidth uint64, flags VirDomainBlockJobSetSpeedFlags) error {
+func (d *Domain) BlockJobSetSpeed(disk string, bandwidth uint64, flags DomainBlockJobSetSpeedFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	ret := C.virDomainBlockJobSetSpeed(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
@@ -2051,7 +2051,7 @@ func (d *VirDomain) BlockJobSetSpeed(disk string, bandwidth uint64, flags VirDom
 	return nil
 }
 
-func (d *VirDomain) BlockPull(disk string, bandwidth uint64, flags VirDomainBlockPullFlags) error {
+func (d *Domain) BlockPull(disk string, bandwidth uint64, flags DomainBlockPullFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	ret := C.virDomainBlockPull(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
@@ -2061,7 +2061,7 @@ func (d *VirDomain) BlockPull(disk string, bandwidth uint64, flags VirDomainBloc
 	return nil
 }
 
-func (d *VirDomain) BlockRebase(disk string, base string, bandwidth uint64, flags VirDomainBlockRebaseFlags) error {
+func (d *Domain) BlockRebase(disk string, base string, bandwidth uint64, flags DomainBlockRebaseFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	var cbase *C.char
@@ -2076,7 +2076,7 @@ func (d *VirDomain) BlockRebase(disk string, base string, bandwidth uint64, flag
 	return nil
 }
 
-func (d *VirDomain) BlockResize(disk string, size uint64, flags VirDomainBlockResizeFlags) error {
+func (d *Domain) BlockResize(disk string, size uint64, flags DomainBlockResizeFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	ret := C.virDomainBlockResize(d.ptr, cdisk, C.ulonglong(size), C.uint(flags))
@@ -2086,7 +2086,7 @@ func (d *VirDomain) BlockResize(disk string, size uint64, flags VirDomainBlockRe
 	return nil
 }
 
-func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) ([]byte, error) {
+func (d *Domain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) ([]byte, error) {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	data := make([]byte, size)
@@ -2099,7 +2099,7 @@ func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uin
 	return data, nil
 }
 
-func (d *VirDomain) MemoryPeek(start uint64, size uint64, flags VirDomainMemoryFlags) ([]byte, error) {
+func (d *Domain) MemoryPeek(start uint64, size uint64, flags DomainMemoryFlags) ([]byte, error) {
 	data := make([]byte, size)
 	ret := C.virDomainMemoryPeek(d.ptr, C.ulonglong(start), C.size_t(size),
 		unsafe.Pointer(&data[0]), C.uint(flags))
@@ -2110,7 +2110,7 @@ func (d *VirDomain) MemoryPeek(start uint64, size uint64, flags VirDomainMemoryF
 	return data, nil
 }
 
-func (d *VirDomain) Migrate(dconn *VirConnection, flags VirDomainMigrateFlags, dname string, uri string, bandwidth uint64) (*VirDomain, error) {
+func (d *Domain) Migrate(dconn *VirConnection, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
@@ -2127,12 +2127,12 @@ func (d *VirDomain) Migrate(dconn *VirConnection, flags VirDomainMigrateFlags, d
 		return nil, GetLastError()
 	}
 
-	return &VirDomain{
+	return &Domain{
 		ptr: ret,
 	}, nil
 }
 
-func (d *VirDomain) Migrate2(dconn *VirConnection, dxml string, flags VirDomainMigrateFlags, dname string, uri string, bandwidth uint64) (*VirDomain, error) {
+func (d *Domain) Migrate2(dconn *VirConnection, dxml string, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
 	var cdxml *C.char
 	if dxml != "" {
 		cdxml = C.CString(dxml)
@@ -2154,12 +2154,12 @@ func (d *VirDomain) Migrate2(dconn *VirConnection, dxml string, flags VirDomainM
 		return nil, GetLastError()
 	}
 
-	return &VirDomain{
+	return &Domain{
 		ptr: ret,
 	}, nil
 }
 
-type VirDomainMigrateParameters struct {
+type DomainMigrateParameters struct {
 	URISet                    bool
 	URI                       string
 	DestNameSet               bool
@@ -2194,7 +2194,7 @@ type VirDomainMigrateParameters struct {
 	AutoConvergeIncrement     int
 }
 
-func getMigrateParameterFieldInfo(params *VirDomainMigrateParameters) map[string]typedParamsFieldInfo {
+func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_MIGRATE_PARAM_URI: typedParamsFieldInfo{
 			set: &params.URISet,
@@ -2263,7 +2263,7 @@ func getMigrateParameterFieldInfo(params *VirDomainMigrateParameters) map[string
 	}
 }
 
-func (d *VirDomain) Migrate3(dconn *VirConnection, params *VirDomainMigrateParameters, flags VirDomainMigrateFlags) (*VirDomain, error) {
+func (d *Domain) Migrate3(dconn *VirConnection, params *DomainMigrateParameters, flags DomainMigrateFlags) (*Domain, error) {
 
 	info := getMigrateParameterFieldInfo(params)
 	cparams, err := typedParamsPackNew(info)
@@ -2279,12 +2279,12 @@ func (d *VirDomain) Migrate3(dconn *VirConnection, params *VirDomainMigrateParam
 		return nil, GetLastError()
 	}
 
-	return &VirDomain{
+	return &Domain{
 		ptr: ret,
 	}, nil
 }
 
-func (d *VirDomain) MigrateToURI(duri string, flags VirDomainMigrateFlags, dname string, bandwidth uint64) error {
+func (d *Domain) MigrateToURI(duri string, flags DomainMigrateFlags, dname string, bandwidth uint64) error {
 	cduri := C.CString(duri)
 	defer C.free(cduri)
 
@@ -2302,7 +2302,7 @@ func (d *VirDomain) MigrateToURI(duri string, flags VirDomainMigrateFlags, dname
 	return nil
 }
 
-func (d *VirDomain) MigrateToURI2(dconnuri string, miguri string, dxml string, flags VirDomainMigrateFlags, dname string, bandwidth uint64) error {
+func (d *Domain) MigrateToURI2(dconnuri string, miguri string, dxml string, flags DomainMigrateFlags, dname string, bandwidth uint64) error {
 	var cdconnuri *C.char
 	if dconnuri != "" {
 		cdconnuri = C.CString(dconnuri)
@@ -2332,7 +2332,7 @@ func (d *VirDomain) MigrateToURI2(dconnuri string, miguri string, dxml string, f
 	return nil
 }
 
-func (d *VirDomain) MigrateToURI3(dconnuri string, params *VirDomainMigrateParameters, flags VirDomainMigrateFlags) error {
+func (d *Domain) MigrateToURI3(dconnuri string, params *DomainMigrateParameters, flags DomainMigrateFlags) error {
 	var cdconnuri *C.char
 	if dconnuri != "" {
 		cdconnuri = C.CString(dconnuri)
@@ -2356,7 +2356,7 @@ func (d *VirDomain) MigrateToURI3(dconnuri string, params *VirDomainMigrateParam
 	return nil
 }
 
-func (d *VirDomain) MigrateGetCompressionCache(flags uint32) (uint64, error) {
+func (d *Domain) MigrateGetCompressionCache(flags uint32) (uint64, error) {
 	var cacheSize C.ulonglong
 
 	ret := C.virDomainMigrateGetCompressionCache(d.ptr, &cacheSize, C.uint(flags))
@@ -2367,7 +2367,7 @@ func (d *VirDomain) MigrateGetCompressionCache(flags uint32) (uint64, error) {
 	return uint64(cacheSize), nil
 }
 
-func (d *VirDomain) MigrateSetCompressionCache(size uint64, flags uint32) error {
+func (d *Domain) MigrateSetCompressionCache(size uint64, flags uint32) error {
 	ret := C.virDomainMigrateSetCompressionCache(d.ptr, C.ulonglong(size), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -2376,7 +2376,7 @@ func (d *VirDomain) MigrateSetCompressionCache(size uint64, flags uint32) error 
 	return nil
 }
 
-func (d *VirDomain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
+func (d *Domain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
 	var maxSpeed C.ulong
 
 	ret := C.virDomainMigrateGetMaxSpeed(d.ptr, &maxSpeed, C.uint(flags))
@@ -2387,7 +2387,7 @@ func (d *VirDomain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
 	return uint64(maxSpeed), nil
 }
 
-func (d *VirDomain) MigrateSetMaxSpeed(speed uint64, flags uint32) error {
+func (d *Domain) MigrateSetMaxSpeed(speed uint64, flags uint32) error {
 	ret := C.virDomainMigrateSetMaxSpeed(d.ptr, C.ulong(speed), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -2396,7 +2396,7 @@ func (d *VirDomain) MigrateSetMaxSpeed(speed uint64, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
+func (d *Domain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 	ret := C.virDomainMigrateSetMaxDowntime(d.ptr, C.ulonglong(downtime), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -2405,7 +2405,7 @@ func (d *VirDomain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) MigrateStartPostCopy(flags uint32) error {
+func (d *Domain) MigrateStartPostCopy(flags uint32) error {
 	ret := C.virDomainMigrateStartPostCopy(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -2414,7 +2414,7 @@ func (d *VirDomain) MigrateStartPostCopy(flags uint32) error {
 	return nil
 }
 
-type VirDomainBlkioParameters struct {
+type DomainBlkioParameters struct {
 	WeightSet          bool
 	Weight             uint
 	DeviceWeightSet    bool
@@ -2429,7 +2429,7 @@ type VirDomainBlkioParameters struct {
 	DeviceWriteBps     string
 }
 
-func getBlkioParametersFieldInfo(params *VirDomainBlkioParameters) map[string]typedParamsFieldInfo {
+func getBlkioParametersFieldInfo(params *DomainBlkioParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_BLKIO_WEIGHT: typedParamsFieldInfo{
 			set: &params.WeightSet,
@@ -2458,8 +2458,8 @@ func getBlkioParametersFieldInfo(params *VirDomainBlkioParameters) map[string]ty
 	}
 }
 
-func (d *VirDomain) GetBlkioParameters(flags VirDomainModificationImpact) (*VirDomainBlkioParameters, error) {
-	params := &VirDomainBlkioParameters{}
+func (d *Domain) GetBlkioParameters(flags DomainModificationImpact) (*DomainBlkioParameters, error) {
+	params := &DomainBlkioParameters{}
 	info := getBlkioParametersFieldInfo(params)
 
 	var nparams C.int
@@ -2484,7 +2484,7 @@ func (d *VirDomain) GetBlkioParameters(flags VirDomainModificationImpact) (*VirD
 	return params, nil
 }
 
-func (d *VirDomain) SetBlkioParameters(params *VirDomainBlkioParameters, flags VirDomainModificationImpact) error {
+func (d *Domain) SetBlkioParameters(params *DomainBlkioParameters, flags DomainModificationImpact) error {
 	info := getBlkioParametersFieldInfo(params)
 
 	var nparams C.int
@@ -2512,7 +2512,7 @@ func (d *VirDomain) SetBlkioParameters(params *VirDomainBlkioParameters, flags V
 	return nil
 }
 
-type VirDomainBlockIoTuneParameters struct {
+type DomainBlockIoTuneParameters struct {
 	TotalBytesSecSet          bool
 	TotalBytesSec             uint64
 	ReadBytesSecSet           bool
@@ -2553,7 +2553,7 @@ type VirDomainBlockIoTuneParameters struct {
 	SizeIopsSec               uint64
 }
 
-func getBlockIoTuneParametersFieldInfo(params *VirDomainBlockIoTuneParameters) map[string]typedParamsFieldInfo {
+func getBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC: typedParamsFieldInfo{
 			set: &params.TotalBytesSecSet,
@@ -2634,11 +2634,11 @@ func getBlockIoTuneParametersFieldInfo(params *VirDomainBlockIoTuneParameters) m
 	}
 }
 
-func (d *VirDomain) GetBlockIoTune(disk string, flags VirDomainModificationImpact) (*VirDomainBlockIoTuneParameters, error) {
+func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*DomainBlockIoTuneParameters, error) {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 
-	params := &VirDomainBlockIoTuneParameters{}
+	params := &DomainBlockIoTuneParameters{}
 	info := getBlockIoTuneParametersFieldInfo(params)
 
 	var nparams C.int
@@ -2663,7 +2663,7 @@ func (d *VirDomain) GetBlockIoTune(disk string, flags VirDomainModificationImpac
 	return params, nil
 }
 
-func (d *VirDomain) SetBlockIoTune(disk string, params *VirDomainBlockIoTuneParameters, flags uint32) error {
+func (d *Domain) SetBlockIoTune(disk string, params *DomainBlockIoTuneParameters, flags uint32) error {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 
@@ -2694,14 +2694,14 @@ func (d *VirDomain) SetBlockIoTune(disk string, params *VirDomainBlockIoTunePara
 	return nil
 }
 
-type VirDomainBlockJobInfo struct {
-	Type      VirDomainBlockJobType
+type DomainBlockJobInfo struct {
+	Type      DomainBlockJobType
 	Bandwidth uint64
 	Cur       uint64
 	End       uint64
 }
 
-func (d *VirDomain) GetBlockJobInfo(disk string, flags VirDomainBlockJobInfoFlags) (*VirDomainBlockJobInfo, error) {
+func (d *Domain) GetBlockJobInfo(disk string, flags DomainBlockJobInfoFlags) (*DomainBlockJobInfo, error) {
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 
@@ -2713,21 +2713,21 @@ func (d *VirDomain) GetBlockJobInfo(disk string, flags VirDomainBlockJobInfoFlag
 		return nil, GetLastError()
 	}
 
-	return &VirDomainBlockJobInfo{
-		Type:      VirDomainBlockJobType(cinfo._type),
+	return &DomainBlockJobInfo{
+		Type:      DomainBlockJobType(cinfo._type),
 		Bandwidth: uint64(cinfo.bandwidth),
 		Cur:       uint64(cinfo.cur),
 		End:       uint64(cinfo.end),
 	}, nil
 }
 
-type VirDomainControlInfo struct {
-	State     VirDomainControlState
+type DomainControlInfo struct {
+	State     DomainControlState
 	Details   int
 	StateTime uint64
 }
 
-func (d *VirDomain) GetControlInfo(flags uint32) (*VirDomainControlInfo, error) {
+func (d *Domain) GetControlInfo(flags uint32) (*DomainControlInfo, error) {
 
 	var cinfo C.virDomainControlInfo
 
@@ -2736,22 +2736,22 @@ func (d *VirDomain) GetControlInfo(flags uint32) (*VirDomainControlInfo, error) 
 		return nil, GetLastError()
 	}
 
-	return &VirDomainControlInfo{
-		State:     VirDomainControlState(cinfo.state),
+	return &DomainControlInfo{
+		State:     DomainControlState(cinfo.state),
 		Details:   int(cinfo.details),
 		StateTime: uint64(cinfo.stateTime),
 	}, nil
 }
 
-type VirDomainDiskError struct {
+type DomainDiskError struct {
 	Disk  string
-	Error VirDomainDiskErrorCode
+	Error DomainDiskErrorCode
 }
 
-func (d *VirDomain) GetDiskErrors(flags uint32) ([]VirDomainDiskError, error) {
+func (d *Domain) GetDiskErrors(flags uint32) ([]DomainDiskError, error) {
 	ret := C.virDomainGetDiskErrors(d.ptr, nil, 0, 0)
 	if ret == -1 {
-		return []VirDomainDiskError{}, GetLastError()
+		return []DomainDiskError{}, GetLastError()
 	}
 
 	maxerrors := ret
@@ -2759,15 +2759,15 @@ func (d *VirDomain) GetDiskErrors(flags uint32) ([]VirDomainDiskError, error) {
 
 	ret = C.virDomainGetDiskErrors(d.ptr, (*C.virDomainDiskError)(unsafe.Pointer(&cerrors[0])), C.uint(maxerrors), C.uint(flags))
 	if ret == -1 {
-		return []VirDomainDiskError{}, GetLastError()
+		return []DomainDiskError{}, GetLastError()
 	}
 
-	errors := make([]VirDomainDiskError, maxerrors)
+	errors := make([]DomainDiskError, maxerrors)
 
 	for i, cerror := range cerrors {
-		errors[i] = VirDomainDiskError{
+		errors[i] = DomainDiskError{
 			Disk:  C.GoString(cerror.disk),
-			Error: VirDomainDiskErrorCode(cerror.error),
+			Error: DomainDiskErrorCode(cerror.error),
 		}
 		C.free(unsafe.Pointer(cerror.disk))
 	}
@@ -2775,7 +2775,7 @@ func (d *VirDomain) GetDiskErrors(flags uint32) ([]VirDomainDiskError, error) {
 	return errors, nil
 }
 
-func (d *VirDomain) GetHostname(flags uint32) (string, error) {
+func (d *Domain) GetHostname(flags uint32) (string, error) {
 	ret := C.virDomainGetHostname(d.ptr, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
@@ -2786,8 +2786,8 @@ func (d *VirDomain) GetHostname(flags uint32) (string, error) {
 	return C.GoString(ret), nil
 }
 
-type VirDomainJobInfo struct {
-	Type                      VirDomainJobType
+type DomainJobInfo struct {
+	Type                      DomainJobType
 	TimeElapsedSet            bool
 	TimeElapsed               uint64
 	TimeElapsedNetSet         bool
@@ -2846,7 +2846,7 @@ type VirDomainJobInfo struct {
 	AutoConvergeThrottle      int
 }
 
-func (d *VirDomain) GetJobInfo() (*VirDomainJobInfo, error) {
+func (d *Domain) GetJobInfo() (*DomainJobInfo, error) {
 	var cinfo C.virDomainJobInfo
 
 	ret := C.virDomainGetJobInfo(d.ptr, &cinfo)
@@ -2854,8 +2854,8 @@ func (d *VirDomain) GetJobInfo() (*VirDomainJobInfo, error) {
 		return nil, GetLastError()
 	}
 
-	return &VirDomainJobInfo{
-		Type:             VirDomainJobType(cinfo._type),
+	return &DomainJobInfo{
+		Type:             DomainJobType(cinfo._type),
 		TimeElapsedSet:   true,
 		TimeElapsed:      uint64(cinfo.timeElapsed),
 		TimeRemainingSet: true,
@@ -2881,7 +2881,7 @@ func (d *VirDomain) GetJobInfo() (*VirDomainJobInfo, error) {
 	}, nil
 }
 
-func getDomainJobInfoFieldInfo(params *VirDomainJobInfo) map[string]typedParamsFieldInfo {
+func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_JOB_TIME_ELAPSED: typedParamsFieldInfo{
 			set: &params.TimeElapsedSet,
@@ -2998,7 +2998,7 @@ func getDomainJobInfoFieldInfo(params *VirDomainJobInfo) map[string]typedParamsF
 	}
 }
 
-func (d *VirDomain) GetJobStats(flags VirDomainGetJobStatsFlags) (*VirDomainJobInfo, error) {
+func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, error) {
 	var cparams *C.virTypedParameter
 	var nparams C.int
 	var jobtype C.int
@@ -3008,7 +3008,7 @@ func (d *VirDomain) GetJobStats(flags VirDomainGetJobStatsFlags) (*VirDomainJobI
 	}
 	defer C.virTypedParamsFree(cparams, nparams)
 
-	params := VirDomainJobInfo{}
+	params := DomainJobInfo{}
 	info := getDomainJobInfoFieldInfo(&params)
 
 	err := typedParamsUnpackLen(cparams, int(nparams), info)
@@ -3019,7 +3019,7 @@ func (d *VirDomain) GetJobStats(flags VirDomainGetJobStatsFlags) (*VirDomainJobI
 	return &params, nil
 }
 
-func (d *VirDomain) GetMaxMemory() (uint64, error) {
+func (d *Domain) GetMaxMemory() (uint64, error) {
 	ret := C.virDomainGetMaxMemory(d.ptr)
 	if ret == 0 {
 		return 0, GetLastError()
@@ -3028,7 +3028,7 @@ func (d *VirDomain) GetMaxMemory() (uint64, error) {
 	return uint64(ret), nil
 }
 
-func (d *VirDomain) GetMaxVcpus() (uint, error) {
+func (d *Domain) GetMaxVcpus() (uint, error) {
 	ret := C.virDomainGetMaxVcpus(d.ptr)
 	if ret == -1 {
 		return 0, GetLastError()
@@ -3037,7 +3037,7 @@ func (d *VirDomain) GetMaxVcpus() (uint, error) {
 	return uint(ret), nil
 }
 
-func (d *VirDomain) GetOSType() (string, error) {
+func (d *Domain) GetOSType() (string, error) {
 	ret := C.virDomainGetOSType(d.ptr)
 	if ret == nil {
 		return "", GetLastError()
@@ -3048,7 +3048,7 @@ func (d *VirDomain) GetOSType() (string, error) {
 	return C.GoString(ret), nil
 }
 
-type VirDomainMemoryParameters struct {
+type DomainMemoryParameters struct {
 	HardLimitSet     bool
 	HardLimit        uint64
 	SoftLimitSet     bool
@@ -3059,7 +3059,7 @@ type VirDomainMemoryParameters struct {
 	SwapHardLimit    uint64
 }
 
-func getDomainMemoryParametersFieldInfo(params *VirDomainMemoryParameters) map[string]typedParamsFieldInfo {
+func getDomainMemoryParametersFieldInfo(params *DomainMemoryParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_MEMORY_HARD_LIMIT: typedParamsFieldInfo{
 			set: &params.HardLimitSet,
@@ -3080,8 +3080,8 @@ func getDomainMemoryParametersFieldInfo(params *VirDomainMemoryParameters) map[s
 	}
 }
 
-func (d *VirDomain) GetMemoryParameters(flags VirDomainModificationImpact) (*VirDomainMemoryParameters, error) {
-	params := &VirDomainMemoryParameters{}
+func (d *Domain) GetMemoryParameters(flags DomainModificationImpact) (*DomainMemoryParameters, error) {
+	params := &DomainMemoryParameters{}
 	info := getDomainMemoryParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3106,7 +3106,7 @@ func (d *VirDomain) GetMemoryParameters(flags VirDomainModificationImpact) (*Vir
 	return params, nil
 }
 
-func (d *VirDomain) SetMemoryParameters(params *VirDomainMemoryParameters, flags uint32) error {
+func (d *Domain) SetMemoryParameters(params *DomainMemoryParameters, flags uint32) error {
 	info := getDomainMemoryParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3134,14 +3134,14 @@ func (d *VirDomain) SetMemoryParameters(params *VirDomainMemoryParameters, flags
 	return nil
 }
 
-type VirDomainNumaParameters struct {
+type DomainNumaParameters struct {
 	NodesetSet bool
 	Nodeset    string
 	ModeSet    bool
-	Mode       VirDomainNumatuneMemMode
+	Mode       DomainNumatuneMemMode
 }
 
-func getDomainNumaParametersFieldInfo(params *VirDomainNumaParameters) map[string]typedParamsFieldInfo {
+func getDomainNumaParametersFieldInfo(params *DomainNumaParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_NUMA_NODESET: typedParamsFieldInfo{
 			set: &params.NodesetSet,
@@ -3154,8 +3154,8 @@ func getDomainNumaParametersFieldInfo(params *VirDomainNumaParameters) map[strin
 	}
 }
 
-func (d *VirDomain) GetNumaParameters(flags VirDomainModificationImpact) (*VirDomainNumaParameters, error) {
-	params := &VirDomainNumaParameters{}
+func (d *Domain) GetNumaParameters(flags DomainModificationImpact) (*DomainNumaParameters, error) {
+	params := &DomainNumaParameters{}
 	info := getDomainNumaParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3180,7 +3180,7 @@ func (d *VirDomain) GetNumaParameters(flags VirDomainModificationImpact) (*VirDo
 	return params, nil
 }
 
-func (d *VirDomain) SetNumaParameters(params *VirDomainNumaParameters, flags uint32) error {
+func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags uint32) error {
 	info := getDomainNumaParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3208,7 +3208,7 @@ func (d *VirDomain) SetNumaParameters(params *VirDomainNumaParameters, flags uin
 	return nil
 }
 
-type VirDomainPerfEvents struct {
+type DomainPerfEvents struct {
 	CmtSet             bool
 	Cmt                bool
 	MbmtSet            bool
@@ -3225,7 +3225,7 @@ type VirDomainPerfEvents struct {
 	CpuCycles          bool
 }
 
-func getDomainPerfEventsFieldInfo(params *VirDomainPerfEvents) map[string]typedParamsFieldInfo {
+func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_PERF_PARAM_CMT: typedParamsFieldInfo{
 			set: &params.CmtSet,
@@ -3258,8 +3258,8 @@ func getDomainPerfEventsFieldInfo(params *VirDomainPerfEvents) map[string]typedP
 	}
 }
 
-func (d *VirDomain) GetPerfEvents(flags VirDomainModificationImpact) (*VirDomainPerfEvents, error) {
-	params := &VirDomainPerfEvents{}
+func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvents, error) {
+	params := &DomainPerfEvents{}
 	info := getDomainPerfEventsFieldInfo(params)
 
 	var cparams *C.virTypedParameter
@@ -3279,7 +3279,7 @@ func (d *VirDomain) GetPerfEvents(flags VirDomainModificationImpact) (*VirDomain
 	return params, nil
 }
 
-func (d *VirDomain) SetPerfEvents(params *VirDomainPerfEvents, flags uint32) error {
+func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags uint32) error {
 	info := getDomainPerfEventsFieldInfo(params)
 
 	var cparams *C.virTypedParameter
@@ -3301,7 +3301,7 @@ func (d *VirDomain) SetPerfEvents(params *VirDomainPerfEvents, flags uint32) err
 	return nil
 }
 
-type VirDomainSchedulerParameters struct {
+type DomainSchedulerParameters struct {
 	Type              string
 	CpuSharesSet      bool
 	CpuShares         uint64
@@ -3333,7 +3333,7 @@ type VirDomainSchedulerParameters struct {
 	Shares            int
 }
 
-func getDomainSchedulerParametersFieldInfo(params *VirDomainSchedulerParameters) map[string]typedParamsFieldInfo {
+func getDomainSchedulerParametersFieldInfo(params *DomainSchedulerParameters) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		C.VIR_DOMAIN_SCHEDULER_CPU_SHARES: typedParamsFieldInfo{
 			set: &params.CpuSharesSet,
@@ -3394,8 +3394,8 @@ func getDomainSchedulerParametersFieldInfo(params *VirDomainSchedulerParameters)
 	}
 }
 
-func (d *VirDomain) GetSchedulerParameters() (*VirDomainSchedulerParameters, error) {
-	params := &VirDomainSchedulerParameters{}
+func (d *Domain) GetSchedulerParameters() (*DomainSchedulerParameters, error) {
+	params := &DomainSchedulerParameters{}
 	info := getDomainSchedulerParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3406,7 +3406,7 @@ func (d *VirDomain) GetSchedulerParameters() (*VirDomainSchedulerParameters, err
 
 	defer C.free(schedtype)
 	if nparams == 0 {
-		return &VirDomainSchedulerParameters{
+		return &DomainSchedulerParameters{
 			Type: C.GoString(schedtype),
 		}, nil
 	}
@@ -3426,8 +3426,8 @@ func (d *VirDomain) GetSchedulerParameters() (*VirDomainSchedulerParameters, err
 	return params, nil
 }
 
-func (d *VirDomain) GetSchedulerParametersFlags(flags VirDomainModificationImpact) (*VirDomainSchedulerParameters, error) {
-	params := &VirDomainSchedulerParameters{}
+func (d *Domain) GetSchedulerParametersFlags(flags DomainModificationImpact) (*DomainSchedulerParameters, error) {
+	params := &DomainSchedulerParameters{}
 	info := getDomainSchedulerParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3438,7 +3438,7 @@ func (d *VirDomain) GetSchedulerParametersFlags(flags VirDomainModificationImpac
 
 	defer C.free(schedtype)
 	if nparams == 0 {
-		return &VirDomainSchedulerParameters{
+		return &DomainSchedulerParameters{
 			Type: C.GoString(schedtype),
 		}, nil
 	}
@@ -3458,7 +3458,7 @@ func (d *VirDomain) GetSchedulerParametersFlags(flags VirDomainModificationImpac
 	return params, nil
 }
 
-func (d *VirDomain) SetSchedulerParameters(params *VirDomainSchedulerParameters) error {
+func (d *Domain) SetSchedulerParameters(params *DomainSchedulerParameters) error {
 	info := getDomainSchedulerParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3489,7 +3489,7 @@ func (d *VirDomain) SetSchedulerParameters(params *VirDomainSchedulerParameters)
 	return nil
 }
 
-func (d *VirDomain) SetSchedulerParametersFlags(params *VirDomainSchedulerParameters, flags VirDomainModificationImpact) error {
+func (d *Domain) SetSchedulerParametersFlags(params *DomainSchedulerParameters, flags DomainModificationImpact) error {
 	info := getDomainSchedulerParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3525,7 +3525,7 @@ type VirSecurityLabel struct {
 	Enforcing bool
 }
 
-func (d *VirDomain) GetSecurityLabel() (*VirSecurityLabel, error) {
+func (d *Domain) GetSecurityLabel() (*VirSecurityLabel, error) {
 	var clabel C.virSecurityLabel
 
 	ret := C.virDomainGetSecurityLabel(d.ptr, &clabel)
@@ -3539,7 +3539,7 @@ func (d *VirDomain) GetSecurityLabel() (*VirSecurityLabel, error) {
 	}, nil
 }
 
-func (d *VirDomain) GetSecurityLabelList() ([]VirSecurityLabel, error) {
+func (d *Domain) GetSecurityLabelList() ([]VirSecurityLabel, error) {
 	var clabels *C.virSecurityLabel
 
 	ret := C.virDomainGetSecurityLabelList(d.ptr, &clabels)
@@ -3560,7 +3560,7 @@ func (d *VirDomain) GetSecurityLabelList() ([]VirSecurityLabel, error) {
 	return labels, nil
 }
 
-func (d *VirDomain) GetTime(flags uint32) (int64, uint, error) {
+func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 	var secs C.longlong
 	var nsecs C.uint
 	ret := C.virDomainGetTime(d.ptr, &secs, &nsecs, C.uint(flags))
@@ -3571,7 +3571,7 @@ func (d *VirDomain) GetTime(flags uint32) (int64, uint, error) {
 	return int64(secs), uint(nsecs), nil
 }
 
-func (d *VirDomain) SetTime(secs int64, nsecs uint, flags uint32) error {
+func (d *Domain) SetTime(secs int64, nsecs uint, flags uint32) error {
 
 	ret := C.virDomainSetTime(d.ptr, C.longlong(secs), C.uint(nsecs), C.uint(flags))
 	if ret == -1 {
@@ -3581,7 +3581,7 @@ func (d *VirDomain) SetTime(secs int64, nsecs uint, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) SetUserPassword(user string, password string, flags VirDomainSetUserPasswordFlags) error {
+func (d *Domain) SetUserPassword(user string, password string, flags DomainSetUserPasswordFlags) error {
 	cuser := C.CString(user)
 	cpassword := C.CString(password)
 
@@ -3596,7 +3596,7 @@ func (d *VirDomain) SetUserPassword(user string, password string, flags VirDomai
 	return nil
 }
 
-func (d *VirDomain) ManagedSave(flags VirDomainSaveRestoreFlags) error {
+func (d *Domain) ManagedSave(flags DomainSaveRestoreFlags) error {
 	ret := C.virDomainManagedSave(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3605,7 +3605,7 @@ func (d *VirDomain) ManagedSave(flags VirDomainSaveRestoreFlags) error {
 	return nil
 }
 
-func (d *VirDomain) HasManagedSaveImage(flags uint32) (bool, error) {
+func (d *Domain) HasManagedSaveImage(flags uint32) (bool, error) {
 	result := C.virDomainHasManagedSaveImage(d.ptr, C.uint(flags))
 	if result == -1 {
 		return false, GetLastError()
@@ -3616,7 +3616,7 @@ func (d *VirDomain) HasManagedSaveImage(flags uint32) (bool, error) {
 	return false, nil
 }
 
-func (d *VirDomain) ManagedSaveRemove(flags uint32) error {
+func (d *Domain) ManagedSaveRemove(flags uint32) error {
 	ret := C.virDomainManagedSaveRemove(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3625,7 +3625,7 @@ func (d *VirDomain) ManagedSaveRemove(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) Rename(name string, flags uint32) error {
+func (d *Domain) Rename(name string, flags uint32) error {
 	cname := C.CString(name)
 	defer C.free(cname)
 	ret := C.virDomainRename(d.ptr, cname, C.uint(flags))
@@ -3636,7 +3636,7 @@ func (d *VirDomain) Rename(name string, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) Reset(flags uint32) error {
+func (d *Domain) Reset(flags uint32) error {
 	ret := C.virDomainReset(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3645,7 +3645,7 @@ func (d *VirDomain) Reset(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) SendProcessSignal(pid int64, signum VirDomainProcessSignal, flags uint32) error {
+func (d *Domain) SendProcessSignal(pid int64, signum DomainProcessSignal, flags uint32) error {
 	ret := C.virDomainSendProcessSignal(d.ptr, C.longlong(pid), C.uint(signum), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3654,7 +3654,7 @@ func (d *VirDomain) SendProcessSignal(pid int64, signum VirDomainProcessSignal, 
 	return nil
 }
 
-func (d *VirDomain) InjectNMI(flags uint32) error {
+func (d *Domain) InjectNMI(flags uint32) error {
 	ret := C.virDomainInjectNMI(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3663,7 +3663,7 @@ func (d *VirDomain) InjectNMI(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) CoreDump(to string, flags uint32) error {
+func (d *Domain) CoreDump(to string, flags uint32) error {
 	cto := C.CString(to)
 	defer C.free(cto)
 
@@ -3675,7 +3675,7 @@ func (d *VirDomain) CoreDump(to string, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) CoreDumpWithFormat(to string, format VirDomainCoreDumpFormat, flags uint32) error {
+func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags uint32) error {
 	cto := C.CString(to)
 	defer C.free(cto)
 
@@ -3687,7 +3687,7 @@ func (d *VirDomain) CoreDumpWithFormat(to string, format VirDomainCoreDumpFormat
 	return nil
 }
 
-func (d *VirDomain) HasCurrentSnapshot(flags uint32) (bool, error) {
+func (d *Domain) HasCurrentSnapshot(flags uint32) (bool, error) {
 	result := C.virDomainHasCurrentSnapshot(d.ptr, C.uint(flags))
 	if result == -1 {
 		return false, GetLastError()
@@ -3698,7 +3698,7 @@ func (d *VirDomain) HasCurrentSnapshot(flags uint32) (bool, error) {
 	return false, nil
 }
 
-func (d *VirDomain) FSFreeze(mounts []string, flags uint32) error {
+func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 	cmounts := make([](*C.char), len(mounts))
 
 	for i := 0; i < len(mounts); i++ {
@@ -3715,7 +3715,7 @@ func (d *VirDomain) FSFreeze(mounts []string, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) FSThaw(mounts []string, flags uint32) error {
+func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 	cmounts := make([](*C.char), len(mounts))
 
 	for i := 0; i < len(mounts); i++ {
@@ -3732,7 +3732,7 @@ func (d *VirDomain) FSThaw(mounts []string, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) FSTrim(mount string, minimum uint64, flags uint32) error {
+func (d *Domain) FSTrim(mount string, minimum uint64, flags uint32) error {
 	cmount := C.CString(mount)
 	defer C.free(cmount)
 
@@ -3744,22 +3744,22 @@ func (d *VirDomain) FSTrim(mount string, minimum uint64, flags uint32) error {
 	return nil
 }
 
-type VirDomainFSInfo struct {
+type DomainFSInfo struct {
 	MountPoint string
 	Name       string
 	FSType     string
 	DevAlias   []string
 }
 
-func (d *VirDomain) GetFSInfo(flags uint32) ([]VirDomainFSInfo, error) {
+func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
 	var cfsinfolist **C.virDomainFSInfo
 
 	ret := C.virDomainGetFSInfo(d.ptr, (**C.virDomainFSInfoPtr)(unsafe.Pointer(&cfsinfolist)), C.uint(flags))
 	if ret == -1 {
-		return []VirDomainFSInfo{}, GetLastError()
+		return []DomainFSInfo{}, GetLastError()
 	}
 
-	fsinfo := make([]VirDomainFSInfo, int(ret))
+	fsinfo := make([]DomainFSInfo, int(ret))
 
 	for i := 0; i < int(ret); i++ {
 		cfsinfo := (*C.virDomainFSInfo)(*(**C.virDomainFSInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cfsinfolist)) + (unsafe.Sizeof(*cfsinfolist) * uintptr(i)))))
@@ -3769,7 +3769,7 @@ func (d *VirDomain) GetFSInfo(flags uint32) ([]VirDomainFSInfo, error) {
 			calias := (*C.char)(*(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cfsinfo.devAlias)) + (unsafe.Sizeof(*cfsinfo) * uintptr(j)))))
 			aliases[j] = C.GoString(calias)
 		}
-		fsinfo[i] = VirDomainFSInfo{
+		fsinfo[i] = DomainFSInfo{
 			MountPoint: C.GoString(cfsinfo.mountpoint),
 			Name:       C.GoString(cfsinfo.name),
 			FSType:     C.GoString(cfsinfo.fstype),
@@ -3783,7 +3783,7 @@ func (d *VirDomain) GetFSInfo(flags uint32) ([]VirDomainFSInfo, error) {
 	return fsinfo, nil
 }
 
-func (d *VirDomain) PMSuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+func (d *Domain) PMSuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
 	ret := C.virDomainPMSuspendForDuration(d.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3792,7 +3792,7 @@ func (d *VirDomain) PMSuspendForDuration(target VirNodeSuspendTarget, duration u
 	return nil
 }
 
-func (d *VirDomain) PMWakeup(flags uint32) error {
+func (d *Domain) PMWakeup(flags uint32) error {
 	ret := C.virDomainPMWakeup(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3801,7 +3801,7 @@ func (d *VirDomain) PMWakeup(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) AddIOThread(id uint, flags uint32) error {
+func (d *Domain) AddIOThread(id uint, flags uint32) error {
 	ret := C.virDomainAddIOThread(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3810,7 +3810,7 @@ func (d *VirDomain) AddIOThread(id uint, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) DelIOThread(id uint, flags uint32) error {
+func (d *Domain) DelIOThread(id uint, flags uint32) error {
 	ret := C.virDomainDelIOThread(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3819,7 +3819,7 @@ func (d *VirDomain) DelIOThread(id uint, flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) GetEmulatorPinInfo(flags uint32) ([]bool, error) {
+func (d *Domain) GetEmulatorPinInfo(flags uint32) ([]bool, error) {
 	var cnodeinfo C.virNodeInfo
 	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
 	if ret == -1 {
@@ -3844,20 +3844,20 @@ func (d *VirDomain) GetEmulatorPinInfo(flags uint32) ([]bool, error) {
 	return cpumaps, nil
 }
 
-type VirDomainIOThreadInfo struct {
+type DomainIOThreadInfo struct {
 	IOThreadID uint
 	CpuMap     []bool
 }
 
-func (d *VirDomain) GetIOThreadInfo(flags VirDomainModificationImpact) ([]VirDomainIOThreadInfo, error) {
+func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThreadInfo, error) {
 	var cinfolist **C.virDomainIOThreadInfo
 
 	ret := C.virDomainGetIOThreadInfo(d.ptr, (**C.virDomainIOThreadInfoPtr)(unsafe.Pointer(&cinfolist)), C.uint(flags))
 	if ret == -1 {
-		return []VirDomainIOThreadInfo{}, GetLastError()
+		return []DomainIOThreadInfo{}, GetLastError()
 	}
 
-	info := make([]VirDomainIOThreadInfo, int(ret))
+	info := make([]DomainIOThreadInfo, int(ret))
 
 	for i := 0; i < int(ret); i++ {
 		cinfo := (*(**C.virDomainIOThreadInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cinfolist)) + (unsafe.Sizeof(*cinfolist) + uintptr(i)))))
@@ -3872,7 +3872,7 @@ func (d *VirDomain) GetIOThreadInfo(flags VirDomainModificationImpact) ([]VirDom
 			cpumap[j] = (cpumapbyte & (1 << uint(bit))) != 0
 		}
 
-		info[i] = VirDomainIOThreadInfo{
+		info[i] = DomainIOThreadInfo{
 			IOThreadID: uint(cinfo.iothread_id),
 			CpuMap:     cpumap,
 		}
@@ -3884,7 +3884,7 @@ func (d *VirDomain) GetIOThreadInfo(flags VirDomainModificationImpact) ([]VirDom
 	return info, nil
 }
 
-func (d *VirDomain) GetVcpuPinInfo(flags uint32) ([][]bool, error) {
+func (d *Domain) GetVcpuPinInfo(flags uint32) ([][]bool, error) {
 	var cnodeinfo C.virNodeInfo
 	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
 	if ret == -1 {
@@ -3923,7 +3923,7 @@ func (d *VirDomain) GetVcpuPinInfo(flags uint32) ([][]bool, error) {
 	return cpumaps, nil
 }
 
-func (d *VirDomain) PinEmulator(cpumap []bool, flags VirDomainModificationImpact) error {
+func (d *Domain) PinEmulator(cpumap []bool, flags DomainModificationImpact) error {
 
 	maplen := (len(cpumap) + 7) / 8
 	ccpumaps := make([]C.uchar, maplen)
@@ -3942,7 +3942,7 @@ func (d *VirDomain) PinEmulator(cpumap []bool, flags VirDomainModificationImpact
 	return nil
 }
 
-func (d *VirDomain) PinIOThread(iothreadid uint, cpumap []bool, flags VirDomainModificationImpact) error {
+func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModificationImpact) error {
 
 	maplen := (len(cpumap) + 7) / 8
 	ccpumaps := make([]C.uchar, maplen)
@@ -3961,7 +3961,7 @@ func (d *VirDomain) PinIOThread(iothreadid uint, cpumap []bool, flags VirDomainM
 	return nil
 }
 
-func (d *VirDomain) OpenChannel(name string, stream *Stream, flags VirDomainChannelFlags) error {
+func (d *Domain) OpenChannel(name string, stream *Stream, flags DomainChannelFlags) error {
 	cname := C.CString(name)
 	defer C.free(cname)
 
@@ -3973,7 +3973,7 @@ func (d *VirDomain) OpenChannel(name string, stream *Stream, flags VirDomainChan
 	return nil
 }
 
-func (d *VirDomain) OpenConsole(devname string, stream *Stream, flags VirDomainConsoleFlags) error {
+func (d *Domain) OpenConsole(devname string, stream *Stream, flags DomainConsoleFlags) error {
 	cdevname := C.CString(devname)
 	defer C.free(cdevname)
 
@@ -3985,7 +3985,7 @@ func (d *VirDomain) OpenConsole(devname string, stream *Stream, flags VirDomainC
 	return nil
 }
 
-func (d *VirDomain) OpenGraphics(idx uint, file os.File, flags VirDomainOpenGraphicsFlags) error {
+func (d *Domain) OpenGraphics(idx uint, file os.File, flags DomainOpenGraphicsFlags) error {
 	ret := C.virDomainOpenGraphics(d.ptr, C.uint(idx), C.int(file.Fd()), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3994,7 +3994,7 @@ func (d *VirDomain) OpenGraphics(idx uint, file os.File, flags VirDomainOpenGrap
 	return nil
 }
 
-func (d *VirDomain) OpenGraphicsFD(idx uint, flags VirDomainOpenGraphicsFlags) (*os.File, error) {
+func (d *Domain) OpenGraphicsFD(idx uint, flags DomainOpenGraphicsFlags) (*os.File, error) {
 	ret := C.virDomainOpenGraphicsFD(d.ptr, C.uint(idx), C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()

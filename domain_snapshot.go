@@ -13,57 +13,57 @@ import (
 	"unsafe"
 )
 
-type VirDomainSnapshotCreateFlags int
+type DomainSnapshotCreateFlags int
 
 const (
-	VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE    = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE)
-	VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT     = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT)
-	VIR_DOMAIN_SNAPSHOT_CREATE_NO_METADATA = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_NO_METADATA)
-	VIR_DOMAIN_SNAPSHOT_CREATE_HALT        = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_HALT)
-	VIR_DOMAIN_SNAPSHOT_CREATE_DISK_ONLY   = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_DISK_ONLY)
-	VIR_DOMAIN_SNAPSHOT_CREATE_REUSE_EXT   = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_REUSE_EXT)
-	VIR_DOMAIN_SNAPSHOT_CREATE_QUIESCE     = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_QUIESCE)
-	VIR_DOMAIN_SNAPSHOT_CREATE_ATOMIC      = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_ATOMIC)
-	VIR_DOMAIN_SNAPSHOT_CREATE_LIVE        = VirDomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_LIVE)
+	VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE    = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE)
+	VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT     = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT)
+	VIR_DOMAIN_SNAPSHOT_CREATE_NO_METADATA = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_NO_METADATA)
+	VIR_DOMAIN_SNAPSHOT_CREATE_HALT        = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_HALT)
+	VIR_DOMAIN_SNAPSHOT_CREATE_DISK_ONLY   = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_DISK_ONLY)
+	VIR_DOMAIN_SNAPSHOT_CREATE_REUSE_EXT   = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_REUSE_EXT)
+	VIR_DOMAIN_SNAPSHOT_CREATE_QUIESCE     = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_QUIESCE)
+	VIR_DOMAIN_SNAPSHOT_CREATE_ATOMIC      = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_ATOMIC)
+	VIR_DOMAIN_SNAPSHOT_CREATE_LIVE        = DomainSnapshotCreateFlags(C.VIR_DOMAIN_SNAPSHOT_CREATE_LIVE)
 )
 
-type VirDomainSnapshotListFlags int
+type DomainSnapshotListFlags int
 
 const (
-	VIR_DOMAIN_SNAPSHOT_LIST_ROOTS       = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_ROOTS)
-	VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS)
-	VIR_DOMAIN_SNAPSHOT_LIST_LEAVES      = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_LEAVES)
-	VIR_DOMAIN_SNAPSHOT_LIST_NO_LEAVES   = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_NO_LEAVES)
-	VIR_DOMAIN_SNAPSHOT_LIST_METADATA    = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_METADATA)
-	VIR_DOMAIN_SNAPSHOT_LIST_NO_METADATA = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_NO_METADATA)
-	VIR_DOMAIN_SNAPSHOT_LIST_INACTIVE    = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_INACTIVE)
-	VIR_DOMAIN_SNAPSHOT_LIST_ACTIVE      = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_ACTIVE)
-	VIR_DOMAIN_SNAPSHOT_LIST_DISK_ONLY   = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_DISK_ONLY)
-	VIR_DOMAIN_SNAPSHOT_LIST_INTERNAL    = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_INTERNAL)
-	VIR_DOMAIN_SNAPSHOT_LIST_EXTERNAL    = VirDomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_EXTERNAL)
+	VIR_DOMAIN_SNAPSHOT_LIST_ROOTS       = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_ROOTS)
+	VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS)
+	VIR_DOMAIN_SNAPSHOT_LIST_LEAVES      = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_LEAVES)
+	VIR_DOMAIN_SNAPSHOT_LIST_NO_LEAVES   = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_NO_LEAVES)
+	VIR_DOMAIN_SNAPSHOT_LIST_METADATA    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_METADATA)
+	VIR_DOMAIN_SNAPSHOT_LIST_NO_METADATA = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_NO_METADATA)
+	VIR_DOMAIN_SNAPSHOT_LIST_INACTIVE    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_INACTIVE)
+	VIR_DOMAIN_SNAPSHOT_LIST_ACTIVE      = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_ACTIVE)
+	VIR_DOMAIN_SNAPSHOT_LIST_DISK_ONLY   = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_DISK_ONLY)
+	VIR_DOMAIN_SNAPSHOT_LIST_INTERNAL    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_INTERNAL)
+	VIR_DOMAIN_SNAPSHOT_LIST_EXTERNAL    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_EXTERNAL)
 )
 
-type VirDomainSnapshotRevertFlags int
+type DomainSnapshotRevertFlags int
 
 const (
-	VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING = VirDomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING)
-	VIR_DOMAIN_SNAPSHOT_REVERT_PAUSED  = VirDomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_PAUSED)
-	VIR_DOMAIN_SNAPSHOT_REVERT_FORCE   = VirDomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_FORCE)
+	VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING = DomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING)
+	VIR_DOMAIN_SNAPSHOT_REVERT_PAUSED  = DomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_PAUSED)
+	VIR_DOMAIN_SNAPSHOT_REVERT_FORCE   = DomainSnapshotRevertFlags(C.VIR_DOMAIN_SNAPSHOT_REVERT_FORCE)
 )
 
-type VirDomainSnapshotDeleteFlags int
+type DomainSnapshotDeleteFlags int
 
 const (
-	VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN      = VirDomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN)
-	VIR_DOMAIN_SNAPSHOT_DELETE_METADATA_ONLY = VirDomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_METADATA_ONLY)
-	VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY = VirDomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY)
+	VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN      = DomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN)
+	VIR_DOMAIN_SNAPSHOT_DELETE_METADATA_ONLY = DomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_METADATA_ONLY)
+	VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY = DomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY)
 )
 
-type VirDomainSnapshot struct {
+type DomainSnapshot struct {
 	ptr C.virDomainSnapshotPtr
 }
 
-func (s *VirDomainSnapshot) Free() error {
+func (s *DomainSnapshot) Free() error {
 	if result := C.virDomainSnapshotFree(s.ptr); result != 0 {
 		return GetLastError()
 	}
@@ -71,7 +71,7 @@ func (s *VirDomainSnapshot) Free() error {
 	return nil
 }
 
-func (s *VirDomainSnapshot) Delete(flags uint32) error {
+func (s *DomainSnapshot) Delete(flags uint32) error {
 	result := C.virDomainSnapshotDelete(s.ptr, C.uint(flags))
 	if result != 0 {
 		return GetLastError()
@@ -79,7 +79,7 @@ func (s *VirDomainSnapshot) Delete(flags uint32) error {
 	return nil
 }
 
-func (s *VirDomainSnapshot) RevertToSnapshot(flags uint32) error {
+func (s *DomainSnapshot) RevertToSnapshot(flags uint32) error {
 	result := C.virDomainRevertToSnapshot(s.ptr, C.uint(flags))
 	if result != 0 {
 		return GetLastError()
@@ -87,17 +87,17 @@ func (s *VirDomainSnapshot) RevertToSnapshot(flags uint32) error {
 	return nil
 }
 
-func (d *VirDomain) CreateSnapshotXML(xml string, flags uint32) (*VirDomainSnapshot, error) {
+func (d *Domain) CreateSnapshotXML(xml string, flags uint32) (*DomainSnapshot, error) {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainSnapshotCreateXML(d.ptr, cXml, C.uint(flags))
 	if result == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomainSnapshot{ptr: result}, nil
+	return &DomainSnapshot{ptr: result}, nil
 }
 
-func (d *VirDomain) Save(destFile string) error {
+func (d *Domain) Save(destFile string) error {
 	cPath := C.CString(destFile)
 	defer C.free(unsafe.Pointer(cPath))
 	result := C.virDomainSave(d.ptr, cPath)
@@ -107,7 +107,7 @@ func (d *VirDomain) Save(destFile string) error {
 	return nil
 }
 
-func (d *VirDomain) SaveFlags(destFile string, destXml string, flags uint32) error {
+func (d *Domain) SaveFlags(destFile string, destXml string, flags uint32) error {
 	cDestFile := C.CString(destFile)
 	cDestXml := C.CString(destXml)
 	defer C.free(unsafe.Pointer(cDestXml))
@@ -142,7 +142,7 @@ func (conn VirConnection) RestoreFlags(srcFile, xmlConf string, flags uint32) er
 	return nil
 }
 
-func (s *VirDomainSnapshot) IsCurrent(flags uint32) (bool, error) {
+func (s *DomainSnapshot) IsCurrent(flags uint32) (bool, error) {
 	result := C.virDomainSnapshotIsCurrent(s.ptr, C.uint(flags))
 	if result == -1 {
 		return false, GetLastError()
@@ -153,7 +153,7 @@ func (s *VirDomainSnapshot) IsCurrent(flags uint32) (bool, error) {
 	return false, nil
 }
 
-func (s *VirDomainSnapshot) HasMetadata(flags uint32) (bool, error) {
+func (s *DomainSnapshot) HasMetadata(flags uint32) (bool, error) {
 	result := C.virDomainSnapshotHasMetadata(s.ptr, C.uint(flags))
 	if result == -1 {
 		return false, GetLastError()
@@ -164,7 +164,7 @@ func (s *VirDomainSnapshot) HasMetadata(flags uint32) (bool, error) {
 	return false, nil
 }
 
-func (s *VirDomainSnapshot) GetXMLDesc(flags uint32) (string, error) {
+func (s *DomainSnapshot) GetXMLDesc(flags uint32) (string, error) {
 	result := C.virDomainSnapshotGetXMLDesc(s.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -174,7 +174,7 @@ func (s *VirDomainSnapshot) GetXMLDesc(flags uint32) (string, error) {
 	return xml, nil
 }
 
-func (s *VirDomainSnapshot) GetName() (string, error) {
+func (s *DomainSnapshot) GetName() (string, error) {
 	name := C.virDomainSnapshotGetName(s.ptr)
 	if name == nil {
 		return "", GetLastError()
@@ -182,15 +182,15 @@ func (s *VirDomainSnapshot) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (s *VirDomainSnapshot) GetParent(flags uint32) (*VirDomainSnapshot, error) {
+func (s *DomainSnapshot) GetParent(flags uint32) (*DomainSnapshot, error) {
 	ptr := C.virDomainSnapshotGetParent(s.ptr, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirDomainSnapshot{ptr: ptr}, nil
+	return &DomainSnapshot{ptr: ptr}, nil
 }
 
-func (s *VirDomainSnapshot) NumChildren(flags VirDomainSnapshotListFlags) (int, error) {
+func (s *DomainSnapshot) NumChildren(flags DomainSnapshotListFlags) (int, error) {
 	result := int(C.virDomainSnapshotNumChildren(s.ptr, C.uint(flags)))
 	if result == -1 {
 		return 0, GetLastError()
@@ -198,7 +198,7 @@ func (s *VirDomainSnapshot) NumChildren(flags VirDomainSnapshotListFlags) (int, 
 	return result, nil
 }
 
-func (s *VirDomainSnapshot) ListChildrenNames(flags VirDomainSnapshotListFlags) ([]string, error) {
+func (s *DomainSnapshot) ListChildrenNames(flags DomainSnapshotListFlags) ([]string, error) {
 	const maxNames = 1024
 	var names [maxNames](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -217,7 +217,7 @@ func (s *VirDomainSnapshot) ListChildrenNames(flags VirDomainSnapshotListFlags) 
 	return goNames, nil
 }
 
-func (d *VirDomainSnapshot) ListAllChildren(flags VirDomainSnapshotListFlags) ([]VirDomainSnapshot, error) {
+func (d *DomainSnapshot) ListAllChildren(flags DomainSnapshotListFlags) ([]DomainSnapshot, error) {
 	var cList *C.virDomainSnapshotPtr
 	numVols := C.virDomainSnapshotListAllChildren(d.ptr, (**C.virDomainSnapshotPtr)(&cList), C.uint(flags))
 	if numVols == -1 {
@@ -228,10 +228,10 @@ func (d *VirDomainSnapshot) ListAllChildren(flags VirDomainSnapshotListFlags) ([
 		Len:  int(numVols),
 		Cap:  int(numVols),
 	}
-	var pools []VirDomainSnapshot
+	var pools []DomainSnapshot
 	slice := *(*[]C.virDomainSnapshotPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		pools = append(pools, VirDomainSnapshot{ptr})
+		pools = append(pools, DomainSnapshot{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
