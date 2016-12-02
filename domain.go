@@ -955,6 +955,17 @@ func (d *VirDomain) IsPersistent() (bool, error) {
 	return false, nil
 }
 
+func (d *VirDomain) IsUpdated() (bool, error) {
+	result := C.virDomainIsUpdated(d.ptr)
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
 func (d *VirDomain) SetAutostart(autostart bool) error {
 	var cAutostart C.int
 	switch autostart {
@@ -2085,6 +2096,17 @@ func (d *VirDomain) BlockPeek(disk string, offset uint64, size uint64, flags uin
 	defer C.free(cdisk)
 	data := make([]byte, size)
 	ret := C.virDomainBlockPeek(d.ptr, cdisk, C.ulonglong(offset), C.size_t(size),
+		unsafe.Pointer(&data[0]), C.uint(flags))
+	if ret == -1 {
+		return []byte{}, GetLastError()
+	}
+
+	return data, nil
+}
+
+func (d *VirDomain) MemoryPeek(start uint64, size uint64, flags VirDomainMemoryFlags) ([]byte, error) {
+	data := make([]byte, size)
+	ret := C.virDomainMemoryPeek(d.ptr, C.ulonglong(start), C.size_t(size),
 		unsafe.Pointer(&data[0]), C.uint(flags))
 	if ret == -1 {
 		return []byte{}, GetLastError()
@@ -3572,6 +3594,229 @@ func (d *VirDomain) SetUserPassword(user string, password string, flags VirDomai
 	defer C.free(cpassword)
 
 	ret := C.virDomainSetUserPassword(d.ptr, cuser, cpassword, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) ManagedSave(flags VirDomainSaveRestoreFlags) error {
+	ret := C.virDomainManagedSave(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) HasManagedSaveImage(flags uint32) (bool, error) {
+	result := C.virDomainHasManagedSaveImage(d.ptr, C.uint(flags))
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (d *VirDomain) ManagedSaveRemove(flags uint32) error {
+	ret := C.virDomainManagedSaveRemove(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) Rename(name string, flags uint32) error {
+	cname := C.CString(name)
+	defer C.free(cname)
+	ret := C.virDomainRename(d.ptr, cname, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) Reset(flags uint32) error {
+	ret := C.virDomainReset(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) SendProcessSignal(pid int64, signum VirDomainProcessSignal, flags uint32) error {
+	ret := C.virDomainSendProcessSignal(d.ptr, C.longlong(pid), C.uint(signum), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) InjectNMI(flags uint32) error {
+	ret := C.virDomainInjectNMI(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) CoreDump(to string, flags uint32) error {
+	cto := C.CString(to)
+	defer C.free(cto)
+
+	ret := C.virDomainCoreDump(d.ptr, cto, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) CoreDumpWithFormat(to string, format VirDomainCoreDumpFormat, flags uint32) error {
+	cto := C.CString(to)
+	defer C.free(cto)
+
+	ret := C.virDomainCoreDumpWithFormat(d.ptr, cto, C.uint(format), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) HasCurrentSnapshot(flags uint32) (bool, error) {
+	result := C.virDomainHasCurrentSnapshot(d.ptr, C.uint(flags))
+	if result == -1 {
+		return false, GetLastError()
+	}
+	if result == 1 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (d *VirDomain) FSFreeze(mounts []string, flags uint32) error {
+	cmounts := make([](*C.char), len(mounts))
+
+	for i := 0; i < len(mounts); i++ {
+		cmounts[i] = C.CString(mounts[i])
+		defer C.free(cmounts[i])
+	}
+
+	nmounts := len(mounts)
+	ret := C.virDomainFSFreeze(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) FSThaw(mounts []string, flags uint32) error {
+	cmounts := make([](*C.char), len(mounts))
+
+	for i := 0; i < len(mounts); i++ {
+		cmounts[i] = C.CString(mounts[i])
+		defer C.free(cmounts[i])
+	}
+
+	nmounts := len(mounts)
+	ret := C.virDomainFSThaw(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) FSTrim(mount string, minimum uint64, flags uint32) error {
+	cmount := C.CString(mount)
+	defer C.free(cmount)
+
+	ret := C.virDomainFSTrim(d.ptr, cmount, C.ulonglong(minimum), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+type VirDomainFSInfo struct {
+	MountPoint string
+	Name       string
+	FSType     string
+	DevAlias   []string
+}
+
+func (d *VirDomain) GetFSInfo(flags uint32) ([]VirDomainFSInfo, error) {
+	var cfsinfolist **C.virDomainFSInfo
+
+	ret := C.virDomainGetFSInfo(d.ptr, (**C.virDomainFSInfoPtr)(unsafe.Pointer(&cfsinfolist)), C.uint(flags))
+	if ret == -1 {
+		return []VirDomainFSInfo{}, GetLastError()
+	}
+
+	fsinfo := make([]VirDomainFSInfo, int(ret))
+
+	for i := 0; i < int(ret); i++ {
+		cfsinfo := (*C.virDomainFSInfo)(*(**C.virDomainFSInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cfsinfolist)) + (unsafe.Sizeof(*cfsinfolist) * uintptr(i)))))
+
+		aliases := make([]string, int(cfsinfo.ndevAlias))
+		for j := 0; j < int(cfsinfo.ndevAlias); j++ {
+			calias := (*C.char)(*(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cfsinfo.devAlias)) + (unsafe.Sizeof(*cfsinfo) * uintptr(j)))))
+			aliases[j] = C.GoString(calias)
+		}
+		fsinfo[i] = VirDomainFSInfo{
+			MountPoint: C.GoString(cfsinfo.mountpoint),
+			Name:       C.GoString(cfsinfo.name),
+			FSType:     C.GoString(cfsinfo.fstype),
+			DevAlias:   aliases,
+		}
+
+		C.virDomainFSInfoFree(cfsinfo)
+	}
+	C.free(unsafe.Pointer(cfsinfolist))
+
+	return fsinfo, nil
+}
+
+func (d *VirDomain) PMSuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+	ret := C.virDomainPMSuspendForDuration(d.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) PMWakeup(flags uint32) error {
+	ret := C.virDomainPMWakeup(d.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) AddIOThread(id uint, flags uint32) error {
+	ret := C.virDomainAddIOThread(d.ptr, C.uint(id), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) DelIOThread(id uint, flags uint32) error {
+	ret := C.virDomainDelIOThread(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}

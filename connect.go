@@ -643,6 +643,20 @@ func (c *VirConnection) LookupDomainByUUIDString(uuid string) (VirDomain, error)
 	return VirDomain{ptr: ptr}, nil
 }
 
+func (c *VirConnection) LookupDomainByUUID(uuid []byte) (VirDomain, error) {
+	if len(uuid) != C.VIR_UUID_BUFLEN {
+		return VirDomain{}, fmt.Errorf("UUID must be exactly %d bytes in size",
+			int(C.VIR_UUID_BUFLEN))
+	}
+	cUuid := C.CBytes(uuid)
+	defer C.free(unsafe.Pointer(cUuid))
+	ptr := C.virDomainLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	if ptr == nil {
+		return VirDomain{}, GetLastError()
+	}
+	return VirDomain{ptr: ptr}, nil
+}
+
 func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags VirDomainCreateFlags) (VirDomain, error) {
 	xmlConfig, err := ioutil.ReadFile(xmlFile)
 	if err != nil {
@@ -1680,4 +1694,34 @@ func (c *VirConnection) SuspendForDuration(target VirNodeSuspendTarget, duration
 		return GetLastError()
 	}
 	return nil
+}
+
+func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags VirDomainSaveRestoreFlags) error {
+	cfile := C.CString(file)
+	defer C.free(cfile)
+	cxml := C.CString(xml)
+	defer C.free(cxml)
+
+	ret := C.virDomainSaveImageDefineXML(c.ptr, cfile, cxml, C.uint(flags))
+
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags VirDomainXMLFlags) (string, error) {
+	cfile := C.CString(file)
+	defer C.free(cfile)
+
+	ret := C.virDomainSaveImageGetXMLDesc(c.ptr, cfile, C.uint(flags))
+
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(ret)
+
+	return C.GoString(ret), nil
 }
