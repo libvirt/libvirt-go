@@ -405,7 +405,7 @@ func TestDomainCreateXML(t *testing.T) {
 			<type>hvm</type>
 		</os>
 	</domain>`
-	dom, err := conn.DomainCreateXML(xml, VIR_DOMAIN_NONE)
+	dom, err := conn.DomainCreateXML(xml, DOMAIN_NONE)
 	if err != nil {
 		t.Error(err)
 		return
@@ -860,7 +860,7 @@ func TestLookupStorageVolByKey(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	vol2, err := conn.LookupStorageVolByKey(defVolKey)
@@ -902,7 +902,7 @@ func TestLookupStorageVolByPath(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	vol2, err := conn.LookupStorageVolByPath(defVolPath)
@@ -928,7 +928,7 @@ func TestListAllDomains(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	doms, err := conn.ListAllDomains(VIR_CONNECT_LIST_DOMAINS_PERSISTENT)
+	doms, err := conn.ListAllDomains(CONNECT_LIST_DOMAINS_PERSISTENT)
 	if err != nil {
 		t.Error(err)
 		return
@@ -963,7 +963,7 @@ func TestListAllNetworks(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	nets, err := conn.ListAllNetworks(VIR_CONNECT_LIST_NETWORKS_INACTIVE)
+	nets, err := conn.ListAllNetworks(CONNECT_LIST_NETWORKS_INACTIVE)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -993,7 +993,7 @@ func TestListAllStoragePools(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	pools, err := conn.ListAllStoragePools(VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE)
+	pools, err := conn.ListAllStoragePools(CONNECT_LIST_STORAGE_POOLS_INACTIVE)
 	if err != nil {
 		t.Fatal(err)
 	}

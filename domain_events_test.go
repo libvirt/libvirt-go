@@ -33,7 +33,7 @@ func TestDomainEventRegister(t *testing.T) {
 	callback := DomainEventCallback(
 		func(c *Connect, d *Domain, eventDetails interface{}, f func()) int {
 			if lifecycleEvent, ok := eventDetails.(DomainLifecycleEvent); ok {
-				if lifecycleEvent.Event == VIR_DOMAIN_EVENT_STARTED {
+				if lifecycleEvent.Event == DOMAIN_EVENT_STARTED {
 					domName, _ := d.GetName()
 					if defName != domName {
 						t.Fatalf("Name was not '%s': %s", defName, domName)
@@ -54,7 +54,7 @@ func TestDomainEventRegister(t *testing.T) {
 
 	callbackId = conn.DomainEventRegister(
 		Domain{},
-		VIR_DOMAIN_EVENT_ID_LIFECYCLE,
+		DOMAIN_EVENT_ID_LIFECYCLE,
 		&callback,
 		func() {
 			nbEvents++
@@ -69,7 +69,7 @@ func TestDomainEventRegister(t *testing.T) {
 			<type>hvm</type>
 		</os>
 	</domain>`
-	dom, err := conn.DomainCreateXML(xml, VIR_DOMAIN_NONE)
+	dom, err := conn.DomainCreateXML(xml, DOMAIN_NONE)
 	if err != nil {
 		t.Error(err)
 		return

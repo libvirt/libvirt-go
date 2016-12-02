@@ -15,56 +15,56 @@ import (
 type StorageVolCreateFlags int
 
 const (
-	VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA = StorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA)
-	VIR_STORAGE_VOL_CREATE_REFLINK           = StorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_REFLINK)
+	STORAGE_VOL_CREATE_PREALLOC_METADATA = StorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA)
+	STORAGE_VOL_CREATE_REFLINK           = StorageVolCreateFlags(C.VIR_STORAGE_VOL_CREATE_REFLINK)
 )
 
 type StorageVolDeleteFlags int
 
 const (
-	VIR_STORAGE_VOL_DELETE_NORMAL         = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_NORMAL)         // Delete metadata only (fast)
-	VIR_STORAGE_VOL_DELETE_ZEROED         = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_ZEROED)         // Clear all data to zeros (slow)
-	VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS) // Force removal of volume, even if in use
+	STORAGE_VOL_DELETE_NORMAL         = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_NORMAL)         // Delete metadata only (fast)
+	STORAGE_VOL_DELETE_ZEROED         = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_ZEROED)         // Clear all data to zeros (slow)
+	STORAGE_VOL_DELETE_WITH_SNAPSHOTS = StorageVolDeleteFlags(C.VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS) // Force removal of volume, even if in use
 )
 
 type StorageVolResizeFlags int
 
 const (
-	VIR_STORAGE_VOL_RESIZE_ALLOCATE = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_ALLOCATE) // force allocation of new size
-	VIR_STORAGE_VOL_RESIZE_DELTA    = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_DELTA)    // size is relative to current
-	VIR_STORAGE_VOL_RESIZE_SHRINK   = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_SHRINK)   // allow decrease in capacity
+	STORAGE_VOL_RESIZE_ALLOCATE = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_ALLOCATE) // force allocation of new size
+	STORAGE_VOL_RESIZE_DELTA    = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_DELTA)    // size is relative to current
+	STORAGE_VOL_RESIZE_SHRINK   = StorageVolResizeFlags(C.VIR_STORAGE_VOL_RESIZE_SHRINK)   // allow decrease in capacity
 )
 
 type StorageVolType int
 
 const (
-	VIR_STORAGE_VOL_FILE    = StorageVolType(C.VIR_STORAGE_VOL_FILE)    // Regular file based volumes
-	VIR_STORAGE_VOL_BLOCK   = StorageVolType(C.VIR_STORAGE_VOL_BLOCK)   // Block based volumes
-	VIR_STORAGE_VOL_DIR     = StorageVolType(C.VIR_STORAGE_VOL_DIR)     // Directory-passthrough based volume
-	VIR_STORAGE_VOL_NETWORK = StorageVolType(C.VIR_STORAGE_VOL_NETWORK) //Network volumes like RBD (RADOS Block Device)
-	VIR_STORAGE_VOL_NETDIR  = StorageVolType(C.VIR_STORAGE_VOL_NETDIR)  // Network accessible directory that can contain other network volumes
-	VIR_STORAGE_VOL_PLOOP   = StorageVolType(C.VIR_STORAGE_VOL_PLOOP)   // Ploop directory based volumes
+	STORAGE_VOL_FILE    = StorageVolType(C.VIR_STORAGE_VOL_FILE)    // Regular file based volumes
+	STORAGE_VOL_BLOCK   = StorageVolType(C.VIR_STORAGE_VOL_BLOCK)   // Block based volumes
+	STORAGE_VOL_DIR     = StorageVolType(C.VIR_STORAGE_VOL_DIR)     // Directory-passthrough based volume
+	STORAGE_VOL_NETWORK = StorageVolType(C.VIR_STORAGE_VOL_NETWORK) //Network volumes like RBD (RADOS Block Device)
+	STORAGE_VOL_NETDIR  = StorageVolType(C.VIR_STORAGE_VOL_NETDIR)  // Network accessible directory that can contain other network volumes
+	STORAGE_VOL_PLOOP   = StorageVolType(C.VIR_STORAGE_VOL_PLOOP)   // Ploop directory based volumes
 )
 
 type StorageVolWipeAlgorithm int
 
 const (
-	VIR_STORAGE_VOL_WIPE_ALG_ZERO       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_ZERO)       // 1-pass, all zeroes
-	VIR_STORAGE_VOL_WIPE_ALG_NNSA       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_NNSA)       // 4-pass NNSA Policy Letter NAP-14.1-C (XVI-8)
-	VIR_STORAGE_VOL_WIPE_ALG_DOD        = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_DOD)        // 4-pass DoD 5220.22-M section 8-306 procedure
-	VIR_STORAGE_VOL_WIPE_ALG_BSI        = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_BSI)        // 9-pass method recommended by the German Center of Security in Information Technologies
-	VIR_STORAGE_VOL_WIPE_ALG_GUTMANN    = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_GUTMANN)    // The canonical 35-pass sequence
-	VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER   = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER)   // 7-pass method described by Bruce Schneier in "Applied Cryptography" (1996)
-	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7  = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7)  // 7-pass random
-	VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33 = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33) // 33-pass random
-	VIR_STORAGE_VOL_WIPE_ALG_RANDOM     = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM)     // 1-pass random
-	VIR_STORAGE_VOL_WIPE_ALG_TRIM       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_TRIM)       // Trim the underlying storage
+	STORAGE_VOL_WIPE_ALG_ZERO       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_ZERO)       // 1-pass, all zeroes
+	STORAGE_VOL_WIPE_ALG_NNSA       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_NNSA)       // 4-pass NNSA Policy Letter NAP-14.1-C (XVI-8)
+	STORAGE_VOL_WIPE_ALG_DOD        = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_DOD)        // 4-pass DoD 5220.22-M section 8-306 procedure
+	STORAGE_VOL_WIPE_ALG_BSI        = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_BSI)        // 9-pass method recommended by the German Center of Security in Information Technologies
+	STORAGE_VOL_WIPE_ALG_GUTMANN    = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_GUTMANN)    // The canonical 35-pass sequence
+	STORAGE_VOL_WIPE_ALG_SCHNEIER   = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_SCHNEIER)   // 7-pass method described by Bruce Schneier in "Applied Cryptography" (1996)
+	STORAGE_VOL_WIPE_ALG_PFITZNER7  = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER7)  // 7-pass random
+	STORAGE_VOL_WIPE_ALG_PFITZNER33 = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_PFITZNER33) // 33-pass random
+	STORAGE_VOL_WIPE_ALG_RANDOM     = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_RANDOM)     // 1-pass random
+	STORAGE_VOL_WIPE_ALG_TRIM       = StorageVolWipeAlgorithm(C.VIR_STORAGE_VOL_WIPE_ALG_TRIM)       // Trim the underlying storage
 )
 
 type StorageXMLFlags int
 
 const (
-	VIR_STORAGE_XML_INACTIVE = StorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
+	STORAGE_XML_INACTIVE = StorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
 )
 
 type StorageVol struct {

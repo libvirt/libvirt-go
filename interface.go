@@ -15,7 +15,7 @@ import (
 type InterfaceXMLFlags int
 
 const (
-	VIR_INTERFACE_XML_INACTIVE = InterfaceXMLFlags(C.VIR_INTERFACE_XML_INACTIVE)
+	INTERFACE_XML_INACTIVE = InterfaceXMLFlags(C.VIR_INTERFACE_XML_INACTIVE)
 )
 
 type Interface struct {

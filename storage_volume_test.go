@@ -46,7 +46,7 @@ func TestStorageVolGetInfo(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if _, err := vol.GetInfo(); err != nil {
@@ -74,7 +74,7 @@ func TestStorageVolGetKey(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if _, err := vol.GetKey(); err != nil {
@@ -102,7 +102,7 @@ func TestStorageVolGetName(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if _, err := vol.GetName(); err != nil {
@@ -130,7 +130,7 @@ func TestStorageVolGetPath(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if _, err := vol.GetPath(); err != nil {
@@ -158,7 +158,7 @@ func TestStorageVolGetXMLDesc(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if _, err := vol.GetXMLDesc(0); err != nil {
@@ -186,7 +186,7 @@ func TestPoolLookupByVolume(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 

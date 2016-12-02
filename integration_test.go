@@ -50,9 +50,9 @@ func TestMultipleCloseCallback(t *testing.T) {
 	}()
 
 	callback := func(conn Connect, reason ConnectCloseReason, opaque func()) {
-		if reason != VIR_CONNECT_CLOSE_REASON_KEEPALIVE {
+		if reason != CONNECT_CLOSE_REASON_KEEPALIVE {
 			t.Errorf("Expected close reason to be %d, got %d",
-				VIR_CONNECT_CLOSE_REASON_KEEPALIVE, reason)
+				CONNECT_CLOSE_REASON_KEEPALIVE, reason)
 		}
 		opaque()
 	}
@@ -177,12 +177,12 @@ func TestQemuMonitorCommand(t *testing.T) {
 		return
 	}
 
-	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
+	if _, err := dom.QemuMonitorCommand(DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
 		t.Error(err)
 		return
 	}
 
-	if _, err := dom.QemuMonitorCommand(VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
+	if _, err := dom.QemuMonitorCommand(DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
 		t.Error(err)
 		return
 	}
@@ -199,14 +199,14 @@ func TestDomainCreateWithFlags(t *testing.T) {
 		}
 	}()
 
-	if err := dom.CreateWithFlags(VIR_DOMAIN_START_PAUSED); err != nil {
+	if err := dom.CreateWithFlags(DOMAIN_START_PAUSED); err != nil {
 		state, err := dom.GetState()
 		if err != nil {
 			t.Error(err)
 			return
 		}
 
-		if DomainState(state[0]) != VIR_DOMAIN_PAUSED {
+		if DomainState(state[0]) != DOMAIN_PAUSED {
 			t.Fatalf("Domain should be paused")
 		}
 	}
@@ -260,7 +260,7 @@ func TestIntegrationGetMetadata(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	v, err := dom.GetMetadata(VIR_DOMAIN_METADATA_TITLE, "", 0)
+	v, err := dom.GetMetadata(DOMAIN_METADATA_TITLE, "", 0)
 	dom.Destroy()
 	if err != nil {
 		t.Error(err)
@@ -297,17 +297,17 @@ func TestIntegrationSetMetadata(t *testing.T) {
 		dom.Free()
 	}()
 	const domTitle = "newtitle"
-	if err := dom.SetMetadata(VIR_DOMAIN_METADATA_TITLE, domTitle, "", "", 0); err != nil {
+	if err := dom.SetMetadata(DOMAIN_METADATA_TITLE, domTitle, "", "", 0); err != nil {
 		t.Error(err)
 		return
 	}
-	v, err := dom.GetMetadata(VIR_DOMAIN_METADATA_TITLE, "", 0)
+	v, err := dom.GetMetadata(DOMAIN_METADATA_TITLE, "", 0)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	if v != domTitle {
-		t.Fatalf("VIR_DOMAIN_METADATA_TITLE should have been %s, not %s", domTitle, v)
+		t.Fatalf("DOMAIN_METADATA_TITLE should have been %s, not %s", domTitle, v)
 		return
 	}
 }
@@ -586,11 +586,11 @@ func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
 		<source network='default'/>
 		<model type='virtio'/>
 		</interface>`
-	if err := dom.AttachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+	if err := dom.AttachDeviceFlags(nwXml, DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Error(err)
 		return
 	}
-	if err := dom.DetachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+	if err := dom.DetachDeviceFlags(nwXml, DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Error(err)
 		return
 	}
@@ -635,11 +635,11 @@ func TestStorageVolResize(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	const newCapacityInBytes = 12582912
-	if err := vol.Resize(newCapacityInBytes, VIR_STORAGE_VOL_RESIZE_ALLOCATE); err != nil {
+	if err := vol.Resize(newCapacityInBytes, STORAGE_VOL_RESIZE_ALLOCATE); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -683,7 +683,7 @@ func TestStorageVolWipe(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	if err := vol.Wipe(0); err != nil {
@@ -730,10 +730,10 @@ func TestStorageVolWipePattern(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
-	if err := vol.WipePattern(VIR_STORAGE_VOL_WIPE_ALG_ZERO, 0); err != nil {
+	if err := vol.WipePattern(STORAGE_VOL_WIPE_ALG_ZERO, 0); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -874,7 +874,7 @@ func TestIntegrationSecretGetUsageType(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if uType != VIR_SECRET_USAGE_TYPE_CEPH {
+	if uType != SECRET_USAGE_TYPE_CEPH {
 		t.Fatal("unexpected usage type.Expected usage type is Ceph")
 	}
 }
@@ -931,7 +931,7 @@ func TestIntegrationLookupSecretByUsage(t *testing.T) {
 		sec.Undefine()
 		sec.Free()
 	}()
-	sec2, err := conn.LookupSecretByUsage(VIR_SECRET_USAGE_TYPE_CEPH, usageID)
+	sec2, err := conn.LookupSecretByUsage(SECRET_USAGE_TYPE_CEPH, usageID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1097,7 +1097,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		<source network='default'/>
 		<model type='virtio'/>
 		</interface>`
-	if err := dom.AttachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+	if err := dom.AttachDeviceFlags(nwXml, DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1113,7 +1113,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := dom.DetachDeviceFlags(nwXml, VIR_DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
+	if err := dom.DetachDeviceFlags(nwXml, DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -1157,7 +1157,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 

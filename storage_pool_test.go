@@ -34,7 +34,7 @@ func TestStoragePoolBuild(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	if err := pool.Build(VIR_STORAGE_POOL_BUILD_NEW); err != nil {
+	if err := pool.Build(STORAGE_POOL_BUILD_NEW); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -169,7 +169,7 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if info.State != VIR_STORAGE_POOL_RUNNING {
+	if info.State != STORAGE_POOL_RUNNING {
 		t.Fatal("Storage pool should be running")
 	}
 	if err = pool.Destroy(); err != nil {
@@ -182,7 +182,7 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if info.State != VIR_STORAGE_POOL_INACTIVE {
+	if info.State != STORAGE_POOL_INACTIVE {
 		t.Fatal("Storage pool should be inactive")
 	}
 }
@@ -273,7 +273,7 @@ func TestStorageVolCreateDelete(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer vol.Free()
-	if err := vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+	if err := vol.Delete(STORAGE_VOL_DELETE_NORMAL); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -309,10 +309,10 @@ func TestStorageVolCreateFromDelete(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer clone.Free()
-	if err := clone.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+	if err := clone.Delete(STORAGE_VOL_DELETE_NORMAL); err != nil {
 		t.Fatal(err)
 	}
-	if err := vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL); err != nil {
+	if err := vol.Delete(STORAGE_VOL_DELETE_NORMAL); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -338,7 +338,7 @@ func TestLookupStorageVolByName(t *testing.T) {
 		return
 	}
 	defer func() {
-		vol.Delete(VIR_STORAGE_VOL_DELETE_NORMAL)
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
 		vol.Free()
 	}()
 	vol2, err := pool.LookupStorageVolByName(defVolName)

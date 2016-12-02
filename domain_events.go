@@ -397,33 +397,33 @@ func (c *Connect) DomainEventRegister(dom Domain,
 	goCallBackId := registerCallbackId(context)
 
 	switch eventId {
-	case VIR_DOMAIN_EVENT_ID_LIFECYCLE:
+	case DOMAIN_EVENT_ID_LIFECYCLE:
 		callbackPtr = unsafe.Pointer(C.domainEventLifecycleCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_REBOOT, VIR_DOMAIN_EVENT_ID_CONTROL_ERROR:
+	case DOMAIN_EVENT_ID_REBOOT, DOMAIN_EVENT_ID_CONTROL_ERROR:
 		callbackPtr = unsafe.Pointer(C.domainEventGenericCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_RTC_CHANGE:
+	case DOMAIN_EVENT_ID_RTC_CHANGE:
 		callbackPtr = unsafe.Pointer(C.domainEventRTCChangeCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_WATCHDOG:
+	case DOMAIN_EVENT_ID_WATCHDOG:
 		callbackPtr = unsafe.Pointer(C.domainEventWatchdogCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_IO_ERROR:
+	case DOMAIN_EVENT_ID_IO_ERROR:
 		callbackPtr = unsafe.Pointer(C.domainEventIOErrorCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_GRAPHICS:
+	case DOMAIN_EVENT_ID_GRAPHICS:
 		callbackPtr = unsafe.Pointer(C.domainEventGraphicsCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON:
+	case DOMAIN_EVENT_ID_IO_ERROR_REASON:
 		callbackPtr = unsafe.Pointer(C.domainEventIOErrorReasonCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_BLOCK_JOB:
+	case DOMAIN_EVENT_ID_BLOCK_JOB:
 		// TODO Post 1.2.4, uncomment later
-		// case VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2:
+		// case DOMAIN_EVENT_ID_BLOCK_JOB_2:
 		callbackPtr = unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_DISK_CHANGE:
+	case DOMAIN_EVENT_ID_DISK_CHANGE:
 		callbackPtr = unsafe.Pointer(C.domainEventDiskChangeCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_TRAY_CHANGE:
+	case DOMAIN_EVENT_ID_TRAY_CHANGE:
 		callbackPtr = unsafe.Pointer(C.domainEventTrayChangeCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_PMWAKEUP, VIR_DOMAIN_EVENT_ID_PMSUSPEND, VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK:
+	case DOMAIN_EVENT_ID_PMWAKEUP, DOMAIN_EVENT_ID_PMSUSPEND, DOMAIN_EVENT_ID_PMSUSPEND_DISK:
 		callbackPtr = unsafe.Pointer(C.domainEventReasonCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE:
+	case DOMAIN_EVENT_ID_BALLOON_CHANGE:
 		callbackPtr = unsafe.Pointer(C.domainEventBalloonChangeCallback_cgo)
-	case VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED:
+	case DOMAIN_EVENT_ID_DEVICE_REMOVED:
 		callbackPtr = unsafe.Pointer(C.domainEventDeviceRemovedCallback_cgo)
 	default:
 	}
@@ -448,98 +448,98 @@ func (c *Connect) DomainEventDeregister(callbackId int) error {
 func (e DomainLifecycleEvent) String() string {
 	var detail, event string
 	switch e.Event {
-	case VIR_DOMAIN_EVENT_DEFINED:
+	case DOMAIN_EVENT_DEFINED:
 		event = "defined"
 		switch DomainEventDefinedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_DEFINED_ADDED:
+		case DOMAIN_EVENT_DEFINED_ADDED:
 			detail = "added"
-		case VIR_DOMAIN_EVENT_DEFINED_UPDATED:
+		case DOMAIN_EVENT_DEFINED_UPDATED:
 			detail = "updated"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_UNDEFINED:
+	case DOMAIN_EVENT_UNDEFINED:
 		event = "undefined"
 		switch DomainEventUndefinedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_UNDEFINED_REMOVED:
+		case DOMAIN_EVENT_UNDEFINED_REMOVED:
 			detail = "removed"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_STARTED:
+	case DOMAIN_EVENT_STARTED:
 		event = "started"
 		switch DomainEventStartedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_STARTED_BOOTED:
+		case DOMAIN_EVENT_STARTED_BOOTED:
 			detail = "booted"
-		case VIR_DOMAIN_EVENT_STARTED_MIGRATED:
+		case DOMAIN_EVENT_STARTED_MIGRATED:
 			detail = "migrated"
-		case VIR_DOMAIN_EVENT_STARTED_RESTORED:
+		case DOMAIN_EVENT_STARTED_RESTORED:
 			detail = "restored"
-		case VIR_DOMAIN_EVENT_STARTED_FROM_SNAPSHOT:
+		case DOMAIN_EVENT_STARTED_FROM_SNAPSHOT:
 			detail = "snapshot"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_SUSPENDED:
+	case DOMAIN_EVENT_SUSPENDED:
 		event = "suspended"
 		switch DomainEventSuspendedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_SUSPENDED_PAUSED:
+		case DOMAIN_EVENT_SUSPENDED_PAUSED:
 			detail = "paused"
-		case VIR_DOMAIN_EVENT_SUSPENDED_MIGRATED:
+		case DOMAIN_EVENT_SUSPENDED_MIGRATED:
 			detail = "migrated"
-		case VIR_DOMAIN_EVENT_SUSPENDED_IOERROR:
+		case DOMAIN_EVENT_SUSPENDED_IOERROR:
 			detail = "I/O error"
-		case VIR_DOMAIN_EVENT_SUSPENDED_WATCHDOG:
+		case DOMAIN_EVENT_SUSPENDED_WATCHDOG:
 			detail = "watchdog"
-		case VIR_DOMAIN_EVENT_SUSPENDED_RESTORED:
+		case DOMAIN_EVENT_SUSPENDED_RESTORED:
 			detail = "restored"
-		case VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT:
+		case DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT:
 			detail = "snapshot"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_RESUMED:
+	case DOMAIN_EVENT_RESUMED:
 		event = "resumed"
 		switch DomainEventResumedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_RESUMED_UNPAUSED:
+		case DOMAIN_EVENT_RESUMED_UNPAUSED:
 			detail = "unpaused"
-		case VIR_DOMAIN_EVENT_RESUMED_MIGRATED:
+		case DOMAIN_EVENT_RESUMED_MIGRATED:
 			detail = "migrated"
-		case VIR_DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT:
+		case DOMAIN_EVENT_RESUMED_FROM_SNAPSHOT:
 			detail = "snapshot"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_STOPPED:
+	case DOMAIN_EVENT_STOPPED:
 		event = "stopped"
 		switch DomainEventStoppedDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_STOPPED_SHUTDOWN:
+		case DOMAIN_EVENT_STOPPED_SHUTDOWN:
 			detail = "shutdown"
-		case VIR_DOMAIN_EVENT_STOPPED_DESTROYED:
+		case DOMAIN_EVENT_STOPPED_DESTROYED:
 			detail = "destroyed"
-		case VIR_DOMAIN_EVENT_STOPPED_CRASHED:
+		case DOMAIN_EVENT_STOPPED_CRASHED:
 			detail = "crashed"
-		case VIR_DOMAIN_EVENT_STOPPED_MIGRATED:
+		case DOMAIN_EVENT_STOPPED_MIGRATED:
 			detail = "migrated"
-		case VIR_DOMAIN_EVENT_STOPPED_SAVED:
+		case DOMAIN_EVENT_STOPPED_SAVED:
 			detail = "saved"
-		case VIR_DOMAIN_EVENT_STOPPED_FAILED:
+		case DOMAIN_EVENT_STOPPED_FAILED:
 			detail = "failed"
-		case VIR_DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT:
+		case DOMAIN_EVENT_STOPPED_FROM_SNAPSHOT:
 			detail = "snapshot"
 		default:
 			detail = "unknown"
 		}
 
-	case VIR_DOMAIN_EVENT_SHUTDOWN:
+	case DOMAIN_EVENT_SHUTDOWN:
 		event = "shutdown"
 		switch DomainEventShutdownDetailType(e.Detail) {
-		case VIR_DOMAIN_EVENT_SHUTDOWN_FINISHED:
+		case DOMAIN_EVENT_SHUTDOWN_FINISHED:
 			detail = "finished"
 		default:
 			detail = "unknown"
@@ -568,11 +568,11 @@ func (e DomainIOErrorEvent) String() string {
 func (e DomainGraphicsEvent) String() string {
 	var phase string
 	switch e.Phase {
-	case VIR_DOMAIN_EVENT_GRAPHICS_CONNECT:
+	case DOMAIN_EVENT_GRAPHICS_CONNECT:
 		phase = "connected"
-	case VIR_DOMAIN_EVENT_GRAPHICS_INITIALIZE:
+	case DOMAIN_EVENT_GRAPHICS_INITIALIZE:
 		phase = "initialized"
-	case VIR_DOMAIN_EVENT_GRAPHICS_DISCONNECT:
+	case DOMAIN_EVENT_GRAPHICS_DISCONNECT:
 		phase = "disconnected"
 	default:
 		phase = "unknown"
