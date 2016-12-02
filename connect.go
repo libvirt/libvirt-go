@@ -874,47 +874,47 @@ func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NetworkDefineXML(xmlConfig string) (*VirNetwork, error) {
+func (c *VirConnection) NetworkDefineXML(xmlConfig string) (*Network, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkDefineXML(c.ptr, cXml)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNetwork{ptr: ptr}, nil
+	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NetworkCreateXML(xmlConfig string) (*VirNetwork, error) {
+func (c *VirConnection) NetworkCreateXML(xmlConfig string) (*Network, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkCreateXML(c.ptr, cXml)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNetwork{ptr: ptr}, nil
+	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByName(name string) (*VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByName(name string) (*Network, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNetworkLookupByName(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNetwork{ptr: ptr}, nil
+	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (*VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (*Network, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNetworkLookupByUUIDString(c.ptr, cUuid)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNetwork{ptr: ptr}, nil
+	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*VirNetwork, error) {
+func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*Network, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -925,7 +925,7 @@ func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*VirNetwork, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirNetwork{ptr: ptr}, nil
+	return &Network{ptr: ptr}, nil
 }
 
 func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
@@ -1215,7 +1215,7 @@ func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) 
 	return ifaces, nil
 }
 
-func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([]VirNetwork, error) {
+func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([]Network, error) {
 	var cList *C.virNetworkPtr
 	numNets := C.virConnectListAllNetworks(c.ptr, (**C.virNetworkPtr)(&cList), C.uint(flags))
 	if numNets == -1 {
@@ -1226,10 +1226,10 @@ func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([
 		Len:  int(numNets),
 		Cap:  int(numNets),
 	}
-	var nets []VirNetwork
+	var nets []Network
 	slice := *(*[]C.virNetworkPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
-		nets = append(nets, VirNetwork{ptr})
+		nets = append(nets, Network{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return nets, nil

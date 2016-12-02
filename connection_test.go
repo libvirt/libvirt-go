@@ -968,7 +968,7 @@ func TestListAllNetworks(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(nets) == 0 {
-		t.Fatal("length of []VirNetwork shouldn't be 0")
+		t.Fatal("length of []Network shouldn't be 0")
 	}
 	found := false
 	for _, n := range nets {
