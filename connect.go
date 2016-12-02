@@ -21,6 +21,10 @@ func init() {
 	C.virInitialize()
 }
 
+const (
+	LIBVIR_VERSION_NUMBER = uint32(C.LIBVIR_VERSION_NUMBER)
+)
+
 type VirConnectCloseReason int
 
 const (
