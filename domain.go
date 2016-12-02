@@ -10,6 +10,7 @@ package libvirt
 import "C"
 
 import (
+	"os"
 	"reflect"
 	"unsafe"
 )
@@ -903,6 +904,18 @@ func (d *VirDomain) Create() error {
 
 func (d *VirDomain) CreateWithFlags(flags VirDomainCreateFlags) error {
 	result := C.virDomainCreateWithFlags(d.ptr, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (d *VirDomain) CreateWithFiles(files []os.File, flags VirDomainCreateFlags) error {
+	cfiles := make([]C.int, len(files))
+	for i := 0; i < len(files); i++ {
+		cfiles[i] = C.int(files[i].Fd())
+	}
+	result := C.virDomainCreateWithFiles(d.ptr, C.uint(len(files)), &cfiles[0], C.uint(flags))
 	if result == -1 {
 		return GetLastError()
 	}
@@ -3822,4 +3835,188 @@ func (d *VirDomain) DelIOThread(id uint, flags uint32) error {
 	}
 
 	return nil
+}
+
+func (d *VirDomain) GetEmulatorPinInfo(flags uint32) ([]bool, error) {
+	var cnodeinfo C.virNodeInfo
+	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
+	if ret == -1 {
+		return []bool{}, GetLastError()
+	}
+
+	ncpus := cnodeinfo.nodes * cnodeinfo.sockets * cnodeinfo.cores * cnodeinfo.threads
+	maplen := int((ncpus + 7) / 8)
+	ccpumaps := make([]C.uchar, maplen)
+	ret = C.virDomainGetEmulatorPinInfo(d.ptr, &ccpumaps[0], C.int(maplen), C.uint(flags))
+	if ret == -1 {
+		return []bool{}, GetLastError()
+	}
+
+	cpumaps := make([]bool, ncpus)
+	for i := 0; i < int(ncpus); i++ {
+		byte := i / 8
+		bit := i % 8
+		cpumaps[i] = (ccpumaps[byte] & (1 << uint(bit))) != 0
+	}
+
+	return cpumaps, nil
+}
+
+type VirDomainIOThreadInfo struct {
+	IOThreadID uint
+	CpuMap     []bool
+}
+
+func (d *VirDomain) GetIOThreadInfo(flags VirDomainModificationImpact) ([]VirDomainIOThreadInfo, error) {
+	var cinfolist **C.virDomainIOThreadInfo
+
+	ret := C.virDomainGetIOThreadInfo(d.ptr, (**C.virDomainIOThreadInfoPtr)(unsafe.Pointer(&cinfolist)), C.uint(flags))
+	if ret == -1 {
+		return []VirDomainIOThreadInfo{}, GetLastError()
+	}
+
+	info := make([]VirDomainIOThreadInfo, int(ret))
+
+	for i := 0; i < int(ret); i++ {
+		cinfo := (*(**C.virDomainIOThreadInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cinfolist)) + (unsafe.Sizeof(*cinfolist) + uintptr(i)))))
+
+		ncpus := int(cinfo.cpumaplen * 8)
+		cpumap := make([]bool, ncpus)
+		for j := 0; j < ncpus; j++ {
+			byte := j / 8
+			bit := j % 8
+
+			cpumapbyte := *(*C.uchar)(unsafe.Pointer(uintptr(unsafe.Pointer(cinfo.cpumap)) + (unsafe.Sizeof(*cinfo.cpumap) * uintptr(byte))))
+			cpumap[j] = (cpumapbyte & (1 << uint(bit))) != 0
+		}
+
+		info[i] = VirDomainIOThreadInfo{
+			IOThreadID: uint(cinfo.iothread_id),
+			CpuMap:     cpumap,
+		}
+
+		C.virDomainIOThreadInfoFree(cinfo)
+	}
+	C.free(unsafe.Pointer(cinfolist))
+
+	return info, nil
+}
+
+func (d *VirDomain) GetVcpuPinInfo(flags uint32) ([][]bool, error) {
+	var cnodeinfo C.virNodeInfo
+	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
+	if ret == -1 {
+		return [][]bool{}, GetLastError()
+	}
+
+	var cdominfo C.virDomainInfo
+	ret = C.virDomainGetInfo(d.ptr, &cdominfo)
+	if ret == -1 {
+		return [][]bool{}, GetLastError()
+	}
+
+	nvcpus := int(cdominfo.nrVirtCpu)
+	npcpus := int(cnodeinfo.nodes * cnodeinfo.sockets * cnodeinfo.cores * cnodeinfo.threads)
+	maplen := ((npcpus + 7) / 8)
+	ccpumaps := make([]C.uchar, maplen*nvcpus)
+
+	ret = C.virDomainGetVcpuPinInfo(d.ptr, C.int(nvcpus), &ccpumaps[0], C.int(maplen), C.uint(flags))
+	if ret == -1 {
+		return [][]bool{}, GetLastError()
+	}
+
+	cpumaps := make([][]bool, nvcpus)
+	for i := 0; i < nvcpus; i++ {
+		cpumaps[i] = make([]bool, npcpus)
+		for j := 0; j < npcpus; j++ {
+			byte := (i * maplen) + (j / 8)
+			bit := j % 8
+
+			if (ccpumaps[byte] & (1 << uint(bit))) != 0 {
+				cpumaps[i][j] = true
+			}
+		}
+	}
+
+	return cpumaps, nil
+}
+
+func (d *VirDomain) PinEmulator(cpumap []bool, flags VirDomainModificationImpact) error {
+
+	maplen := (len(cpumap) + 7) / 8
+	ccpumaps := make([]C.uchar, maplen)
+	for i := 0; i < len(cpumap); i++ {
+		byte := i / 8
+		bit := i % 8
+
+		ccpumaps[byte] |= (1 << uint(bit))
+	}
+
+	ret := C.virDomainPinEmulator(d.ptr, &ccpumaps[0], C.int(maplen), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) PinIOThread(iothreadid uint, cpumap []bool, flags VirDomainModificationImpact) error {
+
+	maplen := (len(cpumap) + 7) / 8
+	ccpumaps := make([]C.uchar, maplen)
+	for i := 0; i < len(cpumap); i++ {
+		byte := i / 8
+		bit := i % 8
+
+		ccpumaps[byte] |= (1 << uint(bit))
+	}
+
+	ret := C.virDomainPinIOThread(d.ptr, C.uint(iothreadid), &ccpumaps[0], C.int(maplen), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) OpenChannel(name string, stream *VirStream, flags VirDomainChannelFlags) error {
+	cname := C.CString(name)
+	defer C.free(cname)
+
+	ret := C.virDomainOpenChannel(d.ptr, cname, stream.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) OpenConsole(devname string, stream *VirStream, flags VirDomainConsoleFlags) error {
+	cdevname := C.CString(devname)
+	defer C.free(cdevname)
+
+	ret := C.virDomainOpenConsole(d.ptr, cdevname, stream.ptr, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) OpenGraphics(idx uint, file os.File, flags VirDomainOpenGraphicsFlags) error {
+	ret := C.virDomainOpenGraphics(d.ptr, C.uint(idx), C.int(file.Fd()), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *VirDomain) OpenGraphicsFD(idx uint, flags VirDomainOpenGraphicsFlags) (*os.File, error) {
+	ret := C.virDomainOpenGraphicsFD(d.ptr, C.uint(idx), C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return os.NewFile(uintptr(ret), "graphics"), nil
 }

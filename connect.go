@@ -2,6 +2,7 @@ package libvirt
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"sync"
 	"unsafe"
@@ -666,10 +667,34 @@ func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateF
 	return VirDomain{ptr: ptr}, nil
 }
 
+func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags VirDomainCreateFlags) (VirDomain, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	cfiles := make([]C.int, len(files))
+	for i := 0; i < len(files); i++ {
+		cfiles[i] = C.int(files[i].Fd())
+	}
+	ptr := C.virDomainCreateXMLWithFiles(c.ptr, cXml, C.uint(len(files)), (&cfiles[0]), C.uint(flags))
+	if ptr == nil {
+		return VirDomain{}, GetLastError()
+	}
+	return VirDomain{ptr: ptr}, nil
+}
+
 func (c *VirConnection) DomainDefineXML(xmlConfig string) (VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXML(c.ptr, cXml)
+	if ptr == nil {
+		return VirDomain{}, GetLastError()
+	}
+	return VirDomain{ptr: ptr}, nil
+}
+
+func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags VirDomainDefineFlags) (VirDomain, error) {
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virDomainDefineXMLFlags(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return VirDomain{}, GetLastError()
 	}
