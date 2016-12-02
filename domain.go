@@ -1484,7 +1484,7 @@ func (d *VirDomain) UpdateDeviceFlags(xml string, flags uint) error {
 	return nil
 }
 
-func (d *VirDomain) Screenshot(stream *VirStream, screen, flags uint) (string, error) {
+func (d *VirDomain) Screenshot(stream *Stream, screen, flags uint) (string, error) {
 	cType := C.virDomainScreenshot(d.ptr, stream.ptr, C.uint(screen), C.uint(flags))
 	if cType == nil {
 		return "", GetLastError()
@@ -3961,7 +3961,7 @@ func (d *VirDomain) PinIOThread(iothreadid uint, cpumap []bool, flags VirDomainM
 	return nil
 }
 
-func (d *VirDomain) OpenChannel(name string, stream *VirStream, flags VirDomainChannelFlags) error {
+func (d *VirDomain) OpenChannel(name string, stream *Stream, flags VirDomainChannelFlags) error {
 	cname := C.CString(name)
 	defer C.free(cname)
 
@@ -3973,7 +3973,7 @@ func (d *VirDomain) OpenChannel(name string, stream *VirStream, flags VirDomainC
 	return nil
 }
 
-func (d *VirDomain) OpenConsole(devname string, stream *VirStream, flags VirDomainConsoleFlags) error {
+func (d *VirDomain) OpenConsole(devname string, stream *Stream, flags VirDomainConsoleFlags) error {
 	cdevname := C.CString(devname)
 	defer C.free(cdevname)
 

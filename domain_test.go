@@ -603,7 +603,7 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	stream, err := NewVirStream(conn, 0)
+	stream, err := NewStream(conn, 0)
 	if err != nil {
 		t.Fatalf("failed to create new stream: %s", err)
 	}
