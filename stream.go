@@ -65,7 +65,7 @@ func (v *VirStream) Free() error {
 	if result == -1 {
 		return GetLastError()
 	}
-
+	v.ptr = nil
 	return nil
 }
 

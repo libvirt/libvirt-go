@@ -98,6 +98,7 @@ func (n *VirNetwork) Free() error {
 	if result := C.virNetworkFree(n.ptr); result != 0 {
 		return GetLastError()
 	}
+	n.ptr = nil
 	return nil
 }
 

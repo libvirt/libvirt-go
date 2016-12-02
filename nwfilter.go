@@ -1,7 +1,7 @@
 package libvirt
 
 /*
-#cgo LDFLAGS: -lvirt 
+#cgo LDFLAGS: -lvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
@@ -20,6 +20,7 @@ func (f *VirNWFilter) Free() error {
 	if result := C.virNWFilterFree(f.ptr); result != 0 {
 		return GetLastError()
 	}
+	f.ptr = nil
 	return nil
 }
 

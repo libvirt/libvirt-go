@@ -30,6 +30,7 @@ func (s *VirSecret) Free() error {
 	if result := C.virSecretFree(s.ptr); result != 0 {
 		return GetLastError()
 	}
+	s.ptr = nil
 	return nil
 }
 

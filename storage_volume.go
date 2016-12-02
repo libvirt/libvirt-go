@@ -89,6 +89,7 @@ func (v *VirStorageVol) Free() error {
 	if result := C.virStorageVolFree(v.ptr); result != 0 {
 		return GetLastError()
 	}
+	v.ptr = nil
 	return nil
 }
 

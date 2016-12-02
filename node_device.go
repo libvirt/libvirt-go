@@ -30,10 +30,11 @@ type VirNodeDevice struct {
 	ptr C.virNodeDevicePtr
 }
 
-func (s *VirNodeDevice) Free() error {
-	if result := C.virNodeDeviceFree(s.ptr); result != 0 {
+func (n *VirNodeDevice) Free() error {
+	if result := C.virNodeDeviceFree(n.ptr); result != 0 {
 		return GetLastError()
 	}
+	n.ptr = nil
 	return nil
 }
 

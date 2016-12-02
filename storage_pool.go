@@ -112,6 +112,7 @@ func (p *VirStoragePool) Free() error {
 	if result := C.virStoragePoolFree(p.ptr); result != 0 {
 		return GetLastError()
 	}
+	p.ptr = nil
 	return nil
 }
 
