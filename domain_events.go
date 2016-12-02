@@ -106,19 +106,19 @@ type DomainIOErrorReasonEvent struct {
 type DomainBlockJobEvent struct {
 	Disk   string
 	Type   DomainBlockJobType
-	Status VirConnectDomainEventBlockJobStatus
+	Status ConnectDomainEventBlockJobStatus
 }
 
 type DomainDiskChangeEvent struct {
 	OldSrcPath string
 	NewSrcPath string
 	DevAlias   string
-	Reason     VirConnectDomainEventDiskChangeReason
+	Reason     ConnectDomainEventDiskChangeReason
 }
 
 type DomainTrayChangeEvent struct {
 	DevAlias string
-	Reason   VirConnectDomainEventTrayChangeReason
+	Reason   ConnectDomainEventTrayChangeReason
 }
 
 type DomainReasonEvent struct {
@@ -139,7 +139,7 @@ func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainLifecycleEvent{
 		Event:  DomainEventType(event),
@@ -154,7 +154,7 @@ func domainEventGenericCallback(c C.virConnectPtr, d C.virDomainPtr,
 	opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	callDomainCallbackId(opaque, &connection, &domain, nil)
 }
@@ -164,7 +164,7 @@ func domainEventRTCChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	utcoffset int64, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainRTCChangeEvent{
 		Utcoffset: utcoffset,
@@ -178,7 +178,7 @@ func domainEventWatchdogCallback(c C.virConnectPtr, d C.virDomainPtr,
 	action int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainWatchdogEvent{
 		Action: DomainEventWatchdogAction(action),
@@ -192,7 +192,7 @@ func domainEventIOErrorCallback(c C.virConnectPtr, d C.virDomainPtr,
 	srcPath *C.char, devAlias *C.char, action int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainIOErrorEvent{
 		SrcPath:  C.GoString(srcPath),
@@ -213,7 +213,7 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 	opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	subjectGo := make([]DomainEventGraphicsSubjectIdentity, subject.nidentity)
 	nidentities := int(subject.nidentity)
@@ -252,7 +252,7 @@ func domainEventIOErrorReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 	opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainIOErrorReasonEvent{
 		DomainIOErrorEvent: DomainIOErrorEvent{
@@ -271,12 +271,12 @@ func domainEventBlockJobCallback(c C.virConnectPtr, d C.virDomainPtr,
 	disk *C.char, _type int, status int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainBlockJobEvent{
 		Disk:   C.GoString(disk),
 		Type:   DomainBlockJobType(_type),
-		Status: VirConnectDomainEventBlockJobStatus(status),
+		Status: ConnectDomainEventBlockJobStatus(status),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -288,13 +288,13 @@ func domainEventDiskChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	reason int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainDiskChangeEvent{
 		OldSrcPath: C.GoString(oldSrcPath),
 		NewSrcPath: C.GoString(newSrcPath),
 		DevAlias:   C.GoString(devAlias),
-		Reason:     VirConnectDomainEventDiskChangeReason(reason),
+		Reason:     ConnectDomainEventDiskChangeReason(reason),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -305,11 +305,11 @@ func domainEventTrayChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	devAlias *C.char, reason int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainTrayChangeEvent{
 		DevAlias: C.GoString(devAlias),
-		Reason:   VirConnectDomainEventTrayChangeReason(reason),
+		Reason:   ConnectDomainEventTrayChangeReason(reason),
 	}
 
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
@@ -320,7 +320,7 @@ func domainEventReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 	reason int, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainReasonEvent{
 		Reason: reason,
@@ -334,7 +334,7 @@ func domainEventBalloonChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	actual uint64, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainBalloonChangeEvent{
 		Actual: actual,
@@ -348,7 +348,7 @@ func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
 	devAlias *C.char, opaque int) {
 
 	domain := Domain{ptr: d}
-	connection := VirConnection{ptr: c}
+	connection := Connect{ptr: c}
 
 	eventDetails := DomainDeviceRemovedEvent{
 		DevAlias: C.GoString(devAlias),
@@ -363,7 +363,7 @@ func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
 // registered as a domain event callback. The event parameter should
 // be casted to the more specific event structure
 // (eg. DomainLifecycleEvent). The return code is ignored.
-type DomainEventCallback func(c *VirConnection, d *Domain,
+type DomainEventCallback func(c *Connect, d *Domain,
 	event interface{}, f func()) int
 
 type domainCallbackContext struct {
@@ -371,7 +371,7 @@ type domainCallbackContext struct {
 	f  func()
 }
 
-func callDomainCallbackId(goCallbackId int, c *VirConnection, d *Domain,
+func callDomainCallbackId(goCallbackId int, c *Connect, d *Domain,
 	event interface{}) {
 	ctx := getCallbackId(goCallbackId)
 	switch cctx := ctx.(type) {
@@ -385,7 +385,7 @@ func callDomainCallbackId(goCallbackId int, c *VirConnection, d *Domain,
 // BUG(vincentbernat): The returned value of DomainEventRegister, should be an
 // error instead of an int, for uniformity with other functions.
 
-func (c *VirConnection) DomainEventRegister(dom Domain,
+func (c *Connect) DomainEventRegister(dom Domain,
 	eventId DomainEventID,
 	callback *DomainEventCallback,
 	opaque func()) int {
@@ -437,7 +437,7 @@ func (c *VirConnection) DomainEventRegister(dom Domain,
 	return int(ret)
 }
 
-func (c *VirConnection) DomainEventDeregister(callbackId int) error {
+func (c *Connect) DomainEventDeregister(callbackId int) error {
 	// Deregister the callback
 	if i := int(C.virConnectDomainEventDeregisterAny(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()

@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetLastError(t *testing.T) {
-	_, err := NewVirConnection("invalid_transport:///default")
+	_, err := NewConnect("invalid_transport:///default")
 	if err == nil {
 		t.Fatalf("Expected an error when creating invalid connection")
 	}

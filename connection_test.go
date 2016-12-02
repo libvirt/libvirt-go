@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func buildTestConnection() *VirConnection {
-	conn, err := NewVirConnection("test:///default")
+func buildTestConnection() *Connect {
+	conn, err := NewConnect("test:///default")
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,7 @@ func TestVersion(t *testing.T) {
 }
 
 func TestConnection(t *testing.T) {
-	conn, err := NewVirConnection("test:///default")
+	conn, err := NewConnect("test:///default")
 	if err != nil {
 		t.Error(err)
 		return
@@ -43,7 +43,7 @@ func TestConnection(t *testing.T) {
 }
 
 func TestConnectionReadOnly(t *testing.T) {
-	conn, err := NewVirConnectionReadOnly("test:///default")
+	conn, err := NewConnectReadOnly("test:///default")
 	if err != nil {
 		t.Error(err)
 		return
@@ -67,7 +67,7 @@ func TestConnectionReadOnly(t *testing.T) {
 }
 
 func TestInvalidConnection(t *testing.T) {
-	_, err := NewVirConnection("invalid_transport:///default")
+	_, err := NewConnect("invalid_transport:///default")
 	if err == nil {
 		t.Error("Non-existent transport works")
 	}

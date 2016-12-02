@@ -22,7 +22,7 @@ func networkXML(netName string) string {
     </network>`
 }
 
-func buildTestNetwork(netName string) (*Network, *VirConnection) {
+func buildTestNetwork(netName string) (*Network, *Connect) {
 	conn := buildTestConnection()
 	networkXML := networkXML(netName)
 	net, err := conn.NetworkDefineXML(networkXML)

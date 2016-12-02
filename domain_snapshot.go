@@ -119,16 +119,16 @@ func (d *Domain) SaveFlags(destFile string, destXml string, flags uint32) error 
 	return nil
 }
 
-func (conn VirConnection) Restore(srcFile string) error {
+func (c *Connect) Restore(srcFile string) error {
 	cPath := C.CString(srcFile)
 	defer C.free(unsafe.Pointer(cPath))
-	if result := C.virDomainRestore(conn.ptr, cPath); result == -1 {
+	if result := C.virDomainRestore(c.ptr, cPath); result == -1 {
 		return GetLastError()
 	}
 	return nil
 }
 
-func (conn VirConnection) RestoreFlags(srcFile, xmlConf string, flags uint32) error {
+func (c *Connect) RestoreFlags(srcFile, xmlConf string, flags uint32) error {
 	cPath := C.CString(srcFile)
 	defer C.free(unsafe.Pointer(cPath))
 	var cXmlConf *C.char
@@ -136,7 +136,7 @@ func (conn VirConnection) RestoreFlags(srcFile, xmlConf string, flags uint32) er
 		cXmlConf = C.CString(xmlConf)
 		defer C.free(unsafe.Pointer(cXmlConf))
 	}
-	if result := C.virDomainRestoreFlags(conn.ptr, cPath, cXmlConf, C.uint(flags)); result == -1 {
+	if result := C.virDomainRestoreFlags(c.ptr, cPath, cXmlConf, C.uint(flags)); result == -1 {
 		return GetLastError()
 	}
 	return nil

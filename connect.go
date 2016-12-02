@@ -25,149 +25,149 @@ const (
 	LIBVIR_VERSION_NUMBER = uint32(C.LIBVIR_VERSION_NUMBER)
 )
 
-type VirConnectCloseReason int
+type ConnectCloseReason int
 
 const (
-	VIR_CONNECT_CLOSE_REASON_ERROR     = VirConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_ERROR)
-	VIR_CONNECT_CLOSE_REASON_EOF       = VirConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_EOF)
-	VIR_CONNECT_CLOSE_REASON_KEEPALIVE = VirConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_KEEPALIVE)
-	VIR_CONNECT_CLOSE_REASON_CLIENT    = VirConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_CLIENT)
+	VIR_CONNECT_CLOSE_REASON_ERROR     = ConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_ERROR)
+	VIR_CONNECT_CLOSE_REASON_EOF       = ConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_EOF)
+	VIR_CONNECT_CLOSE_REASON_KEEPALIVE = ConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_KEEPALIVE)
+	VIR_CONNECT_CLOSE_REASON_CLIENT    = ConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_CLIENT)
 )
 
-type VirConnectListAllDomainsFlags int
+type ConnectListAllDomainsFlags int
 
 const (
-	VIR_CONNECT_LIST_DOMAINS_ACTIVE         = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_ACTIVE)
-	VIR_CONNECT_LIST_DOMAINS_INACTIVE       = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_INACTIVE)
-	VIR_CONNECT_LIST_DOMAINS_PERSISTENT     = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_PERSISTENT)
-	VIR_CONNECT_LIST_DOMAINS_TRANSIENT      = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_TRANSIENT)
-	VIR_CONNECT_LIST_DOMAINS_RUNNING        = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_RUNNING)
-	VIR_CONNECT_LIST_DOMAINS_PAUSED         = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_PAUSED)
-	VIR_CONNECT_LIST_DOMAINS_SHUTOFF        = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_SHUTOFF)
-	VIR_CONNECT_LIST_DOMAINS_OTHER          = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_OTHER)
-	VIR_CONNECT_LIST_DOMAINS_MANAGEDSAVE    = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_MANAGEDSAVE)
-	VIR_CONNECT_LIST_DOMAINS_NO_MANAGEDSAVE = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_MANAGEDSAVE)
-	VIR_CONNECT_LIST_DOMAINS_AUTOSTART      = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_AUTOSTART)
-	VIR_CONNECT_LIST_DOMAINS_NO_AUTOSTART   = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_AUTOSTART)
-	VIR_CONNECT_LIST_DOMAINS_HAS_SNAPSHOT   = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_HAS_SNAPSHOT)
-	VIR_CONNECT_LIST_DOMAINS_NO_SNAPSHOT    = VirConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_SNAPSHOT)
+	VIR_CONNECT_LIST_DOMAINS_ACTIVE         = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_ACTIVE)
+	VIR_CONNECT_LIST_DOMAINS_INACTIVE       = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_INACTIVE)
+	VIR_CONNECT_LIST_DOMAINS_PERSISTENT     = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_PERSISTENT)
+	VIR_CONNECT_LIST_DOMAINS_TRANSIENT      = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_TRANSIENT)
+	VIR_CONNECT_LIST_DOMAINS_RUNNING        = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_RUNNING)
+	VIR_CONNECT_LIST_DOMAINS_PAUSED         = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_PAUSED)
+	VIR_CONNECT_LIST_DOMAINS_SHUTOFF        = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_SHUTOFF)
+	VIR_CONNECT_LIST_DOMAINS_OTHER          = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_OTHER)
+	VIR_CONNECT_LIST_DOMAINS_MANAGEDSAVE    = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_MANAGEDSAVE)
+	VIR_CONNECT_LIST_DOMAINS_NO_MANAGEDSAVE = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_MANAGEDSAVE)
+	VIR_CONNECT_LIST_DOMAINS_AUTOSTART      = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_AUTOSTART)
+	VIR_CONNECT_LIST_DOMAINS_NO_AUTOSTART   = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_AUTOSTART)
+	VIR_CONNECT_LIST_DOMAINS_HAS_SNAPSHOT   = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_HAS_SNAPSHOT)
+	VIR_CONNECT_LIST_DOMAINS_NO_SNAPSHOT    = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_SNAPSHOT)
 )
 
-type VirConnectListAllNetworksFlags int
+type ConnectListAllNetworksFlags int
 
 const (
-	VIR_CONNECT_LIST_NETWORKS_INACTIVE     = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_INACTIVE)
-	VIR_CONNECT_LIST_NETWORKS_ACTIVE       = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_ACTIVE)
-	VIR_CONNECT_LIST_NETWORKS_PERSISTENT   = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_PERSISTENT)
-	VIR_CONNECT_LIST_NETWORKS_TRANSIENT    = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_TRANSIENT)
-	VIR_CONNECT_LIST_NETWORKS_AUTOSTART    = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_AUTOSTART)
-	VIR_CONNECT_LIST_NETWORKS_NO_AUTOSTART = VirConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_NO_AUTOSTART)
+	VIR_CONNECT_LIST_NETWORKS_INACTIVE     = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_INACTIVE)
+	VIR_CONNECT_LIST_NETWORKS_ACTIVE       = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_ACTIVE)
+	VIR_CONNECT_LIST_NETWORKS_PERSISTENT   = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_PERSISTENT)
+	VIR_CONNECT_LIST_NETWORKS_TRANSIENT    = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_TRANSIENT)
+	VIR_CONNECT_LIST_NETWORKS_AUTOSTART    = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_AUTOSTART)
+	VIR_CONNECT_LIST_NETWORKS_NO_AUTOSTART = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_NO_AUTOSTART)
 )
 
-type VirConnectListAllStoragePoolsFlags int
+type ConnectListAllStoragePoolsFlags int
 
 const (
-	VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE     = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE)
-	VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE       = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE)
-	VIR_CONNECT_LIST_STORAGE_POOLS_PERSISTENT   = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_PERSISTENT)
-	VIR_CONNECT_LIST_STORAGE_POOLS_TRANSIENT    = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_TRANSIENT)
-	VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART    = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART)
-	VIR_CONNECT_LIST_STORAGE_POOLS_NO_AUTOSTART = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_NO_AUTOSTART)
-	VIR_CONNECT_LIST_STORAGE_POOLS_DIR          = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_DIR)
-	VIR_CONNECT_LIST_STORAGE_POOLS_FS           = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_FS)
-	VIR_CONNECT_LIST_STORAGE_POOLS_NETFS        = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_NETFS)
-	VIR_CONNECT_LIST_STORAGE_POOLS_LOGICAL      = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_LOGICAL)
-	VIR_CONNECT_LIST_STORAGE_POOLS_DISK         = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_DISK)
-	VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI        = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI)
-	VIR_CONNECT_LIST_STORAGE_POOLS_SCSI         = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_SCSI)
-	VIR_CONNECT_LIST_STORAGE_POOLS_MPATH        = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_MPATH)
-	VIR_CONNECT_LIST_STORAGE_POOLS_RBD          = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_RBD)
-	VIR_CONNECT_LIST_STORAGE_POOLS_SHEEPDOG     = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_SHEEPDOG)
-	VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER      = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER)
-	VIR_CONNECT_LIST_STORAGE_POOLS_ZFS          = VirConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ZFS)
+	VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE     = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE)
+	VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE       = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ACTIVE)
+	VIR_CONNECT_LIST_STORAGE_POOLS_PERSISTENT   = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_PERSISTENT)
+	VIR_CONNECT_LIST_STORAGE_POOLS_TRANSIENT    = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_TRANSIENT)
+	VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART    = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_AUTOSTART)
+	VIR_CONNECT_LIST_STORAGE_POOLS_NO_AUTOSTART = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_NO_AUTOSTART)
+	VIR_CONNECT_LIST_STORAGE_POOLS_DIR          = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_DIR)
+	VIR_CONNECT_LIST_STORAGE_POOLS_FS           = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_FS)
+	VIR_CONNECT_LIST_STORAGE_POOLS_NETFS        = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_NETFS)
+	VIR_CONNECT_LIST_STORAGE_POOLS_LOGICAL      = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_LOGICAL)
+	VIR_CONNECT_LIST_STORAGE_POOLS_DISK         = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_DISK)
+	VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI        = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI)
+	VIR_CONNECT_LIST_STORAGE_POOLS_SCSI         = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_SCSI)
+	VIR_CONNECT_LIST_STORAGE_POOLS_MPATH        = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_MPATH)
+	VIR_CONNECT_LIST_STORAGE_POOLS_RBD          = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_RBD)
+	VIR_CONNECT_LIST_STORAGE_POOLS_SHEEPDOG     = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_SHEEPDOG)
+	VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER      = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_GLUSTER)
+	VIR_CONNECT_LIST_STORAGE_POOLS_ZFS          = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ZFS)
 )
 
-type VirConnectBaselineCPUFlags int
+type ConnectBaselineCPUFlags int
 
 const (
-	VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES = VirConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES)
-	VIR_CONNECT_BASELINE_CPU_MIGRATABLE      = VirConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_MIGRATABLE)
+	VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES = ConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES)
+	VIR_CONNECT_BASELINE_CPU_MIGRATABLE      = ConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_MIGRATABLE)
 )
 
-type VirConnectCompareCPUFlags int
+type ConnectCompareCPUFlags int
 
 const (
-	VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE = VirConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE)
+	VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE = ConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE)
 )
 
-type VirConnectListAllInterfacesFlags int
+type ConnectListAllInterfacesFlags int
 
 const (
-	VIR_CONNECT_LIST_INTERFACES_INACTIVE = VirConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_INACTIVE)
-	VIR_CONNECT_LIST_INTERFACES_ACTIVE   = VirConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_ACTIVE)
+	VIR_CONNECT_LIST_INTERFACES_INACTIVE = ConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_INACTIVE)
+	VIR_CONNECT_LIST_INTERFACES_ACTIVE   = ConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_ACTIVE)
 )
 
-type VirConnectListAllNodeDeviceFlags int
+type ConnectListAllNodeDeviceFlags int
 
 const (
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM        = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_PCI_DEV       = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_PCI_DEV)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_DEV       = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_DEV)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_INTERFACE = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_INTERFACE)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_NET           = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_NET)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_HOST     = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_HOST)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_TARGET   = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_TARGET)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI          = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE       = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_FC_HOST       = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_FC_HOST)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_VPORTS        = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_VPORTS)
-	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC  = VirConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM        = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_PCI_DEV       = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_PCI_DEV)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_DEV       = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_DEV)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_INTERFACE = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_INTERFACE)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_NET           = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_NET)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_HOST     = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_HOST)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_TARGET   = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_TARGET)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI          = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE       = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_FC_HOST       = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_FC_HOST)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_VPORTS        = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_VPORTS)
+	VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC  = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC)
 )
 
-type VirConnectListAllSecretsFlags int
+type ConnectListAllSecretsFlags int
 
 const (
-	VIR_CONNECT_LIST_SECRETS_EPHEMERAL    = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_EPHEMERAL)
-	VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL)
-	VIR_CONNECT_LIST_SECRETS_PRIVATE      = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_PRIVATE)
-	VIR_CONNECT_LIST_SECRETS_NO_PRIVATE   = VirConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_PRIVATE)
+	VIR_CONNECT_LIST_SECRETS_EPHEMERAL    = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_EPHEMERAL)
+	VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_EPHEMERAL)
+	VIR_CONNECT_LIST_SECRETS_PRIVATE      = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_PRIVATE)
+	VIR_CONNECT_LIST_SECRETS_NO_PRIVATE   = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_PRIVATE)
 )
 
-type VirConnectGetAllDomainStatsFlags int
+type ConnectGetAllDomainStatsFlags int
 
 const (
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE        = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE      = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT    = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT     = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING       = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED        = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF       = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER         = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_BACKING       = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_BACKING)
-	VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS = VirConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE        = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE      = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT    = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT     = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING       = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED        = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF       = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER         = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_BACKING       = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_BACKING)
+	VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS)
 )
 
-type VirConnectFlags int
+type ConnectFlags int
 
 const (
-	VIR_CONNECT_RO         = VirConnectFlags(C.VIR_CONNECT_RO)
-	VIR_CONNECT_NO_ALIASES = VirConnectFlags(C.VIR_CONNECT_NO_ALIASES)
+	VIR_CONNECT_RO         = ConnectFlags(C.VIR_CONNECT_RO)
+	VIR_CONNECT_NO_ALIASES = ConnectFlags(C.VIR_CONNECT_NO_ALIASES)
 )
 
-type VirConnectDomainEventAgentLifecycleState int
+type ConnectDomainEventAgentLifecycleState int
 
 const (
-	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_CONNECTED    = VirConnectDomainEventAgentLifecycleState(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_CONNECTED)
-	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_DISCONNECTED = VirConnectDomainEventAgentLifecycleState(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_DISCONNECTED)
+	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_CONNECTED    = ConnectDomainEventAgentLifecycleState(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_CONNECTED)
+	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_DISCONNECTED = ConnectDomainEventAgentLifecycleState(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_DISCONNECTED)
 )
 
-type VirConnectDomainEventAgentLifecycleReason int
+type ConnectDomainEventAgentLifecycleReason int
 
 const (
-	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_UNKNOWN        = VirConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_UNKNOWN)
-	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_DOMAIN_STARTED = VirConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_DOMAIN_STARTED)
-	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL        = VirConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL)
+	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_UNKNOWN        = ConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_UNKNOWN)
+	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_DOMAIN_STARTED = ConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_DOMAIN_STARTED)
+	VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL        = ConnectDomainEventAgentLifecycleReason(C.VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_REASON_CHANNEL)
 )
 
 type VirCPUCompareResult int
@@ -204,21 +204,21 @@ const (
 	VIR_NODE_MEMORY_STATS_ALL_CELLS = int(C.VIR_NODE_MEMORY_STATS_ALL_CELLS)
 )
 
-type VirConnectCredentialType int
+type ConnectCredentialType int
 
 const (
-	VIR_CRED_USERNAME     = VirConnectCredentialType(C.VIR_CRED_USERNAME)
-	VIR_CRED_AUTHNAME     = VirConnectCredentialType(C.VIR_CRED_AUTHNAME)
-	VIR_CRED_LANGUAGE     = VirConnectCredentialType(C.VIR_CRED_LANGUAGE)
-	VIR_CRED_CNONCE       = VirConnectCredentialType(C.VIR_CRED_CNONCE)
-	VIR_CRED_PASSPHRASE   = VirConnectCredentialType(C.VIR_CRED_PASSPHRASE)
-	VIR_CRED_ECHOPROMPT   = VirConnectCredentialType(C.VIR_CRED_ECHOPROMPT)
-	VIR_CRED_NOECHOPROMPT = VirConnectCredentialType(C.VIR_CRED_NOECHOPROMPT)
-	VIR_CRED_REALM        = VirConnectCredentialType(C.VIR_CRED_REALM)
-	VIR_CRED_EXTERNAL     = VirConnectCredentialType(C.VIR_CRED_EXTERNAL)
+	VIR_CRED_USERNAME     = ConnectCredentialType(C.VIR_CRED_USERNAME)
+	VIR_CRED_AUTHNAME     = ConnectCredentialType(C.VIR_CRED_AUTHNAME)
+	VIR_CRED_LANGUAGE     = ConnectCredentialType(C.VIR_CRED_LANGUAGE)
+	VIR_CRED_CNONCE       = ConnectCredentialType(C.VIR_CRED_CNONCE)
+	VIR_CRED_PASSPHRASE   = ConnectCredentialType(C.VIR_CRED_PASSPHRASE)
+	VIR_CRED_ECHOPROMPT   = ConnectCredentialType(C.VIR_CRED_ECHOPROMPT)
+	VIR_CRED_NOECHOPROMPT = ConnectCredentialType(C.VIR_CRED_NOECHOPROMPT)
+	VIR_CRED_REALM        = ConnectCredentialType(C.VIR_CRED_REALM)
+	VIR_CRED_EXTERNAL     = ConnectCredentialType(C.VIR_CRED_EXTERNAL)
 )
 
-type VirConnection struct {
+type Connect struct {
 	ptr C.virConnectPtr
 }
 
@@ -246,7 +246,7 @@ func init() {
 	connections = make(map[C.virConnectPtr]*virConnectionData)
 }
 
-func saveConnectionData(c *VirConnection, d *virConnectionData) {
+func saveConnectionData(c *Connect, d *virConnectionData) {
 	if c.ptr == nil {
 		return // Or panic?
 	}
@@ -255,7 +255,7 @@ func saveConnectionData(c *VirConnection, d *virConnectionData) {
 	connections[c.ptr] = d
 }
 
-func getConnectionData(c *VirConnection) *virConnectionData {
+func getConnectionData(c *Connect) *virConnectionData {
 	connectionsLock.RLock()
 	d := connections[c.ptr]
 	connectionsLock.RUnlock()
@@ -267,7 +267,7 @@ func getConnectionData(c *VirConnection) *virConnectionData {
 	return d
 }
 
-func releaseConnectionData(c *VirConnection) {
+func releaseConnectionData(c *Connect) {
 	if c.ptr == nil {
 		return
 	}
@@ -284,7 +284,7 @@ func GetVersion() (uint32, error) {
 	return uint32(version), nil
 }
 
-func NewVirConnection(uri string) (*VirConnection, error) {
+func NewConnect(uri string) (*Connect, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -294,10 +294,10 @@ func NewVirConnection(uri string) (*VirConnection, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirConnection{ptr: ptr}, nil
+	return &Connect{ptr: ptr}, nil
 }
 
-func NewVirConnectionWithAuth(uri string, username string, password string) (*VirConnection, error) {
+func NewConnectWithAuth(uri string, username string, password string) (*Connect, error) {
 	var cUri *C.char
 
 	authMechs := C.authMechs()
@@ -324,10 +324,10 @@ func NewVirConnectionWithAuth(uri string, username string, password string) (*Vi
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirConnection{ptr: ptr}, nil
+	return &Connect{ptr: ptr}, nil
 }
 
-func NewVirConnectionReadOnly(uri string) (*VirConnection, error) {
+func NewConnectReadOnly(uri string) (*Connect, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -337,10 +337,10 @@ func NewVirConnectionReadOnly(uri string) (*VirConnection, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
-	return &VirConnection{ptr: ptr}, nil
+	return &Connect{ptr: ptr}, nil
 }
 
-func (c *VirConnection) CloseConnection() (int, error) {
+func (c *Connect) CloseConnection() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return result, GetLastError()
@@ -352,7 +352,7 @@ func (c *VirConnection) CloseConnection() (int, error) {
 	return result, nil
 }
 
-type CloseCallback func(conn VirConnection, reason VirConnectCloseReason, opaque func())
+type CloseCallback func(conn Connect, reason ConnectCloseReason, opaque func())
 type closeContext struct {
 	cb CloseCallback
 	f  func()
@@ -361,7 +361,7 @@ type closeContext struct {
 // Register a close callback for the given destination. Only one
 // callback per connection is allowed. Setting a callback will remove
 // the previous one.
-func (c *VirConnection) RegisterCloseCallback(cb CloseCallback, opaque func()) error {
+func (c *Connect) RegisterCloseCallback(cb CloseCallback, opaque func()) error {
 	c.UnregisterCloseCallback()
 	context := &closeContext{
 		cb: cb,
@@ -379,7 +379,7 @@ func (c *VirConnection) RegisterCloseCallback(cb CloseCallback, opaque func()) e
 	return nil
 }
 
-func (c *VirConnection) UnregisterCloseCallback() error {
+func (c *Connect) UnregisterCloseCallback() error {
 	connData := getConnectionData(c)
 	if connData.closeCallbackId == nil {
 		return nil
@@ -394,17 +394,17 @@ func (c *VirConnection) UnregisterCloseCallback() error {
 }
 
 //export closeCallback
-func closeCallback(conn C.virConnectPtr, reason VirConnectCloseReason, goCallbackId int) {
+func closeCallback(conn C.virConnectPtr, reason ConnectCloseReason, goCallbackId int) {
 	ctx := getCallbackId(goCallbackId)
 	switch cctx := ctx.(type) {
 	case *closeContext:
-		cctx.cb(VirConnection{ptr: conn}, reason, cctx.f)
+		cctx.cb(Connect{ptr: conn}, reason, cctx.f)
 	default:
 		panic("Inappropriate callback type called")
 	}
 }
 
-func (c *VirConnection) GetCapabilities() (string, error) {
+func (c *Connect) GetCapabilities() (string, error) {
 	str := C.virConnectGetCapabilities(c.ptr)
 	if str == nil {
 		return "", GetLastError()
@@ -414,7 +414,7 @@ func (c *VirConnection) GetCapabilities() (string, error) {
 	return capabilities, nil
 }
 
-func (c *VirConnection) GetNodeInfo() (*VirNodeInfo, error) {
+func (c *Connect) GetNodeInfo() (*VirNodeInfo, error) {
 	var cinfo C.virNodeInfo
 	result := C.virNodeGetInfo(c.ptr, &cinfo)
 	if result == -1 {
@@ -436,7 +436,7 @@ func (ni *VirNodeInfo) GetMaxCPUs() uint32 {
 	return ni.Nodes * ni.Sockets * ni.Cores * ni.Threads
 }
 
-func (c *VirConnection) GetHostname() (string, error) {
+func (c *Connect) GetHostname() (string, error) {
 	str := C.virConnectGetHostname(c.ptr)
 	if str == nil {
 		return "", GetLastError()
@@ -446,7 +446,7 @@ func (c *VirConnection) GetHostname() (string, error) {
 	return hostname, nil
 }
 
-func (c *VirConnection) GetLibVersion() (uint32, error) {
+func (c *Connect) GetLibVersion() (uint32, error) {
 	var version C.ulong
 	if err := C.virConnectGetLibVersion(c.ptr, &version); err < 0 {
 		return 0, GetLastError()
@@ -454,7 +454,7 @@ func (c *VirConnection) GetLibVersion() (uint32, error) {
 	return uint32(version), nil
 }
 
-func (c *VirConnection) GetType() (string, error) {
+func (c *Connect) GetType() (string, error) {
 	str := C.virConnectGetType(c.ptr)
 	if str == nil {
 		return "", GetLastError()
@@ -463,7 +463,7 @@ func (c *VirConnection) GetType() (string, error) {
 	return hypDriver, nil
 }
 
-func (c *VirConnection) IsAlive() (bool, error) {
+func (c *Connect) IsAlive() (bool, error) {
 	result := C.virConnectIsAlive(c.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -474,7 +474,7 @@ func (c *VirConnection) IsAlive() (bool, error) {
 	return false, nil
 }
 
-func (c *VirConnection) IsEncrypted() (bool, error) {
+func (c *Connect) IsEncrypted() (bool, error) {
 	result := C.virConnectIsEncrypted(c.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -485,7 +485,7 @@ func (c *VirConnection) IsEncrypted() (bool, error) {
 	return false, nil
 }
 
-func (c *VirConnection) IsSecure() (bool, error) {
+func (c *Connect) IsSecure() (bool, error) {
 	result := C.virConnectIsSecure(c.ptr)
 	if result == -1 {
 		return false, GetLastError()
@@ -496,7 +496,7 @@ func (c *VirConnection) IsSecure() (bool, error) {
 	return false, nil
 }
 
-func (c *VirConnection) ListDefinedDomains() ([]string, error) {
+func (c *Connect) ListDefinedDomains() ([]string, error) {
 	var names [1024](*C.char)
 	namesPtr := unsafe.Pointer(&names)
 	numDomains := C.virConnectListDefinedDomains(
@@ -514,7 +514,7 @@ func (c *VirConnection) ListDefinedDomains() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListDomains() ([]uint32, error) {
+func (c *Connect) ListDomains() ([]uint32, error) {
 	var cDomainsIds [512](uint32)
 	cDomainsPointer := unsafe.Pointer(&cDomainsIds)
 	numDomains := C.virConnectListDomains(c.ptr, (*C.int)(cDomainsPointer), 512)
@@ -525,7 +525,7 @@ func (c *VirConnection) ListDomains() ([]uint32, error) {
 	return cDomainsIds[:numDomains], nil
 }
 
-func (c *VirConnection) ListInterfaces() ([]string, error) {
+func (c *Connect) ListInterfaces() ([]string, error) {
 	const maxIfaces = 1024
 	var names [maxIfaces](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -544,7 +544,7 @@ func (c *VirConnection) ListInterfaces() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListNetworks() ([]string, error) {
+func (c *Connect) ListNetworks() ([]string, error) {
 	const maxNets = 1024
 	var names [maxNets](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -563,7 +563,7 @@ func (c *VirConnection) ListNetworks() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListNWFilters() ([]string, error) {
+func (c *Connect) ListNWFilters() ([]string, error) {
 	const maxFilters = 1024
 	var names [maxFilters](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -582,7 +582,7 @@ func (c *VirConnection) ListNWFilters() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListStoragePools() ([]string, error) {
+func (c *Connect) ListStoragePools() ([]string, error) {
 	const maxPools = 1024
 	var names [maxPools](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -601,7 +601,7 @@ func (c *VirConnection) ListStoragePools() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListSecrets() ([]string, error) {
+func (c *Connect) ListSecrets() ([]string, error) {
 	const maxSecrets = 1024
 	var uuids [maxSecrets](*C.char)
 	uuidsPtr := unsafe.Pointer(&uuids)
@@ -620,7 +620,7 @@ func (c *VirConnection) ListSecrets() ([]string, error) {
 	return goUuids, nil
 }
 
-func (c *VirConnection) ListDevices(cap string, flags uint32) ([]string, error) {
+func (c *Connect) ListDevices(cap string, flags uint32) ([]string, error) {
 	ccap := C.CString(cap)
 	defer C.free(ccap)
 	const maxNodeDevices = 1024
@@ -641,7 +641,7 @@ func (c *VirConnection) ListDevices(cap string, flags uint32) ([]string, error) 
 	return goUuids, nil
 }
 
-func (c *VirConnection) LookupDomainById(id uint32) (*Domain, error) {
+func (c *Connect) LookupDomainById(id uint32) (*Domain, error) {
 	ptr := C.virDomainLookupByID(c.ptr, C.int(id))
 	if ptr == nil {
 		return nil, GetLastError()
@@ -649,7 +649,7 @@ func (c *VirConnection) LookupDomainById(id uint32) (*Domain, error) {
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByName(id string) (*Domain, error) {
+func (c *Connect) LookupDomainByName(id string) (*Domain, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virDomainLookupByName(c.ptr, cName)
@@ -659,7 +659,7 @@ func (c *VirConnection) LookupDomainByName(id string) (*Domain, error) {
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUIDString(uuid string) (*Domain, error) {
+func (c *Connect) LookupDomainByUUIDString(uuid string) (*Domain, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virDomainLookupByUUIDString(c.ptr, cUuid)
@@ -669,7 +669,7 @@ func (c *VirConnection) LookupDomainByUUIDString(uuid string) (*Domain, error) {
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*Domain, error) {
+func (c *Connect) LookupDomainByUUID(uuid []byte) (*Domain, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -683,7 +683,7 @@ func (c *VirConnection) LookupDomainByUUID(uuid []byte) (*Domain, error) {
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXML(xmlConfig string, flags DomainCreateFlags) (*Domain, error) {
+func (c *Connect) DomainCreateXML(xmlConfig string, flags DomainCreateFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainCreateXML(c.ptr, cXml, C.uint(flags))
@@ -693,7 +693,7 @@ func (c *VirConnection) DomainCreateXML(xmlConfig string, flags DomainCreateFlag
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags DomainCreateFlags) (*Domain, error) {
+func (c *Connect) DomainCreateXMLWithFiles(xmlConfig string, files []os.File, flags DomainCreateFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	cfiles := make([]C.int, len(files))
@@ -707,7 +707,7 @@ func (c *VirConnection) DomainCreateXMLWithFiles(xmlConfig string, files []os.Fi
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXML(xmlConfig string) (*Domain, error) {
+func (c *Connect) DomainDefineXML(xmlConfig string) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXML(c.ptr, cXml)
@@ -717,7 +717,7 @@ func (c *VirConnection) DomainDefineXML(xmlConfig string) (*Domain, error) {
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags) (*Domain, error) {
+func (c *Connect) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags) (*Domain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virDomainDefineXMLFlags(c.ptr, cXml, C.uint(flags))
@@ -727,7 +727,7 @@ func (c *VirConnection) DomainDefineXMLFlags(xmlConfig string, flags DomainDefin
 	return &Domain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
+func (c *Connect) ListDefinedInterfaces() ([]string, error) {
 	const maxIfaces = 1024
 	var names [maxIfaces](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -746,7 +746,7 @@ func (c *VirConnection) ListDefinedInterfaces() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListDefinedNetworks() ([]string, error) {
+func (c *Connect) ListDefinedNetworks() ([]string, error) {
 	const maxNets = 1024
 	var names [maxNets](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -765,7 +765,7 @@ func (c *VirConnection) ListDefinedNetworks() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
+func (c *Connect) ListDefinedStoragePools() ([]string, error) {
 	const maxPools = 1024
 	var names [maxPools](*C.char)
 	namesPtr := unsafe.Pointer(&names)
@@ -784,7 +784,7 @@ func (c *VirConnection) ListDefinedStoragePools() ([]string, error) {
 	return goNames, nil
 }
 
-func (c *VirConnection) NumOfDefinedDomains() (int, error) {
+func (c *Connect) NumOfDefinedDomains() (int, error) {
 	result := int(C.virConnectNumOfDefinedDomains(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -792,7 +792,7 @@ func (c *VirConnection) NumOfDefinedDomains() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
+func (c *Connect) NumOfDefinedInterfaces() (int, error) {
 	result := int(C.virConnectNumOfDefinedInterfaces(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -800,7 +800,7 @@ func (c *VirConnection) NumOfDefinedInterfaces() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfDefinedNetworks() (int, error) {
+func (c *Connect) NumOfDefinedNetworks() (int, error) {
 	result := int(C.virConnectNumOfDefinedNetworks(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -808,7 +808,7 @@ func (c *VirConnection) NumOfDefinedNetworks() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
+func (c *Connect) NumOfDefinedStoragePools() (int, error) {
 	result := int(C.virConnectNumOfDefinedStoragePools(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -816,7 +816,7 @@ func (c *VirConnection) NumOfDefinedStoragePools() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfDomains() (int, error) {
+func (c *Connect) NumOfDomains() (int, error) {
 	result := int(C.virConnectNumOfDomains(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -824,7 +824,7 @@ func (c *VirConnection) NumOfDomains() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfStoragePools() (int, error) {
+func (c *Connect) NumOfStoragePools() (int, error) {
 	result := int(C.virConnectNumOfStoragePools(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -832,7 +832,7 @@ func (c *VirConnection) NumOfStoragePools() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfInterfaces() (int, error) {
+func (c *Connect) NumOfInterfaces() (int, error) {
 	result := int(C.virConnectNumOfInterfaces(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -840,7 +840,7 @@ func (c *VirConnection) NumOfInterfaces() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfNetworks() (int, error) {
+func (c *Connect) NumOfNetworks() (int, error) {
 	result := int(C.virConnectNumOfNetworks(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -848,7 +848,7 @@ func (c *VirConnection) NumOfNetworks() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfNWFilters() (int, error) {
+func (c *Connect) NumOfNWFilters() (int, error) {
 	result := int(C.virConnectNumOfNWFilters(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -856,7 +856,7 @@ func (c *VirConnection) NumOfNWFilters() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfSecrets() (int, error) {
+func (c *Connect) NumOfSecrets() (int, error) {
 	result := int(C.virConnectNumOfSecrets(c.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -864,7 +864,7 @@ func (c *VirConnection) NumOfSecrets() (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
+func (c *Connect) NumOfDevices(cap string, flags uint32) (int, error) {
 	ccap := C.CString(cap)
 	defer C.free(ccap)
 	result := int(C.virNodeNumOfDevices(c.ptr, ccap, C.uint(flags)))
@@ -874,7 +874,7 @@ func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NetworkDefineXML(xmlConfig string) (*Network, error) {
+func (c *Connect) NetworkDefineXML(xmlConfig string) (*Network, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkDefineXML(c.ptr, cXml)
@@ -884,7 +884,7 @@ func (c *VirConnection) NetworkDefineXML(xmlConfig string) (*Network, error) {
 	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NetworkCreateXML(xmlConfig string) (*Network, error) {
+func (c *Connect) NetworkCreateXML(xmlConfig string) (*Network, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNetworkCreateXML(c.ptr, cXml)
@@ -894,7 +894,7 @@ func (c *VirConnection) NetworkCreateXML(xmlConfig string) (*Network, error) {
 	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByName(name string) (*Network, error) {
+func (c *Connect) LookupNetworkByName(name string) (*Network, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNetworkLookupByName(c.ptr, cName)
@@ -904,7 +904,7 @@ func (c *VirConnection) LookupNetworkByName(name string) (*Network, error) {
 	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (*Network, error) {
+func (c *Connect) LookupNetworkByUUIDString(uuid string) (*Network, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNetworkLookupByUUIDString(c.ptr, cUuid)
@@ -914,7 +914,7 @@ func (c *VirConnection) LookupNetworkByUUIDString(uuid string) (*Network, error)
 	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*Network, error) {
+func (c *Connect) LookupNetworkByUUID(uuid []byte) (*Network, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -928,7 +928,7 @@ func (c *VirConnection) LookupNetworkByUUID(uuid []byte) (*Network, error) {
 	return &Network{ptr: ptr}, nil
 }
 
-func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
+func (c *Connect) SetKeepAlive(interval int, count uint) error {
 	res := int(C.virConnectSetKeepAlive(c.ptr, C.int(interval), C.uint(count)))
 	switch res {
 	case 0:
@@ -938,7 +938,7 @@ func (c *VirConnection) SetKeepAlive(interval int, count uint) error {
 	}
 }
 
-func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
+func (c *Connect) GetSysinfo(flags uint) (string, error) {
 	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {
 		return "", GetLastError()
@@ -948,7 +948,7 @@ func (c *VirConnection) GetSysinfo(flags uint) (string, error) {
 	return info, nil
 }
 
-func (c *VirConnection) GetURI() (string, error) {
+func (c *Connect) GetURI() (string, error) {
 	cStr := C.virConnectGetURI(c.ptr)
 	if cStr == nil {
 		return "", GetLastError()
@@ -958,7 +958,7 @@ func (c *VirConnection) GetURI() (string, error) {
 	return uri, nil
 }
 
-func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
+func (c *Connect) GetMaxVcpus(typeAttr string) (int, error) {
 	var cTypeAttr *C.char
 	if typeAttr != "" {
 		cTypeAttr = C.CString(typeAttr)
@@ -971,7 +971,7 @@ func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (*VirInterface, error) {
+func (c *Connect) InterfaceDefineXML(xmlConfig string, flags uint32) (*VirInterface, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virInterfaceDefineXML(c.ptr, cXml, C.uint(flags))
@@ -981,7 +981,7 @@ func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (*Vir
 	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupInterfaceByName(name string) (*VirInterface, error) {
+func (c *Connect) LookupInterfaceByName(name string) (*VirInterface, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByName(c.ptr, cName)
@@ -991,7 +991,7 @@ func (c *VirConnection) LookupInterfaceByName(name string) (*VirInterface, error
 	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupInterfaceByMACString(mac string) (*VirInterface, error) {
+func (c *Connect) LookupInterfaceByMACString(mac string) (*VirInterface, error) {
 	cName := C.CString(mac)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virInterfaceLookupByMACString(c.ptr, cName)
@@ -1001,7 +1001,7 @@ func (c *VirConnection) LookupInterfaceByMACString(mac string) (*VirInterface, e
 	return &VirInterface{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (*StoragePool, error) {
+func (c *Connect) StoragePoolDefineXML(xmlConfig string, flags uint32) (*StoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolDefineXML(c.ptr, cXml, C.uint(flags))
@@ -1011,7 +1011,7 @@ func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (*S
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (*StoragePool, error) {
+func (c *Connect) StoragePoolCreateXML(xmlConfig string, flags uint32) (*StoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolCreateXML(c.ptr, cXml, C.uint(flags))
@@ -1021,7 +1021,7 @@ func (c *VirConnection) StoragePoolCreateXML(xmlConfig string, flags uint32) (*S
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByName(name string) (*StoragePool, error) {
+func (c *Connect) LookupStoragePoolByName(name string) (*StoragePool, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virStoragePoolLookupByName(c.ptr, cName)
@@ -1031,7 +1031,7 @@ func (c *VirConnection) LookupStoragePoolByName(name string) (*StoragePool, erro
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (*StoragePool, error) {
+func (c *Connect) LookupStoragePoolByUUIDString(uuid string) (*StoragePool, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virStoragePoolLookupByUUIDString(c.ptr, cUuid)
@@ -1041,7 +1041,7 @@ func (c *VirConnection) LookupStoragePoolByUUIDString(uuid string) (*StoragePool
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*StoragePool, error) {
+func (c *Connect) LookupStoragePoolByUUID(uuid []byte) (*StoragePool, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1055,7 +1055,7 @@ func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (*StoragePool, erro
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*NWFilter, error) {
+func (c *Connect) NWFilterDefineXML(xmlConfig string) (*NWFilter, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNWFilterDefineXML(c.ptr, cXml)
@@ -1065,7 +1065,7 @@ func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (*NWFilter, error) {
 	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByName(name string) (*NWFilter, error) {
+func (c *Connect) LookupNWFilterByName(name string) (*NWFilter, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNWFilterLookupByName(c.ptr, cName)
@@ -1075,7 +1075,7 @@ func (c *VirConnection) LookupNWFilterByName(name string) (*NWFilter, error) {
 	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (*NWFilter, error) {
+func (c *Connect) LookupNWFilterByUUIDString(uuid string) (*NWFilter, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virNWFilterLookupByUUIDString(c.ptr, cUuid)
@@ -1085,7 +1085,7 @@ func (c *VirConnection) LookupNWFilterByUUIDString(uuid string) (*NWFilter, erro
 	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
+func (c *Connect) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1099,7 +1099,7 @@ func (c *VirConnection) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 	return &NWFilter{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByKey(key string) (*StorageVol, error) {
+func (c *Connect) LookupStorageVolByKey(key string) (*StorageVol, error) {
 	cKey := C.CString(key)
 	defer C.free(unsafe.Pointer(cKey))
 	ptr := C.virStorageVolLookupByKey(c.ptr, cKey)
@@ -1109,7 +1109,7 @@ func (c *VirConnection) LookupStorageVolByKey(key string) (*StorageVol, error) {
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupStorageVolByPath(path string) (*StorageVol, error) {
+func (c *Connect) LookupStorageVolByPath(path string) (*StorageVol, error) {
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
 	ptr := C.virStorageVolLookupByPath(c.ptr, cPath)
@@ -1119,7 +1119,7 @@ func (c *VirConnection) LookupStorageVolByPath(path string) (*StorageVol, error)
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*Secret, error) {
+func (c *Connect) SecretDefineXML(xmlConfig string, flags uint32) (*Secret, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virSecretDefineXML(c.ptr, cXml, C.uint(flags))
@@ -1129,7 +1129,7 @@ func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (*Secret
 	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*Secret, error) {
+func (c *Connect) LookupSecretByUUID(uuid []byte) (*Secret, error) {
 	if len(uuid) != C.VIR_UUID_BUFLEN {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
@@ -1143,7 +1143,7 @@ func (c *VirConnection) LookupSecretByUUID(uuid []byte) (*Secret, error) {
 	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUUIDString(uuid string) (*Secret, error) {
+func (c *Connect) LookupSecretByUUIDString(uuid string) (*Secret, error) {
 	cUuid := C.CString(uuid)
 	defer C.free(unsafe.Pointer(cUuid))
 	ptr := C.virSecretLookupByUUIDString(c.ptr, cUuid)
@@ -1153,7 +1153,7 @@ func (c *VirConnection) LookupSecretByUUIDString(uuid string) (*Secret, error) {
 	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupSecretByUsage(usageType SecretUsageType, usageID string) (*Secret, error) {
+func (c *Connect) LookupSecretByUsage(usageType SecretUsageType, usageID string) (*Secret, error) {
 	cUsageID := C.CString(usageID)
 	defer C.free(unsafe.Pointer(cUsageID))
 	ptr := C.virSecretLookupByUsage(c.ptr, C.int(usageType), cUsageID)
@@ -1163,7 +1163,7 @@ func (c *VirConnection) LookupSecretByUsage(usageType SecretUsageType, usageID s
 	return &Secret{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceByName(id string) (*NodeDevice, error) {
+func (c *Connect) LookupDeviceByName(id string) (*NodeDevice, error) {
 	cName := C.CString(id)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.virNodeDeviceLookupByName(c.ptr, cName)
@@ -1173,7 +1173,7 @@ func (c *VirConnection) LookupDeviceByName(id string) (*NodeDevice, error) {
 	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (*NodeDevice, error) {
+func (c *Connect) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint32) (*NodeDevice, error) {
 	cWwnn := C.CString(wwnn)
 	cWwpn := C.CString(wwpn)
 	defer C.free(unsafe.Pointer(cWwnn))
@@ -1185,7 +1185,7 @@ func (c *VirConnection) LookupDeviceSCSIHostByWWN(wwnn, wwpn string, flags uint3
 	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, error) {
+func (c *Connect) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virNodeDeviceCreateXML(c.ptr, cXml, C.uint(flags))
@@ -1195,7 +1195,7 @@ func (c *VirConnection) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDe
 	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
+func (c *Connect) ListAllInterfaces(flags uint32) ([]VirInterface, error) {
 	var cList *C.virInterfacePtr
 	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
 	if numIfaces == -1 {
@@ -1215,7 +1215,7 @@ func (c *VirConnection) ListAllInterfaces(flags uint32) ([]VirInterface, error) 
 	return ifaces, nil
 }
 
-func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([]Network, error) {
+func (c *Connect) ListAllNetworks(flags ConnectListAllNetworksFlags) ([]Network, error) {
 	var cList *C.virNetworkPtr
 	numNets := C.virConnectListAllNetworks(c.ptr, (**C.virNetworkPtr)(&cList), C.uint(flags))
 	if numNets == -1 {
@@ -1235,7 +1235,7 @@ func (c *VirConnection) ListAllNetworks(flags VirConnectListAllNetworksFlags) ([
 	return nets, nil
 }
 
-func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]Domain, error) {
+func (c *Connect) ListAllDomains(flags ConnectListAllDomainsFlags) ([]Domain, error) {
 	var cList *C.virDomainPtr
 	numDomains := C.virConnectListAllDomains(c.ptr, (**C.virDomainPtr)(&cList), C.uint(flags))
 	if numDomains == -1 {
@@ -1255,7 +1255,7 @@ func (c *VirConnection) ListAllDomains(flags VirConnectListAllDomainsFlags) ([]D
 	return domains, nil
 }
 
-func (c *VirConnection) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
+func (c *Connect) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	var cList *C.virNWFilterPtr
 	numNWFilters := C.virConnectListAllNWFilters(c.ptr, (**C.virNWFilterPtr)(&cList), C.uint(flags))
 	if numNWFilters == -1 {
@@ -1275,7 +1275,7 @@ func (c *VirConnection) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	return filters, nil
 }
 
-func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsFlags) ([]StoragePool, error) {
+func (c *Connect) ListAllStoragePools(flags ConnectListAllStoragePoolsFlags) ([]StoragePool, error) {
 	var cList *C.virStoragePoolPtr
 	numPools := C.virConnectListAllStoragePools(c.ptr, (**C.virStoragePoolPtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1295,7 +1295,7 @@ func (c *VirConnection) ListAllStoragePools(flags VirConnectListAllStoragePoolsF
 	return pools, nil
 }
 
-func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]Secret, error) {
+func (c *Connect) ListAllSecrets(flags ConnectListAllSecretsFlags) ([]Secret, error) {
 	var cList *C.virSecretPtr
 	numPools := C.virConnectListAllSecrets(c.ptr, (**C.virSecretPtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1315,7 +1315,7 @@ func (c *VirConnection) ListAllSecrets(flags VirConnectListAllSecretsFlags) ([]S
 	return pools, nil
 }
 
-func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlags) ([]NodeDevice, error) {
+func (c *Connect) ListAllNodeDevices(flags ConnectListAllNodeDeviceFlags) ([]NodeDevice, error) {
 	var cList *C.virNodeDevicePtr
 	numPools := C.virConnectListAllNodeDevices(c.ptr, (**C.virNodeDevicePtr)(&cList), C.uint(flags))
 	if numPools == -1 {
@@ -1335,7 +1335,7 @@ func (c *VirConnection) ListAllNodeDevices(flags VirConnectListAllNodeDeviceFlag
 	return pools, nil
 }
 
-func (c *VirConnection) InterfaceChangeBegin(flags uint) error {
+func (c *Connect) InterfaceChangeBegin(flags uint) error {
 	ret := C.virInterfaceChangeBegin(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1343,7 +1343,7 @@ func (c *VirConnection) InterfaceChangeBegin(flags uint) error {
 	return nil
 }
 
-func (c *VirConnection) InterfaceChangeCommit(flags uint) error {
+func (c *Connect) InterfaceChangeCommit(flags uint) error {
 	ret := C.virInterfaceChangeCommit(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1351,7 +1351,7 @@ func (c *VirConnection) InterfaceChangeCommit(flags uint) error {
 	return nil
 }
 
-func (c *VirConnection) InterfaceChangeRollback(flags uint) error {
+func (c *Connect) InterfaceChangeRollback(flags uint) error {
 	ret := C.virInterfaceChangeRollback(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1359,7 +1359,7 @@ func (c *VirConnection) InterfaceChangeRollback(flags uint) error {
 	return nil
 }
 
-func (c *VirConnection) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags VirNodeAllocPagesFlags) (int, error) {
+func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags VirNodeAllocPagesFlags) (int, error) {
 	cpages := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes))
 
@@ -1379,7 +1379,7 @@ func (c *VirConnection) AllocPages(pageSizes map[int]int64, startCell int, cellC
 	return int(ret), nil
 }
 
-func (c *VirConnection) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
+func (c *Connect) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
 	var ccpumap *C.uchar
 	var conline C.uint
 	ret := C.virNodeGetCPUMap(c.ptr, &ccpumap, &conline, C.uint(flags))
@@ -1416,7 +1416,7 @@ type VirNodeCPUStats struct {
 	Utilization    uint64
 }
 
-func (c *VirConnection) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats, error) {
+func (c *Connect) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats, error) {
 	var nparams C.int
 
 	ret := C.virNodeGetCPUStats(c.ptr, C.int(cpuNum), nil, &nparams, C.uint(0))
@@ -1459,7 +1459,7 @@ func (c *VirConnection) GetCPUStats(cpuNum int, flags uint32) (*VirNodeCPUStats,
 	return stats, nil
 }
 
-func (c *VirConnection) GetCellsFreeMemory(startCell int, maxCells int) ([]uint64, error) {
+func (c *Connect) GetCellsFreeMemory(startCell int, maxCells int) ([]uint64, error) {
 	cmem := make([]C.ulonglong, maxCells)
 	ret := C.virNodeGetCellsFreeMemory(c.ptr, (*C.ulonglong)(unsafe.Pointer(&cmem[0])), C.int(startCell), C.int(maxCells))
 	if ret == -1 {
@@ -1474,7 +1474,7 @@ func (c *VirConnection) GetCellsFreeMemory(startCell int, maxCells int) ([]uint6
 	return mem, nil
 }
 
-func (c *VirConnection) GetFreeMemory() (uint64, error) {
+func (c *Connect) GetFreeMemory() (uint64, error) {
 	ret := C.virNodeGetFreeMemory(c.ptr)
 	if ret == 0 {
 		return 0, GetLastError()
@@ -1483,7 +1483,7 @@ func (c *VirConnection) GetFreeMemory() (uint64, error) {
 	return (uint64)(ret), nil
 }
 
-func (c *VirConnection) GetFreePages(pageSizes []uint64, startCell int, maxCells uint, flags uint32) ([]uint64, error) {
+func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint, flags uint32) ([]uint64, error) {
 	cpageSizes := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes)*int(maxCells))
 
@@ -1561,7 +1561,7 @@ func getMemoryParameterFieldInfo(params *VirNodeMemoryParameters) map[string]typ
 	}
 }
 
-func (c *VirConnection) GetMemoryParameters(flags uint32) (*VirNodeMemoryParameters, error) {
+func (c *Connect) GetMemoryParameters(flags uint32) (*VirNodeMemoryParameters, error) {
 	params := &VirNodeMemoryParameters{}
 	info := getMemoryParameterFieldInfo(params)
 
@@ -1599,7 +1599,7 @@ type VirNodeMemoryStats struct {
 	Cached     uint64
 }
 
-func (c *VirConnection) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats, error) {
+func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*VirNodeMemoryStats, error) {
 	var nparams C.int
 
 	ret := C.virNodeGetMemoryStats(c.ptr, C.int(cellNum), nil, &nparams, 0)
@@ -1641,7 +1641,7 @@ type VirNodeSecurityModel struct {
 	Doi   string
 }
 
-func (c *VirConnection) GetSecurityModel() (*VirNodeSecurityModel, error) {
+func (c *Connect) GetSecurityModel() (*VirNodeSecurityModel, error) {
 	var cmodel C.virSecurityModel
 	ret := C.virNodeGetSecurityModel(c.ptr, &cmodel)
 	if ret == -1 {
@@ -1654,7 +1654,7 @@ func (c *VirConnection) GetSecurityModel() (*VirNodeSecurityModel, error) {
 	}, nil
 }
 
-func (c *VirConnection) SetMemoryParameters(params *VirNodeMemoryParameters, flags uint32) error {
+func (c *Connect) SetMemoryParameters(params *VirNodeMemoryParameters, flags uint32) error {
 	info := getMemoryParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1682,7 +1682,7 @@ func (c *VirConnection) SetMemoryParameters(params *VirNodeMemoryParameters, fla
 	return nil
 }
 
-func (c *VirConnection) SuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
+func (c *Connect) SuspendForDuration(target VirNodeSuspendTarget, duration uint64, flags uint32) error {
 	ret := C.virNodeSuspendForDuration(c.ptr, C.uint(target), C.ulonglong(duration), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1690,7 +1690,7 @@ func (c *VirConnection) SuspendForDuration(target VirNodeSuspendTarget, duration
 	return nil
 }
 
-func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags DomainSaveRestoreFlags) error {
+func (c *Connect) DomainSaveImageDefineXML(file string, xml string, flags DomainSaveRestoreFlags) error {
 	cfile := C.CString(file)
 	defer C.free(cfile)
 	cxml := C.CString(xml)
@@ -1705,7 +1705,7 @@ func (c *VirConnection) DomainSaveImageDefineXML(file string, xml string, flags 
 	return nil
 }
 
-func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (string, error) {
+func (c *Connect) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (string, error) {
 	cfile := C.CString(file)
 	defer C.free(cfile)
 
@@ -1720,7 +1720,7 @@ func (c *VirConnection) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFl
 	return C.GoString(ret), nil
 }
 
-func (c *VirConnection) BaselineCPU(xmlCPUs []string, flags VirConnectBaselineCPUFlags) (string, error) {
+func (c *Connect) BaselineCPU(xmlCPUs []string, flags ConnectBaselineCPUFlags) (string, error) {
 	cxmlCPUs := make([]*C.char, len(xmlCPUs))
 	for i := 0; i < len(xmlCPUs); i++ {
 		cxmlCPUs[i] = C.CString(xmlCPUs[i])
@@ -1737,7 +1737,7 @@ func (c *VirConnection) BaselineCPU(xmlCPUs []string, flags VirConnectBaselineCP
 	return C.GoString(ret), nil
 }
 
-func (c *VirConnection) CompareCPU(xmlDesc string, flags VirConnectCompareCPUFlags) (VirCPUCompareResult, error) {
+func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (VirCPUCompareResult, error) {
 	cxmlDesc := C.CString(xmlDesc)
 	defer C.free(cxmlDesc)
 
@@ -1749,7 +1749,7 @@ func (c *VirConnection) CompareCPU(xmlDesc string, flags VirConnectCompareCPUFla
 	return VirCPUCompareResult(ret), nil
 }
 
-func (c *VirConnection) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {
+func (c *Connect) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {
 	cnativeFormat := C.CString(nativeFormat)
 	defer C.free(cnativeFormat)
 	cnativeConfig := C.CString(nativeConfig)
@@ -1765,7 +1765,7 @@ func (c *VirConnection) DomainXMLFromNative(nativeFormat string, nativeConfig st
 	return C.GoString(ret), nil
 }
 
-func (c *VirConnection) DomainXMLToNative(nativeFormat string, domainXml string, flags uint32) (string, error) {
+func (c *Connect) DomainXMLToNative(nativeFormat string, domainXml string, flags uint32) (string, error) {
 	cnativeFormat := C.CString(nativeFormat)
 	defer C.free(cnativeFormat)
 	cdomainXml := C.CString(domainXml)
@@ -1781,7 +1781,7 @@ func (c *VirConnection) DomainXMLToNative(nativeFormat string, domainXml string,
 	return C.GoString(ret), nil
 }
 
-func (c *VirConnection) GetCPUModelNames(arch string, flags uint32) ([]string, error) {
+func (c *Connect) GetCPUModelNames(arch string, flags uint32) ([]string, error) {
 	carch := C.CString(arch)
 	defer C.free(carch)
 
@@ -1803,7 +1803,7 @@ func (c *VirConnection) GetCPUModelNames(arch string, flags uint32) ([]string, e
 	return models, nil
 }
 
-func (c *VirConnection) GetDomainCapabilities(emulatorbin string, arch string, machine string, virttype string, flags uint32) (string, error) {
+func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine string, virttype string, flags uint32) (string, error) {
 	var cemulatorbin *C.char
 	if emulatorbin != "" {
 		cemulatorbin = C.CString(emulatorbin)
@@ -1835,7 +1835,7 @@ func (c *VirConnection) GetDomainCapabilities(emulatorbin string, arch string, m
 	return C.GoString(ret), nil
 }
 
-func (c *VirConnection) GetVersion() (uint32, error) {
+func (c *Connect) GetVersion() (uint32, error) {
 	var hvVer C.ulong
 	ret := C.virConnectGetVersion(c.ptr, &hvVer)
 	if ret == -1 {
@@ -1845,7 +1845,7 @@ func (c *VirConnection) GetVersion() (uint32, error) {
 	return uint32(hvVer), nil
 }
 
-func (c *VirConnection) FindStoragePoolSources(pooltype string, srcSpec string, flags uint32) (string, error) {
+func (c *Connect) FindStoragePoolSources(pooltype string, srcSpec string, flags uint32) (string, error) {
 	cpooltype := C.CString(pooltype)
 	defer C.free(cpooltype)
 	var csrcSpec *C.char

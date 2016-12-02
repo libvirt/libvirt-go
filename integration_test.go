@@ -10,15 +10,15 @@ import (
 	"time"
 )
 
-func buildTestQEMUConnection() *VirConnection {
-	conn, err := NewVirConnection("qemu:///system")
+func buildTestQEMUConnection() *Connect {
+	conn, err := NewConnect("qemu:///system")
 	if err != nil {
 		panic(err)
 	}
 	return conn
 }
 
-func buildTestQEMUDomain() (*Domain, *VirConnection) {
+func buildTestQEMUDomain() (*Domain, *Connect) {
 	conn := buildTestQEMUConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="qemu">
 		<name>libvirt-go-test-` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
@@ -49,7 +49,7 @@ func TestMultipleCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn VirConnection, reason VirConnectCloseReason, opaque func()) {
+	callback := func(conn Connect, reason ConnectCloseReason, opaque func()) {
 		if reason != VIR_CONNECT_CLOSE_REASON_KEEPALIVE {
 			t.Errorf("Expected close reason to be %d, got %d",
 				VIR_CONNECT_CLOSE_REASON_KEEPALIVE, reason)
@@ -96,7 +96,7 @@ func TestUnregisterCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn VirConnection, reason VirConnectCloseReason, opaque func()) {
+	callback := func(conn Connect, reason ConnectCloseReason, opaque func()) {
 		nbCall++
 	}
 	err := conn.RegisterCloseCallback(callback, nil)
@@ -137,7 +137,7 @@ func TestSetKeepalive(t *testing.T) {
 }
 
 func TestConnectionWithAuth(t *testing.T) {
-	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "pass")
+	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", "user", "pass")
 	if err != nil {
 		t.Error(err)
 		return
@@ -153,7 +153,7 @@ func TestConnectionWithAuth(t *testing.T) {
 }
 
 func TestConnectionWithWrongCredentials(t *testing.T) {
-	conn, err := NewVirConnectionWithAuth("test+tcp://127.0.0.1/default", "user", "wrongpass")
+	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", "user", "wrongpass")
 	if err == nil {
 		conn.CloseConnection()
 		t.Error(err)
@@ -212,7 +212,7 @@ func TestDomainCreateWithFlags(t *testing.T) {
 	}
 }
 
-func defineTestLxcDomain(conn *VirConnection, title string) (*Domain, error) {
+func defineTestLxcDomain(conn *Connect, title string) (*Domain, error) {
 	if title == "" {
 		title = time.Now().String()
 	}
@@ -239,7 +239,7 @@ func defineTestLxcDomain(conn *VirConnection, title string) (*Domain, error) {
 // 		go test -tags integration
 
 func TestIntegrationGetMetadata(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -277,7 +277,7 @@ func TestIntegrationGetMetadata(t *testing.T) {
 }
 
 func TestIntegrationSetMetadata(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -313,7 +313,7 @@ func TestIntegrationSetMetadata(t *testing.T) {
 }
 
 func TestIntegrationGetSysinfo(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -347,7 +347,7 @@ func testNWFilterXML(name, chain string) string {
 }
 
 func TestIntergrationDefineUndefineNWFilterXML(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -374,7 +374,7 @@ func TestIntergrationDefineUndefineNWFilterXML(t *testing.T) {
 }
 
 func TestIntegrationNWFilterGetName(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -399,7 +399,7 @@ func TestIntegrationNWFilterGetName(t *testing.T) {
 }
 
 func TestIntegrationNWFilterGetUUID(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -424,7 +424,7 @@ func TestIntegrationNWFilterGetUUID(t *testing.T) {
 }
 
 func TestIntegrationNWFilterGetUUIDString(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -449,7 +449,7 @@ func TestIntegrationNWFilterGetUUIDString(t *testing.T) {
 }
 
 func TestIntegrationNWFilterGetXMLDesc(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -474,7 +474,7 @@ func TestIntegrationNWFilterGetXMLDesc(t *testing.T) {
 }
 
 func TestIntegrationLookupNWFilterByName(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -512,7 +512,7 @@ func TestIntegrationLookupNWFilterByName(t *testing.T) {
 }
 
 func TestIntegrationLookupNWFilterByUUIDString(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -561,7 +561,7 @@ func TestIntegrationLookupNWFilterByUUIDString(t *testing.T) {
 }
 
 func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -597,7 +597,7 @@ func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
 }
 
 func TestStorageVolResize(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -645,7 +645,7 @@ func TestStorageVolResize(t *testing.T) {
 }
 
 func TestStorageVolWipe(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -692,7 +692,7 @@ func TestStorageVolWipe(t *testing.T) {
 }
 
 func TestStorageVolWipePattern(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -753,7 +753,7 @@ func testSecretTypeCephFromXML(name string) string {
 }
 
 func TestIntegrationSecretDefineUndefine(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -775,7 +775,7 @@ func TestIntegrationSecretDefineUndefine(t *testing.T) {
 }
 
 func TestIntegrationSecretGetUUID(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -800,7 +800,7 @@ func TestIntegrationSecretGetUUID(t *testing.T) {
 }
 
 func TestIntegrationSecretGetUUIDString(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -825,7 +825,7 @@ func TestIntegrationSecretGetUUIDString(t *testing.T) {
 }
 
 func TestIntegrationSecretGetXMLDesc(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -850,7 +850,7 @@ func TestIntegrationSecretGetXMLDesc(t *testing.T) {
 }
 
 func TestIntegrationSecretGetUsageType(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -880,7 +880,7 @@ func TestIntegrationSecretGetUsageType(t *testing.T) {
 }
 
 func TestIntegrationSecretGetUsageID(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -911,7 +911,7 @@ func TestIntegrationSecretGetUsageID(t *testing.T) {
 }
 
 func TestIntegrationLookupSecretByUsage(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -939,7 +939,7 @@ func TestIntegrationLookupSecretByUsage(t *testing.T) {
 }
 
 func TestIntegrationGetDomainCPUStats(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1001,7 +1001,7 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 // }
 
 func TestIntegrationListAllInterfaces(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -1033,7 +1033,7 @@ func TestIntegrationListAllInterfaces(t *testing.T) {
 }
 
 func TestIntergrationListAllNWFilters(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -1074,7 +1074,7 @@ func TestIntergrationListAllNWFilters(t *testing.T) {
 }
 
 func TestIntegrationDomainInterfaceStats(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1119,7 +1119,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 }
 
 func TestStorageVolUploadDownload(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return
@@ -1220,7 +1220,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 }
 
 /*func TestDomainMemoryStats(t *testing.T) {
-	conn, err := NewVirConnection("lxc:///")
+	conn, err := NewConnect("lxc:///")
 	if err != nil {
 		t.Error(err)
 		return

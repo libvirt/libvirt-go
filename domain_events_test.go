@@ -31,7 +31,7 @@ func TestDomainEventRegister(t *testing.T) {
 	nbEvents := 0
 
 	callback := DomainEventCallback(
-		func(c *VirConnection, d *Domain, eventDetails interface{}, f func()) int {
+		func(c *Connect, d *Domain, eventDetails interface{}, f func()) int {
 			if lifecycleEvent, ok := eventDetails.(DomainLifecycleEvent); ok {
 				if lifecycleEvent.Event == VIR_DOMAIN_EVENT_STARTED {
 					domName, _ := d.GetName()

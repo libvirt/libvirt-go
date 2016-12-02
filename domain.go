@@ -449,28 +449,28 @@ const (
 	VIR_KEYCODE_SET_RFB    = VirKeycodeSet(C.VIR_KEYCODE_SET_RFB)
 )
 
-type VirConnectDomainEventBlockJobStatus int
+type ConnectDomainEventBlockJobStatus int
 
 const (
-	VIR_DOMAIN_BLOCK_JOB_COMPLETED = VirConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_COMPLETED)
-	VIR_DOMAIN_BLOCK_JOB_FAILED    = VirConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_FAILED)
-	VIR_DOMAIN_BLOCK_JOB_CANCELED  = VirConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_CANCELED)
-	VIR_DOMAIN_BLOCK_JOB_READY     = VirConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_READY)
+	VIR_DOMAIN_BLOCK_JOB_COMPLETED = ConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_COMPLETED)
+	VIR_DOMAIN_BLOCK_JOB_FAILED    = ConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_FAILED)
+	VIR_DOMAIN_BLOCK_JOB_CANCELED  = ConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_CANCELED)
+	VIR_DOMAIN_BLOCK_JOB_READY     = ConnectDomainEventBlockJobStatus(C.VIR_DOMAIN_BLOCK_JOB_READY)
 )
 
-type VirConnectDomainEventDiskChangeReason int
+type ConnectDomainEventDiskChangeReason int
 
 const (
 	// OldSrcPath is set
-	VIR_DOMAIN_EVENT_DISK_CHANGE_MISSING_ON_START = VirConnectDomainEventDiskChangeReason(C.VIR_DOMAIN_EVENT_DISK_CHANGE_MISSING_ON_START)
-	VIR_DOMAIN_EVENT_DISK_DROP_MISSING_ON_START   = VirConnectDomainEventDiskChangeReason(C.VIR_DOMAIN_EVENT_DISK_DROP_MISSING_ON_START)
+	VIR_DOMAIN_EVENT_DISK_CHANGE_MISSING_ON_START = ConnectDomainEventDiskChangeReason(C.VIR_DOMAIN_EVENT_DISK_CHANGE_MISSING_ON_START)
+	VIR_DOMAIN_EVENT_DISK_DROP_MISSING_ON_START   = ConnectDomainEventDiskChangeReason(C.VIR_DOMAIN_EVENT_DISK_DROP_MISSING_ON_START)
 )
 
-type VirConnectDomainEventTrayChangeReason int
+type ConnectDomainEventTrayChangeReason int
 
 const (
-	VIR_DOMAIN_EVENT_TRAY_CHANGE_OPEN  = VirConnectDomainEventTrayChangeReason(C.VIR_DOMAIN_EVENT_TRAY_CHANGE_OPEN)
-	VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE = VirConnectDomainEventTrayChangeReason(C.VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE)
+	VIR_DOMAIN_EVENT_TRAY_CHANGE_OPEN  = ConnectDomainEventTrayChangeReason(C.VIR_DOMAIN_EVENT_TRAY_CHANGE_OPEN)
+	VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE = ConnectDomainEventTrayChangeReason(C.VIR_DOMAIN_EVENT_TRAY_CHANGE_CLOSE)
 )
 
 /*
@@ -2110,7 +2110,7 @@ func (d *Domain) MemoryPeek(start uint64, size uint64, flags DomainMemoryFlags) 
 	return data, nil
 }
 
-func (d *Domain) Migrate(dconn *VirConnection, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
+func (d *Domain) Migrate(dconn *Connect, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
@@ -2132,7 +2132,7 @@ func (d *Domain) Migrate(dconn *VirConnection, flags DomainMigrateFlags, dname s
 	}, nil
 }
 
-func (d *Domain) Migrate2(dconn *VirConnection, dxml string, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
+func (d *Domain) Migrate2(dconn *Connect, dxml string, flags DomainMigrateFlags, dname string, uri string, bandwidth uint64) (*Domain, error) {
 	var cdxml *C.char
 	if dxml != "" {
 		cdxml = C.CString(dxml)
@@ -2263,7 +2263,7 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 	}
 }
 
-func (d *Domain) Migrate3(dconn *VirConnection, params *DomainMigrateParameters, flags DomainMigrateFlags) (*Domain, error) {
+func (d *Domain) Migrate3(dconn *Connect, params *DomainMigrateParameters, flags DomainMigrateFlags) (*Domain, error) {
 
 	info := getMigrateParameterFieldInfo(params)
 	cparams, err := typedParamsPackNew(info)

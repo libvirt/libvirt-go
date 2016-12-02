@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func buildTestDomain() (*Domain, *VirConnection) {
+func buildTestDomain() (*Domain, *Connect) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -21,7 +21,7 @@ func buildTestDomain() (*Domain, *VirConnection) {
 	return dom, conn
 }
 
-func buildSMPTestDomain() (*Domain, *VirConnection) {
+func buildSMPTestDomain() (*Domain, *Connect) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="test">
 		<name>` + time.Now().String() + `</name>
@@ -37,7 +37,7 @@ func buildSMPTestDomain() (*Domain, *VirConnection) {
 	return dom, conn
 }
 
-func buildTransientTestDomain() (*Domain, *VirConnection) {
+func buildTransientTestDomain() (*Domain, *Connect) {
 	conn := buildTestConnection()
 	dom, err := conn.DomainCreateXML(`<domain type="test">
 		<name>`+time.Now().String()+`</name>
