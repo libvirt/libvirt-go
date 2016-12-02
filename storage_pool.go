@@ -9,7 +9,6 @@ package libvirt
 import "C"
 
 import (
-	"io/ioutil"
 	"reflect"
 	"unsafe"
 )
@@ -243,14 +242,6 @@ func (i *VirStoragePoolInfo) GetAllocationInBytes() uint64 {
 
 func (i *VirStoragePoolInfo) GetAvailableInBytes() uint64 {
 	return uint64(i.ptr.available)
-}
-
-func (p *VirStoragePool) StorageVolCreateXMLFromFile(xmlFile string, flags uint32) (VirStorageVol, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirStorageVol{}, err
-	}
-	return p.StorageVolCreateXML(string(xmlConfig), flags)
 }
 
 func (p *VirStoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (VirStorageVol, error) {

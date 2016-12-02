@@ -2,7 +2,6 @@ package libvirt
 
 import (
 	"fmt"
-	"io/ioutil"
 	"reflect"
 	"sync"
 	"unsafe"
@@ -657,14 +656,6 @@ func (c *VirConnection) LookupDomainByUUID(uuid []byte) (VirDomain, error) {
 	return VirDomain{ptr: ptr}, nil
 }
 
-func (c *VirConnection) DomainCreateXMLFromFile(xmlFile string, flags VirDomainCreateFlags) (VirDomain, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirDomain{}, err
-	}
-	return c.DomainCreateXML(string(xmlConfig), flags)
-}
-
 func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateFlags) (VirDomain, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
@@ -673,14 +664,6 @@ func (c *VirConnection) DomainCreateXML(xmlConfig string, flags VirDomainCreateF
 		return VirDomain{}, GetLastError()
 	}
 	return VirDomain{ptr: ptr}, nil
-}
-
-func (c *VirConnection) DomainDefineXMLFromFile(xmlFile string) (VirDomain, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirDomain{}, err
-	}
-	return c.DomainDefineXML(string(xmlConfig))
 }
 
 func (c *VirConnection) DomainDefineXML(xmlConfig string) (VirDomain, error) {
@@ -840,14 +823,6 @@ func (c *VirConnection) NumOfDevices(cap string, flags uint32) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) NetworkDefineXMLFromFile(xmlFile string) (VirNetwork, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirNetwork{}, err
-	}
-	return c.NetworkDefineXML(string(xmlConfig))
-}
-
 func (c *VirConnection) NetworkDefineXML(xmlConfig string) (VirNetwork, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
@@ -945,14 +920,6 @@ func (c *VirConnection) GetMaxVcpus(typeAttr string) (int, error) {
 	return result, nil
 }
 
-func (c *VirConnection) InterfaceDefineXMLFromFile(xmlFile string) (VirInterface, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirInterface{}, err
-	}
-	return c.InterfaceDefineXML(string(xmlConfig), 0)
-}
-
 func (c *VirConnection) InterfaceDefineXML(xmlConfig string, flags uint32) (VirInterface, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
@@ -981,14 +948,6 @@ func (c *VirConnection) LookupInterfaceByMACString(mac string) (VirInterface, er
 		return VirInterface{}, GetLastError()
 	}
 	return VirInterface{ptr: ptr}, nil
-}
-
-func (c *VirConnection) StoragePoolDefineXMLFromFile(xmlFile string) (VirStoragePool, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirStoragePool{}, err
-	}
-	return c.StoragePoolDefineXML(string(xmlConfig), 0)
 }
 
 func (c *VirConnection) StoragePoolDefineXML(xmlConfig string, flags uint32) (VirStoragePool, error) {
@@ -1043,14 +1002,6 @@ func (c *VirConnection) LookupStoragePoolByUUID(uuid []byte) (VirStoragePool, er
 		return VirStoragePool{}, GetLastError()
 	}
 	return VirStoragePool{ptr: ptr}, nil
-}
-
-func (c *VirConnection) NWFilterDefineXMLFromFile(xmlFile string) (VirNWFilter, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirNWFilter{}, err
-	}
-	return c.NWFilterDefineXML(string(xmlConfig))
 }
 
 func (c *VirConnection) NWFilterDefineXML(xmlConfig string) (VirNWFilter, error) {
@@ -1115,14 +1066,6 @@ func (c *VirConnection) LookupStorageVolByPath(path string) (VirStorageVol, erro
 		return VirStorageVol{}, GetLastError()
 	}
 	return VirStorageVol{ptr: ptr}, nil
-}
-
-func (c *VirConnection) SecretDefineXMLFromFile(xmlFile string) (VirSecret, error) {
-	xmlConfig, err := ioutil.ReadFile(xmlFile)
-	if err != nil {
-		return VirSecret{}, err
-	}
-	return c.SecretDefineXML(string(xmlConfig), 0)
 }
 
 func (c *VirConnection) SecretDefineXML(xmlConfig string, flags uint32) (VirSecret, error) {
