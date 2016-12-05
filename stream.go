@@ -31,17 +31,6 @@ type Stream struct {
 	ptr C.virStreamPtr
 }
 
-func NewStream(c *Connect, flags uint) (*Stream, error) {
-	virStream := C.virStreamNew(c.ptr, C.uint(flags))
-	if virStream == nil {
-		return nil, GetLastError()
-	}
-
-	return &Stream{
-		ptr: virStream,
-	}, nil
-}
-
 func (v *Stream) Abort() error {
 	result := C.virStreamAbort(v.ptr)
 	if result == -1 {

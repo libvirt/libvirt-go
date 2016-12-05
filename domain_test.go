@@ -238,7 +238,7 @@ func TestSaveDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if err := conn.Restore(tmpFile); err != nil {
+	if err := conn.DomainRestore(tmpFile); err != nil {
 		t.Error(err)
 		return
 	}
@@ -603,7 +603,7 @@ func TestDomainScreenshot(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	stream, err := NewStream(conn, 0)
+	stream, err := conn.NewStream(0)
 	if err != nil {
 		t.Fatalf("failed to create new stream: %s", err)
 	}

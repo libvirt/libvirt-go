@@ -1862,3 +1862,37 @@ func (c *Connect) FindStoragePoolSources(pooltype string, srcSpec string, flags 
 
 	return C.GoString(ret), nil
 }
+
+func (c *Connect) DomainRestore(srcFile string) error {
+	cPath := C.CString(srcFile)
+	defer C.free(unsafe.Pointer(cPath))
+	if result := C.virDomainRestore(c.ptr, cPath); result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (c *Connect) DomainRestoreFlags(srcFile, xmlConf string, flags uint32) error {
+	cPath := C.CString(srcFile)
+	defer C.free(unsafe.Pointer(cPath))
+	var cXmlConf *C.char
+	if xmlConf != "" {
+		cXmlConf = C.CString(xmlConf)
+		defer C.free(unsafe.Pointer(cXmlConf))
+	}
+	if result := C.virDomainRestoreFlags(c.ptr, cPath, cXmlConf, C.uint(flags)); result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
+func (c *Connect) NewStream(flags uint) (*Stream, error) {
+	virStream := C.virStreamNew(c.ptr, C.uint(flags))
+	if virStream == nil {
+		return nil, GetLastError()
+	}
+
+	return &Stream{
+		ptr: virStream,
+	}, nil
+}

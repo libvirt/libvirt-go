@@ -1165,7 +1165,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 
 	// write above data to the vol
 	// 1. create a stream
-	stream, err := NewStream(conn, 0)
+	stream, err := conn.NewStream(0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1191,7 +1191,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 
 	// read back the data
 	// 1. create a stream
-	downStream, err := NewStream(conn, 0)
+	downStream, err := conn.NewStream(0)
 	if err != nil {
 		t.Fatal(err)
 	}
