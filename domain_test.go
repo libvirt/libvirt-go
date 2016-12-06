@@ -237,6 +237,10 @@ func TestSaveDomain(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
 	// get the name so we can get a handle on it later
 	domName, err := dom.GetName()
 	if err != nil {
@@ -268,6 +272,10 @@ func TestSaveDomainFlags(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
 	const srcFile = "/tmp/libvirt-go-test.tmp"
 	if err := dom.SaveFlags(srcFile, "", 0); err == nil {
 		t.Fatal("expected xml modification unsupported")
@@ -346,6 +354,10 @@ func TestShutdownReboot(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
 	if err := dom.Reboot(0); err != nil {
 		t.Error(err)
 		return
