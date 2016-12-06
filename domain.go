@@ -885,12 +885,12 @@ type DomainMemoryStat struct {
 	Val uint64
 }
 
-type VcpuInfo struct {
+type DomainVcpuInfo struct {
 	Number  uint32
 	State   int32
 	CpuTime uint64
 	Cpu     int32
-	CpuMap  []uint32
+	CpuMap  []bool
 }
 
 func (d *Domain) Free() error {
@@ -1695,86 +1695,50 @@ func (d *Domain) MemoryStats(nrStats uint32, flags uint32) ([]DomainMemoryStat, 
 	return out, nil
 }
 
-func (d *Domain) GetVcpus(maxInfo int32) ([]VcpuInfo, error) {
-	ptr := make([]C.virVcpuInfo, maxInfo)
-
-	result := C.virDomainGetVcpus(
-		d.ptr, (C.virVcpuInfoPtr)(unsafe.Pointer(&ptr[0])),
-		C.int(maxInfo), nil, C.int(0))
-
-	if result == -1 {
-		return []VcpuInfo{}, GetLastError()
+func (d *Domain) GetVcpus() ([]DomainVcpuInfo, error) {
+	var cnodeinfo C.virNodeInfo
+	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
+	if ret == -1 {
+		return []DomainVcpuInfo{}, GetLastError()
 	}
 
-	out := make([]VcpuInfo, 0)
-	for i := 0; i < int(result); i++ {
-		out = append(out, VcpuInfo{
-			Number:  uint32(ptr[i].number),
-			State:   int32(ptr[i].state),
-			CpuTime: uint64(ptr[i].cpuTime),
-			Cpu:     int32(ptr[i].cpu),
-		})
+	var cdominfo C.virDomainInfo
+	ret = C.virDomainGetInfo(d.ptr, &cdominfo)
+	if ret == -1 {
+		return []DomainVcpuInfo{}, GetLastError()
 	}
 
-	return out, nil
-}
+	nvcpus := int(cdominfo.nrVirtCpu)
+	npcpus := int(cnodeinfo.nodes * cnodeinfo.sockets * cnodeinfo.cores * cnodeinfo.threads)
+	maplen := ((npcpus + 7) / 8)
+	ccpumaps := make([]C.uchar, maplen*nvcpus)
+	cinfo := make([]C.virVcpuInfo, nvcpus)
 
-// libvirt-domain.h: CPU_MAPLEN
-func virCpuMapLen(cpu uint32) C.int {
-	return C.int((cpu + 7) / 8)
-}
+	ret = C.virDomainGetVcpus(d.ptr, &cinfo[0], C.int(nvcpus), &ccpumaps[0], C.int(maplen))
+	if ret == -1 {
+		return []DomainVcpuInfo{}, GetLastError()
+	}
 
-// extractCpuMask extracts an individual cpumask from a slice of cpumasks
-// and parses it into a slice of CPU ids
-func extractCpuMask(bytesCpuMaps []byte, n, mapLen int) []uint32 {
-	const byteSize = uint(8)
+	info := make([]DomainVcpuInfo, int(ret))
+	for i := 0; i < int(ret); i++ {
+		affinity := make([]bool, npcpus)
+		for j := 0; j < npcpus; j++ {
+			byte := (i * maplen) + (j / 8)
+			bit := j % 8
 
-	// Repslice the big array to separate only mask number 'n'
-	cpuMap := bytesCpuMaps[n*mapLen : (n+1)*mapLen]
+			affinity[j] = (ccpumaps[byte] & (1 << uint(bit))) != 0
+		}
 
-	out := make([]uint32, 0)
-	for i, b := range cpuMap { // iterate over bytes of the mask
-		for j := uint(0); j < byteSize; j++ { // iterate over bits in this byte
-			if (b>>j)&0x1 == 1 {
-				out = append(out, uint32(j+uint(i)*byteSize))
-			}
+		info[i] = DomainVcpuInfo{
+			Number:  uint32(cinfo[i].number),
+			State:   int32(cinfo[i].state),
+			CpuTime: uint64(cinfo[i].cpuTime),
+			Cpu:     int32(cinfo[i].cpu),
+			CpuMap:  affinity,
 		}
 	}
 
-	return out
-}
-
-func (d *Domain) GetVcpusCpuMap(maxInfo int, maxCPUs uint32) ([]VcpuInfo, error) {
-	ptr := make([]C.virVcpuInfo, maxInfo)
-
-	mapLen := virCpuMapLen(maxCPUs)                    // Length of CPUs bitmask in bytes
-	bufSize := int(mapLen) * int(maxInfo)              // Length of the array of 'maxinfo' bitmasks
-	cpuMaps := (*C.uchar)(C.malloc(C.size_t(bufSize))) // Array itself
-	defer C.free(unsafe.Pointer(cpuMaps))
-
-	result := C.virDomainGetVcpus(
-		d.ptr, (C.virVcpuInfoPtr)(unsafe.Pointer(&ptr[0])),
-		C.int(maxInfo), cpuMaps, mapLen)
-
-	if result == -1 {
-		return nil, GetLastError()
-	}
-
-	// Convert to golang []byte for easier handling
-	bytesCpuMaps := C.GoBytes(unsafe.Pointer(cpuMaps), C.int(bufSize))
-
-	out := make([]VcpuInfo, 0)
-	for i := 0; i < int(result); i++ {
-		out = append(out, VcpuInfo{
-			Number:  uint32(ptr[i].number),
-			State:   int32(ptr[i].state),
-			CpuTime: uint64(ptr[i].cpuTime),
-			Cpu:     int32(ptr[i].cpu),
-			CpuMap:  extractCpuMask(bytesCpuMaps, i, int(mapLen)),
-		})
-	}
-
-	return out, nil
+	return info, nil
 }
 
 func (d *Domain) GetVcpusFlags(flags uint32) (int32, error) {
@@ -1800,26 +1764,18 @@ func (d *Domain) QemuMonitorCommand(flags uint32, command string) (string, error
 	return rstring, nil
 }
 
-func cpuMask(cpuMap []uint32, maxCPUs uint32) (*C.uchar, C.int) {
-	const byteSize = uint(8)
-
-	mapLen := virCpuMapLen(maxCPUs) // Length of CPUs bitmask in bytes
-	bytesCpuMap := make([]byte, mapLen)
-
-	for _, c := range cpuMap {
-		by := uint(c) / byteSize
-		bi := uint(c) % byteSize
-		bytesCpuMap[by] |= 1 << bi
+func (d *Domain) PinVcpu(vcpu uint, cpuMap []bool) error {
+	maplen := (len(cpuMap) + 7) / 8
+	ccpumap := make([]C.uchar, maplen)
+	for i := 0; i < len(cpuMap); i++ {
+		if cpuMap[i] {
+			byte := i / 8
+			bit := i % 8
+			ccpumap[byte] |= (1 << uint(bit))
+		}
 	}
 
-	return (*C.uchar)(&bytesCpuMap[0]), mapLen
-}
-
-func (d *Domain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
-
-	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
-
-	result := C.virDomainPinVcpu(d.ptr, C.uint(vcpu), cpumap, maplen)
+	result := C.virDomainPinVcpu(d.ptr, C.uint(vcpu), &ccpumap[0], C.int(maplen))
 
 	if result == -1 {
 		return GetLastError()
@@ -1828,10 +1784,18 @@ func (d *Domain) PinVcpu(vcpu uint, cpuMap []uint32, maxCPUs uint32) error {
 	return nil
 }
 
-func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []uint32, flags uint, maxCPUs uint32) error {
-	cpumap, maplen := cpuMask(cpuMap, maxCPUs)
+func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []bool, flags uint) error {
+	maplen := (len(cpuMap) + 7) / 8
+	ccpumap := make([]C.uchar, maplen)
+	for i := 0; i < len(cpuMap); i++ {
+		if cpuMap[i] {
+			byte := (i + 7) / 8
+			bit := i % 8
+			ccpumap[byte] |= (1 << uint(bit))
+		}
+	}
 
-	result := C.virDomainPinVcpuFlags(d.ptr, C.uint(vcpu), cpumap, maplen, C.uint(flags))
+	result := C.virDomainPinVcpuFlags(d.ptr, C.uint(vcpu), &ccpumap[0], C.int(maplen), C.uint(flags))
 
 	if result == -1 {
 		return GetLastError()
