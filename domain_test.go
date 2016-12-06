@@ -98,17 +98,17 @@ func TestGetDomainState(t *testing.T) {
 			t.Errorf("CloseConnection() == %d, expected 0", res)
 		}
 	}()
-	state, err := dom.GetState()
+	state, reason, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if len(state) != 2 {
-		t.Error("Length of domain state should be 2")
+	if state != DOMAIN_SHUTOFF {
+		t.Error("Domain state in test transport should be shutoff")
 		return
 	}
-	if state[0] != 5 || state[1] != 0 {
-		t.Error("Domain state in test transport should be [5 0]")
+	if DomainShutoffReason(reason) != DOMAIN_SHUTOFF_UNKNOWN {
+		t.Error("Domain reason in test transport should be unknown")
 		return
 	}
 }
@@ -281,26 +281,34 @@ func TestCreateDestroyDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	state, err := dom.GetState()
+	state, reason, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if DomainState(state[0]) != DOMAIN_RUNNING {
+	if state != DOMAIN_RUNNING {
 		t.Fatal("Domain should be running")
+		return
+	}
+	if DomainRunningReason(reason) != DOMAIN_RUNNING_BOOTED {
+		t.Fatal("Domain reason should be booted")
 		return
 	}
 	if err = dom.Destroy(); err != nil {
 		t.Error(err)
 		return
 	}
-	state, err = dom.GetState()
+	state, reason, err = dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if DomainState(state[0]) != DOMAIN_SHUTOFF {
+	if state != DOMAIN_SHUTOFF {
 		t.Fatal("Domain should be destroyed")
+		return
+	}
+	if DomainShutoffReason(reason) != DOMAIN_SHUTOFF_DESTROYED {
+		t.Fatal("Domain reason should be destroyed")
 		return
 	}
 }
@@ -321,13 +329,17 @@ func TestShutdownDomain(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	state, err := dom.GetState()
+	state, reason, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if state[0] != 5 || state[1] != 1 {
-		t.Fatal("state should be [5 1]")
+	if state != DOMAIN_SHUTOFF {
+		t.Error("Domain state in test transport should be shutoff")
+		return
+	}
+	if DomainShutoffReason(reason) != DOMAIN_SHUTOFF_SHUTDOWN {
+		t.Error("Domain reason in test transport should be shutdown")
 		return
 	}
 }
@@ -554,13 +566,17 @@ func TesDomainShutdownFlags(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	state, err := dom.GetState()
+	state, reason, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if state[0] != 5 || state[1] != 1 {
-		t.Fatal("state should be [5 1]")
+	if state != DOMAIN_SHUTOFF {
+		t.Error("Domain state in test transport should be shutoff")
+		return
+	}
+	if DomainShutoffReason(reason) != DOMAIN_SHUTOFF_SHUTDOWN {
+		t.Error("Domain reason in test transport should be shutdown")
 		return
 	}
 }
@@ -580,13 +596,17 @@ func TesDomainDestoryFlags(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	state, err := dom.GetState()
+	state, reason, err := dom.GetState()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if state[0] != 5 || state[1] != 1 {
-		t.Fatal("state should be [5 1]")
+	if state != DOMAIN_SHUTOFF {
+		t.Error("Domain state in test transport should be shutoff")
+		return
+	}
+	if DomainShutoffReason(reason) != DOMAIN_SHUTOFF_SHUTDOWN {
+		t.Error("Domain reason in test transport should be shutdown")
 		return
 	}
 }

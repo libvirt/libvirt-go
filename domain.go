@@ -1039,7 +1039,7 @@ func (d *Domain) GetName() (string, error) {
 	return C.GoString(name), nil
 }
 
-func (d *Domain) GetState() ([]int, error) {
+func (d *Domain) GetState() (DomainState, int, error) {
 	var cState C.int
 	var cReason C.int
 	result := C.virDomainGetState(d.ptr,
@@ -1047,9 +1047,9 @@ func (d *Domain) GetState() ([]int, error) {
 		(*C.int)(unsafe.Pointer(&cReason)),
 		0)
 	if int(result) == -1 {
-		return []int{}, GetLastError()
+		return 0, 0, GetLastError()
 	}
-	return []int{int(cState), int(cReason)}, nil
+	return DomainState(cState), int(cReason), nil
 }
 
 func (d *Domain) GetID() (uint, error) {

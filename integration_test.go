@@ -200,14 +200,19 @@ func TestDomainCreateWithFlags(t *testing.T) {
 	}()
 
 	if err := dom.CreateWithFlags(DOMAIN_START_PAUSED); err != nil {
-		state, err := dom.GetState()
+		state, reason, err := dom.GetState()
 		if err != nil {
 			t.Error(err)
 			return
 		}
 
-		if DomainState(state[0]) != DOMAIN_PAUSED {
+		if state != DOMAIN_PAUSED {
 			t.Fatalf("Domain should be paused")
+			return
+		}
+		if DomainPausedReason(reason) != DOMAIN_PAUSED_STARTING_UP {
+			t.Fatal("Domain reason should be starting up")
+			return
 		}
 	}
 }
