@@ -21,7 +21,7 @@ func buildTestQEMUConnection() VirConnection {
 func buildTestQEMUDomain() (VirDomain, VirConnection) {
 	conn := buildTestQEMUConnection()
 	dom, err := conn.DomainDefineXML(`<domain type="qemu">
-		<name>` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
+		<name>libvirt-go-test-` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
 		<memory unit="KiB">128</memory>
 		<os>
 			<type>hvm</type>
@@ -217,7 +217,7 @@ func defineTestLxcDomain(conn VirConnection, title string) (VirDomain, error) {
 		title = time.Now().String()
 	}
 	xml := `<domain type='lxc'>
-	  <name>` + title + `</name>
+	  <name>libvirt-go-test-` + title + `</name>
 	  <title>` + title + `</title>
 	  <memory>102400</memory>
 	  <os>
