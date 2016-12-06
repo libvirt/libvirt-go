@@ -483,9 +483,12 @@ const (
  * whereas the same command in 'HMP' would be:
  *	'info cpus'
  */
+
+type DomainQemuMonitorCommandFlags int
+
 const (
-	DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT = 0
-	DOMAIN_QEMU_MONITOR_COMMAND_HMP     = (1 << 0)
+	DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT = DomainQemuMonitorCommandFlags(C.VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT)
+	DOMAIN_QEMU_MONITOR_COMMAND_HMP     = DomainQemuMonitorCommandFlags(C.VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP)
 )
 
 type DomainProcessSignal int
@@ -1749,7 +1752,7 @@ func (d *Domain) GetVcpusFlags(flags uint32) (int32, error) {
 	return int32(result), nil
 }
 
-func (d *Domain) QemuMonitorCommand(flags uint32, command string) (string, error) {
+func (d *Domain) QemuMonitorCommand(command string, flags DomainQemuMonitorCommandFlags) (string, error) {
 	var cResult *C.char
 	cCommand := C.CString(command)
 	defer C.free(unsafe.Pointer(cCommand))

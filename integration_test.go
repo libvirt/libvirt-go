@@ -177,12 +177,12 @@ func TestQemuMonitorCommand(t *testing.T) {
 		return
 	}
 
-	if _, err := dom.QemuMonitorCommand(DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT, "{\"execute\" : \"query-cpus\"}"); err != nil {
+	if _, err := dom.QemuMonitorCommand("{\"execute\" : \"query-cpus\"}", DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT); err != nil {
 		t.Error(err)
 		return
 	}
 
-	if _, err := dom.QemuMonitorCommand(DOMAIN_QEMU_MONITOR_COMMAND_HMP, "info cpus"); err != nil {
+	if _, err := dom.QemuMonitorCommand("info cpus", DOMAIN_QEMU_MONITOR_COMMAND_HMP); err != nil {
 		t.Error(err)
 		return
 	}
