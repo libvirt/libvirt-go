@@ -709,3 +709,80 @@ func TestDomainPinVcpu(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+type CPUStringData struct {
+	cpustr string
+	cpumap []bool
+	err    bool
+}
+
+func TestParserCPUString(t *testing.T) {
+	testDataList := []CPUStringData{
+		CPUStringData{
+			"0-1,4,7-9,^8",
+			[]bool{
+				true, true, false, false,
+				true, false, false, true,
+				false, true,
+			},
+			false,
+		},
+		CPUStringData{
+			"0-0,1,^1",
+			[]bool{true, false},
+			false,
+		},
+		CPUStringData{
+			"0-3,,",
+			[]bool{},
+			true,
+		},
+		CPUStringData{
+			"0-3,,",
+			[]bool{},
+			true,
+		},
+		CPUStringData{
+			"3-0",
+			[]bool{},
+			true,
+		},
+		CPUStringData{
+			"!0-3",
+			[]bool{},
+			true,
+		},
+	}
+
+	for _, testData := range testDataList {
+		actual, err := parseCPUString(testData.cpustr)
+
+		if testData.err {
+			if err == nil {
+				t.Errorf("Expected parse error from %s",
+					testData.cpustr)
+				return
+			}
+		} else {
+			if err != nil {
+				t.Errorf("Unexpected parse error from %s",
+					testData.cpustr)
+				return
+			}
+		}
+
+		if len(actual) != len(testData.cpumap) {
+			t.Errorf("Expected %s got %s",
+				actual, testData.cpumap)
+			return
+		}
+
+		for idx, val := range actual {
+			if val != testData.cpumap[idx] {
+				t.Errorf("Expected %s got %s",
+					actual, testData.cpumap)
+				return
+			}
+		}
+	}
+}

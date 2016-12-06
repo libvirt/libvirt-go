@@ -10,8 +10,11 @@ package libvirt
 import "C"
 
 import (
+	"fmt"
 	"os"
 	"reflect"
+	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -3999,5 +4002,135 @@ func (d *Domain) SaveFlags(destFile string, destXml string, flags uint32) error 
 	if result == -1 {
 		return GetLastError()
 	}
+	return nil
+}
+
+type DomainGuestVcpus struct {
+	Vcpus      []bool
+	Online     []bool
+	Offlinable []bool
+}
+
+func getDomainGuestVcpusParametersFieldInfo(VcpusSet *bool, Vcpus *string, OnlineSet *bool, Online *string, OfflinableSet *bool, Offlinable *string) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"vcpus": typedParamsFieldInfo{
+			set: VcpusSet,
+			s:   Vcpus,
+		},
+		"online": typedParamsFieldInfo{
+			set: OnlineSet,
+			s:   Online,
+		},
+		"offlinable": typedParamsFieldInfo{
+			set: OfflinableSet,
+			s:   Offlinable,
+		},
+	}
+}
+
+func parseCPUString(cpumapstr string) ([]bool, error) {
+	pieces := strings.Split(cpumapstr, ",")
+	var cpumap []bool
+	for _, piece := range pieces {
+		if len(piece) < 1 {
+			return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+		}
+		invert := false
+		if piece[0] == '^' {
+			invert = true
+			piece = piece[1:]
+		}
+		pair := strings.Split(piece, "-")
+		var start, end int
+		var err error
+		if len(pair) == 1 {
+			start, err = strconv.Atoi(pair[0])
+			if err != nil {
+				return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+			}
+			end, err = strconv.Atoi(pair[0])
+			if err != nil {
+				return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+			}
+		} else if len(pair) == 2 {
+			start, err = strconv.Atoi(pair[0])
+			if err != nil {
+				return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+			}
+			end, err = strconv.Atoi(pair[1])
+			if err != nil {
+				return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+			}
+		} else {
+			return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+		}
+		if start > end {
+			return []bool{}, fmt.Errorf("Malformed cpu map string %s", cpumapstr)
+		}
+		if (end + 1) > len(cpumap) {
+			newcpumap := make([]bool, end+1)
+			copy(newcpumap, cpumap)
+			cpumap = newcpumap
+		}
+
+		for i := start; i <= end; i++ {
+			if invert {
+				cpumap[i] = false
+			} else {
+				cpumap[i] = true
+			}
+		}
+	}
+
+	return cpumap, nil
+}
+
+func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
+	var VcpusSet, OnlineSet, OfflinableSet bool
+	var VcpusStr, OnlineStr, OfflinableStr string
+	info := getDomainGuestVcpusParametersFieldInfo(&VcpusSet, &VcpusStr, &OnlineSet, &OnlineStr, &OfflinableSet, &OfflinableStr)
+
+	var cparams C.virTypedParameterPtr
+	var nparams C.uint
+	ret := C.virDomainGetGuestVcpus(d.ptr, &cparams, &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsFree(cparams, C.int(nparams))
+
+	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DomainGuestVcpus{}, nil
+}
+
+func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
+	cpumap := ""
+	for i := 0; i < len(cpus); i++ {
+		if cpus[i] {
+			if cpumap == "" {
+				cpumap = string(i)
+			} else {
+				cpumap += "," + string(i)
+			}
+		}
+	}
+
+	var cstate C.int
+	if state {
+		cstate = 1
+	} else {
+		cstate = 0
+	}
+	ccpumap := C.CString(cpumap)
+	defer C.free(ccpumap)
+	ret := C.virDomainSetGuestVcpus(d.ptr, ccpumap, cstate, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
 	return nil
 }
