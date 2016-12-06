@@ -968,7 +968,7 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if ncpus != 1 {
+	if ncpus < 1 {
 		t.Fatal("Number of CPUs should be 1, got", ncpus)
 	}
 
@@ -990,8 +990,8 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(params) != lxcNumParams {
-		t.Fatalf("Wanted %d returned parameters, got %d", lxcNumParams, len(params))
+	if len(params) != (lxcNumParams * ncpus) {
+		t.Fatalf("Wanted %d returned parameters, got %d", lxcNumParams*ncpus, len(params))
 	}
 	param := params[0]
 	if param.Name != lxcParamName {
