@@ -26,49 +26,54 @@ type typedParamsFieldInfo struct {
 	sl  *[]string
 }
 
-func typedParamsUnpackLen(cparams *C.virTypedParameter, nparams int, infomap map[string]typedParamsFieldInfo) error {
+func typedParamsUnpackLen(cparams *C.virTypedParameter, nparams int, infomap map[string]typedParamsFieldInfo) (uint, error) {
+	count := uint(0)
 	for i := 0; i < nparams; i++ {
 		var cparam *C.virTypedParameter
 		cparam = (*C.virTypedParameter)(unsafe.Pointer(uintptr(unsafe.Pointer(cparams)) + unsafe.Sizeof(*cparam)*uintptr(i)))
 		name := C.GoString((*C.char)(unsafe.Pointer(&cparam.field)))
 		info, ok := infomap[name]
 		if !ok {
+			// Ignore unknown keys so that we don't break if
+			// run against a newer libvirt that returns more
+			// parameters than we currently have code to
+			// consume
 			continue
 		}
 		switch cparam._type {
 		case C.VIR_TYPED_PARAM_INT:
 			if info.i == nil {
-				return fmt.Errorf("field %s expects an int", name)
+				return 0, fmt.Errorf("field %s expects an int", name)
 			}
 			*info.i = int(*(*C.int)(unsafe.Pointer(&cparam.value)))
 			*info.set = true
 		case C.VIR_TYPED_PARAM_UINT:
 			if info.ui == nil {
-				return fmt.Errorf("field %s expects a uint", name)
+				return 0, fmt.Errorf("field %s expects a uint", name)
 			}
 			*info.ui = uint(*(*C.uint)(unsafe.Pointer(&cparam.value)))
 			*info.set = true
 		case C.VIR_TYPED_PARAM_LLONG:
 			if info.l == nil {
-				return fmt.Errorf("field %s expects an int64", name)
+				return 0, fmt.Errorf("field %s expects an int64", name)
 			}
 			*info.l = int64(*(*C.longlong)(unsafe.Pointer(&cparam.value)))
 			*info.set = true
 		case C.VIR_TYPED_PARAM_ULLONG:
 			if info.ul == nil {
-				return fmt.Errorf("field %s expects a uint64", name)
+				return 0, fmt.Errorf("field %s expects a uint64", name)
 			}
 			*info.ul = uint64(*(*C.ulonglong)(unsafe.Pointer(&cparam.value)))
 			*info.set = true
 		case C.VIR_TYPED_PARAM_DOUBLE:
 			if info.d == nil {
-				return fmt.Errorf("field %s expects a float64", name)
+				return 0, fmt.Errorf("field %s expects a float64", name)
 			}
 			*info.d = float64(*(*C.double)(unsafe.Pointer(&cparam.value)))
 			*info.set = true
 		case C.VIR_TYPED_PARAM_BOOLEAN:
 			if info.b == nil {
-				return fmt.Errorf("field %s expects a bool", name)
+				return 0, fmt.Errorf("field %s expects a bool", name)
 			}
 			*info.b = *(*C.char)(unsafe.Pointer(&cparam.value)) == 1
 			*info.set = true
@@ -80,15 +85,16 @@ func typedParamsUnpackLen(cparams *C.virTypedParameter, nparams int, infomap map
 				*info.sl = append(*info.sl, C.GoString(*(**C.char)(unsafe.Pointer(&cparam.value))))
 				*info.set = true
 			} else {
-				return fmt.Errorf("field %s expects a string/string list", name)
+				return 0, fmt.Errorf("field %s expects a string/string list", name)
 			}
 		}
+		count++
 	}
 
-	return nil
+	return count, nil
 }
 
-func typedParamsUnpack(cparams []C.virTypedParameter, infomap map[string]typedParamsFieldInfo) error {
+func typedParamsUnpack(cparams []C.virTypedParameter, infomap map[string]typedParamsFieldInfo) (uint, error) {
 	return typedParamsUnpackLen(&cparams[0], len(cparams), infomap)
 }
 
@@ -101,6 +107,10 @@ func typedParamsPackLen(cparams *C.virTypedParameter, nparams int, infomap map[s
 		name := C.GoString((*C.char)(unsafe.Pointer(&cparam.field)))
 		info, ok := infomap[name]
 		if !ok {
+			// Ignore unknown keys so that we don't break if
+			// run against a newer libvirt that returns more
+			// parameters than we currently have code to
+			// consume
 			continue
 		}
 		if !*info.set {

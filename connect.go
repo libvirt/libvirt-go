@@ -1580,7 +1580,7 @@ func (c *Connect) GetMemoryParameters(flags uint32) (*NodeMemoryParameters, erro
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -1895,4 +1895,483 @@ func (c *Connect) NewStream(flags uint) (*Stream, error) {
 	return &Stream{
 		ptr: virStream,
 	}, nil
+}
+
+type DomainStatsState struct {
+	StateSet  bool
+	State     DomainState
+	ReasonSet bool
+	Reason    int
+}
+
+func getDomainStatsStateFieldInfo(params *DomainStatsState) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"state.state": typedParamsFieldInfo{
+			set: &params.StateSet,
+			i:   (*int)(unsafe.Pointer(&params.State)),
+		},
+		"state.reason": typedParamsFieldInfo{
+			set: &params.ReasonSet,
+			i:   &params.Reason,
+		},
+	}
+}
+
+type DomainStatsCPU struct {
+	TimeSet   bool
+	Time      uint64
+	UserSet   bool
+	User      uint64
+	SystemSet bool
+	System    uint64
+}
+
+func getDomainStatsCPUFieldInfo(params *DomainStatsCPU) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"cpu.time": typedParamsFieldInfo{
+			set: &params.TimeSet,
+			ul:  &params.Time,
+		},
+		"cpu.user": typedParamsFieldInfo{
+			set: &params.UserSet,
+			ul:  &params.User,
+		},
+		"cpu.system": typedParamsFieldInfo{
+			set: &params.SystemSet,
+			ul:  &params.System,
+		},
+	}
+}
+
+type DomainStatsBalloon struct {
+	CurrentSet bool
+	Current    uint64
+	MaximumSet bool
+	Maximum    uint64
+}
+
+func getDomainStatsBalloonFieldInfo(params *DomainStatsBalloon) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"balloon.current": typedParamsFieldInfo{
+			set: &params.CurrentSet,
+			ul:  &params.Current,
+		},
+		"balloon.maximum": typedParamsFieldInfo{
+			set: &params.MaximumSet,
+			ul:  &params.Maximum,
+		},
+	}
+}
+
+type DomainStatsVcpu struct {
+	StateSet bool
+	State    VcpuState
+	TimeSet  bool
+	Time     uint64
+}
+
+func getDomainStatsVcpuFieldInfo(idx int, params *DomainStatsVcpu) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("vcpu.%d.state", idx): typedParamsFieldInfo{
+			set: &params.StateSet,
+			i:   (*int)(unsafe.Pointer(&params.State)),
+		},
+		fmt.Sprintf("vcpu.%d.time", idx): typedParamsFieldInfo{
+			set: &params.TimeSet,
+			ul:  &params.Time,
+		},
+	}
+}
+
+type DomainStatsNet struct {
+	NameSet    bool
+	Name       string
+	RxBytesSet bool
+	RxBytes    uint64
+	RxPktsSet  bool
+	RxPkts     uint64
+	RxErrsSet  bool
+	RxErrs     uint64
+	RxDropSet  bool
+	RxDrop     uint64
+	TxBytesSet bool
+	TxBytes    uint64
+	TxPktsSet  bool
+	TxPkts     uint64
+	TxErrsSet  bool
+	TxErrs     uint64
+	TxDropSet  bool
+	TxDrop     uint64
+}
+
+func getDomainStatsNetFieldInfo(idx int, params *DomainStatsNet) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("net.%d.name", idx): typedParamsFieldInfo{
+			set: &params.NameSet,
+			s:   &params.Name,
+		},
+		fmt.Sprintf("net.%d.rx.bytes", idx): typedParamsFieldInfo{
+			set: &params.RxBytesSet,
+			ul:  &params.RxBytes,
+		},
+		fmt.Sprintf("net.%d.rx.pkts", idx): typedParamsFieldInfo{
+			set: &params.RxPktsSet,
+			ul:  &params.RxPkts,
+		},
+		fmt.Sprintf("net.%d.rx.errs", idx): typedParamsFieldInfo{
+			set: &params.RxErrsSet,
+			ul:  &params.RxErrs,
+		},
+		fmt.Sprintf("net.%d.rx.drop", idx): typedParamsFieldInfo{
+			set: &params.RxDropSet,
+			ul:  &params.RxDrop,
+		},
+		fmt.Sprintf("net.%d.tx.bytes", idx): typedParamsFieldInfo{
+			set: &params.TxBytesSet,
+			ul:  &params.TxBytes,
+		},
+		fmt.Sprintf("net.%d.tx.pkts", idx): typedParamsFieldInfo{
+			set: &params.TxPktsSet,
+			ul:  &params.TxPkts,
+		},
+		fmt.Sprintf("net.%d.tx.errs", idx): typedParamsFieldInfo{
+			set: &params.TxErrsSet,
+			ul:  &params.TxErrs,
+		},
+		fmt.Sprintf("net.%d.tx.drop", idx): typedParamsFieldInfo{
+			set: &params.TxDropSet,
+			ul:  &params.TxDrop,
+		},
+	}
+}
+
+type DomainStatsBlock struct {
+	NameSet         bool
+	Name            string
+	BackingIndexSet bool
+	BackingIndex    uint
+	PathSet         bool
+	Path            string
+	RdReqsSet       bool
+	RdReqs          uint64
+	RdBytesSet      bool
+	RdBytes         uint64
+	RdTimesSet      bool
+	RdTimes         uint64
+	WrReqsSet       bool
+	WrReqs          uint64
+	WrBytesSet      bool
+	WrBytes         uint64
+	WrTimesSet      bool
+	WrTimes         uint64
+	FlReqsSet       bool
+	FlReqs          uint64
+	FlTimesSet      bool
+	FlTimes         uint64
+	ErrorsSet       bool
+	Errors          uint64
+	AllocationSet   bool
+	Allocation      uint64
+	CapacitySet     bool
+	Capacity        uint64
+	PhysicalSet     bool
+	Physical        uint64
+}
+
+func getDomainStatsBlockFieldInfo(idx int, params *DomainStatsBlock) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("block.%d.name", idx): typedParamsFieldInfo{
+			set: &params.NameSet,
+			s:   &params.Name,
+		},
+		fmt.Sprintf("block.%d.backingIndex", idx): typedParamsFieldInfo{
+			set: &params.BackingIndexSet,
+			ui:  &params.BackingIndex,
+		},
+		fmt.Sprintf("block.%d.path", idx): typedParamsFieldInfo{
+			set: &params.PathSet,
+			s:   &params.Path,
+		},
+		fmt.Sprintf("block.%d.rd.reqs", idx): typedParamsFieldInfo{
+			set: &params.RdReqsSet,
+			ul:  &params.RdReqs,
+		},
+		fmt.Sprintf("block.%d.rd.bytes", idx): typedParamsFieldInfo{
+			set: &params.RdBytesSet,
+			ul:  &params.RdBytes,
+		},
+		fmt.Sprintf("block.%d.rd.times", idx): typedParamsFieldInfo{
+			set: &params.RdTimesSet,
+			ul:  &params.RdTimes,
+		},
+		fmt.Sprintf("block.%d.wr.reqs", idx): typedParamsFieldInfo{
+			set: &params.WrReqsSet,
+			ul:  &params.WrReqs,
+		},
+		fmt.Sprintf("block.%d.wr.bytes", idx): typedParamsFieldInfo{
+			set: &params.WrBytesSet,
+			ul:  &params.WrBytes,
+		},
+		fmt.Sprintf("block.%d.wr.times", idx): typedParamsFieldInfo{
+			set: &params.WrTimesSet,
+			ul:  &params.WrTimes,
+		},
+		fmt.Sprintf("block.%d.fl.reqs", idx): typedParamsFieldInfo{
+			set: &params.FlReqsSet,
+			ul:  &params.FlReqs,
+		},
+		fmt.Sprintf("block.%d.fl.times", idx): typedParamsFieldInfo{
+			set: &params.FlTimesSet,
+			ul:  &params.FlTimes,
+		},
+		fmt.Sprintf("block.%d.errors", idx): typedParamsFieldInfo{
+			set: &params.ErrorsSet,
+			ul:  &params.Errors,
+		},
+		fmt.Sprintf("block.%d.allocation", idx): typedParamsFieldInfo{
+			set: &params.AllocationSet,
+			ul:  &params.Allocation,
+		},
+		fmt.Sprintf("block.%d.capacity", idx): typedParamsFieldInfo{
+			set: &params.CapacitySet,
+			ul:  &params.Capacity,
+		},
+		fmt.Sprintf("block.%d.physical", idx): typedParamsFieldInfo{
+			set: &params.PhysicalSet,
+			ul:  &params.Physical,
+		},
+	}
+}
+
+type DomainStatsPerf struct {
+	CmtSet             bool
+	Cmt                uint64
+	MbmtSet            bool
+	Mbmt               uint64
+	MbmlSet            bool
+	Mbml               uint64
+	CacheMissesSet     bool
+	CacheMisses        uint64
+	CacheReferencesSet bool
+	CacheReferences    uint64
+	InstructionsSet    bool
+	Instructions       uint64
+	CpuCyclesSet       bool
+	CpuCycles          uint64
+}
+
+func getDomainStatsPerfFieldInfo(params *DomainStatsPerf) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"perf.cmt": typedParamsFieldInfo{
+			set: &params.CmtSet,
+			ul:  &params.Cmt,
+		},
+		"perf.mbmt": typedParamsFieldInfo{
+			set: &params.MbmtSet,
+			ul:  &params.Mbmt,
+		},
+		"perf.mbml": typedParamsFieldInfo{
+			set: &params.MbmlSet,
+			ul:  &params.Mbml,
+		},
+		"perf.cache_misses": typedParamsFieldInfo{
+			set: &params.CacheMissesSet,
+			ul:  &params.CacheMisses,
+		},
+		"perf.cache_references": typedParamsFieldInfo{
+			set: &params.CacheReferencesSet,
+			ul:  &params.CacheReferences,
+		},
+		"perf.instructions": typedParamsFieldInfo{
+			set: &params.InstructionsSet,
+			ul:  &params.Instructions,
+		},
+		"perf.cpu_cycles": typedParamsFieldInfo{
+			set: &params.CpuCyclesSet,
+			ul:  &params.CpuCycles,
+		},
+	}
+}
+
+type DomainStats struct {
+	Domain  *Domain
+	State   *DomainStatsState
+	Cpu     *DomainStatsCPU
+	Balloon *DomainStatsBalloon
+	Vcpu    []DomainStatsVcpu
+	Net     []DomainStatsNet
+	Block   []DomainStatsBlock
+	Perf    *DomainStatsPerf
+}
+
+type domainStatsLengths struct {
+	VcpuCurrentSet bool
+	VcpuCurrent    uint
+	VcpuMaximumSet bool
+	VcpuMaximum    uint
+	NetCountSet    bool
+	NetCount       uint
+	BlockCountSet  bool
+	BlockCount     uint
+}
+
+func getDomainStatsLengthsFieldInfo(params *domainStatsLengths) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"vcpu.current": typedParamsFieldInfo{
+			set: &params.VcpuCurrentSet,
+			ui:  &params.VcpuCurrent,
+		},
+		"vcpu.maximum": typedParamsFieldInfo{
+			set: &params.VcpuMaximumSet,
+			ui:  &params.VcpuMaximum,
+		},
+		"net.count": typedParamsFieldInfo{
+			set: &params.NetCountSet,
+			ui:  &params.NetCount,
+		},
+		"block.count": typedParamsFieldInfo{
+			set: &params.BlockCountSet,
+			ui:  &params.BlockCount,
+		},
+	}
+}
+
+func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes, flags ConnectGetAllDomainStatsFlags) ([]DomainStats, error) {
+	var ret C.int
+	var cstats *C.virDomainStatsRecordPtr
+	if len(doms) > 0 {
+		cdoms := make([]C.virDomainPtr, len(doms))
+		for i := 0; i < len(doms); i++ {
+			cdoms[i] = doms[i].ptr
+		}
+
+		ret = C.virDomainListGetStats(&cdoms[0], C.uint(statsTypes), &cstats, C.uint(flags))
+	} else {
+		ret = C.virConnectGetAllDomainStats(c.ptr, C.uint(statsTypes), &cstats, C.uint(flags))
+	}
+	if ret == -1 {
+		return []DomainStats{}, GetLastError()
+	}
+
+	defer C.virDomainStatsRecordListFree(cstats)
+
+	stats := make([]DomainStats, ret)
+	for i := 0; i < int(ret); i++ {
+		cdomstats := *(*C.virDomainStatsRecordPtr)(unsafe.Pointer(uintptr(unsafe.Pointer(cstats)) + (unsafe.Sizeof(*cstats) * uintptr(i))))
+
+		domstats := DomainStats{
+			Domain: &Domain{ptr: cdomstats.dom},
+		}
+
+		state := &DomainStatsState{}
+		stateInfo := getDomainStatsStateFieldInfo(state)
+
+		count, err := typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), stateInfo)
+		if err != nil {
+			return []DomainStats{}, err
+		}
+		if count != 0 {
+			domstats.State = state
+		}
+
+		cpu := &DomainStatsCPU{}
+		cpuInfo := getDomainStatsCPUFieldInfo(cpu)
+
+		count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), cpuInfo)
+		if err != nil {
+			return []DomainStats{}, err
+		}
+		if count != 0 {
+			domstats.Cpu = cpu
+		}
+
+		balloon := &DomainStatsBalloon{}
+		balloonInfo := getDomainStatsBalloonFieldInfo(balloon)
+
+		count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), balloonInfo)
+		if err != nil {
+			return []DomainStats{}, err
+		}
+		if count != 0 {
+			domstats.Balloon = balloon
+		}
+
+		perf := &DomainStatsPerf{}
+		perfInfo := getDomainStatsPerfFieldInfo(perf)
+
+		count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), perfInfo)
+		if err != nil {
+			return []DomainStats{}, err
+		}
+		if count != 0 {
+			domstats.Perf = perf
+		}
+
+		lengths := domainStatsLengths{}
+		lengthsInfo := getDomainStatsLengthsFieldInfo(&lengths)
+
+		count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), lengthsInfo)
+		if err != nil {
+			return []DomainStats{}, err
+		}
+
+		if !lengths.VcpuMaximumSet && lengths.VcpuCurrentSet {
+			lengths.VcpuMaximum = lengths.VcpuCurrent
+		}
+
+		if lengths.VcpuMaximum > 0 {
+
+			domstats.Vcpu = make([]DomainStatsVcpu, lengths.VcpuMaximum)
+			for j := 0; j < int(lengths.VcpuMaximum); j++ {
+				vcpu := DomainStatsVcpu{}
+				vcpuInfo := getDomainStatsVcpuFieldInfo(j, &vcpu)
+
+				count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), vcpuInfo)
+				if err != nil {
+					return []DomainStats{}, err
+				}
+				if count == 0 {
+					vcpu.StateSet = true
+					vcpu.State = VCPU_OFFLINE
+				}
+				domstats.Vcpu[j] = vcpu
+			}
+		}
+
+		if lengths.BlockCountSet && lengths.BlockCount > 0 {
+			domstats.Block = make([]DomainStatsBlock, lengths.BlockCount)
+			for j := 0; j < int(lengths.BlockCount); j++ {
+				block := DomainStatsBlock{}
+				blockInfo := getDomainStatsBlockFieldInfo(j, &block)
+
+				count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), blockInfo)
+				if err != nil {
+					return []DomainStats{}, err
+				}
+				if count != 0 {
+					domstats.Block[j] = block
+				}
+			}
+		}
+
+		if lengths.NetCountSet && lengths.NetCount > 0 {
+			domstats.Net = make([]DomainStatsNet, lengths.NetCount)
+			for j := 0; j < int(lengths.NetCount); j++ {
+				net := DomainStatsNet{}
+				netInfo := getDomainStatsNetFieldInfo(j, &net)
+
+				count, err = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), netInfo)
+				if err != nil {
+					return []DomainStats{}, err
+				}
+				if count != 0 {
+					domstats.Net[j] = net
+				}
+			}
+		}
+
+		stats[i] = domstats
+	}
+
+	return stats, nil
 }

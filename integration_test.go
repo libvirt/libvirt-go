@@ -1281,3 +1281,25 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 		t.Fatal("should have 0 interfaces", len(ifaces))
 	}
 }
+
+func TestDomainGetAllStats(t *testing.T) {
+	dom, conn := buildTestQEMUDomain()
+	defer func() {
+		dom.Free()
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
+
+	_, err := conn.GetAllDomainStats([]*Domain{}, DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_INTERFACE|DOMAIN_STATS_BALLOON|DOMAIN_STATS_BLOCK|DOMAIN_STATS_PERF|DOMAIN_STATS_VCPU, 0)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}

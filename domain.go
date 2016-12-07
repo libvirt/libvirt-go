@@ -1182,7 +1182,7 @@ func (d *Domain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]DomainCP
 		offset := i * int(nparams)
 		info := getCPUStatsFieldInfo(&stats[i])
 		cparamscpu := cparams[offset : offset+int(ret)]
-		err := typedParamsUnpack(cparamscpu, info)
+		_, err := typedParamsUnpack(cparamscpu, info)
 		if err != nil {
 			return []DomainCPUStats{}, err
 		}
@@ -1261,7 +1261,7 @@ func (d *Domain) GetInterfaceParameters(device string, flags uint32) (*DomainInt
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -1593,7 +1593,7 @@ func (d *Domain) BlockStatsFlags(disk string, flags uint32) (*DomainBlockStats, 
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -2446,7 +2446,7 @@ func (d *Domain) GetBlkioParameters(flags DomainModificationImpact) (*DomainBlki
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -2625,7 +2625,7 @@ func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*D
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -2981,7 +2981,7 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 	params := DomainJobInfo{}
 	info := getDomainJobInfoFieldInfo(&params)
 
-	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, err := typedParamsUnpackLen(cparams, int(nparams), info)
 	if err != nil {
 		return nil, GetLastError()
 	}
@@ -3068,7 +3068,7 @@ func (d *Domain) GetMemoryParameters(flags DomainModificationImpact) (*DomainMem
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -3142,7 +3142,7 @@ func (d *Domain) GetNumaParameters(flags DomainModificationImpact) (*DomainNumaP
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -3241,7 +3241,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 
 	defer C.virTypedParamsFree(cparams, nparams)
 
-	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, err := typedParamsUnpackLen(cparams, int(nparams), info)
 	if err != nil {
 		return nil, err
 	}
@@ -3388,7 +3388,7 @@ func (d *Domain) GetSchedulerParameters() (*DomainSchedulerParameters, error) {
 	}
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -3420,7 +3420,7 @@ func (d *Domain) GetSchedulerParametersFlags(flags DomainModificationImpact) (*D
 	}
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
 
-	err := typedParamsUnpack(cparams, info)
+	_, err := typedParamsUnpack(cparams, info)
 	if err != nil {
 		return nil, err
 	}
@@ -4099,7 +4099,7 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 
 	defer C.virTypedParamsFree(cparams, C.int(nparams))
 
-	err := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, err := typedParamsUnpackLen(cparams, int(nparams), info)
 	if err != nil {
 		return nil, err
 	}
