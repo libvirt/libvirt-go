@@ -11,7 +11,7 @@ func TestGetLastError(t *testing.T) {
 		t.Fatalf("Expected an error when creating invalid connection")
 	}
 	got := GetLastError()
-	expected := Error{0, 0, "", 0}
+	expected := Error{0, 0, "Missing error", 0}
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("Expected error %+v, got %+v", expected, got)
 	}

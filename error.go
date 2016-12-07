@@ -541,14 +541,14 @@ type Error struct {
 }
 
 func (err Error) Error() string {
-	return fmt.Sprintf("[Code-%d] [Domain-%d] %s",
+	return fmt.Sprintf("virError(Code=%d, Domain=%d, Message='%s')",
 		err.Code, err.Domain, err.Message)
 }
 
 var ErrNoError = Error{
 	Code:    ERR_OK,
 	Domain:  FROM_NONE,
-	Message: "",
+	Message: "Missing error",
 	Level:   ERR_NONE,
 }
 
