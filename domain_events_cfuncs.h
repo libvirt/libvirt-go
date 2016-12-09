@@ -36,8 +36,14 @@ void domainEventDiskChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
 void domainEventTrayChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                       const char *devAlias, int reason, void* data);
 
-void domainEventReasonCallback_cgo(virConnectPtr c, virDomainPtr d,
-                                  int reason, void* data);
+void domainEventPMSuspendCallback_cgo(virConnectPtr c, virDomainPtr d,
+				      int reason, void* data);
+
+void domainEventPMWakeupCallback_cgo(virConnectPtr c, virDomainPtr d,
+				     int reason, void* data);
+
+void domainEventPMSuspendDiskCallback_cgo(virConnectPtr c, virDomainPtr d,
+					  int reason, void* data);
 
 void domainEventBalloonChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          unsigned long long actual, void* data);

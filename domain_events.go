@@ -12,25 +12,35 @@ import (
 */
 import "C"
 
-type DomainLifecycleEvent struct {
+type DomainEventGenericCallback func(c *Connect, d *Domain)
+
+type DomainEventLifecycle struct {
 	Event DomainEventType
 	// TODO: we can make Detail typesafe somehow ?
 	Detail int
 }
 
-type DomainRTCChangeEvent struct {
+type DomainEventLifecycleCallback func(c *Connect, d *Domain, event *DomainEventLifecycle)
+
+type DomainEventRTCChange struct {
 	Utcoffset int64
 }
 
-type DomainWatchdogEvent struct {
+type DomainEventRTCChangeCallback func(c *Connect, d *Domain, event *DomainEventRTCChange)
+
+type DomainEventWatchdog struct {
 	Action DomainEventWatchdogAction
 }
 
-type DomainIOErrorEvent struct {
+type DomainEventWatchdogCallback func(c *Connect, d *Domain, event *DomainEventWatchdog)
+
+type DomainEventIOError struct {
 	SrcPath  string
 	DevAlias string
 	Action   DomainEventIOErrorAction
 }
+
+type DomainEventIOErrorCallback func(c *Connect, d *Domain, event *DomainEventIOError)
 
 type DomainEventGraphicsAddress struct {
 	Family  DomainEventGraphicsAddressType
@@ -43,7 +53,7 @@ type DomainEventGraphicsSubjectIdentity struct {
 	Name string
 }
 
-type DomainGraphicsEvent struct {
+type DomainEventGraphics struct {
 	Phase      DomainEventGraphicsPhase
 	Local      DomainEventGraphicsAddress
 	Remote     DomainEventGraphicsAddress
@@ -51,109 +61,167 @@ type DomainGraphicsEvent struct {
 	Subject    []DomainEventGraphicsSubjectIdentity
 }
 
-type DomainIOErrorReasonEvent struct {
-	DomainIOErrorEvent
-	Reason string
+type DomainEventGraphicsCallback func(c *Connect, d *Domain, event *DomainEventGraphics)
+
+type DomainEventIOErrorReason struct {
+	SrcPath  string
+	DevAlias string
+	Action   DomainEventIOErrorAction
+	Reason   string
 }
 
-type DomainBlockJobEvent struct {
+type DomainEventIOErrorReasonCallback func(c *Connect, d *Domain, event *DomainEventIOErrorReason)
+
+type DomainEventBlockJob struct {
 	Disk   string
 	Type   DomainBlockJobType
 	Status ConnectDomainEventBlockJobStatus
 }
 
-type DomainDiskChangeEvent struct {
+type DomainEventBlockJobCallback func(c *Connect, d *Domain, event *DomainEventBlockJob)
+
+type DomainEventDiskChange struct {
 	OldSrcPath string
 	NewSrcPath string
 	DevAlias   string
 	Reason     ConnectDomainEventDiskChangeReason
 }
 
-type DomainTrayChangeEvent struct {
+type DomainEventDiskChangeCallback func(c *Connect, d *Domain, event *DomainEventDiskChange)
+
+type DomainEventTrayChange struct {
 	DevAlias string
 	Reason   ConnectDomainEventTrayChangeReason
 }
 
-type DomainReasonEvent struct {
+type DomainEventTrayChangeCallback func(c *Connect, d *Domain, event *DomainEventTrayChange)
+
+type DomainEventPMSuspend struct {
 	Reason int
 }
 
-type DomainBalloonChangeEvent struct {
+type DomainEventPMSuspendCallback func(c *Connect, d *Domain, event *DomainEventPMSuspend)
+
+type DomainEventPMWakeup struct {
+	Reason int
+}
+
+type DomainEventPMWakeupCallback func(c *Connect, d *Domain, event *DomainEventPMWakeup)
+
+type DomainEventPMSuspendDisk struct {
+	Reason int
+}
+
+type DomainEventPMSuspendDiskCallback func(c *Connect, d *Domain, event *DomainEventPMSuspendDisk)
+
+type DomainEventBalloonChange struct {
 	Actual uint64
 }
 
-type DomainDeviceRemovedEvent struct {
+type DomainEventBalloonChangeCallback func(c *Connect, d *Domain, event *DomainEventBalloonChange)
+
+type DomainEventDeviceRemoved struct {
 	DevAlias string
 }
+
+type DomainEventDeviceRemovedCallback func(c *Connect, d *Domain, event *DomainEventDeviceRemoved)
 
 //export domainEventLifecycleCallback
 func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	event int, detail int,
-	opaque int) {
+	goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainLifecycleEvent{
+	eventDetails := &DomainEventLifecycle{
 		Event:  DomainEventType(event),
 		Detail: detail,
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventLifecycleCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
 }
 
 //export domainEventGenericCallback
 func domainEventGenericCallback(c C.virConnectPtr, d C.virDomainPtr,
-	opaque int) {
+	goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	callDomainCallbackId(opaque, &connection, &domain, nil)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventGenericCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain)
 }
 
 //export domainEventRTCChangeCallback
 func domainEventRTCChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	utcoffset int64, opaque int) {
+	utcoffset int64, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainRTCChangeEvent{
+	eventDetails := &DomainEventRTCChange{
 		Utcoffset: utcoffset,
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventRTCChangeCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventWatchdogCallback
 func domainEventWatchdogCallback(c C.virConnectPtr, d C.virDomainPtr,
-	action int, opaque int) {
+	action int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainWatchdogEvent{
+	eventDetails := &DomainEventWatchdog{
 		Action: DomainEventWatchdogAction(action),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventWatchdogCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventIOErrorCallback
 func domainEventIOErrorCallback(c C.virConnectPtr, d C.virDomainPtr,
-	srcPath *C.char, devAlias *C.char, action int, opaque int) {
+	srcPath *C.char, devAlias *C.char, action int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainIOErrorEvent{
+	eventDetails := &DomainEventIOError{
 		SrcPath:  C.GoString(srcPath),
 		DevAlias: C.GoString(devAlias),
 		Action:   DomainEventIOErrorAction(action),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventIOErrorCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventGraphicsCallback
@@ -163,10 +231,10 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 	remote C.virDomainEventGraphicsAddressPtr,
 	authScheme *C.char,
 	subject C.virDomainEventGraphicsSubjectPtr,
-	opaque int) {
+	goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
 	subjectGo := make([]DomainEventGraphicsSubjectIdentity, subject.nidentity)
 	nidentities := int(subject.nidentity)
@@ -180,7 +248,7 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 		)
 	}
 
-	eventDetails := DomainGraphicsEvent{
+	eventDetails := &DomainEventGraphics{
 		Phase: DomainEventGraphicsPhase(phase),
 		Local: DomainEventGraphicsAddress{
 			Family:  DomainEventGraphicsAddressType(local.family),
@@ -196,171 +264,519 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 		Subject:    subjectGo,
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventGraphicsCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventIOErrorReasonCallback
 func domainEventIOErrorReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
 	srcPath *C.char, devAlias *C.char, action int, reason *C.char,
-	opaque int) {
+	goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainIOErrorReasonEvent{
-		DomainIOErrorEvent: DomainIOErrorEvent{
-			SrcPath:  C.GoString(srcPath),
-			DevAlias: C.GoString(devAlias),
-			Action:   DomainEventIOErrorAction(action),
-		},
-		Reason: C.GoString(reason),
+	eventDetails := &DomainEventIOErrorReason{
+		SrcPath:  C.GoString(srcPath),
+		DevAlias: C.GoString(devAlias),
+		Action:   DomainEventIOErrorAction(action),
+		Reason:   C.GoString(reason),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventIOErrorReasonCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventBlockJobCallback
 func domainEventBlockJobCallback(c C.virConnectPtr, d C.virDomainPtr,
-	disk *C.char, _type int, status int, opaque int) {
+	disk *C.char, _type int, status int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainBlockJobEvent{
+	eventDetails := &DomainEventBlockJob{
 		Disk:   C.GoString(disk),
 		Type:   DomainBlockJobType(_type),
 		Status: ConnectDomainEventBlockJobStatus(status),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventBlockJobCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventDiskChangeCallback
 func domainEventDiskChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
 	oldSrcPath *C.char, newSrcPath *C.char, devAlias *C.char,
-	reason int, opaque int) {
+	reason int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainDiskChangeEvent{
+	eventDetails := &DomainEventDiskChange{
 		OldSrcPath: C.GoString(oldSrcPath),
 		NewSrcPath: C.GoString(newSrcPath),
 		DevAlias:   C.GoString(devAlias),
 		Reason:     ConnectDomainEventDiskChangeReason(reason),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventDiskChangeCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventTrayChangeCallback
 func domainEventTrayChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	devAlias *C.char, reason int, opaque int) {
+	devAlias *C.char, reason int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainTrayChangeEvent{
+	eventDetails := &DomainEventTrayChange{
 		DevAlias: C.GoString(devAlias),
 		Reason:   ConnectDomainEventTrayChangeReason(reason),
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventTrayChangeCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
-//export domainEventReasonCallback
-func domainEventReasonCallback(c C.virConnectPtr, d C.virDomainPtr,
-	reason int, opaque int) {
+//export domainEventPMSuspendCallback
+func domainEventPMSuspendCallback(c C.virConnectPtr, d C.virDomainPtr,
+	reason int, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainReasonEvent{
+	eventDetails := &DomainEventPMSuspend{
 		Reason: reason,
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventPMSuspendCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventPMWakeupCallback
+func domainEventPMWakeupCallback(c C.virConnectPtr, d C.virDomainPtr,
+	reason int, goCallbackId int) {
+
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventPMWakeup{
+		Reason: reason,
+	}
+
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventPMWakeupCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventPMSuspendDiskCallback
+func domainEventPMSuspendDiskCallback(c C.virConnectPtr, d C.virDomainPtr,
+	reason int, goCallbackId int) {
+
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventPMSuspendDisk{
+		Reason: reason,
+	}
+
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventPMSuspendDiskCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventBalloonChangeCallback
 func domainEventBalloonChangeCallback(c C.virConnectPtr, d C.virDomainPtr,
-	actual uint64, opaque int) {
+	actual uint64, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainBalloonChangeEvent{
+	eventDetails := &DomainEventBalloonChange{
 		Actual: actual,
 	}
 
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventBalloonChangeCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
 }
 
 //export domainEventDeviceRemovedCallback
 func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
-	devAlias *C.char, opaque int) {
+	devAlias *C.char, goCallbackId int) {
 
-	domain := Domain{ptr: d}
-	connection := Connect{ptr: c}
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
 
-	eventDetails := DomainDeviceRemovedEvent{
+	eventDetails := &DomainEventDeviceRemoved{
 		DevAlias: C.GoString(devAlias),
 	}
-	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
-}
-
-// DomainEventCallback is the signature of functions that can be
-// registered as a domain event callback. The event parameter should
-// be casted to the more specific event structure
-// (eg. DomainLifecycleEvent).
-type DomainEventCallback func(c *Connect, d *Domain, event interface{})
-
-func callDomainCallbackId(goCallbackId int, c *Connect, d *Domain,
-	event interface{}) {
 	callbackFunc := getCallbackId(goCallbackId)
-	callback, ok := callbackFunc.(DomainEventCallback)
+	callback, ok := callbackFunc.(DomainEventDeviceRemovedCallback)
 	if !ok {
 		panic("Inappropriate callback type called")
 	}
-	callback(c, d, event)
+	callback(connection, domain, eventDetails)
+
 }
 
-func (c *Connect) DomainEventRegister(dom Domain, eventId DomainEventID, callback DomainEventCallback) (int, error) {
-	var callbackPtr unsafe.Pointer
+func (c *Connect) DomainEventLifecycleRegister(dom *Domain, callback DomainEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	switch eventId {
-	case DOMAIN_EVENT_ID_LIFECYCLE:
-		callbackPtr = unsafe.Pointer(C.domainEventLifecycleCallback_cgo)
-	case DOMAIN_EVENT_ID_REBOOT, DOMAIN_EVENT_ID_CONTROL_ERROR:
-		callbackPtr = unsafe.Pointer(C.domainEventGenericCallback_cgo)
-	case DOMAIN_EVENT_ID_RTC_CHANGE:
-		callbackPtr = unsafe.Pointer(C.domainEventRTCChangeCallback_cgo)
-	case DOMAIN_EVENT_ID_WATCHDOG:
-		callbackPtr = unsafe.Pointer(C.domainEventWatchdogCallback_cgo)
-	case DOMAIN_EVENT_ID_IO_ERROR:
-		callbackPtr = unsafe.Pointer(C.domainEventIOErrorCallback_cgo)
-	case DOMAIN_EVENT_ID_GRAPHICS:
-		callbackPtr = unsafe.Pointer(C.domainEventGraphicsCallback_cgo)
-	case DOMAIN_EVENT_ID_IO_ERROR_REASON:
-		callbackPtr = unsafe.Pointer(C.domainEventIOErrorReasonCallback_cgo)
-	case DOMAIN_EVENT_ID_BLOCK_JOB:
-		// TODO Post 1.2.4, uncomment later
-		// case DOMAIN_EVENT_ID_BLOCK_JOB_2:
-		callbackPtr = unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
-	case DOMAIN_EVENT_ID_DISK_CHANGE:
-		callbackPtr = unsafe.Pointer(C.domainEventDiskChangeCallback_cgo)
-	case DOMAIN_EVENT_ID_TRAY_CHANGE:
-		callbackPtr = unsafe.Pointer(C.domainEventTrayChangeCallback_cgo)
-	case DOMAIN_EVENT_ID_PMWAKEUP, DOMAIN_EVENT_ID_PMSUSPEND, DOMAIN_EVENT_ID_PMSUSPEND_DISK:
-		callbackPtr = unsafe.Pointer(C.domainEventReasonCallback_cgo)
-	case DOMAIN_EVENT_ID_BALLOON_CHANGE:
-		callbackPtr = unsafe.Pointer(C.domainEventBalloonChangeCallback_cgo)
-	case DOMAIN_EVENT_ID_DEVICE_REMOVED:
-		callbackPtr = unsafe.Pointer(C.domainEventDeviceRemovedCallback_cgo)
-	default:
+	callbackPtr := unsafe.Pointer(C.domainEventLifecycleCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, dom.ptr, C.int(eventId),
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_LIFECYCLE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventRebootRegister(dom *Domain, callback DomainEventGenericCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventGenericCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_REBOOT,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventRTCChangeRegister(dom *Domain, callback DomainEventRTCChangeCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventRTCChangeCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_RTC_CHANGE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventWatchdogRegister(dom *Domain, callback DomainEventWatchdogCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventWatchdogCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_WATCHDOG,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventIOErrorRegister(dom *Domain, callback DomainEventIOErrorCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventIOErrorCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_IO_ERROR,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventGraphicsRegister(dom *Domain, callback DomainEventGraphicsCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventGraphicsCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_GRAPHICS,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventIOErrorReasonRegister(dom *Domain, callback DomainEventIOErrorReasonCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventIOErrorReasonCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventControlErrorRegister(dom *Domain, callback DomainEventGenericCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventGenericCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_CONTROL_ERROR,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventBlockJobRegister(dom *Domain, callback DomainEventBlockJobCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventDiskChangeRegister(dom *Domain, callback DomainEventDiskChangeCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventDiskChangeCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_DISK_CHANGE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventTrayChangeRegister(dom *Domain, callback DomainEventTrayChangeCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventTrayChangeCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_TRAY_CHANGE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventPMWakeupRegister(dom *Domain, callback DomainEventPMWakeupCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventPMWakeupCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_PMWAKEUP,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventPMSuspendRegister(dom *Domain, callback DomainEventPMSuspendCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_PMSUSPEND,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventBalloonChangeRegister(dom *Domain, callback DomainEventBalloonChangeCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventBalloonChangeCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventPMSuspendDiskRegister(dom *Domain, callback DomainEventPMSuspendDiskCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendDiskCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventDeviceRemovedRegister(dom *Domain, callback DomainEventDeviceRemovedCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovedCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventBlockJob2Register(dom *Domain, callback DomainEventBlockJobCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
 	if ret == -1 {
@@ -378,7 +794,7 @@ func (c *Connect) DomainEventDeregister(callbackId int) error {
 	return nil
 }
 
-func (e DomainLifecycleEvent) String() string {
+func (e DomainEventLifecycle) String() string {
 	var detail, event string
 	switch e.Event {
 	case DOMAIN_EVENT_DEFINED:
@@ -485,20 +901,20 @@ func (e DomainLifecycleEvent) String() string {
 	return fmt.Sprintf("Domain event=%q detail=%q", event, detail)
 }
 
-func (e DomainRTCChangeEvent) String() string {
+func (e DomainEventRTCChange) String() string {
 	return fmt.Sprintf("RTC change offset=%d", e.Utcoffset)
 }
 
-func (e DomainWatchdogEvent) String() string {
+func (e DomainEventWatchdog) String() string {
 	return fmt.Sprintf("Watchdog action=%d", e.Action)
 }
 
-func (e DomainIOErrorEvent) String() string {
+func (e DomainEventIOError) String() string {
 	return fmt.Sprintf("I/O error path=%q alias=%q action=%d",
 		e.SrcPath, e.DevAlias, e.Action)
 }
 
-func (e DomainGraphicsEvent) String() string {
+func (e DomainEventGraphics) String() string {
 	var phase string
 	switch e.Phase {
 	case DOMAIN_EVENT_GRAPHICS_CONNECT:
@@ -514,30 +930,30 @@ func (e DomainGraphicsEvent) String() string {
 	return fmt.Sprintf("Graphics phase=%q", phase)
 }
 
-func (e DomainIOErrorReasonEvent) String() string {
+func (e DomainEventIOErrorReason) String() string {
 	return fmt.Sprintf("IO error path=%q alias=%q action=%d reason=%q",
 		e.SrcPath, e.DevAlias, e.Action, e.Reason)
 }
 
-func (e DomainBlockJobEvent) String() string {
+func (e DomainEventBlockJob) String() string {
 	return fmt.Sprintf("Block job disk=%q status=%d type=%d",
 		e.Disk, e.Status, e.Type)
 }
 
-func (e DomainDiskChangeEvent) String() string {
+func (e DomainEventDiskChange) String() string {
 	return fmt.Sprintf("Disk change old=%q new=%q alias=%q reason=%d",
 		e.OldSrcPath, e.NewSrcPath, e.DevAlias, e.Reason)
 }
 
-func (e DomainTrayChangeEvent) String() string {
+func (e DomainEventTrayChange) String() string {
 	return fmt.Sprintf("Tray change dev=%q reason=%d",
 		e.DevAlias, e.Reason)
 }
 
-func (e DomainBalloonChangeEvent) String() string {
+func (e DomainEventBalloonChange) String() string {
 	return fmt.Sprintf("Ballon change %d", e.Actual)
 }
 
-func (e DomainDeviceRemovedEvent) String() string {
+func (e DomainEventDeviceRemoved) String() string {
 	return fmt.Sprintf("Device %q removed ", e.DevAlias)
 }

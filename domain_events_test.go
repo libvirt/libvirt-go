@@ -30,32 +30,22 @@ func TestDomainEventRegister(t *testing.T) {
 
 	nbEvents := 0
 
-	callback := DomainEventCallback(
-		func(c *Connect, d *Domain, eventDetails interface{}) {
-			if lifecycleEvent, ok := eventDetails.(DomainLifecycleEvent); ok {
-				if lifecycleEvent.Event == DOMAIN_EVENT_STARTED {
-					domName, _ := d.GetName()
-					if defName != domName {
-						t.Fatalf("Name was not '%s': %s", defName, domName)
-					}
-				}
-				eventString := fmt.Sprintf("%s", lifecycleEvent)
-				expected := "Domain event=\"started\" detail=\"booted\""
-				if eventString != expected {
-					t.Errorf("event == %q, expected %q", eventString, expected)
-				}
-			} else {
-				t.Fatalf("event details isn't DomainLifecycleEvent: %s", eventDetails)
+	callback := func(c *Connect, d *Domain, event *DomainEventLifecycle) {
+		if event.Event == DOMAIN_EVENT_STARTED {
+			domName, _ := d.GetName()
+			if defName != domName {
+				t.Fatalf("Name was not '%s': %s", defName, domName)
 			}
-			nbEvents++
-		},
-	)
+		}
+		eventString := fmt.Sprintf("%s", event)
+		expected := "Domain event=\"started\" detail=\"booted\""
+		if eventString != expected {
+			t.Errorf("event == %q, expected %q", eventString, expected)
+		}
+		nbEvents++
+	}
 
-	callbackId, err := conn.DomainEventRegister(
-		Domain{},
-		DOMAIN_EVENT_ID_LIFECYCLE,
-		callback,
-	)
+	callbackId, err := conn.DomainEventLifecycleRegister(nil, callback)
 	if err != nil {
 		t.Error(err)
 		return
