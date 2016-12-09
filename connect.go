@@ -352,22 +352,14 @@ func (c *Connect) CloseConnection() (int, error) {
 	return result, nil
 }
 
-type CloseCallback func(conn Connect, reason ConnectCloseReason, opaque func())
-type closeContext struct {
-	cb CloseCallback
-	f  func()
-}
+type CloseCallback func(conn Connect, reason ConnectCloseReason)
 
 // Register a close callback for the given destination. Only one
 // callback per connection is allowed. Setting a callback will remove
 // the previous one.
-func (c *Connect) RegisterCloseCallback(cb CloseCallback, opaque func()) error {
+func (c *Connect) RegisterCloseCallback(callback CloseCallback) error {
 	c.UnregisterCloseCallback()
-	context := &closeContext{
-		cb: cb,
-		f:  opaque,
-	}
-	goCallbackId := registerCallbackId(context)
+	goCallbackId := registerCallbackId(callback)
 	callbackPtr := unsafe.Pointer(C.closeCallback_cgo)
 	res := C.virConnectRegisterCloseCallback_cgo(c.ptr, C.virConnectCloseFunc(callbackPtr), C.long(goCallbackId))
 	if res != 0 {
@@ -395,13 +387,12 @@ func (c *Connect) UnregisterCloseCallback() error {
 
 //export closeCallback
 func closeCallback(conn C.virConnectPtr, reason ConnectCloseReason, goCallbackId int) {
-	ctx := getCallbackId(goCallbackId)
-	switch cctx := ctx.(type) {
-	case *closeContext:
-		cctx.cb(Connect{ptr: conn}, reason, cctx.f)
-	default:
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(CloseCallback)
+	if !ok {
 		panic("Inappropriate callback type called")
 	}
+	callback(Connect{ptr: conn}, reason)
 }
 
 func (c *Connect) GetCapabilities() (string, error) {
