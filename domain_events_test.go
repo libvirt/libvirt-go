@@ -31,7 +31,7 @@ func TestDomainEventRegister(t *testing.T) {
 	nbEvents := 0
 
 	callback := DomainEventCallback(
-		func(c *Connect, d *Domain, eventDetails interface{}, f func()) int {
+		func(c *Connect, d *Domain, eventDetails interface{}) {
 			if lifecycleEvent, ok := eventDetails.(DomainLifecycleEvent); ok {
 				if lifecycleEvent.Event == DOMAIN_EVENT_STARTED {
 					domName, _ := d.GetName()
@@ -47,19 +47,19 @@ func TestDomainEventRegister(t *testing.T) {
 			} else {
 				t.Fatalf("event details isn't DomainLifecycleEvent: %s", eventDetails)
 			}
-			f()
-			return 0
-		},
-	)
-
-	callbackId = conn.DomainEventRegister(
-		Domain{},
-		DOMAIN_EVENT_ID_LIFECYCLE,
-		&callback,
-		func() {
 			nbEvents++
 		},
 	)
+
+	callbackId, err := conn.DomainEventRegister(
+		Domain{},
+		DOMAIN_EVENT_ID_LIFECYCLE,
+		callback,
+	)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 
 	// Test a minimally valid xml
 	xml := `<domain type="test">

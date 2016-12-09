@@ -309,45 +309,25 @@ func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
 	callDomainCallbackId(opaque, &connection, &domain, eventDetails)
 }
 
-// BUG(vincentbernat): The returned value of DomainEventCallback is
-// ignored and should be removed from the signature.
-
 // DomainEventCallback is the signature of functions that can be
 // registered as a domain event callback. The event parameter should
 // be casted to the more specific event structure
-// (eg. DomainLifecycleEvent). The return code is ignored.
-type DomainEventCallback func(c *Connect, d *Domain,
-	event interface{}, f func()) int
-
-type domainCallbackContext struct {
-	cb *DomainEventCallback
-	f  func()
-}
+// (eg. DomainLifecycleEvent).
+type DomainEventCallback func(c *Connect, d *Domain, event interface{})
 
 func callDomainCallbackId(goCallbackId int, c *Connect, d *Domain,
 	event interface{}) {
-	ctx := getCallbackId(goCallbackId)
-	switch cctx := ctx.(type) {
-	case *domainCallbackContext:
-		(*cctx.cb)(c, d, event, cctx.f)
-	default:
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventCallback)
+	if !ok {
 		panic("Inappropriate callback type called")
 	}
+	callback(c, d, event)
 }
 
-// BUG(vincentbernat): The returned value of DomainEventRegister, should be an
-// error instead of an int, for uniformity with other functions.
-
-func (c *Connect) DomainEventRegister(dom Domain,
-	eventId DomainEventID,
-	callback *DomainEventCallback,
-	opaque func()) int {
+func (c *Connect) DomainEventRegister(dom Domain, eventId DomainEventID, callback DomainEventCallback) (int, error) {
 	var callbackPtr unsafe.Pointer
-	context := &domainCallbackContext{
-		cb: callback,
-		f:  opaque,
-	}
-	goCallBackId := registerCallbackId(context)
+	goCallBackId := registerCallbackId(callback)
 
 	switch eventId {
 	case DOMAIN_EVENT_ID_LIFECYCLE:
@@ -385,9 +365,9 @@ func (c *Connect) DomainEventRegister(dom Domain,
 		C.long(goCallBackId))
 	if ret == -1 {
 		freeCallbackId(goCallBackId)
-		return -1
+		return 0, GetLastError()
 	}
-	return int(ret)
+	return int(ret), nil
 }
 
 func (c *Connect) DomainEventDeregister(callbackId int) error {
