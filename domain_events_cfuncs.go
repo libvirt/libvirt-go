@@ -122,6 +122,63 @@ void domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
     domainEventDeviceRemovedCallback(c, d, devAlias, (int)(intptr_t)data);
 }
 
+extern void domainEventTunableCallback(virConnectPtr, virDomainPtr, virTypedParameterPtr, int, int);
+void domainEventTunableCallback_cgo(virConnectPtr conn,
+				    virDomainPtr dom,
+				    virTypedParameterPtr params,
+				    int nparams,
+				    void *opaque)
+{
+    domainEventTunableCallback(conn, dom, params, nparams, (int)(intptr_t)opaque);
+}
+
+extern void domainEventAgentLifecycleCallback(virConnectPtr, virDomainPtr, int, int, int);
+void domainEventAgentLifecycleCallback_cgo(virConnectPtr conn,
+					   virDomainPtr dom,
+					   int state,
+					   int reason,
+					   void *opaque)
+{
+    domainEventAgentLifecycleCallback(conn, dom, state, reason, (int)(intptr_t)opaque);
+}
+
+extern void domainEventDeviceAddedCallback(virConnectPtr, virDomainPtr, const char *, int);
+void domainEventDeviceAddedCallback_cgo(virConnectPtr conn,
+					virDomainPtr dom,
+					const char *devAlias,
+					void *opaque)
+{
+    domainEventDeviceAddedCallback(conn, dom, devAlias, (int)(intptr_t)opaque);
+}
+
+extern void domainEventMigrationIterationCallback(virConnectPtr, virDomainPtr, int, int);
+void domainEventMigrationIterationCallback_cgo(virConnectPtr conn,
+					       virDomainPtr dom,
+					       int iteration,
+					       void *opaque)
+{
+    domainEventMigrationIterationCallback(conn, dom, iteration, (int)(intptr_t)opaque);
+}
+
+extern void domainEventJobCompletedCallback(virConnectPtr, virDomainPtr, virTypedParameterPtr, int, int);
+void domainEventJobCompletedCallback_cgo(virConnectPtr conn,
+					 virDomainPtr dom,
+					 virTypedParameterPtr params,
+					 int nparams,
+					 void *opaque)
+{
+    domainEventJobCompletedCallback(conn, dom, params, nparams, (int)(intptr_t)opaque);
+}
+
+extern void domainEventDeviceRemovalFailedCallback(virConnectPtr, virDomainPtr, const char *, int);
+void domainEventDeviceRemovalFailedCallback_cgo(virConnectPtr conn,
+						virDomainPtr dom,
+						const char *devAlias,
+						void *opaque)
+{
+    domainEventDeviceRemovalFailedCallback(conn, dom, devAlias, (int)(intptr_t)opaque);
+}
+
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
                                          int eventID, virConnectDomainEventGenericCallback cb,
                                          long goCallbackId) {

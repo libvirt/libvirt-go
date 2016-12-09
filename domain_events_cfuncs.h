@@ -50,9 +50,37 @@ void domainEventBalloonChangeCallback_cgo(virConnectPtr c, virDomainPtr d,
 
 void domainEventDeviceRemovedCallback_cgo(virConnectPtr c, virDomainPtr d,
                                          const char *devAlias, void* data);
+void domainEventTunableCallback_cgo(virConnectPtr conn,
+				    virDomainPtr dom,
+				    virTypedParameterPtr params,
+				    int nparams,
+				    void *opaque);
+void domainEventAgentLifecycleCallback_cgo(virConnectPtr conn,
+					   virDomainPtr dom,
+					   int state,
+					   int reason,
+					   void *opaque);
+void domainEventDeviceAddedCallback_cgo(virConnectPtr conn,
+					virDomainPtr dom,
+					const char *devAlias,
+					void *opaque);
+void domainEventMigrationIterationCallback_cgo(virConnectPtr conn,
+					       virDomainPtr dom,
+					       int iteration,
+					       void *opaque);
+void domainEventJobCompletedCallback_cgo(virConnectPtr conn,
+					 virDomainPtr dom,
+					 virTypedParameterPtr params,
+					 int nparams,
+					 void *opaque);
+void domainEventDeviceRemovalFailedCallback_cgo(virConnectPtr conn,
+						virDomainPtr dom,
+						const char *devAlias,
+						void *opaque);
 
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
                                          int eventID, virConnectDomainEventGenericCallback cb,
                                          long goCallbackId);
+
 
 #endif /* DOMAIN_EVENTS_CFUNCS_H__ */

@@ -126,6 +126,56 @@ type DomainEventDeviceRemoved struct {
 
 type DomainEventDeviceRemovedCallback func(c *Connect, d *Domain, event *DomainEventDeviceRemoved)
 
+type DomainEventTunableCpuPin struct {
+	VcpuPinSet     bool
+	VcpuPin        [][]bool
+	EmulatorPinSet bool
+	EmulatorPin    []bool
+	IOThreadPinSet bool
+	IOThreadPin    [][]bool
+}
+
+type DomainEventTunable struct {
+	CpuSched      *DomainSchedulerParameters
+	CpuPin        *DomainEventTunableCpuPin
+	BlkdevDiskSet bool
+	BlkdevDisk    string
+	BlkdevTune    *DomainBlockIoTuneParameters
+}
+
+type DomainEventTunableCallback func(c *Connect, d *Domain, event *DomainEventTunable)
+
+type DomainEventAgentLifecycle struct {
+	State  ConnectDomainEventAgentLifecycleState
+	Reason ConnectDomainEventAgentLifecycleReason
+}
+
+type DomainEventAgentLifecycleCallback func(c *Connect, d *Domain, event *DomainEventAgentLifecycle)
+
+type DomainEventDeviceAdded struct {
+	DevAlias string
+}
+
+type DomainEventDeviceAddedCallback func(c *Connect, d *Domain, event *DomainEventDeviceAdded)
+
+type DomainEventMigrationIteration struct {
+	Iteration int
+}
+
+type DomainEventMigrationIterationCallback func(c *Connect, d *Domain, event *DomainEventMigrationIteration)
+
+type DomainEventJobCompleted struct {
+	Info DomainJobInfo
+}
+
+type DomainEventJobCompletedCallback func(c *Connect, d *Domain, event *DomainEventJobCompleted)
+
+type DomainEventDeviceRemovalFailed struct {
+	DevAlias string
+}
+
+type DomainEventDeviceRemovalFailedCallback func(c *Connect, d *Domain, event *DomainEventDeviceRemovalFailed)
+
 //export domainEventLifecycleCallback
 func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	event int, detail int,
@@ -463,6 +513,366 @@ func domainEventDeviceRemovedCallback(c C.virConnectPtr, d C.virDomainPtr,
 
 }
 
+func getDomainTuneSchedulerParametersFieldInfo(params *DomainSchedulerParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_TUNABLE_CPU_CPU_SHARES: typedParamsFieldInfo{
+			set: &params.CpuSharesSet,
+			ul:  &params.CpuShares,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_GLOBAL_PERIOD: typedParamsFieldInfo{
+			set: &params.GlobalPeriodSet,
+			ul:  &params.GlobalPeriod,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_GLOBAL_QUOTA: typedParamsFieldInfo{
+			set: &params.GlobalQuotaSet,
+			ul:  &params.GlobalQuota,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_EMULATOR_PERIOD: typedParamsFieldInfo{
+			set: &params.EmulatorPeriodSet,
+			ul:  &params.EmulatorPeriod,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_EMULATOR_QUOTA: typedParamsFieldInfo{
+			set: &params.EmulatorQuotaSet,
+			ul:  &params.EmulatorQuota,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_VCPU_PERIOD: typedParamsFieldInfo{
+			set: &params.VcpuPeriodSet,
+			ul:  &params.VcpuPeriod,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_VCPU_QUOTA: typedParamsFieldInfo{
+			set: &params.VcpuQuotaSet,
+			ul:  &params.VcpuQuota,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_IOTHREAD_PERIOD: typedParamsFieldInfo{
+			set: &params.IothreadPeriodSet,
+			ul:  &params.IothreadPeriod,
+		},
+		C.VIR_DOMAIN_TUNABLE_CPU_IOTHREAD_QUOTA: typedParamsFieldInfo{
+			set: &params.IothreadQuotaSet,
+			ul:  &params.IothreadQuota,
+		},
+	}
+}
+
+func getTuneBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.TotalBytesSecSet,
+			ul:  &params.TotalBytesSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.ReadBytesSecSet,
+			ul:  &params.ReadBytesSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_BYTES_SEC: typedParamsFieldInfo{
+			set: &params.WriteBytesSecSet,
+			ul:  &params.WriteBytesSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.TotalIopsSecSet,
+			ul:  &params.TotalIopsSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.ReadIopsSecSet,
+			ul:  &params.ReadIopsSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.WriteIopsSecSet,
+			ul:  &params.WriteIopsSec,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.TotalBytesSecMaxSet,
+			ul:  &params.TotalBytesSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.ReadBytesSecMaxSet,
+			ul:  &params.ReadBytesSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_BYTES_SEC_MAX: typedParamsFieldInfo{
+			set: &params.WriteBytesSecMaxSet,
+			ul:  &params.WriteBytesSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.TotalIopsSecMaxSet,
+			ul:  &params.TotalIopsSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.ReadIopsSecMaxSet,
+			ul:  &params.ReadIopsSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_IOPS_SEC_MAX: typedParamsFieldInfo{
+			set: &params.WriteIopsSecMaxSet,
+			ul:  &params.WriteIopsSecMax,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.TotalBytesSecMaxLengthSet,
+			ul:  &params.TotalBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.ReadBytesSecMaxLengthSet,
+			ul:  &params.ReadBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_BYTES_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.WriteBytesSecMaxLengthSet,
+			ul:  &params.WriteBytesSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.TotalIopsSecMaxLengthSet,
+			ul:  &params.TotalIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_READ_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.ReadIopsSecMaxLengthSet,
+			ul:  &params.ReadIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_IOPS_SEC_MAX_LENGTH: typedParamsFieldInfo{
+			set: &params.WriteIopsSecMaxLengthSet,
+			ul:  &params.WriteIopsSecMaxLength,
+		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_SIZE_IOPS_SEC: typedParamsFieldInfo{
+			set: &params.SizeIopsSecSet,
+			ul:  &params.SizeIopsSec,
+		},
+	}
+}
+
+type domainEventTunablePinTemp struct {
+	VcpuPinSet     bool
+	VcpuPin        []string
+	EmulatorPinSet bool
+	EmulatorPin    string
+	IOThreadPinSet bool
+	IOThreadPin    []string
+}
+
+func getDomainPinTempFieldInfo(numvcpu int, numiothread int, params *domainEventTunablePinTemp) map[string]typedParamsFieldInfo {
+	ret := map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_TUNABLE_CPU_EMULATORPIN: typedParamsFieldInfo{
+			set: &params.EmulatorPinSet,
+			s:   &params.EmulatorPin,
+		},
+	}
+	for i := 0; i < numvcpu; i++ {
+		ret[fmt.Sprintf("cputune.vcpupin%d", i)] = typedParamsFieldInfo{
+			s: &params.VcpuPin[i],
+		}
+	}
+	for i := 0; i < numiothread; i++ {
+		ret[fmt.Sprintf("cputune.iothreadpin%u", i)] = typedParamsFieldInfo{
+			s: &params.IOThreadPin[i],
+		}
+	}
+
+	return ret
+}
+
+func countPinInfo(cparams C.virTypedParameterPtr, nparams C.int) (int, int) {
+	maxvcpus := 0
+	maxiothreads := 0
+	for i := 0; i < int(nparams); i++ {
+		var cparam *C.virTypedParameter
+		cparam = (*C.virTypedParameter)(unsafe.Pointer(uintptr(unsafe.Pointer(cparams)) + unsafe.Sizeof(*cparam)*uintptr(i)))
+		name := C.GoString((*C.char)(unsafe.Pointer(&cparam.field)))
+
+		var vcpu int
+		_, err := fmt.Scanf(name, "cputune.vcpupin%d", &vcpu)
+		if err == nil {
+			if vcpu > maxvcpus {
+				maxvcpus = vcpu
+			}
+		}
+
+		var iothread int
+		_, err = fmt.Scanf(name, "cputune.iothreadpin%d", &iothread)
+		if err == nil {
+			if iothread > maxiothreads {
+				maxiothreads = iothread
+			}
+		}
+	}
+
+	return maxvcpus + 1, maxiothreads + 1
+}
+
+func domainEventTunableGetPin(params C.virTypedParameterPtr, nparams C.int) *DomainEventTunableCpuPin {
+	var pin domainEventTunablePinTemp
+	numvcpus, numiothreads := countPinInfo(params, nparams)
+	pinInfo := getDomainPinTempFieldInfo(numvcpus, numiothreads, &pin)
+
+	num, err := typedParamsUnpackLen(params, int(nparams), pinInfo)
+	if num == 0 || err != nil {
+		return nil
+	}
+
+	info := &DomainEventTunableCpuPin{}
+
+	if pin.VcpuPinSet {
+		info.VcpuPinSet = true
+		info.VcpuPin = make([][]bool, len(pin.VcpuPin))
+
+		for i := 0; i < len(pin.VcpuPin); i++ {
+			bits, err := parseCPUString(pin.VcpuPin[i])
+			if err == nil {
+				info.VcpuPin[i] = bits
+			}
+		}
+	}
+
+	if pin.EmulatorPinSet {
+		bits, err := parseCPUString(pin.EmulatorPin)
+		if err == nil {
+			info.EmulatorPinSet = true
+			info.EmulatorPin = bits
+		}
+	}
+
+	if pin.IOThreadPinSet {
+		info.IOThreadPinSet = true
+		info.IOThreadPin = make([][]bool, len(pin.IOThreadPin))
+
+		for i := 0; i < len(pin.IOThreadPin); i++ {
+			bits, err := parseCPUString(pin.IOThreadPin[i])
+			if err == nil {
+				info.IOThreadPin[i] = bits
+			}
+		}
+	}
+
+	return info
+}
+
+//export domainEventTunableCallback
+func domainEventTunableCallback(c C.virConnectPtr, d C.virDomainPtr, params C.virTypedParameterPtr, nparams C.int, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventTunable{}
+
+	pin := domainEventTunableGetPin(params, nparams)
+	if pin != nil {
+		eventDetails.CpuPin = pin
+	}
+
+	var sched DomainSchedulerParameters
+	schedInfo := getDomainTuneSchedulerParametersFieldInfo(&sched)
+
+	num, _ := typedParamsUnpackLen(params, int(nparams), schedInfo)
+	if num > 0 {
+		eventDetails.CpuSched = &sched
+	}
+
+	blknameInfo := map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_DISK: typedParamsFieldInfo{
+			set: &eventDetails.BlkdevDiskSet,
+			s:   &eventDetails.BlkdevDisk,
+		},
+	}
+	typedParamsUnpackLen(params, int(nparams), blknameInfo)
+
+	var blktune DomainBlockIoTuneParameters
+	blktuneInfo := getTuneBlockIoTuneParametersFieldInfo(&blktune)
+
+	num, _ = typedParamsUnpackLen(params, int(nparams), blktuneInfo)
+	if num > 0 {
+		eventDetails.BlkdevTune = &blktune
+	}
+
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventTunableCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventAgentLifecycleCallback
+func domainEventAgentLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr, state C.int, reason C.int, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventAgentLifecycle{
+		State:  ConnectDomainEventAgentLifecycleState(state),
+		Reason: ConnectDomainEventAgentLifecycleReason(reason),
+	}
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventAgentLifecycleCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventDeviceAddedCallback
+func domainEventDeviceAddedCallback(c C.virConnectPtr, d C.virDomainPtr, devalias *C.char, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventDeviceAdded{
+		DevAlias: C.GoString(devalias),
+	}
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventDeviceAddedCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventMigrationIterationCallback
+func domainEventMigrationIterationCallback(c C.virConnectPtr, d C.virDomainPtr, iteration C.int, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventMigrationIteration{
+		Iteration: int(iteration),
+	}
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventMigrationIterationCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventJobCompletedCallback
+func domainEventJobCompletedCallback(c C.virConnectPtr, d C.virDomainPtr, params C.virTypedParameterPtr, nparams C.int, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventJobCompleted{}
+	info := getDomainJobInfoFieldInfo(&eventDetails.Info)
+
+	typedParamsUnpackLen(params, int(nparams), info)
+
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventJobCompletedCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
+//export domainEventDeviceRemovalFailedCallback
+func domainEventDeviceRemovalFailedCallback(c C.virConnectPtr, d C.virDomainPtr, devalias *C.char, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventDeviceRemovalFailed{
+		DevAlias: C.GoString(devalias),
+	}
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventDeviceRemovalFailedCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
 func (c *Connect) DomainEventLifecycleRegister(dom *Domain, callback DomainEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
@@ -777,6 +1187,120 @@ func (c *Connect) DomainEventBlockJob2Register(dom *Domain, callback DomainEvent
 	}
 	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventTunableRegister(dom *Domain, callback DomainEventTunableCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventTunableCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_TUNABLE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventAgentLifecycleRegister(dom *Domain, callback DomainEventAgentLifecycleCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventAgentLifecycleCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventDeviceAddedRegister(dom *Domain, callback DomainEventDeviceAddedCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceAddedCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_DEVICE_ADDED,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventMigrationIterationRegister(dom *Domain, callback DomainEventMigrationIterationCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventMigrationIterationCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventJobCompletedRegister(dom *Domain, callback DomainEventJobCompletedCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventJobCompletedCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_JOB_COMPLETED,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventDeviceRemovalFailedRegister(dom *Domain, callback DomainEventDeviceRemovalFailedCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovalFailedCallback_cgo)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
 	if ret == -1 {
