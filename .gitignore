@@ -2,3 +2,6 @@
 *.sublime-project
 .vagrant
 /libvirt-go.test
+*~
+.#*
+\#*
