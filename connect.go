@@ -297,30 +297,73 @@ func NewConnect(uri string) (*Connect, error) {
 	return &Connect{ptr: ptr}, nil
 }
 
-func NewConnectWithAuth(uri string, username string, password string) (*Connect, error) {
+type ConnectCredential struct {
+	Type      ConnectCredentialType
+	Prompt    string
+	Challenge string
+	DefResult string
+	Result    string
+	ResultLen int
+}
+
+type ConnectAuthCallback func(creds []*ConnectCredential)
+
+type ConnectAuth struct {
+	CredType []ConnectCredentialType
+	Callback ConnectAuthCallback
+}
+
+//export connectAuthCallback
+func connectAuthCallback(ccredlist C.virConnectCredentialPtr, ncred C.uint, callbackID C.int) C.int {
+	cred := make([]*ConnectCredential, int(ncred))
+
+	for i := 0; i < int(ncred); i++ {
+		ccred := (C.virConnectCredentialPtr)(unsafe.Pointer((uintptr)(unsafe.Pointer(ccredlist)) + (unsafe.Sizeof(*ccredlist) * uintptr(i))))
+		cred[i] = &ConnectCredential{
+			Type:      ConnectCredentialType(ccred._type),
+			Prompt:    C.GoString(ccred.prompt),
+			Challenge: C.GoString(ccred.challenge),
+			DefResult: C.GoString(ccred.defresult),
+			ResultLen: -1,
+		}
+	}
+	callbackEntry := getCallbackId(int(callbackID))
+	callback, ok := callbackEntry.(ConnectAuthCallback)
+	if !ok {
+		panic("Unexpected callback type")
+	}
+
+	callback(cred)
+
+	for i := 0; i < int(ncred); i++ {
+		ccred := (C.virConnectCredentialPtr)(unsafe.Pointer((uintptr)(unsafe.Pointer(ccredlist)) + (unsafe.Sizeof(*ccredlist) * uintptr(i))))
+		if cred[i].ResultLen >= 0 {
+			ccred.result = C.CString(cred[i].Result)
+			ccred.resultlen = C.uint(cred[i].ResultLen)
+		}
+	}
+
+	return 0
+}
+
+func NewConnectWithAuth(uri string, auth *ConnectAuth, flags uint32) (*Connect, error) {
 	var cUri *C.char
 
-	authMechs := C.authMechs()
-	defer C.free(unsafe.Pointer(authMechs))
-	cUsername := C.CString(username)
-	defer C.free(unsafe.Pointer(cUsername))
-	cPassword := C.CString(password)
-	defer C.free(unsafe.Pointer(cPassword))
-	cbData := C.authData(cUsername, C.uint(len(username)), cPassword, C.uint(len(password)))
-	defer C.free(unsafe.Pointer(cbData))
+	ccredtype := make([]C.int, len(auth.CredType))
 
-	auth := C.virConnectAuth{
-		credtype:  authMechs,
-		ncredtype: C.uint(2),
-		cb:        C.virConnectAuthCallbackPtr(unsafe.Pointer(C.authCb)),
-		cbdata:    unsafe.Pointer(cbData),
+	for i := 0; i < len(auth.CredType); i++ {
+		ccredtype[i] = C.int(auth.CredType[i])
 	}
 
 	if uri != "" {
 		cUri = C.CString(uri)
 		defer C.free(unsafe.Pointer(cUri))
 	}
-	ptr := C.virConnectOpenAuth(cUri, (*C.struct__virConnectAuth)(unsafe.Pointer(&auth)), C.uint(0))
+
+	callbackID := registerCallbackId(auth.Callback)
+
+	ptr := C.virConnectOpenAuthWrap(cUri, &ccredtype[0], C.uint(len(auth.CredType)), C.int(callbackID), C.uint(flags))
+	freeCallbackId(callbackID)
 	if ptr == nil {
 		return nil, GetLastError()
 	}

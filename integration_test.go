@@ -139,7 +139,24 @@ func TestSetKeepalive(t *testing.T) {
 }
 
 func TestConnectionWithAuth(t *testing.T) {
-	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", "user", "pass")
+	callback := func(creds []*ConnectCredential) {
+		for _, cred := range creds {
+			if cred.Type == CRED_AUTHNAME {
+				cred.Result = "user"
+				cred.ResultLen = len(cred.Result)
+			} else if cred.Type == CRED_PASSPHRASE {
+				cred.Result = "pass"
+				cred.ResultLen = len(cred.Result)
+			}
+		}
+	}
+	auth := &ConnectAuth{
+		CredType: []ConnectCredentialType{
+			CRED_AUTHNAME, CRED_PASSPHRASE,
+		},
+		Callback: callback,
+	}
+	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", auth, 0)
 	if err != nil {
 		t.Error(err)
 		return
@@ -155,7 +172,24 @@ func TestConnectionWithAuth(t *testing.T) {
 }
 
 func TestConnectionWithWrongCredentials(t *testing.T) {
-	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", "user", "wrongpass")
+	callback := func(creds []*ConnectCredential) {
+		for _, cred := range creds {
+			if cred.Type == CRED_AUTHNAME {
+				cred.Result = "user"
+				cred.ResultLen = len(cred.Result)
+			} else if cred.Type == CRED_PASSPHRASE {
+				cred.Result = "wrongpass"
+				cred.ResultLen = len(cred.Result)
+			}
+		}
+	}
+	auth := &ConnectAuth{
+		CredType: []ConnectCredentialType{
+			CRED_AUTHNAME, CRED_PASSPHRASE,
+		},
+		Callback: callback,
+	}
+	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", auth, 0)
 	if err == nil {
 		conn.CloseConnection()
 		t.Error(err)
