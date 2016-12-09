@@ -13,7 +13,7 @@ import (
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "go_libvirt.h"
+#include "connect_cfuncs.h"
 */
 import "C"
 
