@@ -1,6 +1,17 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.3.5 */
+
+#ifndef VIR_PERF_PARAM_MBML
+#define VIR_PERF_PARAM_MBML "mbml"
+#endif
+
+#ifndef VIR_PERF_PARAM_MBMT
+#define VIR_PERF_PARAM_MBMT "mbmt"
+#endif
+
+
 /* 2.0.0 */
 
 #ifndef VIR_DOMAIN_JOB_AUTO_CONVERGE_THROTTLE
