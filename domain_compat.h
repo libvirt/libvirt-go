@@ -1,6 +1,29 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.15 */
+
+#ifndef VIR_DOMAIN_JOB_DOWNTIME_NET
+#define VIR_DOMAIN_JOB_DOWNTIME_NET "downtime_net"
+#endif
+
+#ifndef VIR_DOMAIN_JOB_TIME_ELAPSED_NET
+#define VIR_DOMAIN_JOB_TIME_ELAPSED_NET "time_elapsed_net"
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_ID_DEVICE_ADDED
+#define VIR_DOMAIN_EVENT_ID_DEVICE_ADDED 19
+#endif
+
+
+int virDomainAddIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned int flags);
+int virDomainDelIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned int flags);
+
+
 /* 1.2.16 */
 
 #ifndef VIR_DOMAIN_PASSWORD_ENCRYPTED

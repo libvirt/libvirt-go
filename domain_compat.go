@@ -6,6 +6,30 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainAddIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002015
+    assert(0); // Caller should have checked version
+#else
+    return virDomainAddIOThread(domain, iothread_id, flags);
+#endif
+}
+
+
+int virDomainDelIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002015
+    assert(0); // Caller should have checked version
+#else
+    return virDomainDelIOThread(domain, iothread_id, flags);
+#endif
+}
+
+
 int virDomainSetUserPasswordCompat(virDomainPtr dom,
 				   const char *user,
 				   const char *password,

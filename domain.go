@@ -3718,7 +3718,10 @@ func (d *Domain) PMWakeup(flags uint32) error {
 }
 
 func (d *Domain) AddIOThread(id uint, flags uint32) error {
-	ret := C.virDomainAddIOThread(d.ptr, C.uint(id), C.uint(flags))
+	if C.LIBVIR_VERSION_NUMBER < 1002015 {
+		return GetNotImplementedError()
+	}
+	ret := C.virDomainAddIOThreadCompat(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3727,7 +3730,10 @@ func (d *Domain) AddIOThread(id uint, flags uint32) error {
 }
 
 func (d *Domain) DelIOThread(id uint, flags uint32) error {
-	ret := C.virDomainDelIOThread(d.ptr, C.uint(id), C.uint(flags))
+	if C.LIBVIR_VERSION_NUMBER < 1002015 {
+		return GetNotImplementedError()
+	}
+	ret := C.virDomainDelIOThreadCompat(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
