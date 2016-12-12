@@ -2304,7 +2304,11 @@ func (d *Domain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 }
 
 func (d *Domain) MigrateStartPostCopy(flags uint32) error {
-	ret := C.virDomainMigrateStartPostCopy(d.ptr, C.uint(flags))
+	if C.LIBVIR_VERSION_NUMBER < 1003003 {
+		return GetNotImplementedError()
+	}
+
+	ret := C.virDomainMigrateStartPostCopyCompat(d.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3157,12 +3161,16 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 }
 
 func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvents, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1003003 {
+		return nil, GetNotImplementedError()
+	}
+
 	params := &DomainPerfEvents{}
 	info := getDomainPerfEventsFieldInfo(params)
 
 	var cparams *C.virTypedParameter
 	var nparams C.int
-	ret := C.virDomainGetPerfEvents(d.ptr, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetPerfEventsCompat(d.ptr, &cparams, &nparams, C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}
@@ -3178,11 +3186,15 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 }
 
 func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1003003 {
+		return GetNotImplementedError()
+	}
+
 	info := getDomainPerfEventsFieldInfo(params)
 
 	var cparams *C.virTypedParameter
 	var nparams C.int
-	ret := C.virDomainGetPerfEvents(d.ptr, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetPerfEventsCompat(d.ptr, &cparams, &nparams, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3194,7 +3206,7 @@ func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags uint32) error {
 		return err
 	}
 
-	ret = C.virDomainSetPerfEvents(d.ptr, cparams, nparams, C.uint(flags))
+	ret = C.virDomainSetPerfEventsCompat(d.ptr, cparams, nparams, C.uint(flags))
 
 	return nil
 }

@@ -6,6 +6,43 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainGetPerfEventsCompat(virDomainPtr dom,
+				 virTypedParameterPtr *params,
+				 int *nparams,
+				 unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1003003
+    assert(0); // Caller should have checked version
+#else
+    return virDomainGetPerfEventsCompat(dom, params, nparams, flags);
+#endif
+}
+
+
+int virDomainSetPerfEventsCompat(virDomainPtr dom,
+				 virTypedParameterPtr params,
+				 int nparams,
+				 unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1003003
+    assert(0); // Caller should have checked version
+#else
+    return virDomainSetPerfEventsCompat(dom, params, nparams, flags);
+#endif
+}
+
+
+int virDomainMigrateStartPostCopyCompat(virDomainPtr domain,
+					unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1003003
+    assert(0); // Caller should have checked version
+#else
+    return virDomainMigrateStartPostCopy(domain, flags);
+#endif
+}
+
+
 int virDomainGetGuestVcpusCompat(virDomainPtr domain,
 				 virTypedParameterPtr *params,
 				 unsigned int *nparams,

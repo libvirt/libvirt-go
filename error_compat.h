@@ -1,6 +1,21 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.3.3 */
+
+#ifndef VIR_FROM_PERF
+#define VIR_FROM_PERF 65
+#endif
+
+#ifndef VIR_ERR_AUTH_UNAVAILABLE
+#define VIR_ERR_AUTH_UNAVAILABLE 94
+#endif
+
+#ifndef VIR_ERR_NO_SERVER
+#define VIR_ERR_NO_SERVER 95
+#endif
+
+
 /* 1.3.5 */
 
 #ifndef VIR_ERR_NO_CLIENT

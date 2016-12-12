@@ -1,6 +1,84 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.3.3 */
+
+#ifndef VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT
+#define VIR_DOMAIN_EVENT_DEFINED_FROM_SNAPSHOT 3
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_RESUMED_POSTCOPY
+#define VIR_DOMAIN_EVENT_RESUMED_POSTCOPY 3
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY
+#define VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY 7
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED
+#define VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY_FAILED 8
+#endif
+
+#ifndef VIR_DOMAIN_PAUSED_POSTCOPY
+#define VIR_DOMAIN_PAUSED_POSTCOPY 12
+#endif
+
+#ifndef VIR_DOMAIN_PAUSED_POSTCOPY_FAILED
+#define VIR_DOMAIN_PAUSED_POSTCOPY_FAILED 13
+#endif
+
+#ifndef VIR_DOMAIN_RUNNING_POSTCOPY
+#define VIR_DOMAIN_RUNNING_POSTCOPY 10
+#endif
+
+#ifndef VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD
+#define VIR_DOMAIN_SCHEDULER_GLOBAL_PERIOD "global_period"
+#endif
+
+#ifndef VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA
+#define VIR_DOMAIN_SCHEDULER_GLOBAL_QUOTA "global_quota"
+#endif
+
+#ifndef VIR_DOMAIN_STATS_PERF
+#define VIR_DOMAIN_STATS_PERF (1 << 6)
+#endif
+
+#ifndef VIR_MIGRATE_PARAM_DISKS_PORT
+#define VIR_MIGRATE_PARAM_DISKS_PORT "disks_port"
+#endif
+
+#ifndef VIR_PERF_PARAM_CMT
+#define VIR_PERF_PARAM_CMT "cmt"
+#endif
+
+#ifndef VIR_MIGRATE_POSTCOPY
+#define VIR_MIGRATE_POSTCOPY (1 << 15)
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_ID_JOB_COMPLETED
+#define VIR_DOMAIN_EVENT_ID_JOB_COMPLETED 21
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_CPU_GLOBAL_PERIOD
+#define VIR_DOMAIN_TUNABLE_CPU_GLOBAL_PERIOD "cputune.global_period"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_CPU_GLOBAL_QUOTA
+#define VIR_DOMAIN_TUNABLE_CPU_GLOBAL_QUOTA "cputune.global_quota"
+#endif
+
+int virDomainGetPerfEventsCompat(virDomainPtr dom,
+				 virTypedParameterPtr *params,
+				 int *nparams,
+				 unsigned int flags);
+int virDomainSetPerfEventsCompat(virDomainPtr dom,
+				 virTypedParameterPtr params,
+				 int nparams,
+				 unsigned int flags);
+int virDomainMigrateStartPostCopyCompat(virDomainPtr domain,
+					unsigned int flags);
+
+
 /* 1.3.4 */
 
 #ifndef VIR_MIGRATE_PARAM_COMPRESSION
