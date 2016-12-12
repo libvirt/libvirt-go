@@ -1,6 +1,13 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.4 */
+
+#ifndef VIR_FROM_FIREWALL
+#define VIR_FROM_FIREWALL 59
+#endif
+
+
 /* 1.2.6 */
 
 #ifndef VIR_ERR_CPU_INCOMPATIBLE
