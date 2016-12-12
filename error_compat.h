@@ -1,6 +1,13 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.6 */
+
+#ifndef VIR_ERR_CPU_INCOMPATIBLE
+#define VIR_ERR_CPU_INCOMPATIBLE 91
+#endif
+
+
 /* 1.2.9 */
 
 #ifndef VIR_FROM_POLKIT

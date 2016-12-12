@@ -1,6 +1,21 @@
 #ifndef LIBVIRT_GO_CONNECT_COMPAT_H_
 #define LIBVIRT_GO_CONNECT_COMPAT_H_
 
+/* 1.2.6 */
+
+#ifndef VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE
+#define VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE 1 << 0
+#endif
+
+int virNodeGetFreePagesCompat(virConnectPtr conn,
+			      unsigned int npages,
+			      unsigned int *pages,
+			      int startcell,
+			      unsigned int cellcount,
+			      unsigned long long *counts,
+			      unsigned int flags);
+
+
 /* 1.2.7 */
 
 char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,

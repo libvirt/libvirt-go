@@ -5,6 +5,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+#include "network_compat.h"
 */
 import "C"
 
@@ -236,8 +237,11 @@ func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection,
 }
 
 func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002006 {
+		return []NetworkDHCPLease{}, GetNotImplementedError()
+	}
 	var cLeases *C.virNetworkDHCPLeasePtr
-	numLeases := C.virNetworkGetDHCPLeases(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
+	numLeases := C.virNetworkGetDHCPLeasesCompat(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
 	if numLeases == -1 {
 		return nil, GetLastError()
 	}
@@ -260,7 +264,7 @@ func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 			Hostname:   C.GoString(clease.hostname),
 			Clientid:   C.GoString(clease.clientid),
 		})
-		C.virNetworkDHCPLeaseFree(clease)
+		C.virNetworkDHCPLeaseFreeCompat(clease)
 	}
 	C.free(unsafe.Pointer(cLeases))
 	return leases, nil

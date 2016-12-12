@@ -6,6 +6,21 @@ package libvirt
 #include <assert.h>
 #include "connect_compat.h"
 
+int virNodeGetFreePagesCompat(virConnectPtr conn,
+			      unsigned int npages,
+			      unsigned int *pages,
+			      int startcell,
+			      unsigned int cellcount,
+			      unsigned long long *counts,
+			      unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002006
+    assert(0); // Caller should have checked version
+#else
+    return virNodeGetFreePages(conn, npages, pages, startcell, cellcount, counts, flags);
+#endif
+}
+
 char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,
 					     const char *emulatorbin,
 					     const char *arch,

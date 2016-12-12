@@ -1525,6 +1525,9 @@ func (c *Connect) GetFreeMemory() (uint64, error) {
 }
 
 func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint, flags uint32) ([]uint64, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002006 {
+		return []uint64{}, GetNotImplementedError()
+	}
 	cpageSizes := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes)*int(maxCells))
 
@@ -1532,7 +1535,7 @@ func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint,
 		cpageSizes[i] = C.uint(pageSizes[i])
 	}
 
-	ret := C.virNodeGetFreePages(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
+	ret := C.virNodeGetFreePagesCompat(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
 		C.uint(maxCells), (*C.ulonglong)(unsafe.Pointer(&ccounts)), C.uint(flags))
 	if ret == -1 {
 		return []uint64{}, GetLastError()
