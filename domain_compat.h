@@ -1,6 +1,25 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.2 */
+
+#ifndef VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS
+#define VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS "device_read_iops_sec"
+#endif
+
+#ifndef VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS
+#define VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS "device_write_iops_sec"
+#endif
+
+#ifndef VIR_DOMAIN_BLKIO_DEVICE_READ_BPS
+#define VIR_DOMAIN_BLKIO_DEVICE_READ_BPS "device_read_bytes_sec"
+#endif
+
+#ifndef VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS
+#define VIR_DOMAIN_BLKIO_DEVICE_WRITE_BPS "device_write_bytes_sec"
+#endif
+
+
 /* 1.2.3 */
 
 #ifndef VIR_DOMAIN_CORE_DUMP_FORMAT_RAW

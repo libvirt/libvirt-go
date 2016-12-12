@@ -1,6 +1,13 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.2 */
+
+#ifndef VIR_FROM_BHYVE
+#define VIR_FROM_BHYVE 57
+#endif
+
+
 /* 1.2.3 */
 
 #ifndef VIR_FROM_CRYPTO
