@@ -6,6 +6,7 @@ package libvirt
 #include <libvirt/libvirt-qemu.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+#include "domain_compat.h"
 */
 import "C"
 
