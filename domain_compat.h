@@ -1,6 +1,29 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 2.3.0 */
+
+#ifndef VIR_DOMAIN_UNDEFINE_KEEP_NVRAM
+#define VIR_DOMAIN_UNDEFINE_KEEP_NVRAM (1 << 3)
+#endif
+
+#ifndef VIR_PERF_PARAM_CACHE_MISSES
+#define VIR_PERF_PARAM_CACHE_MISSES "cache_misses"
+#endif
+
+#ifndef VIR_PERF_PARAM_CACHE_REFERENCES
+#define VIR_PERF_PARAM_CACHE_REFERENCES "cache_references"
+#endif
+
+#ifndef VIR_PERF_PARAM_INSTRUCTIONS
+#define VIR_PERF_PARAM_INSTRUCTIONS "instructions"
+#endif
+
+#ifndef VIR_PERF_PARAM_CPU_CYCLES
+#define VIR_PERF_PARAM_CPU_CYCLES "cpu_cycles"
+#endif
+
+
 /* 2.4.0 */
 
 #ifndef VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC_MAX_LENGTH

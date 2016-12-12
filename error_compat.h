@@ -1,6 +1,12 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 2.3.0 */
+
+#ifndef VIR_ERR_AGENT_UNSYNCED
+#define VIR_ERR_AGENT_UNSYNCED 97
+#endif
+
 /* 2.5.0 */
 
 #ifndef VIR_ERR_LIBSSH
