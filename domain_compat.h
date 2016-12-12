@@ -1,6 +1,17 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.3.1 */
+
+#ifndef VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE
+#define VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE "memory_dirty_rate"
+#endif
+
+#ifndef VIR_DOMAIN_JOB_MEMORY_ITERATION
+#define VIR_DOMAIN_JOB_MEMORY_ITERATION "memory_iteration"
+#endif
+
+
 /* 1.3.2 */
 
 #ifndef VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION
