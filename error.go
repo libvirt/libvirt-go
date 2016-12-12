@@ -4,7 +4,7 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
-#include <stdlib.h>
+#include "error_compat.h"
 
 void ignoreErrorFunc(void *userData, virErrorPtr error) {
      // no-op

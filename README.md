@@ -6,19 +6,8 @@ Make sure to have `libvirt-dev` package (or the development files otherwise some
 
 ## Version Support
 
-The minimum required version of libvirt is **2.4.0**. Due to the
-API/ABI compatibility promise of libvirt, more recent versions of
-libvirt should work too.
-
-The master branch of libvirt-go will always aim to support all
-the APIs present in the master branch of the libvirt core library
-API. At time of release, a tag will be created, so applications
-that need build compatibility with an older version of libvirt
-should checkout the tag corresponding to the version that they
-require. This policy is appies from version 2.4.0 onwards. If
-compatibility is required against a version of libvirt prior to
-2.4.0, it will be necessary to create a branch and strip out
-APIs.
+The libvirt go package provides API coverage for libvirt versions
+from 2.4.0 onwards, through conditional compilation of newer APIs.
 
 ## Documentation
 
