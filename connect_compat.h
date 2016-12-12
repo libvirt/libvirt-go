@@ -1,8 +1,72 @@
 #ifndef LIBVIRT_GO_CONNECT_COMPAT_H_
 #define LIBVIRT_GO_CONNECT_COMPAT_H_
 
-/* 1.2.9 */
+/* 1.2.8 */
 
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE 1 << 0
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE 1 << 1
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT 1 << 2
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT 1 << 3
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING 1 << 4
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED 1 << 5
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF 1 << 6
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER 1 << 7
+#endif
+
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS 1U << 31
+#endif
+
+#ifndef VIR_CONNECT_LIST_STORAGE_POOLS_ZFS
+#define VIR_CONNECT_LIST_STORAGE_POOLS_ZFS 1 << 17
+#endif
+
+#if LIBVIR_VERSION_NUMBER < 1002008
+typedef struct _virDomainStatsRecord virDomainStatsRecord;
+typedef virDomainStatsRecord *virDomainStatsRecordPtr;
+struct _virDomainStatsRecord {
+    virDomainPtr dom;
+    virTypedParameterPtr params;
+    int nparams;
+};
+#endif
+
+int virConnectGetAllDomainStatsCompat(virConnectPtr conn,
+				      unsigned int stats,
+				      virDomainStatsRecordPtr **retStats,
+				      unsigned int flags);
+
+int virDomainListGetStatsCompat(virDomainPtr *doms,
+				unsigned int stats,
+				virDomainStatsRecordPtr **retStats,
+				unsigned int flags);
+
+void virDomainStatsRecordListFreeCompat(virDomainStatsRecordPtr *stats);
+
+
+/* 1.2.9 */
 #ifndef VIR_NODE_ALLOC_PAGES_ADD
 #define VIR_NODE_ALLOC_PAGES_ADD 0
 #endif

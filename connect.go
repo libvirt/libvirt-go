@@ -2278,6 +2278,9 @@ func getDomainStatsLengthsFieldInfo(params *domainStatsLengths) map[string]typed
 }
 
 func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes, flags ConnectGetAllDomainStatsFlags) ([]DomainStats, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002008 {
+		return []DomainStats{}, GetNotImplementedError()
+	}
 	var ret C.int
 	var cstats *C.virDomainStatsRecordPtr
 	if len(doms) > 0 {
@@ -2286,15 +2289,15 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 			cdoms[i] = doms[i].ptr
 		}
 
-		ret = C.virDomainListGetStats(&cdoms[0], C.uint(statsTypes), &cstats, C.uint(flags))
+		ret = C.virDomainListGetStatsCompat(&cdoms[0], C.uint(statsTypes), &cstats, C.uint(flags))
 	} else {
-		ret = C.virConnectGetAllDomainStats(c.ptr, C.uint(statsTypes), &cstats, C.uint(flags))
+		ret = C.virConnectGetAllDomainStatsCompat(c.ptr, C.uint(statsTypes), &cstats, C.uint(flags))
 	}
 	if ret == -1 {
 		return []DomainStats{}, GetLastError()
 	}
 
-	defer C.virDomainStatsRecordListFree(cstats)
+	defer C.virDomainStatsRecordListFreeCompat(cstats)
 
 	stats := make([]DomainStats, ret)
 	for i := 0; i < int(ret); i++ {

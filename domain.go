@@ -1910,6 +1910,9 @@ func getBlockCopyParameterFieldInfo(params *DomainBlockCopyParameters) map[strin
 }
 
 func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyParameters, flags DomainBlockCopyFlags) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002008 {
+		return GetNotImplementedError()
+	}
 	cdisk := C.CString(disk)
 	defer C.free(cdisk)
 	cdestxml := C.CString(destxml)
@@ -1925,7 +1928,7 @@ func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyP
 
 	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
 
-	ret := C.virDomainBlockCopy(d.ptr, cdisk, cdestxml, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams), C.uint(flags))
+	ret := C.virDomainBlockCopyCompat(d.ptr, cdisk, cdestxml, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3930,7 +3933,10 @@ func (d *Domain) OpenGraphics(idx uint, file os.File, flags DomainOpenGraphicsFl
 }
 
 func (d *Domain) OpenGraphicsFD(idx uint, flags DomainOpenGraphicsFlags) (*os.File, error) {
-	ret := C.virDomainOpenGraphicsFD(d.ptr, C.uint(idx), C.uint(flags))
+	if C.LIBVIR_VERSION_NUMBER < 1002008 {
+		return nil, GetNotImplementedError()
+	}
+	ret := C.virDomainOpenGraphicsFDCompat(d.ptr, C.uint(idx), C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}

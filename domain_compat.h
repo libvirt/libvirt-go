@@ -1,6 +1,43 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.8 */
+
+#ifndef VIR_DOMAIN_BLOCK_COPY_SHALLOW
+#define VIR_DOMAIN_BLOCK_COPY_SHALLOW 1 << 0
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_COPY_REUSE_EXT
+#define VIR_DOMAIN_BLOCK_COPY_REUSE_EXT 1 << 1
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_COPY_BANDWIDTH
+#define VIR_DOMAIN_BLOCK_COPY_BANDWIDTH "bandwidth"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_COPY_GRANULARITY
+#define VIR_DOMAIN_BLOCK_COPY_GRANULARITY "granularity"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_COPY_BUF_SIZE
+#define VIR_DOMAIN_BLOCK_COPY_BUF_SIZE "buf-size"
+#endif
+
+#ifndef VIR_DOMAIN_STATS_STATE
+#define VIR_DOMAIN_STATS_STATE 1 << 0
+#endif
+
+int virDomainBlockCopyCompat(virDomainPtr dom, const char *disk,
+			     const char *destxml,
+			     virTypedParameterPtr params,
+			     int nparams,
+			     unsigned int flags);
+
+int virDomainOpenGraphicsFDCompat(virDomainPtr dom,
+				  unsigned int idx,
+				  unsigned int flags);
+
+
 /* 1.2.9 */
 
 #ifndef VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES

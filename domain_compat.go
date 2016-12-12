@@ -6,6 +6,30 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainBlockCopyCompat(virDomainPtr dom, const char *disk,
+			     const char *destxml,
+			     virTypedParameterPtr params,
+			     int nparams,
+			     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002008
+    assert(0); // Caller should have checked version
+#else
+    return virDomainBlockCopy(dom, disk, destxml, params, nparams, flags);
+#endif
+}
+
+int virDomainOpenGraphicsFDCompat(virDomainPtr dom,
+				  unsigned int idx,
+				  unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002008
+    assert(0); // Caller should have checked version
+#else
+    return virDomainOpenGraphicsFD(dom, idx, flags);
+#endif
+}
+
 void virDomainFSInfoFreeCompat(virDomainFSInfoPtr info)
 {
 }
