@@ -8,6 +8,7 @@ import (
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
+#include "node_device_compat.h"
 #include "node_device_events_cfuncs.h"
 */
 import "C"
@@ -59,6 +60,9 @@ func nodeDeviceEventGenericCallback(c C.virConnectPtr, d C.virNodeDevicePtr,
 }
 
 func (c *Connect) NodeDeviceEventLifecycleRegister(device *NodeDevice, callback NodeDeviceEventLifecycleCallback) (int, error) {
+	if C.LIBVIR_VERSION_NUMBER < 2002000 {
+		return 0, GetNotImplementedError()
+	}
 	goCallBackId := registerCallbackId(callback)
 
 	callbackPtr := unsafe.Pointer(C.nodeDeviceEventLifecycleCallback_cgo)
@@ -97,8 +101,11 @@ func (c *Connect) NodeDeviceEventUpdateRegister(device *NodeDevice, callback Nod
 }
 
 func (c *Connect) NodeDeviceEventDeregister(callbackId int) error {
+	if C.LIBVIR_VERSION_NUMBER < 2002000 {
+		return GetNotImplementedError()
+	}
 	// Deregister the callback
-	if i := int(C.virConnectNodeDeviceEventDeregisterAny(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectNodeDeviceEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil

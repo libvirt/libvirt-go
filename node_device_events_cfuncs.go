@@ -4,6 +4,8 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
+#include <assert.h>
+#include "node_device_compat.h"
 #include "node_device_events_cfuncs.h"
 #include "callbacks_cfuncs.h"
 #include <stdint.h>
@@ -25,7 +27,11 @@ int virConnectNodeDeviceEventRegisterAny_cgo(virConnectPtr c,  virNodeDevicePtr 
                                               int eventID, virConnectNodeDeviceEventGenericCallback cb,
                                               long goCallbackId) {
     void* id = (void*)goCallbackId;
+#if LIBVIR_VERSION_NUMBER < 2002000
+    assert(0); // Caller should have checked version
+#else
     return virConnectNodeDeviceEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+#endif
 }
 
 */

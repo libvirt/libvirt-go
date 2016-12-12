@@ -564,3 +564,12 @@ func GetLastError() Error {
 	C.virResetError(err)
 	return virErr
 }
+
+func GetNotImplementedError() Error {
+	return Error{
+		Code:    ERR_NO_SUPPORT,
+		Domain:  FROM_NONE,
+		Message: "Function not implemented in this libvirt build",
+		Level:   ERR_ERROR,
+	}
+}

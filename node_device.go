@@ -5,6 +5,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+#include "node_device_compat.h"
 */
 import "C"
 
