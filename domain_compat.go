@@ -6,6 +6,19 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainCoreDumpWithFormatCompat(virDomainPtr domain,
+				      const char *to,
+				      unsigned int dumpformat,
+				      unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002003
+    assert(0); // Caller should have checked version
+#else
+    return virDomainCoreDumpWithFormatCompat(domain, to, dumpformat, flags);
+#endif
+}
+
+
 int virDomainGetTimeCompat(virDomainPtr dom,
 			   long long *seconds,
 			   unsigned int *nseconds,

@@ -3605,10 +3605,13 @@ func (d *Domain) CoreDump(to string, flags uint32) error {
 }
 
 func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002003 {
+		GetNotImplementedError()
+	}
 	cto := C.CString(to)
 	defer C.free(cto)
 
-	ret := C.virDomainCoreDumpWithFormat(d.ptr, cto, C.uint(format), C.uint(flags))
+	ret := C.virDomainCoreDumpWithFormatCompat(d.ptr, cto, C.uint(format), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}

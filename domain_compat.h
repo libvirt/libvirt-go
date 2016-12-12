@@ -1,6 +1,34 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.3 */
+
+#ifndef VIR_DOMAIN_CORE_DUMP_FORMAT_RAW
+#define VIR_DOMAIN_CORE_DUMP_FORMAT_RAW 0
+#endif
+
+#ifndef VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB
+#define VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_ZLIB 1
+#endif
+
+#ifndef VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO
+#define VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_LZO 2
+#endif
+
+#ifndef VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY
+#define VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY 3
+#endif
+
+#ifndef VIR_MIGRATE_AUTO_CONVERGE
+#define VIR_MIGRATE_AUTO_CONVERGE 1 << 13
+#endif
+
+int virDomainCoreDumpWithFormatCompat(virDomainPtr domain,
+				      const char *to,
+				      unsigned int dumpformat,
+				      unsigned int flags);
+
+
 /* 1.2.5 */
 
 #ifndef VIR_DOMAIN_REBOOT_PARAVIRT

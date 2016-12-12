@@ -7,7 +7,7 @@ Make sure to have `libvirt-dev` package (or the development files otherwise some
 ## Version Support
 
 The libvirt go package provides API coverage for libvirt versions
-from 1.2.3 onwards, through conditional compilation of newer APIs.
+from 1.2.2 onwards, through conditional compilation of newer APIs.
 
 ## Documentation
 
