@@ -1,6 +1,41 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.5 */
+
+#ifndef VIR_DOMAIN_REBOOT_PARAVIRT
+#define VIR_DOMAIN_REBOOT_PARAVIRT 1 << 4
+#endif
+
+#ifndef VIR_DOMAIN_SHUTDOWN_PARAVIRT
+#define VIR_DOMAIN_SHUTDOWN_PARAVIRT 1 << 4
+#endif
+
+#ifndef VIR_DOMAIN_TIME_SYNC
+#define VIR_DOMAIN_TIME_SYNC 1 << 0
+#endif
+
+int virDomainGetTimeCompat(virDomainPtr dom,
+			   long long *seconds,
+			   unsigned int *nseconds,
+			   unsigned int flags);
+
+int virDomainSetTimeCompat(virDomainPtr dom,
+			   long long seconds,
+			   unsigned int nseconds,
+			   unsigned int flags);
+
+int virDomainFSFreezeCompat(virDomainPtr dom,
+			    const char **mountpoints,
+			    unsigned int nmountpoints,
+			    unsigned int flags);
+
+int virDomainFSThawCompat(virDomainPtr dom,
+			  const char **mountpoints,
+			  unsigned int nmountpoints,
+			  unsigned int flags);
+
+
 /* 1.2.6 */
 
 #ifndef VIR_DOMAIN_BLOCK_COMMIT_ACTIVE

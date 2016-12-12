@@ -6,6 +6,54 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainGetTimeCompat(virDomainPtr dom,
+			   long long *seconds,
+			   unsigned int *nseconds,
+			   unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002005
+    assert(0); // Caller should have checked version
+#else
+    return virDomainGetTime(dom, seconds, nseconds, flags);
+#endif
+}
+
+int virDomainSetTimeCompat(virDomainPtr dom,
+			   long long seconds,
+			   unsigned int nseconds,
+			   unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002005
+    assert(0); // Caller should have checked version
+#else
+    return virDomainSetTime(dom, seconds, nseconds, flags);
+#endif
+}
+
+int virDomainFSFreezeCompat(virDomainPtr dom,
+			    const char **mountpoints,
+			    unsigned int nmountpoints,
+			    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002005
+    assert(0); // Caller should have checked version
+#else
+    return virDomainFSFreeze(dom, mountpoints, nmountpoints, flags);
+#endif
+}
+
+int virDomainFSThawCompat(virDomainPtr dom,
+			  const char **mountpoints,
+			  unsigned int nmountpoints,
+			  unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002005
+    assert(0); // Caller should have checked version
+#else
+    return virDomainFSThaw(dom, mountpoints, nmountpoints, flags);
+#endif
+}
+
 int virDomainBlockCopyCompat(virDomainPtr dom, const char *disk,
 			     const char *destxml,
 			     virTypedParameterPtr params,

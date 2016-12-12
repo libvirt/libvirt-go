@@ -3478,9 +3478,12 @@ func (d *Domain) GetSecurityLabelList() ([]SecurityLabel, error) {
 }
 
 func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002005 {
+		return 0, 0, GetNotImplementedError()
+	}
 	var secs C.longlong
 	var nsecs C.uint
-	ret := C.virDomainGetTime(d.ptr, &secs, &nsecs, C.uint(flags))
+	ret := C.virDomainGetTimeCompat(d.ptr, &secs, &nsecs, C.uint(flags))
 	if ret == -1 {
 		return 0, 0, GetLastError()
 	}
@@ -3489,8 +3492,11 @@ func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 }
 
 func (d *Domain) SetTime(secs int64, nsecs uint, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002005 {
+		return GetNotImplementedError()
+	}
 
-	ret := C.virDomainSetTime(d.ptr, C.longlong(secs), C.uint(nsecs), C.uint(flags))
+	ret := C.virDomainSetTimeCompat(d.ptr, C.longlong(secs), C.uint(nsecs), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3622,6 +3628,9 @@ func (d *Domain) HasCurrentSnapshot(flags uint32) (bool, error) {
 }
 
 func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002005 {
+		return GetNotImplementedError()
+	}
 	cmounts := make([](*C.char), len(mounts))
 
 	for i := 0; i < len(mounts); i++ {
@@ -3630,7 +3639,7 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 	}
 
 	nmounts := len(mounts)
-	ret := C.virDomainFSFreeze(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
+	ret := C.virDomainFSFreezeCompat(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3639,6 +3648,9 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 }
 
 func (d *Domain) FSThaw(mounts []string, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002005 {
+		return GetNotImplementedError()
+	}
 	cmounts := make([](*C.char), len(mounts))
 
 	for i := 0; i < len(mounts); i++ {
@@ -3647,7 +3659,7 @@ func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 	}
 
 	nmounts := len(mounts)
-	ret := C.virDomainFSThaw(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
+	ret := C.virDomainFSThawCompat(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
