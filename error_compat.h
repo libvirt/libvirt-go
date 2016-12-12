@@ -1,6 +1,13 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.9 */
+
+#ifndef VIR_FROM_POLKIT
+#define VIR_FROM_POLKIT 60
+#endif
+
+
 /* 1.2.12 */
 
 #ifndef VIR_ERR_XML_INVALID_SCHEMA

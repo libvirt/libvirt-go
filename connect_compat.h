@@ -1,6 +1,25 @@
 #ifndef LIBVIRT_GO_CONNECT_COMPAT_H_
 #define LIBVIRT_GO_CONNECT_COMPAT_H_
 
+/* 1.2.9 */
+
+#ifndef VIR_NODE_ALLOC_PAGES_ADD
+#define VIR_NODE_ALLOC_PAGES_ADD 0
+#endif
+
+#ifndef VIR_NODE_ALLOC_PAGES_SET
+#define VIR_NODE_ALLOC_PAGES_SET 1 << 0
+#endif
+
+int virNodeAllocPagesCompat(virConnectPtr conn,
+			    unsigned int npages,
+			    unsigned int *pageSizes,
+			    unsigned long long *pageCounts,
+			    int startCell,
+			    unsigned int cellCount,
+			    unsigned int flags);
+
+
 /* 1.2.11 */
 
 #ifndef VIR_CONNECT_DOMAIN_EVENT_AGENT_LIFECYCLE_STATE_CONNECTED

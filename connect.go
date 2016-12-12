@@ -1398,6 +1398,9 @@ func (c *Connect) InterfaceChangeRollback(flags uint) error {
 }
 
 func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags NodeAllocPagesFlags) (int, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002009 {
+		return 0, GetNotImplementedError()
+	}
 	cpages := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes))
 
@@ -1408,7 +1411,7 @@ func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount u
 		i++
 	}
 
-	ret := C.virNodeAllocPages(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpages)),
+	ret := C.virNodeAllocPagesCompat(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpages)),
 		(*C.ulonglong)(unsafe.Pointer(&ccounts)), C.int(startCell), C.uint(cellCount), C.uint(flags))
 	if ret == -1 {
 		return 0, GetLastError()
