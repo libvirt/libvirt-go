@@ -3492,13 +3492,16 @@ func (d *Domain) SetTime(secs int64, nsecs uint, flags uint32) error {
 }
 
 func (d *Domain) SetUserPassword(user string, password string, flags DomainSetUserPasswordFlags) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002015 {
+		return GetNotImplementedError()
+	}
 	cuser := C.CString(user)
 	cpassword := C.CString(password)
 
 	defer C.free(cuser)
 	defer C.free(cpassword)
 
-	ret := C.virDomainSetUserPassword(d.ptr, cuser, cpassword, C.uint(flags))
+	ret := C.virDomainSetUserPasswordCompat(d.ptr, cuser, cpassword, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}

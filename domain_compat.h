@@ -1,6 +1,18 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.16 */
+
+#ifndef VIR_DOMAIN_PASSWORD_ENCRYPTED
+#define VIR_DOMAIN_PASSWORD_ENCRYPTED 1 << 0
+#endif
+
+int virDomainSetUserPasswordCompat(virDomainPtr dom,
+				   const char *user,
+				   const char *password,
+				   unsigned int flags);
+
+
 /* 1.2.17 */
 
 #ifndef VIR_DOMAIN_EVENT_WATCHDOG_INJECTNMI

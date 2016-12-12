@@ -6,6 +6,19 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainSetUserPasswordCompat(virDomainPtr dom,
+				   const char *user,
+				   const char *password,
+				   unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002016
+    assert(0); // Caller should have checked version
+#else
+    return virDomainSetUserPassword(dom, user, password, flags);
+#endif
+}
+
+
 int virDomainRenameCompat(virDomainPtr dom,
 			  const char *new_name,
 			  unsigned int flags)
