@@ -1,6 +1,13 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.17 */
+
+#ifndef VIR_FROM_ADMIN
+#define VIR_FROM_ADMIN 62
+#endif
+
+
 /* 1.2.18 */
 
 #ifndef VIR_ERR_MIGRATE_FINISH_OK
