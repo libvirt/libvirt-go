@@ -8,6 +8,7 @@ import (
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
+#include "storage_pool_compat.h"
 #include "storage_pool_events_cfuncs.h"
 */
 import "C"
@@ -42,6 +43,10 @@ func storagePoolEventLifecycleCallback(c C.virConnectPtr, s C.virStoragePoolPtr,
 }
 
 func (c *Connect) StoragePoolEventLifecycleRegister(pool *StoragePool, callback StoragePoolEventLifecycleCallback) (int, error) {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return 0, GetNotImplementedError()
+	}
+
 	goCallBackId := registerCallbackId(callback)
 
 	callbackPtr := unsafe.Pointer(C.storagePoolEventLifecycleCallback_cgo)
@@ -61,8 +66,12 @@ func (c *Connect) StoragePoolEventLifecycleRegister(pool *StoragePool, callback 
 }
 
 func (c *Connect) StoragePoolEventDeregister(callbackId int) error {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return GetNotImplementedError()
+	}
+
 	// Deregister the callback
-	if i := int(C.virConnectStoragePoolEventDeregisterAny(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectStoragePoolEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil

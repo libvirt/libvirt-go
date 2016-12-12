@@ -1,6 +1,31 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 2.0.0 */
+
+#ifndef VIR_DOMAIN_JOB_AUTO_CONVERGE_THROTTLE
+#define VIR_DOMAIN_JOB_AUTO_CONVERGE_THROTTLE "auto_converge_throttle"
+#endif
+
+#ifndef VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL
+#define VIR_MIGRATE_PARAM_AUTO_CONVERGE_INITIAL "auto_converge.initial"
+#endif
+
+#ifndef VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT
+#define VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT "auto_converge.increment"
+#endif
+
+int virDomainGetGuestVcpusCompat(virDomainPtr domain,
+				 virTypedParameterPtr *params,
+				 unsigned int *nparams,
+				 unsigned int flags);
+
+int virDomainSetGuestVcpusCompat(virDomainPtr domain,
+				 const char *cpumap,
+				 int state,
+				 unsigned int flags);
+
+
 /* 2.1.0 */
 
 #ifndef VIR_DOMAIN_MEMORY_STAT_USABLE

@@ -4014,13 +4014,17 @@ func parseCPUString(cpumapstr string) ([]bool, error) {
 }
 
 func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return nil, GetNotImplementedError()
+	}
+
 	var VcpusSet, OnlineSet, OfflinableSet bool
 	var VcpusStr, OnlineStr, OfflinableStr string
 	info := getDomainGuestVcpusParametersFieldInfo(&VcpusSet, &VcpusStr, &OnlineSet, &OnlineStr, &OfflinableSet, &OfflinableStr)
 
 	var cparams C.virTypedParameterPtr
 	var nparams C.uint
-	ret := C.virDomainGetGuestVcpus(d.ptr, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetGuestVcpusCompat(d.ptr, &cparams, &nparams, C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}
@@ -4036,6 +4040,10 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 }
 
 func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return GetNotImplementedError()
+	}
+
 	cpumap := ""
 	for i := 0; i < len(cpus); i++ {
 		if cpus[i] {
@@ -4055,7 +4063,7 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 	}
 	ccpumap := C.CString(cpumap)
 	defer C.free(ccpumap)
-	ret := C.virDomainSetGuestVcpus(d.ptr, ccpumap, cstate, C.uint(flags))
+	ret := C.virDomainSetGuestVcpusCompat(d.ptr, ccpumap, cstate, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
