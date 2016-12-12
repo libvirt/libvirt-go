@@ -1,6 +1,87 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.11 */
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_BYTES_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_BYTES_SEC_MAX "blkdeviotune.total_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_READ_BYTES_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_READ_BYTES_SEC_MAX "blkdeviotune.read_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_BYTES_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_BYTES_SEC_MAX "blkdeviotune.write_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_IOPS_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_TOTAL_IOPS_SEC_MAX "blkdeviotune.total_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_READ_IOPS_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_READ_IOPS_SEC_MAX "blkdeviotune.read_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_IOPS_SEC_MAX
+#define VIR_DOMAIN_TUNABLE_BLKDEV_WRITE_IOPS_SEC_MAX "blkdeviotune.write_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_SIZE_IOPS_SEC
+#define VIR_DOMAIN_TUNABLE_BLKDEV_SIZE_IOPS_SEC "blkdeviotune.size_iops_sec"
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE
+#define VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE 18
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_BYTES_SEC_MAX "total_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_READ_BYTES_SEC_MAX "read_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_WRITE_BYTES_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_WRITE_BYTES_SEC_MAX "write_bytes_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_IOPS_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_TOTAL_IOPS_SEC_MAX "total_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_READ_IOPS_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_READ_IOPS_SEC_MAX "read_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_WRITE_IOPS_SEC_MAX
+#define VIR_DOMAIN_BLOCK_IOTUNE_WRITE_IOPS_SEC_MAX "write_iops_sec_max"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_SIZE_IOPS_SEC
+#define VIR_DOMAIN_BLOCK_IOTUNE_SIZE_IOPS_SEC "size_iops_sec"
+#endif
+
+#if LIBVIR_VERSION_NUMBER < 1002011
+typedef struct _virDomainFSInfo virDomainFSInfo;
+typedef virDomainFSInfo *virDomainFSInfoPtr;
+struct _virDomainFSInfo {
+    char *mountpoint; /* path to mount point */
+    char *name;       /* device name in the guest (e.g. "sda1") */
+    char *fstype;     /* filesystem type */
+    size_t ndevAlias; /* number of elements in devAlias */
+    char **devAlias;  /* array of disk device aliases */
+};
+#endif
+
+void virDomainFSInfoFreeCompat(virDomainFSInfoPtr info);
+
+int virDomainGetFSInfoCompat(virDomainPtr dom,
+			     virDomainFSInfoPtr **info,
+			     unsigned int flags);
+
+
 /* 1.2.12 */
 
 #ifndef VIR_DOMAIN_DEFINE_VALIDATE

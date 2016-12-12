@@ -3672,9 +3672,12 @@ type DomainFSInfo struct {
 }
 
 func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002011 {
+		return []DomainFSInfo{}, GetNotImplementedError()
+	}
 	var cfsinfolist **C.virDomainFSInfo
 
-	ret := C.virDomainGetFSInfo(d.ptr, (**C.virDomainFSInfoPtr)(unsafe.Pointer(&cfsinfolist)), C.uint(flags))
+	ret := C.virDomainGetFSInfoCompat(d.ptr, (**C.virDomainFSInfoPtr)(unsafe.Pointer(&cfsinfolist)), C.uint(flags))
 	if ret == -1 {
 		return []DomainFSInfo{}, GetLastError()
 	}
@@ -3696,7 +3699,7 @@ func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
 			DevAlias:   aliases,
 		}
 
-		C.virDomainFSInfoFree(cfsinfo)
+		C.virDomainFSInfoFreeCompat(cfsinfo)
 	}
 	C.free(unsafe.Pointer(cfsinfolist))
 

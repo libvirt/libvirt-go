@@ -6,6 +6,21 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+void virDomainFSInfoFreeCompat(virDomainFSInfoPtr info)
+{
+}
+
+int virDomainGetFSInfoCompat(virDomainPtr dom,
+			     virDomainFSInfoPtr **info,
+			     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002011
+    assert(0); // Caller should have checked version
+#else
+    return virDomainGetFSInfo(dom, info, flags);
+#endif
+}
+
 int virDomainInterfaceAddressesCompat(virDomainPtr dom,
 				      virDomainInterfacePtr **ifaces,
 				      unsigned int source,
