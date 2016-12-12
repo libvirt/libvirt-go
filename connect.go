@@ -753,9 +753,12 @@ func (c *Connect) DomainDefineXML(xmlConfig string) (*Domain, error) {
 }
 
 func (c *Connect) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags) (*Domain, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002012 {
+		return nil, GetNotImplementedError()
+	}
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
-	ptr := C.virDomainDefineXMLFlags(c.ptr, cXml, C.uint(flags))
+	ptr := C.virDomainDefineXMLFlagsCompat(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
