@@ -15,7 +15,4 @@ func TestGetLastError(t *testing.T) {
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("Expected error %+v, got %+v", expected, got)
 	}
-	if got != ErrNoError {
-		t.Errorf("Expected error to be ErrNoError")
-	}
 }

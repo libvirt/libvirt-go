@@ -545,17 +545,15 @@ func (err Error) Error() string {
 		err.Code, err.Domain, err.Message)
 }
 
-var ErrNoError = Error{
-	Code:    ERR_OK,
-	Domain:  FROM_NONE,
-	Message: "Missing error",
-	Level:   ERR_NONE,
-}
-
 func GetLastError() Error {
 	err := C.virGetLastError()
 	if err == nil {
-		return ErrNoError
+		return Error{
+			Code:    ERR_OK,
+			Domain:  FROM_NONE,
+			Message: "Missing error",
+			Level:   ERR_NONE,
+		}
 	}
 	virErr := Error{
 		Code:    ErrorNumber(err.code),
