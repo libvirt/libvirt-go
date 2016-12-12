@@ -1,6 +1,12 @@
 #ifndef LIBVIRT_GO_ERROR_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.3.0 */
+
+#ifndef VIR_FROM_LOGGING
+#define VIR_FROM_LOGGING 63
+#endif
+
 /* 1.3.2 */
 
 #ifndef VIR_FROM_XENXL
