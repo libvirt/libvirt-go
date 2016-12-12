@@ -8,6 +8,7 @@ import (
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
+#include "network_compat.h"
 #include "network_events_cfuncs.h"
 */
 import "C"
@@ -43,6 +44,9 @@ func networkEventLifecycleCallback(c C.virConnectPtr, n C.virNetworkPtr,
 
 func (c *Connect) NetworkEventLifecycleRegister(net *Network, callback NetworkEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
+	if C.LIBVIR_VERSION_NUMBER < 1002001 {
+		return 0, GetNotImplementedError()
+	}
 
 	callbackPtr := unsafe.Pointer(C.networkEventLifecycleCallback_cgo)
 	var cnet C.virNetworkPtr
@@ -61,8 +65,11 @@ func (c *Connect) NetworkEventLifecycleRegister(net *Network, callback NetworkEv
 }
 
 func (c *Connect) NetworkEventDeregister(callbackId int) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002001 {
+		return GetNotImplementedError()
+	}
 	// Deregister the callback
-	if i := int(C.virConnectNetworkEventDeregisterAny(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectNetworkEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil
