@@ -1751,8 +1751,12 @@ type DomainInterface struct {
 }
 
 func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002014 {
+		return []DomainInterface{}, GetNotImplementedError()
+	}
+
 	var cList *C.virDomainInterfacePtr
-	numIfaces := int(C.virDomainInterfaceAddresses(d.ptr, (**C.virDomainInterfacePtr)(&cList), C.uint(src), 0))
+	numIfaces := int(C.virDomainInterfaceAddressesCompat(d.ptr, (**C.virDomainInterfacePtr)(&cList), C.uint(src), 0))
 	if numIfaces == -1 {
 		return nil, GetLastError()
 	}
@@ -1787,7 +1791,7 @@ func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) 
 			ifaces[i].Addrs[k].Prefix = uint(addrSlice[k].prefix)
 
 		}
-		C.virDomainInterfaceFree(ifaceSlice[i])
+		C.virDomainInterfaceFreeCompat(ifaceSlice[i])
 	}
 	C.free(unsafe.Pointer(cList))
 	return ifaces, nil
@@ -3772,9 +3776,12 @@ type DomainIOThreadInfo struct {
 }
 
 func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThreadInfo, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002014 {
+		return []DomainIOThreadInfo{}, GetNotImplementedError()
+	}
 	var cinfolist **C.virDomainIOThreadInfo
 
-	ret := C.virDomainGetIOThreadInfo(d.ptr, (**C.virDomainIOThreadInfoPtr)(unsafe.Pointer(&cinfolist)), C.uint(flags))
+	ret := C.virDomainGetIOThreadInfoCompat(d.ptr, (**C.virDomainIOThreadInfoPtr)(unsafe.Pointer(&cinfolist)), C.uint(flags))
 	if ret == -1 {
 		return []DomainIOThreadInfo{}, GetLastError()
 	}
@@ -3799,7 +3806,7 @@ func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThre
 			CpuMap:     cpumap,
 		}
 
-		C.virDomainIOThreadInfoFree(cinfo)
+		C.virDomainIOThreadInfoFreeCompat(cinfo)
 	}
 	C.free(unsafe.Pointer(cinfolist))
 
@@ -3865,6 +3872,9 @@ func (d *Domain) PinEmulator(cpumap []bool, flags DomainModificationImpact) erro
 }
 
 func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModificationImpact) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002014 {
+		return GetNotImplementedError()
+	}
 
 	maplen := (len(cpumap) + 7) / 8
 	ccpumaps := make([]C.uchar, maplen)
@@ -3875,7 +3885,7 @@ func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModific
 		ccpumaps[byte] |= (1 << uint(bit))
 	}
 
-	ret := C.virDomainPinIOThread(d.ptr, C.uint(iothreadid), &ccpumaps[0], C.int(maplen), C.uint(flags))
+	ret := C.virDomainPinIOThreadCompat(d.ptr, C.uint(iothreadid), &ccpumaps[0], C.int(maplen), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}

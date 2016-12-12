@@ -6,6 +6,49 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainInterfaceAddressesCompat(virDomainPtr dom,
+				      virDomainInterfacePtr **ifaces,
+				      unsigned int source,
+				      unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002014
+    assert(0); // Caller should have checked version
+#else
+    return virDomainInterfaceAddresses(dom, ifaces, source, flags);
+#endif
+}
+
+void virDomainInterfaceFreeCompat(virDomainInterfacePtr iface)
+{
+}
+
+void virDomainIOThreadInfoFreeCompat(virDomainIOThreadInfoPtr info)
+{
+}
+
+int virDomainGetIOThreadInfoCompat(virDomainPtr domain,
+				   virDomainIOThreadInfoPtr **info,
+				   unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002014
+    assert(0); // Caller should have checked version
+#else
+    return virDomainGetIOThreadInfo(domain, info, flags);
+#endif
+}
+int virDomainPinIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned char *cpumap,
+			       int maplen,
+			       unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002014
+    assert(0); // Caller should have checked version
+#else
+    return virDomainPinIOThread(domain, iothread_id, cpumap, maplen, flags);
+#endif
+}
+
 int virDomainAddIOThreadCompat(virDomainPtr domain,
 			       unsigned int iothread_id,
 			       unsigned int flags)

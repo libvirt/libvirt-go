@@ -1,6 +1,83 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.14 */
+
+#ifndef VIR_DOMAIN_CONTROL_ERROR_REASON_NONE
+#define VIR_DOMAIN_CONTROL_ERROR_REASON_NONE 0
+#endif
+
+#ifndef VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN
+#define VIR_DOMAIN_CONTROL_ERROR_REASON_UNKNOWN 1
+#endif
+
+#ifndef VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR
+#define VIR_DOMAIN_CONTROL_ERROR_REASON_MONITOR 2
+#endif
+
+#ifndef VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL
+#define VIR_DOMAIN_CONTROL_ERROR_REASON_INTERNAL 3
+#endif
+
+#ifndef VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE
+#define VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE 0
+#endif
+
+#ifndef VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT
+#define VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT 1
+#endif
+
+#ifndef VIR_DOMAIN_PAUSED_STARTING_UP
+#define VIR_DOMAIN_PAUSED_STARTING_UP 11
+#endif
+
+#if LIBVIR_VERSION_NUMBER < 1002014
+typedef struct _virDomainIOThreadInfo virDomainIOThreadInfo;
+typedef virDomainIOThreadInfo *virDomainIOThreadInfoPtr;
+struct _virDomainIOThreadInfo {
+    unsigned int iothread_id;          /* IOThread ID */
+    unsigned char *cpumap;             /* CPU map for thread. A pointer to an */
+                                       /* array of real CPUs (in 8-bit bytes) */
+    int cpumaplen;                     /* cpumap size */
+};
+
+typedef struct _virDomainInterfaceIPAddress virDomainIPAddress;
+typedef virDomainIPAddress *virDomainIPAddressPtr;
+struct _virDomainInterfaceIPAddress {
+    int type;                /* virIPAddrType */
+    char *addr;              /* IP address */
+    unsigned int prefix;     /* IP address prefix */
+};
+
+typedef struct _virDomainInterface virDomainInterface;
+typedef virDomainInterface *virDomainInterfacePtr;
+struct _virDomainInterface {
+    char *name;                     /* interface name */
+    char *hwaddr;                   /* hardware address, may be NULL */
+    unsigned int naddrs;            /* number of items in @addrs */
+    virDomainIPAddressPtr addrs;    /* array of IP addresses */
+};
+#endif
+
+int virDomainInterfaceAddressesCompat(virDomainPtr dom,
+				      virDomainInterfacePtr **ifaces,
+				      unsigned int source,
+				      unsigned int flags);
+
+void virDomainInterfaceFreeCompat(virDomainInterfacePtr iface);
+
+void virDomainIOThreadInfoFreeCompat(virDomainIOThreadInfoPtr info);
+
+int virDomainGetIOThreadInfoCompat(virDomainPtr domain,
+				   virDomainIOThreadInfoPtr **info,
+				   unsigned int flags);
+int virDomainPinIOThreadCompat(virDomainPtr domain,
+			       unsigned int iothread_id,
+			       unsigned char *cpumap,
+			       int maplen,
+			       unsigned int flags);
+
+
 /* 1.2.15 */
 
 #ifndef VIR_DOMAIN_JOB_DOWNTIME_NET
