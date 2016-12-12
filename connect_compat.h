@@ -1,6 +1,16 @@
 #ifndef LIBVIRT_GO_CONNECT_COMPAT_H_
 #define LIBVIRT_GO_CONNECT_COMPAT_H_
 
+/* 1.2.7 */
+
+char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,
+					     const char *emulatorbin,
+					     const char *arch,
+					     const char *machine,
+					     const char *virttype,
+					     unsigned int flags);
+
+
 /* 1.2.8 */
 
 #ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE

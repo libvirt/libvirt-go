@@ -1845,6 +1845,9 @@ func (c *Connect) GetCPUModelNames(arch string, flags uint32) ([]string, error) 
 }
 
 func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine string, virttype string, flags uint32) (string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 1002007 {
+		return "", GetNotImplementedError()
+	}
 	var cemulatorbin *C.char
 	if emulatorbin != "" {
 		cemulatorbin = C.CString(emulatorbin)
@@ -1866,7 +1869,7 @@ func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine
 		defer C.free(cvirttype)
 	}
 
-	ret := C.virConnectGetDomainCapabilities(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
+	ret := C.virConnectGetDomainCapabilitiesCompat(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}

@@ -6,6 +6,20 @@ package libvirt
 #include <assert.h>
 #include "connect_compat.h"
 
+char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,
+					     const char *emulatorbin,
+					     const char *arch,
+					     const char *machine,
+					     const char *virttype,
+					     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002007
+    assert(0); // Caller should have checked version
+#else
+    return virConnectGetDomainCapabilities(conn, emulatorbin, arch, machine, virttype, flags);
+#endif
+}
+
 int virConnectGetAllDomainStatsCompat(virConnectPtr conn,
 				      unsigned int stats,
 				      virDomainStatsRecordPtr **retStats,
