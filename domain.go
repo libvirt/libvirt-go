@@ -3536,9 +3536,12 @@ func (d *Domain) ManagedSaveRemove(flags uint32) error {
 }
 
 func (d *Domain) Rename(name string, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 1002019 {
+		return GetNotImplementedError()
+	}
 	cname := C.CString(name)
 	defer C.free(cname)
-	ret := C.virDomainRename(d.ptr, cname, C.uint(flags))
+	ret := C.virDomainRenameCompat(d.ptr, cname, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}

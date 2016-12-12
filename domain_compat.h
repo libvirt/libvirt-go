@@ -1,6 +1,25 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_ERROR_COMPAT_H__
 
+/* 1.2.19 */
+
+#ifndef VIR_DOMAIN_BANDWIDTH_IN_FLOOR
+#define VIR_DOMAIN_BANDWIDTH_IN_FLOOR "inbound.floor"
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_DEFINED_RENAMED
+#define VIR_DOMAIN_EVENT_DEFINED_RENAMED 2
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_UNDEFINED_RENAMED
+#define VIR_DOMAIN_EVENT_UNDEFINED_RENAMED 1
+#endif
+
+int virDomainRenameCompat(virDomainPtr dom,
+			  const char *new_name,
+			  unsigned int flags);
+
+
 /* 1.3.1 */
 
 #ifndef VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE

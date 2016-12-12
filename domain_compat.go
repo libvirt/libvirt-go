@@ -6,6 +6,18 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
+int virDomainRenameCompat(virDomainPtr dom,
+			  const char *new_name,
+			  unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002019
+    assert(0); // Caller should have checked version
+#else
+    return virDomainRename(dom, new_name, flags);
+#endif
+}
+
+
 int virDomainGetPerfEventsCompat(virDomainPtr dom,
 				 virTypedParameterPtr *params,
 				 int *nparams,
