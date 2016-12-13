@@ -39,8 +39,13 @@ func TestMultipleCloseCallback(t *testing.T) {
 	nbCall3 := 0
 	conn := buildTestQEMUConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		res, _ := conn.CloseConnection()
+		// Blacklist versions of libvirt which had a ref counting
+		// bug wrt close callbacks
+		if VERSION_NUMBER <= 1002019 || VERSION_NUMBER >= 1003003 {
+			if res != 0 {
+				t.Errorf("CloseConnection() == %d, expected 0", res)
+			}
 		}
 		if nbCall1 != 0 || nbCall2 != 0 || nbCall3 != 1 {
 			t.Errorf("Wrong number of calls to callback, got %v, expected %v",
