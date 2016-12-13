@@ -1324,7 +1324,11 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer dom.Destroy()
+	defer func() {
+		dom.Destroy()
+		dom.Free()
+	}()
+
 	ifaces, err := dom.ListAllInterfaceAddresses(0)
 	if err != nil {
 		t.Fatal(err)
@@ -1347,12 +1351,19 @@ func TestDomainGetAllStats(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer dom.Destroy()
+	defer func() {
+		dom.Destroy()
+		dom.Free()
+	}()
 
-	_, err := conn.GetAllDomainStats([]*Domain{}, DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_INTERFACE|DOMAIN_STATS_BALLOON|DOMAIN_STATS_BLOCK|DOMAIN_STATS_PERF|DOMAIN_STATS_VCPU, 0)
+	stats, err := conn.GetAllDomainStats([]*Domain{}, DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_INTERFACE|DOMAIN_STATS_BALLOON|DOMAIN_STATS_BLOCK|DOMAIN_STATS_PERF|DOMAIN_STATS_VCPU, 0)
 
 	if err != nil {
 		t.Error(err)
 		return
+	}
+
+	for _, stat := range stats {
+		stat.Domain.Free()
 	}
 }
