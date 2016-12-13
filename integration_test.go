@@ -1005,6 +1005,10 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 
 	stats, err := dom.GetCPUStats(0, 0, 0)
 	if err != nil {
+		lverr, ok := err.(Error)
+		if ok && lverr.Code == ERR_NO_SUPPORT {
+			return
+		}
 		t.Fatal(err)
 	}
 
