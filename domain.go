@@ -22,6 +22,10 @@ import (
 	"unsafe"
 )
 
+const (
+	DOMAIN_SEND_KEY_MAX_KEYS = uint32(C.VIR_DOMAIN_SEND_KEY_MAX_KEYS)
+)
+
 type DomainState int
 
 const (
