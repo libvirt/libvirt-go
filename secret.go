@@ -102,12 +102,13 @@ func (s *Secret) GetValue(flags uint32) ([]byte, error) {
 }
 
 func (s *Secret) SetValue(value []byte, flags uint32) error {
-	var cvalue_size C.size_t = C.size_t(len(value))
-	var cvalue *C.uchar = (*C.uchar)(C.CBytes(value))
+	cvalue := make([]C.uchar, len(value))
 
-	defer C.free(cvalue)
+	for i := 0; i < len(value); i++ {
+		cvalue[i] = C.uchar(value[i])
+	}
 
-	result := C.virSecretSetValue(s.ptr, cvalue, cvalue_size, C.uint(flags))
+	result := C.virSecretSetValue(s.ptr, &cvalue[0], C.size_t(len(value)), C.uint(flags))
 
 	if result == -1 {
 		return GetLastError()

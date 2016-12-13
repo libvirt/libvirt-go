@@ -709,9 +709,11 @@ func (c *Connect) LookupDomainByUUID(uuid []byte) (*Domain, error) {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
-	cUuid := C.CBytes(uuid)
-	defer C.free(unsafe.Pointer(cUuid))
-	ptr := C.virDomainLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	cUuid := make([]C.uchar, C.VIR_UUID_BUFLEN)
+	for i := 0; i < C.VIR_UUID_BUFLEN; i++ {
+		cUuid[i] = C.uchar(uuid[i])
+	}
+	ptr := C.virDomainLookupByUUID(c.ptr, &cUuid[0])
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -957,9 +959,11 @@ func (c *Connect) LookupNetworkByUUID(uuid []byte) (*Network, error) {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
-	cUuid := C.CBytes(uuid)
-	defer C.free(unsafe.Pointer(cUuid))
-	ptr := C.virNetworkLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	cUuid := make([]C.uchar, C.VIR_UUID_BUFLEN)
+	for i := 0; i < C.VIR_UUID_BUFLEN; i++ {
+		cUuid[i] = C.uchar(uuid[i])
+	}
+	ptr := C.virNetworkLookupByUUID(c.ptr, &cUuid[0])
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1084,9 +1088,11 @@ func (c *Connect) LookupStoragePoolByUUID(uuid []byte) (*StoragePool, error) {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
-	cUuid := C.CBytes(uuid)
-	defer C.free(unsafe.Pointer(cUuid))
-	ptr := C.virStoragePoolLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	cUuid := make([]C.uchar, C.VIR_UUID_BUFLEN)
+	for i := 0; i < C.VIR_UUID_BUFLEN; i++ {
+		cUuid[i] = C.uchar(uuid[i])
+	}
+	ptr := C.virStoragePoolLookupByUUID(c.ptr, &cUuid[0])
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1128,9 +1134,11 @@ func (c *Connect) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
-	cUuid := C.CBytes(uuid)
-	defer C.free(unsafe.Pointer(cUuid))
-	ptr := C.virNWFilterLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	cUuid := make([]C.uchar, C.VIR_UUID_BUFLEN)
+	for i := 0; i < C.VIR_UUID_BUFLEN; i++ {
+		cUuid[i] = C.uchar(uuid[i])
+	}
+	ptr := C.virNWFilterLookupByUUID(c.ptr, &cUuid[0])
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1172,9 +1180,11 @@ func (c *Connect) LookupSecretByUUID(uuid []byte) (*Secret, error) {
 		return nil, fmt.Errorf("UUID must be exactly %d bytes in size",
 			int(C.VIR_UUID_BUFLEN))
 	}
-	cUuid := C.CBytes(uuid)
-	defer C.free(unsafe.Pointer(cUuid))
-	ptr := C.virSecretLookupByUUID(c.ptr, (*C.uchar)(cUuid))
+	cUuid := make([]C.uchar, C.VIR_UUID_BUFLEN)
+	for i := 0; i < C.VIR_UUID_BUFLEN; i++ {
+		cUuid[i] = C.uchar(uuid[i])
+	}
+	ptr := C.virSecretLookupByUUID(c.ptr, &cUuid[0])
 	if ptr == nil {
 		return nil, GetLastError()
 	}

@@ -344,6 +344,18 @@ func TestLookupDomainByUUIDString(t *testing.T) {
 		return
 	}
 	defer dom.Free()
+
+	rawuuid, err := doms[0].GetUUID()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	dom, err = conn.LookupDomainByUUID(rawuuid)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Free()
 }
 
 func TestLookupInvalidDomainById(t *testing.T) {
@@ -835,6 +847,17 @@ func TestLookupStoragePoolByUUIDString(t *testing.T) {
 	if name != poolName {
 		t.Fatalf("fetching by UUID: expected storage pool name: %s ,got: %s", name, poolName)
 	}
+	rawpoolUUID, err := pool.GetUUID()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	pool2, err = conn.LookupStoragePoolByUUID(rawpoolUUID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool2.Free()
 }
 
 func TestLookupStorageVolByKey(t *testing.T) {
