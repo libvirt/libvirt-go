@@ -1178,7 +1178,7 @@ func (d *Domain) GetInterfaceParameters(device string, flags uint32) (*DomainInt
 	var nparams C.int
 
 	cdevice := C.CString(device)
-	defer C.free(cdevice)
+	defer C.free(unsafe.Pointer(cdevice))
 	ret := C.virDomainGetInterfaceParameters(d.ptr, cdevice, nil, &nparams, C.uint(0))
 	if ret == -1 {
 		return nil, GetLastError()
@@ -1206,7 +1206,7 @@ func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfacePa
 	var nparams C.int
 
 	cdevice := C.CString(device)
-	defer C.free(cdevice)
+	defer C.free(unsafe.Pointer(cdevice))
 	ret := C.virDomainGetInterfaceParameters(d.ptr, cdevice, nil, &nparams, 0)
 	if ret == -1 {
 		return GetLastError()
@@ -1510,7 +1510,7 @@ func (d *Domain) BlockStatsFlags(disk string, flags uint32) (*DomainBlockStats, 
 	var nparams C.int
 
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	ret := C.virDomainBlockStatsFlags(d.ptr, cdisk, nil, &nparams, C.uint(0))
 	if ret == -1 {
 		return nil, GetLastError()
@@ -1868,16 +1868,16 @@ func (d *Domain) ListAllSnapshots(flags DomainSnapshotListFlags) ([]DomainSnapsh
 
 func (d *Domain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags uint32) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	var cbase *C.char
 	if base != "" {
 		cbase = C.CString(base)
-		defer C.free(cbase)
+		defer C.free(unsafe.Pointer(cbase))
 	}
 	var ctop *C.char
 	if top != "" {
 		ctop = C.CString(top)
-		defer C.free(ctop)
+		defer C.free(unsafe.Pointer(ctop))
 	}
 	ret := C.virDomainBlockCommit(d.ptr, cdisk, cbase, ctop, C.ulong(bandwidth), C.uint(flags))
 	if ret == -1 {
@@ -1917,9 +1917,9 @@ func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyP
 		return GetNotImplementedError()
 	}
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	cdestxml := C.CString(destxml)
-	defer C.free(cdestxml)
+	defer C.free(unsafe.Pointer(cdestxml))
 
 	info := getBlockCopyParameterFieldInfo(params)
 
@@ -1941,7 +1941,7 @@ func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyP
 
 func (d *Domain) BlockJobAbort(disk string, flags DomainBlockJobAbortFlags) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	ret := C.virDomainBlockJobAbort(d.ptr, cdisk, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1951,7 +1951,7 @@ func (d *Domain) BlockJobAbort(disk string, flags DomainBlockJobAbortFlags) erro
 
 func (d *Domain) BlockJobSetSpeed(disk string, bandwidth uint64, flags DomainBlockJobSetSpeedFlags) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	ret := C.virDomainBlockJobSetSpeed(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1961,7 +1961,7 @@ func (d *Domain) BlockJobSetSpeed(disk string, bandwidth uint64, flags DomainBlo
 
 func (d *Domain) BlockPull(disk string, bandwidth uint64, flags DomainBlockPullFlags) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	ret := C.virDomainBlockPull(d.ptr, cdisk, C.ulong(bandwidth), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1971,11 +1971,11 @@ func (d *Domain) BlockPull(disk string, bandwidth uint64, flags DomainBlockPullF
 
 func (d *Domain) BlockRebase(disk string, base string, bandwidth uint64, flags DomainBlockRebaseFlags) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	var cbase *C.char
 	if base != "" {
 		cbase := C.CString(base)
-		defer C.free(cbase)
+		defer C.free(unsafe.Pointer(cbase))
 	}
 	ret := C.virDomainBlockRebase(d.ptr, cdisk, cbase, C.ulong(bandwidth), C.uint(flags))
 	if ret == -1 {
@@ -1986,7 +1986,7 @@ func (d *Domain) BlockRebase(disk string, base string, bandwidth uint64, flags D
 
 func (d *Domain) BlockResize(disk string, size uint64, flags DomainBlockResizeFlags) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	ret := C.virDomainBlockResize(d.ptr, cdisk, C.ulonglong(size), C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1996,7 +1996,7 @@ func (d *Domain) BlockResize(disk string, size uint64, flags DomainBlockResizeFl
 
 func (d *Domain) BlockPeek(disk string, offset uint64, size uint64, flags uint32) ([]byte, error) {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 	data := make([]byte, size)
 	ret := C.virDomainBlockPeek(d.ptr, cdisk, C.ulonglong(offset), C.size_t(size),
 		unsafe.Pointer(&data[0]), C.uint(flags))
@@ -2022,12 +2022,12 @@ func (d *Domain) Migrate(dconn *Connect, flags DomainMigrateFlags, dname string,
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
-		defer C.free(cdname)
+		defer C.free(unsafe.Pointer(cdname))
 	}
 	var curi *C.char
 	if uri != "" {
 		curi = C.CString(uri)
-		defer C.free(curi)
+		defer C.free(unsafe.Pointer(curi))
 	}
 
 	ret := C.virDomainMigrate(d.ptr, dconn.ptr, C.ulong(flags), cdname, curi, C.ulong(bandwidth))
@@ -2044,17 +2044,17 @@ func (d *Domain) Migrate2(dconn *Connect, dxml string, flags DomainMigrateFlags,
 	var cdxml *C.char
 	if dxml != "" {
 		cdxml = C.CString(dxml)
-		defer C.free(cdxml)
+		defer C.free(unsafe.Pointer(cdxml))
 	}
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
-		defer C.free(cdname)
+		defer C.free(unsafe.Pointer(cdname))
 	}
 	var curi *C.char
 	if uri != "" {
 		curi = C.CString(uri)
-		defer C.free(curi)
+		defer C.free(unsafe.Pointer(curi))
 	}
 
 	ret := C.virDomainMigrate2(d.ptr, dconn.ptr, cdxml, C.ulong(flags), cdname, curi, C.ulong(bandwidth))
@@ -2194,12 +2194,12 @@ func (d *Domain) Migrate3(dconn *Connect, params *DomainMigrateParameters, flags
 
 func (d *Domain) MigrateToURI(duri string, flags DomainMigrateFlags, dname string, bandwidth uint64) error {
 	cduri := C.CString(duri)
-	defer C.free(cduri)
+	defer C.free(unsafe.Pointer(cduri))
 
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
-		defer C.free(cdname)
+		defer C.free(unsafe.Pointer(cdname))
 	}
 
 	ret := C.virDomainMigrateToURI(d.ptr, cduri, C.ulong(flags), cdname, C.ulong(bandwidth))
@@ -2214,22 +2214,22 @@ func (d *Domain) MigrateToURI2(dconnuri string, miguri string, dxml string, flag
 	var cdconnuri *C.char
 	if dconnuri != "" {
 		cdconnuri = C.CString(dconnuri)
-		defer C.free(cdconnuri)
+		defer C.free(unsafe.Pointer(cdconnuri))
 	}
 	var cmiguri *C.char
 	if miguri != "" {
 		cmiguri = C.CString(miguri)
-		defer C.free(cmiguri)
+		defer C.free(unsafe.Pointer(cmiguri))
 	}
 	var cdxml *C.char
 	if dxml != "" {
 		cdxml = C.CString(dxml)
-		defer C.free(cdxml)
+		defer C.free(unsafe.Pointer(cdxml))
 	}
 	var cdname *C.char
 	if dname != "" {
 		cdname = C.CString(dname)
-		defer C.free(cdname)
+		defer C.free(unsafe.Pointer(cdname))
 	}
 
 	ret := C.virDomainMigrateToURI2(d.ptr, cdconnuri, cmiguri, cdxml, C.ulong(flags), cdname, C.ulong(bandwidth))
@@ -2244,7 +2244,7 @@ func (d *Domain) MigrateToURI3(dconnuri string, params *DomainMigrateParameters,
 	var cdconnuri *C.char
 	if dconnuri != "" {
 		cdconnuri = C.CString(dconnuri)
-		defer C.free(cdconnuri)
+		defer C.free(unsafe.Pointer(cdconnuri))
 	}
 
 	info := getMigrateParameterFieldInfo(params)
@@ -2548,7 +2548,7 @@ func getBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) map[
 
 func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*DomainBlockIoTuneParameters, error) {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 
 	params := &DomainBlockIoTuneParameters{}
 	info := getBlockIoTuneParametersFieldInfo(params)
@@ -2577,7 +2577,7 @@ func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*D
 
 func (d *Domain) SetBlockIoTune(disk string, params *DomainBlockIoTuneParameters, flags uint32) error {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 
 	info := getBlockIoTuneParametersFieldInfo(params)
 
@@ -2615,7 +2615,7 @@ type DomainBlockJobInfo struct {
 
 func (d *Domain) GetBlockJobInfo(disk string, flags DomainBlockJobInfoFlags) (*DomainBlockJobInfo, error) {
 	cdisk := C.CString(disk)
-	defer C.free(cdisk)
+	defer C.free(unsafe.Pointer(cdisk))
 
 	var cinfo C.virDomainBlockJobInfo
 
@@ -2693,7 +2693,7 @@ func (d *Domain) GetHostname(flags uint32) (string, error) {
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
@@ -2914,7 +2914,7 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 	var cparams *C.virTypedParameter
 	var nparams C.int
 	var jobtype C.int
-	ret := C.virDomainGetJobStats(d.ptr, &jobtype, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetJobStats(d.ptr, &jobtype, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}
@@ -2955,7 +2955,7 @@ func (d *Domain) GetOSType() (string, error) {
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
@@ -3180,7 +3180,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 
 	var cparams *C.virTypedParameter
 	var nparams C.int
-	ret := C.virDomainGetPerfEventsCompat(d.ptr, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetPerfEventsCompat(d.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}
@@ -3204,7 +3204,7 @@ func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags uint32) error {
 
 	var cparams *C.virTypedParameter
 	var nparams C.int
-	ret := C.virDomainGetPerfEventsCompat(d.ptr, &cparams, &nparams, C.uint(flags))
+	ret := C.virDomainGetPerfEventsCompat(d.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -3324,7 +3324,7 @@ func (d *Domain) GetSchedulerParameters() (*DomainSchedulerParameters, error) {
 		return nil, GetLastError()
 	}
 
-	defer C.free(schedtype)
+	defer C.free(unsafe.Pointer(schedtype))
 	if nparams == 0 {
 		return &DomainSchedulerParameters{
 			Type: C.GoString(schedtype),
@@ -3356,7 +3356,7 @@ func (d *Domain) GetSchedulerParametersFlags(flags DomainModificationImpact) (*D
 		return nil, GetLastError()
 	}
 
-	defer C.free(schedtype)
+	defer C.free(unsafe.Pointer(schedtype))
 	if nparams == 0 {
 		return &DomainSchedulerParameters{
 			Type: C.GoString(schedtype),
@@ -3387,7 +3387,7 @@ func (d *Domain) SetSchedulerParameters(params *DomainSchedulerParameters) error
 		return GetLastError()
 	}
 
-	defer C.free(schedtype)
+	defer C.free(unsafe.Pointer(schedtype))
 	if nparams == 0 {
 		return nil
 	}
@@ -3418,7 +3418,7 @@ func (d *Domain) SetSchedulerParametersFlags(params *DomainSchedulerParameters, 
 		return GetLastError()
 	}
 
-	defer C.free(schedtype)
+	defer C.free(unsafe.Pointer(schedtype))
 	if nparams == 0 {
 		return nil
 	}
@@ -3462,7 +3462,7 @@ func (d *Domain) GetSecurityLabel() (*SecurityLabel, error) {
 func (d *Domain) GetSecurityLabelList() ([]SecurityLabel, error) {
 	var clabels *C.virSecurityLabel
 
-	ret := C.virDomainGetSecurityLabelList(d.ptr, &clabels)
+	ret := C.virDomainGetSecurityLabelList(d.ptr, (*C.virSecurityLabelPtr)(unsafe.Pointer(&clabels)))
 	if ret == -1 {
 		return []SecurityLabel{}, GetLastError()
 	}
@@ -3514,8 +3514,8 @@ func (d *Domain) SetUserPassword(user string, password string, flags DomainSetUs
 	cuser := C.CString(user)
 	cpassword := C.CString(password)
 
-	defer C.free(cuser)
-	defer C.free(cpassword)
+	defer C.free(unsafe.Pointer(cuser))
+	defer C.free(unsafe.Pointer(cpassword))
 
 	ret := C.virDomainSetUserPasswordCompat(d.ptr, cuser, cpassword, C.uint(flags))
 	if ret == -1 {
@@ -3559,7 +3559,7 @@ func (d *Domain) Rename(name string, flags uint32) error {
 		return GetNotImplementedError()
 	}
 	cname := C.CString(name)
-	defer C.free(cname)
+	defer C.free(unsafe.Pointer(cname))
 	ret := C.virDomainRenameCompat(d.ptr, cname, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -3597,7 +3597,7 @@ func (d *Domain) InjectNMI(flags uint32) error {
 
 func (d *Domain) CoreDump(to string, flags uint32) error {
 	cto := C.CString(to)
-	defer C.free(cto)
+	defer C.free(unsafe.Pointer(cto))
 
 	ret := C.virDomainCoreDump(d.ptr, cto, C.uint(flags))
 	if ret == -1 {
@@ -3612,7 +3612,7 @@ func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flag
 		GetNotImplementedError()
 	}
 	cto := C.CString(to)
-	defer C.free(cto)
+	defer C.free(unsafe.Pointer(cto))
 
 	ret := C.virDomainCoreDumpWithFormatCompat(d.ptr, cto, C.uint(format), C.uint(flags))
 	if ret == -1 {
@@ -3641,7 +3641,7 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 
 	for i := 0; i < len(mounts); i++ {
 		cmounts[i] = C.CString(mounts[i])
-		defer C.free(cmounts[i])
+		defer C.free(unsafe.Pointer(cmounts[i]))
 	}
 
 	nmounts := len(mounts)
@@ -3661,7 +3661,7 @@ func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 
 	for i := 0; i < len(mounts); i++ {
 		cmounts[i] = C.CString(mounts[i])
-		defer C.free(cmounts[i])
+		defer C.free(unsafe.Pointer(cmounts[i]))
 	}
 
 	nmounts := len(mounts)
@@ -3675,7 +3675,7 @@ func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 
 func (d *Domain) FSTrim(mount string, minimum uint64, flags uint32) error {
 	cmount := C.CString(mount)
-	defer C.free(cmount)
+	defer C.free(unsafe.Pointer(cmount))
 
 	ret := C.virDomainFSTrim(d.ptr, cmount, C.ulonglong(minimum), C.uint(flags))
 	if ret == -1 {
@@ -3919,7 +3919,7 @@ func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModific
 
 func (d *Domain) OpenChannel(name string, stream *Stream, flags DomainChannelFlags) error {
 	cname := C.CString(name)
-	defer C.free(cname)
+	defer C.free(unsafe.Pointer(cname))
 
 	ret := C.virDomainOpenChannel(d.ptr, cname, stream.ptr, C.uint(flags))
 	if ret == -1 {
@@ -3931,7 +3931,7 @@ func (d *Domain) OpenChannel(name string, stream *Stream, flags DomainChannelFla
 
 func (d *Domain) OpenConsole(devname string, stream *Stream, flags DomainConsoleFlags) error {
 	cdevname := C.CString(devname)
-	defer C.free(cdevname)
+	defer C.free(unsafe.Pointer(cdevname))
 
 	ret := C.virDomainOpenConsole(d.ptr, cdevname, stream.ptr, C.uint(flags))
 	if ret == -1 {
@@ -4123,7 +4123,7 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 		cstate = 0
 	}
 	ccpumap := C.CString(cpumap)
-	defer C.free(ccpumap)
+	defer C.free(unsafe.Pointer(ccpumap))
 	ret := C.virDomainSetGuestVcpusCompat(d.ptr, ccpumap, cstate, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()

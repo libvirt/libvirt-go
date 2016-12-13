@@ -657,7 +657,7 @@ func (c *Connect) ListSecrets() ([]string, error) {
 
 func (c *Connect) ListDevices(cap string, flags uint32) ([]string, error) {
 	ccap := C.CString(cap)
-	defer C.free(ccap)
+	defer C.free(unsafe.Pointer(ccap))
 	const maxNodeDevices = 1024
 	var uuids [maxNodeDevices](*C.char)
 	uuidsPtr := unsafe.Pointer(&uuids)
@@ -906,7 +906,7 @@ func (c *Connect) NumOfSecrets() (int, error) {
 
 func (c *Connect) NumOfDevices(cap string, flags uint32) (int, error) {
 	ccap := C.CString(cap)
-	defer C.free(ccap)
+	defer C.free(unsafe.Pointer(ccap))
 	result := int(C.virNodeNumOfDevices(c.ptr, ccap, C.uint(flags)))
 	if result == -1 {
 		return 0, GetLastError()
@@ -1437,7 +1437,7 @@ func (c *Connect) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
 	if ret == -1 {
 		return map[int]bool{}, 0, GetLastError()
 	}
-	defer C.free(ccpumap)
+	defer C.free(unsafe.Pointer(ccpumap))
 
 	cpumapbytes := C.GoBytes(unsafe.Pointer(ccpumap), C.int(ret/8))
 
@@ -1746,9 +1746,9 @@ func (c *Connect) SuspendForDuration(target NodeSuspendTarget, duration uint64, 
 
 func (c *Connect) DomainSaveImageDefineXML(file string, xml string, flags DomainSaveRestoreFlags) error {
 	cfile := C.CString(file)
-	defer C.free(cfile)
+	defer C.free(unsafe.Pointer(cfile))
 	cxml := C.CString(xml)
-	defer C.free(cxml)
+	defer C.free(unsafe.Pointer(cxml))
 
 	ret := C.virDomainSaveImageDefineXML(c.ptr, cfile, cxml, C.uint(flags))
 
@@ -1761,7 +1761,7 @@ func (c *Connect) DomainSaveImageDefineXML(file string, xml string, flags Domain
 
 func (c *Connect) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (string, error) {
 	cfile := C.CString(file)
-	defer C.free(cfile)
+	defer C.free(unsafe.Pointer(cfile))
 
 	ret := C.virDomainSaveImageGetXMLDesc(c.ptr, cfile, C.uint(flags))
 
@@ -1769,7 +1769,7 @@ func (c *Connect) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
@@ -1778,7 +1778,7 @@ func (c *Connect) BaselineCPU(xmlCPUs []string, flags ConnectBaselineCPUFlags) (
 	cxmlCPUs := make([]*C.char, len(xmlCPUs))
 	for i := 0; i < len(xmlCPUs); i++ {
 		cxmlCPUs[i] = C.CString(xmlCPUs[i])
-		defer C.free(cxmlCPUs[i])
+		defer C.free(unsafe.Pointer(cxmlCPUs[i]))
 	}
 
 	ret := C.virConnectBaselineCPU(c.ptr, &cxmlCPUs[0], C.uint(len(xmlCPUs)), C.uint(flags))
@@ -1786,14 +1786,14 @@ func (c *Connect) BaselineCPU(xmlCPUs []string, flags ConnectBaselineCPUFlags) (
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
 
 func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (CPUCompareResult, error) {
 	cxmlDesc := C.CString(xmlDesc)
-	defer C.free(cxmlDesc)
+	defer C.free(unsafe.Pointer(cxmlDesc))
 
 	ret := C.virConnectCompareCPU(c.ptr, cxmlDesc, C.uint(flags))
 	if ret == C.VIR_CPU_COMPARE_ERROR {
@@ -1805,39 +1805,39 @@ func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (CPUC
 
 func (c *Connect) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {
 	cnativeFormat := C.CString(nativeFormat)
-	defer C.free(cnativeFormat)
+	defer C.free(unsafe.Pointer(cnativeFormat))
 	cnativeConfig := C.CString(nativeConfig)
-	defer C.free(cnativeConfig)
+	defer C.free(unsafe.Pointer(cnativeConfig))
 
 	ret := C.virConnectDomainXMLFromNative(c.ptr, cnativeFormat, cnativeConfig, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
 
 func (c *Connect) DomainXMLToNative(nativeFormat string, domainXml string, flags uint32) (string, error) {
 	cnativeFormat := C.CString(nativeFormat)
-	defer C.free(cnativeFormat)
+	defer C.free(unsafe.Pointer(cnativeFormat))
 	cdomainXml := C.CString(domainXml)
-	defer C.free(cdomainXml)
+	defer C.free(unsafe.Pointer(cdomainXml))
 
 	ret := C.virConnectDomainXMLToNative(c.ptr, cnativeFormat, cdomainXml, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
 
 func (c *Connect) GetCPUModelNames(arch string, flags uint32) ([]string, error) {
 	carch := C.CString(arch)
-	defer C.free(carch)
+	defer C.free(unsafe.Pointer(carch))
 
 	var cmodels **C.char
 	ret := C.virConnectGetCPUModelNames(c.ptr, carch, &cmodels, C.uint(flags))
@@ -1849,10 +1849,10 @@ func (c *Connect) GetCPUModelNames(arch string, flags uint32) ([]string, error) 
 	for i := 0; i < int(ret); i++ {
 		cmodel := *(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cmodels)) + (unsafe.Sizeof(*cmodels) * uintptr(i))))
 
-		defer C.free(cmodel)
+		defer C.free(unsafe.Pointer(cmodel))
 		models[i] = C.GoString(cmodel)
 	}
-	defer C.free(cmodels)
+	defer C.free(unsafe.Pointer(cmodels))
 
 	return models, nil
 }
@@ -1864,22 +1864,22 @@ func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine
 	var cemulatorbin *C.char
 	if emulatorbin != "" {
 		cemulatorbin = C.CString(emulatorbin)
-		defer C.free(cemulatorbin)
+		defer C.free(unsafe.Pointer(cemulatorbin))
 	}
 	var carch *C.char
 	if arch != "" {
 		carch = C.CString(arch)
-		defer C.free(carch)
+		defer C.free(unsafe.Pointer(carch))
 	}
 	var cmachine *C.char
 	if machine != "" {
 		cmachine = C.CString(machine)
-		defer C.free(cmachine)
+		defer C.free(unsafe.Pointer(cmachine))
 	}
 	var cvirttype *C.char
 	if virttype != "" {
 		cvirttype = C.CString(virttype)
-		defer C.free(cvirttype)
+		defer C.free(unsafe.Pointer(cvirttype))
 	}
 
 	ret := C.virConnectGetDomainCapabilitiesCompat(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
@@ -1887,7 +1887,7 @@ func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }
@@ -1904,18 +1904,18 @@ func (c *Connect) GetVersion() (uint32, error) {
 
 func (c *Connect) FindStoragePoolSources(pooltype string, srcSpec string, flags uint32) (string, error) {
 	cpooltype := C.CString(pooltype)
-	defer C.free(cpooltype)
+	defer C.free(unsafe.Pointer(cpooltype))
 	var csrcSpec *C.char
 	if srcSpec != "" {
 		csrcSpec := C.CString(srcSpec)
-		defer C.free(csrcSpec)
+		defer C.free(unsafe.Pointer(csrcSpec))
 	}
 	ret := C.virConnectFindStoragePoolSources(c.ptr, cpooltype, csrcSpec, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}
 
-	defer C.free(ret)
+	defer C.free(unsafe.Pointer(ret))
 
 	return C.GoString(ret), nil
 }

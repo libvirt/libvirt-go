@@ -65,7 +65,7 @@ func (n *NodeDevice) Detach() error {
 
 func (n *NodeDevice) DetachFlags(driverName string, flags uint32) error {
 	cDriverName := C.CString(driverName)
-	defer C.free(cDriverName)
+	defer C.free(unsafe.Pointer(cDriverName))
 	result := C.virNodeDeviceDetachFlags(n.ptr, cDriverName, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -104,7 +104,7 @@ func (n *NodeDevice) GetParent() (string, error) {
 	if result == nil {
 		return "", GetLastError()
 	}
-	defer C.free(result)
+	defer C.free(unsafe.Pointer(result))
 	return C.GoString(result), nil
 }
 

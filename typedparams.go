@@ -185,7 +185,7 @@ func typedParamsPackNew(infomap map[string]typedParamsFieldInfo) (*[]C.virTypedP
 	nparams = 0
 	for key, value := range infomap {
 		cfield := C.CString(key)
-		defer C.free(cfield)
+		defer C.free(unsafe.Pointer(cfield))
 		clen := len(key) + 1
 		if clen > C.VIR_TYPED_PARAM_FIELD_LENGTH {
 			clen = C.VIR_TYPED_PARAM_FIELD_LENGTH

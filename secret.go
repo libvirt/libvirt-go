@@ -96,7 +96,7 @@ func (s *Secret) GetValue(flags uint32) ([]byte, error) {
 	if cvalue == nil {
 		return nil, GetLastError()
 	}
-	defer C.free(cvalue)
+	defer C.free(unsafe.Pointer(cvalue))
 	ret := C.GoBytes(unsafe.Pointer(cvalue), C.int(cvalue_size))
 	return ret, nil
 }
