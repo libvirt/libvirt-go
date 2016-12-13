@@ -9,9 +9,10 @@ go:
   - 1.7
 
 env:
-  - LIBVIRT=1.2.2  EXT=gz TAGS=""
-  - LIBVIRT=1.2.14 EXT=gz TAGS="libvirt.1.2.14"
-  - LIBVIRT=2.3.0  EXT=xz TAGS="libvirt.1.2.14"
+  - LIBVIRT=1.2.0  EXT=gz
+  - LIBVIRT=1.2.10 EXT=gz
+  - LIBVIRT=1.2.20 EXT=gz
+  - LIBVIRT=2.5.0  EXT=xz
 
 install:
   - sudo apt-get -qqy build-dep libvirt
@@ -34,4 +35,4 @@ install:
   - echo "pass" | sudo saslpasswd2 -p -a libvirt user
 
 script:
-  go test -timeout 1m -tags "${TAGS}" -v
+  go test -timeout 1m -tags "integration" -v
