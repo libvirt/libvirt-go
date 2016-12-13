@@ -612,6 +612,10 @@ func TesDomainDestoryFlags(t *testing.T) {
 }
 
 func TestDomainScreenshot(t *testing.T) {
+	if VERSION_NUMBER == 2005000 {
+		/* 2.5.0 broke screenshot for test:///default driver */
+		return
+	}
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
