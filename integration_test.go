@@ -1335,6 +1335,10 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 
 	ifaces, err := dom.ListAllInterfaceAddresses(0)
 	if err != nil {
+		lverr, ok := err.(Error)
+		if ok && lverr.Code == ERR_NO_SUPPORT {
+			return
+		}
 		t.Fatal(err)
 	}
 
@@ -1363,6 +1367,10 @@ func TestDomainGetAllStats(t *testing.T) {
 	stats, err := conn.GetAllDomainStats([]*Domain{}, DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_INTERFACE|DOMAIN_STATS_BALLOON|DOMAIN_STATS_BLOCK|DOMAIN_STATS_PERF|DOMAIN_STATS_VCPU, 0)
 
 	if err != nil {
+		lverr, ok := err.(Error)
+		if ok && lverr.Code == ERR_NO_SUPPORT {
+			return
+		}
 		t.Error(err)
 		return
 	}
