@@ -1125,6 +1125,22 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		}
 	}()
 
+	net, err := conn.LookupNetworkByName("default")
+	if err != nil {
+		return
+	}
+
+	defer net.Free()
+
+	active, err := net.IsActive()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !active {
+		return
+	}
+
 	dom, err := defineTestLxcDomain(conn, "")
 	if err != nil {
 		t.Fatal(err)
@@ -1137,6 +1153,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		<mac address='52:54:00:37:aa:c7'/>
 		<source network='default'/>
 		<model type='virtio'/>
+                <target dev="lvgotest0"/>
 		</interface>`
 	if err := dom.AttachDeviceFlags(nwXml, DOMAIN_DEVICE_MODIFY_CONFIG); err != nil {
 		t.Fatal(err)
@@ -1146,7 +1163,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := dom.InterfaceStats("vnet0"); err != nil {
+	if _, err := dom.InterfaceStats("lvgotest0"); err != nil {
 		t.Error(err)
 	}
 
