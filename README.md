@@ -1,4 +1,4 @@
-# libvirt-go [![Build Status](https://travis-ci.org/rgbkrk/libvirt-go.svg?branch=master)](https://travis-ci.org/rgbkrk/libvirt-go) [![GoDoc](https://godoc.org/gopkg.in/alexzorin/libvirt-go.v2?status.svg)](http://godoc.org/gopkg.in/alexzorin/libvirt-go.v2)
+# libvirt-go [![Build Status](https://travis-ci.org/libvirt/libvirt-go.svg?branch=master)](https://travis-ci.org/libvirt/libvirt-go) [![GoDoc](https://godoc.org/github.com/libvirt/libvirt-go?status.svg)](https://godoc.org/github.com/libvirt/libvirt-go)
 
 Go bindings for libvirt.
 
@@ -11,7 +11,7 @@ from 1.2.0 onwards, through conditional compilation of newer APIs.
 
 ## Documentation
 
-* [api documentation for the bindings](http://godoc.org/github.com/rgbkrk/libvirt-go)
+* [api documentation for the bindings](https://godoc.org/github.com/libvirt/libvirt-go)
 * [api documentation for libvirt](http://libvirt.org/html/libvirt-libvirt.html)
 
 ## Contributing
