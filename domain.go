@@ -119,22 +119,22 @@ const (
 	DOMAIN_SHUTDOWN_PARAVIRT       = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_PARAVIRT)
 )
 
-type DomainUndefineFlags int
+type DomainUndefineFlagsValues int
 
 const (
-	DOMAIN_UNDEFINE_MANAGED_SAVE       = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)       // Also remove any managed save
-	DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA) // If last use of domain, then also remove any snapshot metadata
-	DOMAIN_UNDEFINE_NVRAM              = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_NVRAM)              // Also remove any nvram file
-	DOMAIN_UNDEFINE_KEEP_NVRAM         = DomainUndefineFlags(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)         // Keep nvram file
+	DOMAIN_UNDEFINE_MANAGED_SAVE       = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)       // Also remove any managed save
+	DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA) // If last use of domain, then also remove any snapshot metadata
+	DOMAIN_UNDEFINE_NVRAM              = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_NVRAM)              // Also remove any nvram file
+	DOMAIN_UNDEFINE_KEEP_NVRAM         = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)         // Keep nvram file
 )
 
-type DomainAttachDeviceFlags int
+type DomainDeviceModifyFlags int
 
 const (
-	DOMAIN_DEVICE_MODIFY_CONFIG  = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CONFIG)
-	DOMAIN_DEVICE_MODIFY_CURRENT = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CURRENT)
-	DOMAIN_DEVICE_MODIFY_LIVE    = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_LIVE)
-	DOMAIN_DEVICE_MODIFY_FORCE   = DomainAttachDeviceFlags(C.VIR_DOMAIN_DEVICE_MODIFY_FORCE)
+	DOMAIN_DEVICE_MODIFY_CONFIG  = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CONFIG)
+	DOMAIN_DEVICE_MODIFY_CURRENT = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CURRENT)
+	DOMAIN_DEVICE_MODIFY_LIVE    = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_LIVE)
+	DOMAIN_DEVICE_MODIFY_FORCE   = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_FORCE)
 )
 
 type DomainCreateFlags int
@@ -912,7 +912,7 @@ func (d *Domain) Shutdown() error {
 	return nil
 }
 
-func (d *Domain) Reboot(flags uint) error {
+func (d *Domain) Reboot(flags DomainRebootFlagValues) error {
 	result := C.virDomainReboot(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1062,7 +1062,7 @@ func (d *Domain) GetInfo() (*DomainInfo, error) {
 	}, nil
 }
 
-func (d *Domain) GetXMLDesc(flags uint32) (string, error) {
+func (d *Domain) GetXMLDesc(flags DomainXMLFlags) (string, error) {
 	result := C.virDomainGetXMLDesc(d.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -1201,7 +1201,7 @@ func getInterfaceParameterFieldInfo(params *DomainInterfaceParameters) map[strin
 	}
 }
 
-func (d *Domain) GetInterfaceParameters(device string, flags uint32) (*DomainInterfaceParameters, error) {
+func (d *Domain) GetInterfaceParameters(device string, flags DomainModificationImpact) (*DomainInterfaceParameters, error) {
 	params := &DomainInterfaceParameters{}
 	info := getInterfaceParameterFieldInfo(params)
 
@@ -1230,7 +1230,7 @@ func (d *Domain) GetInterfaceParameters(device string, flags uint32) (*DomainInt
 	return params, nil
 }
 
-func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfaceParameters, flags uint32) error {
+func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfaceParameters, flags DomainModificationImpact) error {
 	info := getInterfaceParameterFieldInfo(params)
 
 	var nparams C.int
@@ -1260,7 +1260,7 @@ func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfacePa
 	return nil
 }
 
-func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags uint32) (string, error) {
+func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags DomainModificationImpact) (string, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -1276,7 +1276,7 @@ func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags uint32)
 	return C.GoString(result), nil
 }
 
-func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriKey, uri string, flags uint32) error {
+func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriKey, uri string, flags DomainModificationImpact) error {
 	var cMetaDataCont *C.char
 	var cUriKey *C.char
 	var cUri *C.char
@@ -1305,7 +1305,7 @@ func (d *Domain) Undefine() error {
 	return nil
 }
 
-func (d *Domain) UndefineFlags(flags uint) error {
+func (d *Domain) UndefineFlags(flags DomainUndefineFlagsValues) error {
 	result := C.virDomainUndefineFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1329,7 +1329,7 @@ func (d *Domain) SetMemory(memory uint64) error {
 	return nil
 }
 
-func (d *Domain) SetMemoryFlags(memory uint64, flags uint32) error {
+func (d *Domain) SetMemoryFlags(memory uint64, flags DomainMemoryModFlags) error {
 	result := C.virDomainSetMemoryFlags(d.ptr, C.ulong(memory), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1337,7 +1337,7 @@ func (d *Domain) SetMemoryFlags(memory uint64, flags uint32) error {
 	return nil
 }
 
-func (d *Domain) SetMemoryStatsPeriod(period int, flags uint) error {
+func (d *Domain) SetMemoryStatsPeriod(period int, flags DomainMemoryModFlags) error {
 	result := C.virDomainSetMemoryStatsPeriod(d.ptr, C.int(period), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1411,7 +1411,7 @@ func (d *Domain) AttachDevice(xml string) error {
 	return nil
 }
 
-func (d *Domain) AttachDeviceFlags(xml string, flags DomainAttachDeviceFlags) error {
+func (d *Domain) AttachDeviceFlags(xml string, flags DomainDeviceModifyFlags) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainAttachDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1431,7 +1431,7 @@ func (d *Domain) DetachDevice(xml string) error {
 	return nil
 }
 
-func (d *Domain) DetachDeviceFlags(xml string, flags DomainAttachDeviceFlags) error {
+func (d *Domain) DetachDeviceFlags(xml string, flags DomainDeviceModifyFlags) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainDetachDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1441,7 +1441,7 @@ func (d *Domain) DetachDeviceFlags(xml string, flags DomainAttachDeviceFlags) er
 	return nil
 }
 
-func (d *Domain) UpdateDeviceFlags(xml string, flags uint) error {
+func (d *Domain) UpdateDeviceFlags(xml string, flags DomainDeviceModifyFlags) error {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainUpdateDeviceFlags(d.ptr, cXml, C.uint(flags))
@@ -1451,7 +1451,7 @@ func (d *Domain) UpdateDeviceFlags(xml string, flags uint) error {
 	return nil
 }
 
-func (d *Domain) Screenshot(stream *Stream, screen, flags uint) (string, error) {
+func (d *Domain) Screenshot(stream *Stream, screen, flags uint32) (string, error) {
 	cType := C.virDomainScreenshot(d.ptr, stream.ptr, C.uint(screen), C.uint(flags))
 	if cType == nil {
 		return "", GetLastError()
@@ -1462,7 +1462,7 @@ func (d *Domain) Screenshot(stream *Stream, screen, flags uint) (string, error) 
 	return mimeType, nil
 }
 
-func (d *Domain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint) error {
+func (d *Domain) SendKey(codeset, holdtime uint, keycodes []uint, flags uint32) error {
 	result := C.virDomainSendKey(d.ptr, C.uint(codeset), C.uint(holdtime), (*C.uint)(unsafe.Pointer(&keycodes[0])), C.int(len(keycodes)), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -1708,7 +1708,7 @@ func (d *Domain) GetVcpus() ([]DomainVcpuInfo, error) {
 	return info, nil
 }
 
-func (d *Domain) GetVcpusFlags(flags uint32) (int32, error) {
+func (d *Domain) GetVcpusFlags(flags DomainVcpuFlags) (int32, error) {
 	result := C.virDomainGetVcpusFlags(d.ptr, C.uint(flags))
 	if result == -1 {
 		return 0, GetLastError()
@@ -1751,7 +1751,7 @@ func (d *Domain) PinVcpu(vcpu uint, cpuMap []bool) error {
 	return nil
 }
 
-func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []bool, flags uint) error {
+func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []bool, flags DomainModificationImpact) error {
 	maplen := (len(cpuMap) + 7) / 8
 	ccpumap := make([]C.uchar, maplen)
 	for i := 0; i < len(cpuMap); i++ {
@@ -1896,7 +1896,7 @@ func (d *Domain) ListAllSnapshots(flags DomainSnapshotListFlags) ([]DomainSnapsh
 	return pools, nil
 }
 
-func (d *Domain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags uint32) error {
+func (d *Domain) BlockCommit(disk string, base string, top string, bandwidth uint64, flags DomainBlockCommitFlags) error {
 	cdisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cdisk))
 	var cbase *C.char
@@ -2611,7 +2611,7 @@ func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*D
 	return params, nil
 }
 
-func (d *Domain) SetBlockIoTune(disk string, params *DomainBlockIoTuneParameters, flags uint32) error {
+func (d *Domain) SetBlockIoTune(disk string, params *DomainBlockIoTuneParameters, flags DomainModificationImpact) error {
 	cdisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cdisk))
 
@@ -3054,7 +3054,7 @@ func (d *Domain) GetMemoryParameters(flags DomainModificationImpact) (*DomainMem
 	return params, nil
 }
 
-func (d *Domain) SetMemoryParameters(params *DomainMemoryParameters, flags uint32) error {
+func (d *Domain) SetMemoryParameters(params *DomainMemoryParameters, flags DomainModificationImpact) error {
 	info := getDomainMemoryParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3128,7 +3128,7 @@ func (d *Domain) GetNumaParameters(flags DomainModificationImpact) (*DomainNumaP
 	return params, nil
 }
 
-func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags uint32) error {
+func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags DomainModificationImpact) error {
 	info := getDomainNumaParametersFieldInfo(params)
 
 	var nparams C.int
@@ -3243,7 +3243,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 	return params, nil
 }
 
-func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags uint32) error {
+func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
 		return GetNotImplementedError()
 	}
@@ -3542,7 +3542,7 @@ func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 	return int64(secs), uint(nsecs), nil
 }
 
-func (d *Domain) SetTime(secs int64, nsecs uint, flags uint32) error {
+func (d *Domain) SetTime(secs int64, nsecs uint, flags DomainSetTimeFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
 		return GetNotImplementedError()
 	}
@@ -3643,7 +3643,7 @@ func (d *Domain) InjectNMI(flags uint32) error {
 	return nil
 }
 
-func (d *Domain) CoreDump(to string, flags uint32) error {
+func (d *Domain) CoreDump(to string, flags DomainCoreDumpFlags) error {
 	cto := C.CString(to)
 	defer C.free(unsafe.Pointer(cto))
 
@@ -3655,7 +3655,7 @@ func (d *Domain) CoreDump(to string, flags uint32) error {
 	return nil
 }
 
-func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags uint32) error {
+func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags DomainCoreDumpFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002003 {
 		GetNotImplementedError()
 	}
@@ -3793,7 +3793,7 @@ func (d *Domain) PMWakeup(flags uint32) error {
 	return nil
 }
 
-func (d *Domain) AddIOThread(id uint, flags uint32) error {
+func (d *Domain) AddIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
 		return GetNotImplementedError()
 	}
@@ -3805,7 +3805,7 @@ func (d *Domain) AddIOThread(id uint, flags uint32) error {
 	return nil
 }
 
-func (d *Domain) DelIOThread(id uint, flags uint32) error {
+func (d *Domain) DelIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
 		return GetNotImplementedError()
 	}
@@ -3817,7 +3817,7 @@ func (d *Domain) DelIOThread(id uint, flags uint32) error {
 	return nil
 }
 
-func (d *Domain) GetEmulatorPinInfo(flags uint32) ([]bool, error) {
+func (d *Domain) GetEmulatorPinInfo(flags DomainModificationImpact) ([]bool, error) {
 	var cnodeinfo C.virNodeInfo
 	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
 	if ret == -1 {
@@ -3885,7 +3885,7 @@ func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThre
 	return info, nil
 }
 
-func (d *Domain) GetVcpuPinInfo(flags uint32) ([][]bool, error) {
+func (d *Domain) GetVcpuPinInfo(flags DomainModificationImpact) ([][]bool, error) {
 	var cnodeinfo C.virNodeInfo
 	ret := C.virNodeGetInfo(C.virDomainGetConnect(d.ptr), &cnodeinfo)
 	if ret == -1 {
@@ -4010,7 +4010,7 @@ func (d *Domain) OpenGraphicsFD(idx uint, flags DomainOpenGraphicsFlags) (*os.Fi
 	return os.NewFile(uintptr(ret), "graphics"), nil
 }
 
-func (d *Domain) CreateSnapshotXML(xml string, flags uint32) (*DomainSnapshot, error) {
+func (d *Domain) CreateSnapshotXML(xml string, flags DomainSnapshotCreateFlags) (*DomainSnapshot, error) {
 	cXml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cXml))
 	result := C.virDomainSnapshotCreateXML(d.ptr, cXml, C.uint(flags))
@@ -4030,7 +4030,7 @@ func (d *Domain) Save(destFile string) error {
 	return nil
 }
 
-func (d *Domain) SaveFlags(destFile string, destXml string, flags uint32) error {
+func (d *Domain) SaveFlags(destFile string, destXml string, flags DomainSaveRestoreFlags) error {
 	cDestFile := C.CString(destFile)
 	cDestXml := C.CString(destXml)
 	defer C.free(unsafe.Pointer(cDestXml))

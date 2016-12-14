@@ -234,7 +234,7 @@ func (n *Network) GetBridgeName() (string, error) {
 	return bridge, nil
 }
 
-func (n *Network) GetXMLDesc(flags uint32) (string, error) {
+func (n *Network) GetXMLDesc(flags NetworkXMLFlags) (string, error) {
 	result := C.virNetworkGetXMLDesc(n.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -252,7 +252,7 @@ func (n *Network) Undefine() error {
 	return nil
 }
 
-func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection, parentIndex int, xml string, flags uint32) error {
+func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection, parentIndex int, xml string, flags NetworkUpdateFlags) error {
 	cxml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cxml))
 	result := C.virNetworkUpdate(n.ptr, C.uint(cmd), C.uint(section), C.int(parentIndex), cxml, C.uint(flags))

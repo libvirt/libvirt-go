@@ -111,7 +111,7 @@ func (p *StoragePool) Build(flags StoragePoolBuildFlags) error {
 	return nil
 }
 
-func (p *StoragePool) Create(flags uint32) error {
+func (p *StoragePool) Create(flags StoragePoolCreateFlags) error {
 	result := C.virStoragePoolCreate(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -119,7 +119,7 @@ func (p *StoragePool) Create(flags uint32) error {
 	return nil
 }
 
-func (p *StoragePool) Delete(flags uint32) error {
+func (p *StoragePool) Delete(flags StoragePoolDeleteFlags) error {
 	result := C.virStoragePoolDelete(p.ptr, C.uint(flags))
 	if result == -1 {
 		return GetLastError()
@@ -199,7 +199,7 @@ func (p *StoragePool) GetUUIDString() (string, error) {
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
-func (p *StoragePool) GetXMLDesc(flags uint32) (string, error) {
+func (p *StoragePool) GetXMLDesc(flags StorageXMLFlags) (string, error) {
 	result := C.virStoragePoolGetXMLDesc(p.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
@@ -262,7 +262,7 @@ func (p *StoragePool) Undefine() error {
 	return nil
 }
 
-func (p *StoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*StorageVol, error) {
+func (p *StoragePool) StorageVolCreateXML(xmlConfig string, flags StorageVolCreateFlags) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXML(p.ptr, cXml, C.uint(flags))
@@ -272,7 +272,7 @@ func (p *StoragePool) StorageVolCreateXML(xmlConfig string, flags uint32) (*Stor
 	return &StorageVol{ptr: ptr}, nil
 }
 
-func (p *StoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *StorageVol, flags uint32) (*StorageVol, error) {
+func (p *StoragePool) StorageVolCreateXMLFrom(xmlConfig string, clonevol *StorageVol, flags StorageVolCreateFlags) (*StorageVol, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStorageVolCreateXMLFrom(p.ptr, cXml, clonevol.ptr, C.uint(flags))

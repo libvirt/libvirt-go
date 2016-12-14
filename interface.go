@@ -93,7 +93,7 @@ func (n *Interface) GetName() (string, error) {
 	return name, nil
 }
 
-func (n *Interface) GetXMLDesc(flags uint32) (string, error) {
+func (n *Interface) GetXMLDesc(flags InterfaceXMLFlags) (string, error) {
 	result := C.virInterfaceGetXMLDesc(n.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()

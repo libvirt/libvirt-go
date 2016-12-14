@@ -373,7 +373,7 @@ func connectAuthCallback(ccredlist C.virConnectCredentialPtr, ncred C.uint, call
 	return 0
 }
 
-func NewConnectWithAuth(uri string, auth *ConnectAuth, flags uint32) (*Connect, error) {
+func NewConnectWithAuth(uri string, auth *ConnectAuth, flags ConnectFlags) (*Connect, error) {
 	var cUri *C.char
 
 	ccredtype := make([]C.int, len(auth.CredType))
@@ -1006,7 +1006,7 @@ func (c *Connect) SetKeepAlive(interval int, count uint) error {
 	}
 }
 
-func (c *Connect) GetSysinfo(flags uint) (string, error) {
+func (c *Connect) GetSysinfo(flags uint32) (string, error) {
 	cStr := C.virConnectGetSysinfo(c.ptr, C.uint(flags))
 	if cStr == nil {
 		return "", GetLastError()
@@ -1079,7 +1079,7 @@ func (c *Connect) StoragePoolDefineXML(xmlConfig string, flags uint32) (*Storage
 	return &StoragePool{ptr: ptr}, nil
 }
 
-func (c *Connect) StoragePoolCreateXML(xmlConfig string, flags uint32) (*StoragePool, error) {
+func (c *Connect) StoragePoolCreateXML(xmlConfig string, flags StoragePoolCreateFlags) (*StoragePool, error) {
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
 	ptr := C.virStoragePoolCreateXML(c.ptr, cXml, C.uint(flags))
@@ -1269,7 +1269,7 @@ func (c *Connect) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, 
 	return &NodeDevice{ptr: ptr}, nil
 }
 
-func (c *Connect) ListAllInterfaces(flags uint32) ([]Interface, error) {
+func (c *Connect) ListAllInterfaces(flags ConnectListAllInterfacesFlags) ([]Interface, error) {
 	var cList *C.virInterfacePtr
 	numIfaces := C.virConnectListAllInterfaces(c.ptr, (**C.virInterfacePtr)(&cList), C.uint(flags))
 	if numIfaces == -1 {
@@ -1409,7 +1409,7 @@ func (c *Connect) ListAllNodeDevices(flags ConnectListAllNodeDeviceFlags) ([]Nod
 	return pools, nil
 }
 
-func (c *Connect) InterfaceChangeBegin(flags uint) error {
+func (c *Connect) InterfaceChangeBegin(flags uint32) error {
 	ret := C.virInterfaceChangeBegin(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1417,7 +1417,7 @@ func (c *Connect) InterfaceChangeBegin(flags uint) error {
 	return nil
 }
 
-func (c *Connect) InterfaceChangeCommit(flags uint) error {
+func (c *Connect) InterfaceChangeCommit(flags uint32) error {
 	ret := C.virInterfaceChangeCommit(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1425,7 +1425,7 @@ func (c *Connect) InterfaceChangeCommit(flags uint) error {
 	return nil
 }
 
-func (c *Connect) InterfaceChangeRollback(flags uint) error {
+func (c *Connect) InterfaceChangeRollback(flags uint32) error {
 	ret := C.virInterfaceChangeRollback(c.ptr, C.uint(flags))
 	if ret == -1 {
 		return GetLastError()
@@ -1955,7 +1955,7 @@ func (c *Connect) DomainRestore(srcFile string) error {
 	return nil
 }
 
-func (c *Connect) DomainRestoreFlags(srcFile, xmlConf string, flags uint32) error {
+func (c *Connect) DomainRestoreFlags(srcFile, xmlConf string, flags DomainSaveRestoreFlags) error {
 	cPath := C.CString(srcFile)
 	defer C.free(unsafe.Pointer(cPath))
 	var cXmlConf *C.char
@@ -1969,7 +1969,7 @@ func (c *Connect) DomainRestoreFlags(srcFile, xmlConf string, flags uint32) erro
 	return nil
 }
 
-func (c *Connect) NewStream(flags uint) (*Stream, error) {
+func (c *Connect) NewStream(flags StreamFlags) (*Stream, error) {
 	virStream := C.virStreamNew(c.ptr, C.uint(flags))
 	if virStream == nil {
 		return nil, GetLastError()

@@ -97,7 +97,7 @@ func (s *DomainSnapshot) Free() error {
 	return nil
 }
 
-func (s *DomainSnapshot) Delete(flags uint32) error {
+func (s *DomainSnapshot) Delete(flags DomainSnapshotDeleteFlags) error {
 	result := C.virDomainSnapshotDelete(s.ptr, C.uint(flags))
 	if result != 0 {
 		return GetLastError()
@@ -105,7 +105,7 @@ func (s *DomainSnapshot) Delete(flags uint32) error {
 	return nil
 }
 
-func (s *DomainSnapshot) RevertToSnapshot(flags uint32) error {
+func (s *DomainSnapshot) RevertToSnapshot(flags DomainSnapshotRevertFlags) error {
 	result := C.virDomainRevertToSnapshot(s.ptr, C.uint(flags))
 	if result != 0 {
 		return GetLastError()
@@ -135,7 +135,7 @@ func (s *DomainSnapshot) HasMetadata(flags uint32) (bool, error) {
 	return false, nil
 }
 
-func (s *DomainSnapshot) GetXMLDesc(flags uint32) (string, error) {
+func (s *DomainSnapshot) GetXMLDesc(flags DomainXMLFlags) (string, error) {
 	result := C.virDomainSnapshotGetXMLDesc(s.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
