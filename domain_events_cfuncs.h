@@ -22,8 +22,8 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef DOMAIN_EVENTS_CFUNCS_H__
-#define DOMAIN_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__
+#define LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__
 
 void domainEventLifecycleCallback_cgo(virConnectPtr c, virDomainPtr d,
                                      int event, int detail, void* data);
@@ -107,4 +107,4 @@ int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
                                          long goCallbackId);
 
 
-#endif /* DOMAIN_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__ */

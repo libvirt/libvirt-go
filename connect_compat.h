@@ -22,8 +22,8 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef LIBVIRT_GO_CONNECT_COMPAT_H_
-#define LIBVIRT_GO_CONNECT_COMPAT_H_
+#ifndef LIBVIRT_GO_CONNECT_COMPAT_H__
+#define LIBVIRT_GO_CONNECT_COMPAT_H__
 
 /* 1.2.1 */
 
@@ -186,4 +186,4 @@ virDomainPtr virDomainDefineXMLFlagsCompat(virConnectPtr conn,
 #define VIR_CONNECT_BASELINE_CPU_MIGRATABLE 1 << 1
 #endif
 
-#endif /* LIBVIRT_GO_CONNECT_COMPAT_H_ */
+#endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */

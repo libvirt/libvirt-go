@@ -22,11 +22,11 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef GO_LIBVIRT_H
-#define GO_LIBVIRT_H
+#ifndef LIBVIRT_GO_CONNECT_CFUNCS_H__
+#define LIBVIRT_GO_CONNECT_CFUNCS_H__
 void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque);
 int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
 
 virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags);
 
-#endif /* GO_LIBVIRT_H */
+#endif /* LIBVIRT_GO_CONNECT_CFUNCS_H__ */

@@ -23,7 +23,7 @@
 // Copyright (C) 2016 Red Hat, Inc.
 //
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
-#define LIBVIRT_GO_ERROR_COMPAT_H__
+#define LIBVIRT_GO_DOMAIN_COMPAT_H__
 
 /* 1.2.2 */
 
@@ -801,4 +801,4 @@ int virDomainSetGuestVcpusCompat(virDomainPtr domain,
 #define VIR_DOMAIN_VCPU_HOTPLUGGABLE (1 << 4)
 #endif
 
-#endif /* LIBVIRT_GO_ERROR_COMPAT_H__ */
+#endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

@@ -22,8 +22,8 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef NETWORK_EVENTS_CFUNCS_H__
-#define NETWORK_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__
+#define LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__
 
 void networkEventLifecycleCallback_cgo(virConnectPtr c, virNetworkPtr d,
                                      int event, int detail, void* data);
@@ -33,4 +33,4 @@ int virConnectNetworkEventRegisterAny_cgo(virConnectPtr c,  virNetworkPtr d,
                                          long goCallbackId);
 
 
-#endif /* NETWORK_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__ */

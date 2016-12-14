@@ -22,8 +22,8 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef NODE_DEVICE_EVENTS_CFUNCS_H__
-#define NODE_DEVICE_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__
+#define LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__
 
 void nodeDeviceEventLifecycleCallback_cgo(virConnectPtr c, virNodeDevicePtr d,
 					  int event, int detail, void* data);
@@ -35,4 +35,4 @@ int virConnectNodeDeviceEventRegisterAny_cgo(virConnectPtr c,  virNodeDevicePtr 
 					     long goCallbackId);
 
 
-#endif /* NODE_DEVICE_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__ */

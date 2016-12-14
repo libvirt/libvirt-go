@@ -22,9 +22,9 @@
 // Copyright (c) 2013 Alex Zorin
 // Copyright (C) 2016 Red Hat, Inc.
 //
-#ifndef CALLBACKS_CFUNCS_H__
-#define CALLBACKS_CFUNCS_H__
+#ifndef LIBVIRT_GO_CALLBACKS_CFUNCS_H__
+#define LIBVIRT_GO_CALLBACKS_CFUNCS_H__
 
 void freeGoCallback_cgo(void* goCallbackId);
 
-#endif /* CALLBACKS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_CALLBACKS_CFUNCS_H__ */
