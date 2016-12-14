@@ -219,10 +219,6 @@ var (
 		"_virMemoryParameter",
 		"_virSchedParameter",
 
-		/* TODO */
-		"LIBVIR_VERSION_NUMBER",
-		"VIR_DOMAIN_SEND_KEY_MAX_KEYS",
-
 		/* Remaped to a funcs at Go level */
 		"LIBVIR_CHECK_VERSION",
 		"VIR_NODEINFO_MAXCPUS",
@@ -428,7 +424,7 @@ func ProcessFile(path string) []string {
 
 	defer file.Close()
 
-	re, err := regexp.Compile("C\\.((vir|VIR)[a-zA-Z0-9_]+)\\b")
+	re, err := regexp.Compile("C\\.((vir|VIR|LIBVIR)[a-zA-Z0-9_]+?)(Compat)?\\b")
 	if err != nil {
 		panic(err)
 	}
