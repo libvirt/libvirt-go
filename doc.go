@@ -79,7 +79,7 @@
 // default value of '0' from a parameter which is 0 because it isn't supported by
 // the hypervisor. If the C API defines additional typed parameters, then the
 // corresponding Go struct will be extended to have further fields.
-//  e.g. the GetMemoryStats method in Go (which is backed by
+// e.g. the GetMemoryStats method in Go (which is backed by
 // virNodeGetMemoryStats in C) will return a NodeMemoryStats struct containing
 // the typed parameter values.
 //
@@ -106,7 +106,6 @@
 //  }
 //
 // Example usage
-// =============
 //
 // To connect to libvirt
 //
