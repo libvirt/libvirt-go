@@ -803,4 +803,23 @@ int virDomainSetGuestVcpusCompat(virDomainPtr domain,
 #define VIR_DOMAIN_VCPU_HOTPLUGGABLE (1 << 4)
 #endif
 
+/* 3.0.0 */
+
+#ifndef VIR_PERF_PARAM_BRANCH_INSTRUCTIONS
+#define VIR_PERF_PARAM_BRANCH_INSTRUCTIONS "branch_instructions"
+#endif
+
+#ifndef VIR_PERF_PARAM_BRANCH_MISSES
+#define VIR_PERF_PARAM_BRANCH_MISSES "branch_misses"
+#endif
+
+#ifndef VIR_DOMAIN_BLOCK_IOTUNE_GROUP_NAME
+#define VIR_DOMAIN_BLOCK_IOTUNE_GROUP_NAME "group_name"
+#endif
+
+#ifndef VIR_DOMAIN_TUNABLE_BLKDEV_GROUP_NAME
+#define VIR_DOMAIN_TUNABLE_BLKDEV_GROUP_NAME "blkdeviotune.group_name"
+#endif
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

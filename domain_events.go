@@ -659,6 +659,10 @@ func getTuneBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) 
 			set: &params.SizeIopsSecSet,
 			ul:  &params.SizeIopsSec,
 		},
+		C.VIR_DOMAIN_TUNABLE_BLKDEV_GROUP_NAME: typedParamsFieldInfo{
+			set: &params.GroupNameSet,
+			s:   &params.GroupName,
+		},
 	}
 }
 

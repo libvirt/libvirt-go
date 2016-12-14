@@ -2493,6 +2493,8 @@ type DomainBlockIoTuneParameters struct {
 	WriteIopsSecMaxLength     uint64
 	SizeIopsSecSet            bool
 	SizeIopsSec               uint64
+	GroupNameSet              bool
+	GroupName                 string
 }
 
 func getBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) map[string]typedParamsFieldInfo {
@@ -2572,6 +2574,10 @@ func getBlockIoTuneParametersFieldInfo(params *DomainBlockIoTuneParameters) map[
 		C.VIR_DOMAIN_BLOCK_IOTUNE_SIZE_IOPS_SEC: typedParamsFieldInfo{
 			set: &params.SizeIopsSecSet,
 			ul:  &params.SizeIopsSec,
+		},
+		C.VIR_DOMAIN_BLOCK_IOTUNE_GROUP_NAME: typedParamsFieldInfo{
+			set: &params.GroupNameSet,
+			s:   &params.GroupName,
 		},
 	}
 }
@@ -3151,20 +3157,24 @@ func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags uint32) e
 }
 
 type DomainPerfEvents struct {
-	CmtSet             bool
-	Cmt                bool
-	MbmtSet            bool
-	Mbmt               bool
-	MbmlSet            bool
-	Mbml               bool
-	CacheMissesSet     bool
-	CacheMisses        bool
-	CacheReferencesSet bool
-	CacheReferences    bool
-	InstructionsSet    bool
-	Instructions       bool
-	CpuCyclesSet       bool
-	CpuCycles          bool
+	CmtSet                bool
+	Cmt                   bool
+	MbmtSet               bool
+	Mbmt                  bool
+	MbmlSet               bool
+	Mbml                  bool
+	CacheMissesSet        bool
+	CacheMisses           bool
+	CacheReferencesSet    bool
+	CacheReferences       bool
+	InstructionsSet       bool
+	Instructions          bool
+	CpuCyclesSet          bool
+	CpuCycles             bool
+	BranchInstructionsSet bool
+	BranchInstructions    bool
+	BranchMissesSet       bool
+	BranchMisses          bool
 }
 
 func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedParamsFieldInfo {
@@ -3196,6 +3206,14 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 		C.VIR_PERF_PARAM_CPU_CYCLES: typedParamsFieldInfo{
 			set: &params.CpuCyclesSet,
 			b:   &params.CpuCycles,
+		},
+		C.VIR_PERF_PARAM_BRANCH_INSTRUCTIONS: typedParamsFieldInfo{
+			set: &params.BranchInstructionsSet,
+			b:   &params.BranchInstructions,
+		},
+		C.VIR_PERF_PARAM_BRANCH_MISSES: typedParamsFieldInfo{
+			set: &params.BranchMissesSet,
+			b:   &params.BranchMisses,
 		},
 	}
 }
