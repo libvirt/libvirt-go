@@ -66,7 +66,7 @@ func (v *Stream) Abort() error {
 	return nil
 }
 
-func (v *Stream) Close() error {
+func (v *Stream) Finish() error {
 	result := C.virStreamFinish(v.ptr)
 	if result == -1 {
 		return GetLastError()

@@ -1278,7 +1278,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 	}
 
 	// 4. finish!
-	if err := stream.Close(); err != nil {
+	if err := stream.Finish(); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1307,7 +1307,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 	t.Logf("read back: %#v", buf[:len(data)])
 
 	// 4. finish!
-	if err := downStream.Close(); err != nil {
+	if err := downStream.Finish(); err != nil {
 		t.Fatal(err)
 	}
 }
