@@ -1273,7 +1273,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 	}
 
 	// 3. do the actual writing
-	if n, err := stream.Write(data); err != nil || n != len(data) {
+	if n, err := stream.Send(data); err != nil || n != len(data) {
 		t.Fatal(err, n)
 	}
 
@@ -1300,7 +1300,7 @@ func TestStorageVolUploadDownload(t *testing.T) {
 
 	// 3. do the actual reading
 	buf := make([]byte, 1024)
-	if n, err := downStream.Read(buf); err != nil || n != len(data) {
+	if n, err := downStream.Recv(buf); err != nil || n != len(data) {
 		t.Fatal(err, n)
 	}
 

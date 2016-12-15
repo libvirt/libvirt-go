@@ -84,7 +84,7 @@ func (v *Stream) Free() error {
 	return nil
 }
 
-func (v *Stream) Read(p []byte) (int, error) {
+func (v *Stream) Recv(p []byte) (int, error) {
 	n := C.virStreamRecv(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)))
 	if n < 0 {
 		return 0, GetLastError()
@@ -96,7 +96,7 @@ func (v *Stream) Read(p []byte) (int, error) {
 	return int(n), nil
 }
 
-func (v *Stream) Write(p []byte) (int, error) {
+func (v *Stream) Send(p []byte) (int, error) {
 	n := C.virStreamSend(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)))
 	if n < 0 {
 		return 0, GetLastError()
