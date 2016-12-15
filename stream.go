@@ -31,6 +31,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+#include "stream_cfuncs.h"
 */
 import "C"
 import (
@@ -106,4 +107,84 @@ func (v *Stream) Send(p []byte) (int, error) {
 	}
 
 	return int(n), nil
+}
+
+type StreamSinkFunc func(*Stream, []byte) (int, error)
+
+//export streamSinkCallback
+func streamSinkCallback(stream C.virStreamPtr, cdata *C.char, nbytes C.size_t, callbackID int) int {
+	callbackFunc := getCallbackId(callbackID)
+
+	callback, ok := callbackFunc.(StreamSinkFunc)
+	if !ok {
+		panic("Incorrect stream sink func callback")
+	}
+
+	data := make([]byte, int(nbytes))
+	for i := 0; i < int(nbytes); i++ {
+		cdatabyte := (*C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cdata)) + (unsafe.Sizeof(*cdata) * uintptr(i))))
+		data[i] = (byte)(*cdatabyte)
+	}
+
+	retnbytes, err := callback(&Stream{ptr: stream}, data)
+	if err != nil {
+		return -1
+	}
+
+	return retnbytes
+}
+
+func (v *Stream) RecvAll(handler StreamSinkFunc) error {
+
+	callbackID := registerCallbackId(handler)
+
+	ret := C.virStreamRecvAll_cgo(v.ptr, (C.int)(callbackID))
+	freeCallbackId(callbackID)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+type StreamSourceFunc func(*Stream, int) ([]byte, error)
+
+//export streamSourceCallback
+func streamSourceCallback(stream C.virStreamPtr, cdata *C.char, nbytes C.size_t, callbackID int) int {
+	callbackFunc := getCallbackId(callbackID)
+
+	callback, ok := callbackFunc.(StreamSourceFunc)
+	if !ok {
+		panic("Incorrect stream sink func callback")
+	}
+
+	data, err := callback(&Stream{ptr: stream}, (int)(nbytes))
+	if err != nil {
+		return -1
+	}
+
+	nretbytes := int(nbytes)
+	if len(data) < nretbytes {
+		nretbytes = len(data)
+	}
+
+	for i := 0; i < nretbytes; i++ {
+		cdatabyte := (*C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cdata)) + (unsafe.Sizeof(*cdata) * uintptr(i))))
+		*cdatabyte = (C.char)(data[i])
+	}
+
+	return nretbytes
+}
+
+func (v *Stream) SendAll(handler StreamSourceFunc) error {
+
+	callbackID := registerCallbackId(handler)
+
+	ret := C.virStreamSendAll_cgo(v.ptr, (C.int)(callbackID))
+	freeCallbackId(callbackID)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
 }

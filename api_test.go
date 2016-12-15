@@ -62,8 +62,6 @@ var (
 		"virStreamEventAddCallback",
 		"virStreamEventRemoveCallback",
 		"virStreamEventUpdateCallback",
-		"virStreamRecvAll",
-		"virStreamSendAll",
 
 		/* Wrapped in domain_events_cfuncs.go instead */
 		"virConnectDomainEventRegister",

@@ -29,6 +29,8 @@
 package libvirt
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -1309,6 +1311,156 @@ func TestStorageVolUploadDownload(t *testing.T) {
 	// 4. finish!
 	if err := downStream.Finish(); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
+	conn, err := NewConnect("lxc:///")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		if res, _ := conn.CloseConnection(); res != 0 {
+			t.Errorf("CloseConnection() == %d, expected 0", res)
+		}
+	}()
+
+	poolPath, err := ioutil.TempDir("", "default-pool-test-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.RemoveAll(poolPath)
+	pool, err := conn.StoragePoolDefineXML(`<pool type='dir'>
+                                          <name>default-pool-test-1</name>
+                                          <target>
+                                          <path>`+poolPath+`</path>
+                                          </target>
+                                          </pool>`, 0)
+	defer func() {
+		pool.Undefine()
+		pool.Free()
+	}()
+	if err := pool.Create(0); err != nil {
+		t.Error(err)
+		return
+	}
+	defer pool.Destroy()
+	vol, err := pool.StorageVolCreateXML(testStorageVolXML("", poolPath), 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer func() {
+		vol.Delete(STORAGE_VOL_DELETE_NORMAL)
+		vol.Free()
+	}()
+
+	input := make([]byte, 1024*1024)
+	for i := 0; i < len(input); i++ {
+		input[i] = (byte)(((i % 256) ^ (i / 256)) % 256)
+	}
+
+	// write above data to the vol
+	// 1. create a stream
+	stream, err := conn.NewStream(0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		stream.Free()
+	}()
+
+	// 2. set it up to upload from stream
+	if err := vol.Upload(stream, 0, uint64(len(input)), 0); err != nil {
+		stream.Abort()
+		t.Fatal(err)
+	}
+
+	sent := 0
+	source := func(stream *Stream, nbytes int) ([]byte, error) {
+		tosend := nbytes
+		if tosend > (len(input) - sent) {
+			tosend = len(input) - sent
+		}
+
+		if tosend == 0 {
+			return []byte{}, nil
+		}
+
+		data := input[sent : sent+tosend]
+		sent += tosend
+		return data, nil
+	}
+
+	// 3. do the actual writing
+	if err := stream.SendAll(source); err != nil {
+		t.Fatal(err)
+	}
+
+	if sent != len(input) {
+		t.Fatal("Wanted %d but only sent %d bytes",
+			len(input), sent)
+	}
+
+	// 4. finish!
+	if err := stream.Finish(); err != nil {
+		t.Fatal(err)
+	}
+
+	// read back the data
+	// 1. create a stream
+	downStream, err := conn.NewStream(0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		downStream.Free()
+	}()
+
+	// 2. set it up to download from stream
+	if err := vol.Download(downStream, 0, uint64(len(input)), 0); err != nil {
+		downStream.Abort()
+		t.Fatal(err)
+	}
+
+	// 3. do the actual reading
+	output := make([]byte, len(input))
+
+	got := 0
+	sink := func(st *Stream, data []byte) (int, error) {
+		toget := len(data)
+		if (got + toget) > len(output) {
+			toget = len(output) - got
+		}
+		if toget == 0 {
+			return 0, fmt.Errorf("Output buffer is full")
+		}
+
+		target := output[got : got+toget]
+		copied := copy(target, data)
+		got += copied
+
+		return copied, nil
+	}
+
+	if err := downStream.RecvAll(sink); err != nil {
+		t.Fatal(err)
+	}
+
+	if got != len(input) {
+		t.Fatalf("Wanted %d but only received %d bytes",
+			len(input), got)
+	}
+
+	// 4. finish!
+	if err := downStream.Finish(); err != nil {
+		t.Fatal(err)
+	}
+
+	if !bytes.Equal(input, output) {
+		t.Fatal("Input and output arrays are different")
 	}
 }
 
