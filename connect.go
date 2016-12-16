@@ -2227,20 +2227,32 @@ func getDomainStatsBlockFieldInfo(idx int, params *DomainStatsBlock) map[string]
 }
 
 type DomainStatsPerf struct {
-	CmtSet             bool
-	Cmt                uint64
-	MbmtSet            bool
-	Mbmt               uint64
-	MbmlSet            bool
-	Mbml               uint64
-	CacheMissesSet     bool
-	CacheMisses        uint64
-	CacheReferencesSet bool
-	CacheReferences    uint64
-	InstructionsSet    bool
-	Instructions       uint64
-	CpuCyclesSet       bool
-	CpuCycles          uint64
+	CmtSet                   bool
+	Cmt                      uint64
+	MbmtSet                  bool
+	Mbmt                     uint64
+	MbmlSet                  bool
+	Mbml                     uint64
+	CacheMissesSet           bool
+	CacheMisses              uint64
+	CacheReferencesSet       bool
+	CacheReferences          uint64
+	InstructionsSet          bool
+	Instructions             uint64
+	CpuCyclesSet             bool
+	CpuCycles                uint64
+	BranchInstructionsSet    bool
+	BranchInstructions       uint64
+	BranchMissesSet          bool
+	BranchMisses             uint64
+	BusCyclesSet             bool
+	BusCycles                uint64
+	StalledCyclesFrontendSet bool
+	StalledCyclesFrontend    uint64
+	StalledCyclesBackendSet  bool
+	StalledCyclesBackend     uint64
+	RefCpuCyclesSet          bool
+	RefCpuCycles             uint64
 }
 
 func getDomainStatsPerfFieldInfo(params *DomainStatsPerf) map[string]typedParamsFieldInfo {
@@ -2272,6 +2284,30 @@ func getDomainStatsPerfFieldInfo(params *DomainStatsPerf) map[string]typedParams
 		"perf.cpu_cycles": typedParamsFieldInfo{
 			set: &params.CpuCyclesSet,
 			ul:  &params.CpuCycles,
+		},
+		"perf.branch_instructions": typedParamsFieldInfo{
+			set: &params.BranchInstructionsSet,
+			ul:  &params.BranchInstructions,
+		},
+		"perf.branch_misses": typedParamsFieldInfo{
+			set: &params.BranchMissesSet,
+			ul:  &params.BranchMisses,
+		},
+		"perf.bus_cycles": typedParamsFieldInfo{
+			set: &params.BusCyclesSet,
+			ul:  &params.BusCycles,
+		},
+		"perf.stalled_cycles_frontend": typedParamsFieldInfo{
+			set: &params.StalledCyclesFrontendSet,
+			ul:  &params.StalledCyclesFrontend,
+		},
+		"perf.stalled_cycles_backend": typedParamsFieldInfo{
+			set: &params.StalledCyclesBackendSet,
+			ul:  &params.StalledCyclesBackend,
+		},
+		"perf.ref_cpu_cycles": typedParamsFieldInfo{
+			set: &params.RefCpuCyclesSet,
+			ul:  &params.RefCpuCycles,
 		},
 	}
 }

@@ -3157,25 +3157,35 @@ func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags DomainMod
 }
 
 type DomainPerfEvents struct {
-	CmtSet                bool
-	Cmt                   bool
-	MbmtSet               bool
-	Mbmt                  bool
-	MbmlSet               bool
-	Mbml                  bool
-	CacheMissesSet        bool
-	CacheMisses           bool
-	CacheReferencesSet    bool
-	CacheReferences       bool
-	InstructionsSet       bool
-	Instructions          bool
-	CpuCyclesSet          bool
-	CpuCycles             bool
-	BranchInstructionsSet bool
-	BranchInstructions    bool
-	BranchMissesSet       bool
-	BranchMisses          bool
+	CmtSet                   bool
+	Cmt                      bool
+	MbmtSet                  bool
+	Mbmt                     bool
+	MbmlSet                  bool
+	Mbml                     bool
+	CacheMissesSet           bool
+	CacheMisses              bool
+	CacheReferencesSet       bool
+	CacheReferences          bool
+	InstructionsSet          bool
+	Instructions             bool
+	CpuCyclesSet             bool
+	CpuCycles                bool
+	BranchInstructionsSet    bool
+	BranchInstructions       bool
+	BranchMissesSet          bool
+	BranchMisses             bool
+	BusCyclesSet             bool
+	BusCycles                bool
+	StalledCyclesFrontendSet bool
+	StalledCyclesFrontend    bool
+	StalledCyclesBackendSet  bool
+	StalledCyclesBackend     bool
+	RefCpuCyclesSet          bool
+	RefCpuCycles             bool
 }
+
+/* Remember to also update DomainStatsPerf in connect.go when adding to the stuct above */
 
 func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
@@ -3214,6 +3224,22 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 		C.VIR_PERF_PARAM_BRANCH_MISSES: typedParamsFieldInfo{
 			set: &params.BranchMissesSet,
 			b:   &params.BranchMisses,
+		},
+		C.VIR_PERF_PARAM_BUS_CYCLES: typedParamsFieldInfo{
+			set: &params.BusCyclesSet,
+			b:   &params.BusCycles,
+		},
+		C.VIR_PERF_PARAM_STALLED_CYCLES_FRONTEND: typedParamsFieldInfo{
+			set: &params.StalledCyclesFrontendSet,
+			b:   &params.StalledCyclesFrontend,
+		},
+		C.VIR_PERF_PARAM_STALLED_CYCLES_BACKEND: typedParamsFieldInfo{
+			set: &params.StalledCyclesBackendSet,
+			b:   &params.StalledCyclesBackend,
+		},
+		C.VIR_PERF_PARAM_REF_CPU_CYCLES: typedParamsFieldInfo{
+			set: &params.RefCpuCyclesSet,
+			b:   &params.RefCpuCycles,
 		},
 	}
 }

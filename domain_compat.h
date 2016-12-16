@@ -27,6 +27,25 @@
 #ifndef LIBVIRT_GO_DOMAIN_COMPAT_H__
 #define LIBVIRT_GO_DOMAIN_COMPAT_H__
 
+/* 3.0.0 */
+
+#ifndef VIR_PERF_PARAM_BUS_CYCLES
+#define VIR_PERF_PARAM_BUS_CYCLES "bus_cycles"
+#endif
+
+#ifndef VIR_PERF_PARAM_STALLED_CYCLES_FRONTEND
+#define VIR_PERF_PARAM_STALLED_CYCLES_FRONTEND "stalled_cycles_frontend"
+#endif
+
+#ifndef VIR_PERF_PARAM_STALLED_CYCLES_BACKEND
+#define VIR_PERF_PARAM_STALLED_CYCLES_BACKEND "stalled_cycles_backend"
+#endif
+
+#ifndef VIR_PERF_PARAM_REF_CPU_CYCLES
+#define VIR_PERF_PARAM_REF_CPU_CYCLES "ref_cpu_cycles"
+#endif
+
+
 /* 1.2.2 */
 
 #ifndef VIR_DOMAIN_BLKIO_DEVICE_READ_IOPS
