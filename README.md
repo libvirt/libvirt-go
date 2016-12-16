@@ -37,13 +37,13 @@ Or to send all patches on the current branch, against master
 
 Note the master GIT repository is at
 
-   http://libvirt.org/git/?p=libvirt-go.git;a=summary
+* http://libvirt.org/git/?p=libvirt-go.git;a=summary
 
 The following automatic read-only mirrors are available as a
 convenience to allow contributors to "fork" the repository:
 
-  https://gitlab.com/libvirt/libvirt-go
-  https://github.com/libvirt/libvirt-go
+* https://gitlab.com/libvirt/libvirt-go
+* https://github.com/libvirt/libvirt-go
 
 While you can send pull-requests to these mirrors, they will be
 re-submitted via emai to the mailing list for review before
