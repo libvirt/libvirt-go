@@ -69,6 +69,7 @@ In order to run the unit tests, libvirtd should be configured
 to allow your user account read-write access with no passwords.
 This can be easily done using polkit config files
 
+```
 # cat > /etc/polkit-1/localauthority/50-local.d/50-libvirt.pkla  <<EOF
 [Passwordless libvirt access]
 Identity=unix-group:berrange
@@ -77,6 +78,7 @@ ResultAny=yes
 ResultInactive=yes
 ResultActive=yes
 EOF
+```
 
 (Replace 'berrange' with your UNIX user name).
 
@@ -85,17 +87,21 @@ listening for TCP connections on localhost, with sasl auth
 This can be setup by editing /etc/libvirt/libvirtd.conf to
 set
 
+```
   listen_tls=0
   listen_tcp=1
   auth_tcp=sasl
   listen_addr="127.0.0.1"
+```
 
 and then start libvirtd with the --listen flag (this can
 be set in /etc/sysconfig/libvirtd to make it persistent).
 
 Then create a sasl user
 
+```
    saslpasswd2 -a libvirt user
+```
 
 and enter "pass" as the password.
 
