@@ -101,6 +101,10 @@ func (v *Stream) Recv(p []byte) (int, error) {
 	return int(n), nil
 }
 
+func (v *Stream) Read(p []byte) (int, error) {
+	return v.Recv(p)
+}
+
 func (v *Stream) Send(p []byte) (int, error) {
 	n := C.virStreamSend(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)))
 	if n < 0 {
@@ -111,6 +115,10 @@ func (v *Stream) Send(p []byte) (int, error) {
 	}
 
 	return int(n), nil
+}
+
+func (v *Stream) Write(p []byte) (int, error) {
+	return v.Send(p)
 }
 
 type StreamSinkFunc func(*Stream, []byte) (int, error)
