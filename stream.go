@@ -76,6 +76,10 @@ func (v *Stream) Finish() error {
 	return nil
 }
 
+func (v *Stream) Close() error {
+	return v.Finish()
+}
+
 func (v *Stream) Free() error {
 	result := C.virStreamFree(v.ptr)
 	if result == -1 {
