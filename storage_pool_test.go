@@ -56,8 +56,8 @@ func TestStoragePoolBuild(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Build(STORAGE_POOL_BUILD_NEW); err != nil {
@@ -69,8 +69,8 @@ func TestUndefineStoragePool(t *testing.T) {
 	pool, conn := buildTestStoragePool("")
 	defer func() {
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	name, err := pool.GetName()
@@ -93,8 +93,8 @@ func TestGetStoragePoolName(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := pool.GetName(); err != nil {
@@ -107,8 +107,8 @@ func TestGetStoragePoolUUID(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := pool.GetUUID(); err != nil {
@@ -121,8 +121,8 @@ func TestGetStoragePoolUUIDString(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := pool.GetUUIDString(); err != nil {
@@ -135,8 +135,8 @@ func TestGetStoragePoolInfo(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := pool.GetInfo(); err != nil {
@@ -149,8 +149,8 @@ func TestGetStoragePoolXMLDesc(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := pool.GetXMLDesc(0); err != nil {
@@ -164,8 +164,8 @@ func TestStoragePoolRefresh(t *testing.T) {
 		pool.Destroy()
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -182,8 +182,8 @@ func TestCreateDestroyStoragePool(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -218,8 +218,8 @@ func TestStoragePoolAutostart(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	as, err := pool.GetAutostart()
@@ -249,8 +249,8 @@ func TestStoragePoolIsActive(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -285,8 +285,8 @@ func TestStorageVolCreateDelete(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -309,8 +309,8 @@ func TestStorageVolCreateFromDelete(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -348,8 +348,8 @@ func TestLookupStorageVolByName(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {

@@ -57,8 +57,8 @@ func TestStorageVolGetInfo(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -85,8 +85,8 @@ func TestStorageVolGetKey(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -113,8 +113,8 @@ func TestStorageVolGetName(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -141,8 +141,8 @@ func TestStorageVolGetPath(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -169,8 +169,8 @@ func TestStorageVolGetXMLDesc(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -197,8 +197,8 @@ func TestPoolLookupByVolume(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {

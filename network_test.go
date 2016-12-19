@@ -62,8 +62,8 @@ func TestGetNetworkName(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := net.GetName(); err != nil {
@@ -76,8 +76,8 @@ func TestGetNetworkUUID(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := net.GetUUID()
@@ -91,8 +91,8 @@ func TestGetNetworkUUIDString(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := net.GetUUIDString()
@@ -106,8 +106,8 @@ func TestGetNetworkXMLDesc(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := net.GetXMLDesc(0); err != nil {
@@ -120,8 +120,8 @@ func TestCreateDestroyNetwork(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := net.Create(); err != nil {
@@ -139,8 +139,8 @@ func TestNetworkAutostart(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	as, err := net.GetAutostart()
@@ -171,8 +171,8 @@ func TestNetworkIsActive(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := net.Create(); err != nil {
@@ -207,8 +207,8 @@ func TestNetworkGetBridgeName(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := net.Create(); err != nil {
@@ -225,8 +225,8 @@ func TestNetworkGetBridgeName(t *testing.T) {
 func TestNetworkFree(t *testing.T) {
 	net, conn := buildTestNetwork("")
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := net.Free(); err != nil {
@@ -244,8 +244,8 @@ func TestNetworkCreateXML(t *testing.T) {
 	}
 	defer func() {
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 

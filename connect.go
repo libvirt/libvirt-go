@@ -410,7 +410,7 @@ func NewConnectReadOnly(uri string) (*Connect, error) {
 	return &Connect{ptr: ptr}, nil
 }
 
-func (c *Connect) CloseConnection() (int, error) {
+func (c *Connect) Close() (int, error) {
 	result := int(C.virConnectClose(c.ptr))
 	if result == -1 {
 		return result, GetLastError()

@@ -50,8 +50,8 @@ func TestNodeDeviceEventRegister(t *testing.T) {
 				t.Errorf("got `%v` on NodeDeviceEventDeregister instead of nil", err)
 			}
 		}
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 

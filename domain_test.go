@@ -82,8 +82,8 @@ func TestUndefineDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	name, err := dom.GetName()
@@ -106,8 +106,8 @@ func TestGetDomainName(t *testing.T) {
 	defer func() {
 		dom.Undefine()
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := dom.GetName(); err != nil {
@@ -120,8 +120,8 @@ func TestGetDomainState(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	state, reason, err := dom.GetState()
@@ -143,8 +143,8 @@ func TestGetDomainID(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -164,8 +164,8 @@ func TestGetDomainUUID(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := dom.GetUUID()
@@ -180,8 +180,8 @@ func TestGetDomainUUIDString(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := dom.GetUUIDString()
@@ -195,8 +195,8 @@ func TestGetDomainInfo(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := dom.GetInfo()
@@ -210,8 +210,8 @@ func TestGetDomainXMLDesc(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := dom.GetXMLDesc(0)
@@ -225,8 +225,8 @@ func TestCreateDomainSnapshotXML(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	ss, err := dom.CreateSnapshotXML(`
@@ -245,8 +245,8 @@ func TestSaveDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -280,8 +280,8 @@ func TestSaveDomainFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -299,8 +299,8 @@ func TestCreateDestroyDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -343,8 +343,8 @@ func TestShutdownDomain(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -374,8 +374,8 @@ func TestShutdownReboot(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -392,8 +392,8 @@ func TestDomainAutostart(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	as, err := dom.GetAutostart()
@@ -424,8 +424,8 @@ func TestDomainIsActive(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -462,11 +462,11 @@ func TestDomainIsPersistent(t *testing.T) {
 	defer func() {
 		dom.Free()
 		dom2.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
-		if res, _ := conn2.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn2.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	persistent, err := dom.IsPersistent()
@@ -494,8 +494,8 @@ func TestDomainSetMaxMemory(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.SetMaxMemory(mem); err != nil {
@@ -508,8 +508,8 @@ func TestDomainSetMemory(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -526,8 +526,8 @@ func TestDomainSetVcpus(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -547,8 +547,8 @@ func TestDomainSetVcpus(t *testing.T) {
 func TestDomainFree(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Free(); err != nil {
@@ -561,8 +561,8 @@ func TestDomainSuspend(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -580,8 +580,8 @@ func TestDomainSuspend(t *testing.T) {
 func TesDomainShutdownFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -610,8 +610,8 @@ func TesDomainShutdownFlags(t *testing.T) {
 func TesDomainDestoryFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -645,8 +645,8 @@ func TestDomainScreenshot(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -671,8 +671,8 @@ func TestDomainGetVcpus(t *testing.T) {
 	dom, conn := buildSMPTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -699,8 +699,8 @@ func TestDomainGetVcpusFlags(t *testing.T) {
 	dom, conn := buildTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -723,8 +723,8 @@ func TestDomainPinVcpu(t *testing.T) {
 	dom, conn := buildSMPTestDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {

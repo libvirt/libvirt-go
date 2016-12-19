@@ -67,12 +67,12 @@ func TestMultipleCloseCallback(t *testing.T) {
 	nbCall3 := 0
 	conn := buildTestQEMUConnection()
 	defer func() {
-		res, _ := conn.CloseConnection()
+		res, _ := conn.Close()
 		// Blacklist versions of libvirt which had a ref counting
 		// bug wrt close callbacks
 		if VERSION_NUMBER <= 1002019 || VERSION_NUMBER >= 1003003 {
 			if res != 0 {
-				t.Errorf("CloseConnection() == %d, expected 0", res)
+				t.Errorf("Close() == %d, expected 0", res)
 			}
 		}
 		if nbCall1 != 0 || nbCall2 != 0 || nbCall3 != 1 {
@@ -123,8 +123,8 @@ func TestUnregisterCloseCallback(t *testing.T) {
 	nbCall := 0
 	conn := buildTestQEMUConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 		if nbCall != 0 {
 			t.Errorf("Expected no call to close callback, got %d", nbCall)
@@ -148,8 +148,8 @@ func TestSetKeepalive(t *testing.T) {
 	EventRegisterDefaultImpl()        // We need the event loop for keepalive
 	conn := buildTestQEMUConnection() // The test driver doesn't support keepalives
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := conn.SetKeepAlive(1, 1); err != nil {
@@ -194,13 +194,13 @@ func TestConnectionWithAuth(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	res, err := conn.CloseConnection()
+	res, err := conn.Close()
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	if res != 0 {
-		t.Errorf("CloseConnection() == %d, expected 0", res)
+		t.Errorf("Close() == %d, expected 0", res)
 	}
 }
 
@@ -224,7 +224,7 @@ func TestConnectionWithWrongCredentials(t *testing.T) {
 	}
 	conn, err := NewConnectWithAuth("test+tcp://127.0.0.1/default", auth, 0)
 	if err == nil {
-		conn.CloseConnection()
+		conn.Close()
 		t.Error(err)
 		return
 	}
@@ -236,8 +236,8 @@ func TestQemuMonitorCommand(t *testing.T) {
 		dom.Destroy()
 		dom.Undefine()
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -263,8 +263,8 @@ func TestDomainCreateWithFlags(t *testing.T) {
 		dom.Destroy()
 		dom.Undefine()
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -319,8 +319,8 @@ func TestIntegrationGetMetadata(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	title := time.Now().String()
@@ -357,8 +357,8 @@ func TestIntegrationSetMetadata(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	dom, err := defineTestLxcDomain(conn, "")
@@ -393,8 +393,8 @@ func TestIntegrationGetSysinfo(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	info, err := conn.GetSysinfo(0)
@@ -427,8 +427,8 @@ func TestIntergrationDefineUndefineNWFilterXML(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	filter, err := conn.NWFilterDefineXML(testNWFilterXML("", "ipv4"))
@@ -454,8 +454,8 @@ func TestIntegrationNWFilterGetName(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	filter, err := conn.NWFilterDefineXML(testNWFilterXML("", "ipv4"))
@@ -479,8 +479,8 @@ func TestIntegrationNWFilterGetUUID(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	filter, err := conn.NWFilterDefineXML(testNWFilterXML("", "ipv4"))
@@ -504,8 +504,8 @@ func TestIntegrationNWFilterGetUUIDString(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	filter, err := conn.NWFilterDefineXML(testNWFilterXML("", "ipv4"))
@@ -529,8 +529,8 @@ func TestIntegrationNWFilterGetXMLDesc(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	filter, err := conn.NWFilterDefineXML(testNWFilterXML("", "ipv4"))
@@ -554,8 +554,8 @@ func TestIntegrationLookupNWFilterByName(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	origName := time.Now().String()
@@ -592,8 +592,8 @@ func TestIntegrationLookupNWFilterByUUIDString(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	origName := time.Now().String()
@@ -641,8 +641,8 @@ func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -677,8 +677,8 @@ func TestStorageVolResize(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -725,8 +725,8 @@ func TestStorageVolWipe(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -772,8 +772,8 @@ func TestStorageVolWipePattern(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -833,8 +833,8 @@ func TestIntegrationSecretDefineUndefine(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
@@ -855,8 +855,8 @@ func TestIntegrationSecretGetUUID(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
@@ -880,8 +880,8 @@ func TestIntegrationSecretGetUUIDString(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
@@ -905,8 +905,8 @@ func TestIntegrationSecretGetXMLDesc(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
@@ -930,8 +930,8 @@ func TestIntegrationSecretGetUsageType(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	sec, err := conn.SecretDefineXML(testSecretTypeCephFromXML(""), 0)
@@ -960,8 +960,8 @@ func TestIntegrationSecretGetUsageID(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	setUsageID := time.Now().String()
@@ -991,8 +991,8 @@ func TestIntegrationLookupSecretByUsage(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	usageID := time.Now().String()
@@ -1018,8 +1018,8 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	dom, err := defineTestLxcDomain(conn, "")
@@ -1060,8 +1060,8 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 // 	defer func() {
 // 		dom.Undefine()
 // 		dom.Free()
-// 		if res, _ := conn.CloseConnection(); res != 0 {
-// 			t.Errorf("CloseConnection() == %d, expected 0", res)
+// 		if res, _ := conn.Close(); res != 0 {
+// 			t.Errorf("Close() == %d, expected 0", res)
 // 		}
 // 	}()
 // 	iface := "either mac or path to interface"
@@ -1085,8 +1085,8 @@ func TestIntegrationListAllInterfaces(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	ifaces, err := conn.ListAllInterfaces(0)
@@ -1117,8 +1117,8 @@ func TestIntergrationListAllNWFilters(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -1157,8 +1157,8 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -1220,8 +1220,8 @@ func TestStorageVolUploadDownload(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -1321,8 +1321,8 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -1471,8 +1471,8 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -1503,8 +1503,8 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 	dom, conn := buildTestQEMUDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {
@@ -1534,8 +1534,8 @@ func TestDomainGetAllStats(t *testing.T) {
 	dom, conn := buildTestQEMUDomain()
 	defer func() {
 		dom.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := dom.Create(); err != nil {

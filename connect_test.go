@@ -58,13 +58,13 @@ func TestConnection(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	res, err := conn.CloseConnection()
+	res, err := conn.Close()
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	if res != 0 {
-		t.Errorf("CloseConnection() == %d, expected 0", res)
+		t.Errorf("Close() == %d, expected 0", res)
 	}
 }
 
@@ -75,8 +75,8 @@ func TestConnectionReadOnly(t *testing.T) {
 		return
 	}
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 
@@ -102,8 +102,8 @@ func TestInvalidConnection(t *testing.T) {
 func TestGetType(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	tp, err := conn.GetType()
@@ -120,8 +120,8 @@ func TestGetType(t *testing.T) {
 func TestIsAlive(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	alive, err := conn.IsAlive()
@@ -138,8 +138,8 @@ func TestIsAlive(t *testing.T) {
 func TestIsEncryptedAndSecure(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	secure, err := conn.IsSecure()
@@ -165,8 +165,8 @@ func TestIsEncryptedAndSecure(t *testing.T) {
 func TestCapabilities(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	capabilities, err := conn.GetCapabilities()
@@ -183,8 +183,8 @@ func TestCapabilities(t *testing.T) {
 func TestGetNodeInfo(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	ni, err := conn.GetNodeInfo()
@@ -201,8 +201,8 @@ func TestGetNodeInfo(t *testing.T) {
 func TestHostname(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	hostname, err := conn.GetHostname()
@@ -219,8 +219,8 @@ func TestHostname(t *testing.T) {
 func TestLibVersion(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	version, err := conn.GetLibVersion()
@@ -237,8 +237,8 @@ func TestLibVersion(t *testing.T) {
 func TestListDefinedDomains(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	doms, err := conn.ListDefinedDomains()
@@ -255,8 +255,8 @@ func TestListDefinedDomains(t *testing.T) {
 func TestListDomains(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	doms, err := conn.ListDomains()
@@ -273,8 +273,8 @@ func TestListDomains(t *testing.T) {
 func TestListInterfaces(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListInterfaces()
@@ -287,8 +287,8 @@ func TestListInterfaces(t *testing.T) {
 func TestListNetworks(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListNetworks()
@@ -301,8 +301,8 @@ func TestListNetworks(t *testing.T) {
 func TestListStoragePools(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListStoragePools()
@@ -315,8 +315,8 @@ func TestListStoragePools(t *testing.T) {
 func TestLookupDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	ids, err := conn.ListDomains()
@@ -340,8 +340,8 @@ func TestLookupDomainById(t *testing.T) {
 func TestLookupDomainByUUIDString(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	doms, err := conn.ListAllDomains(0)
@@ -387,8 +387,8 @@ func TestLookupDomainByUUIDString(t *testing.T) {
 func TestLookupInvalidDomainById(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.LookupDomainById(12345)
@@ -401,8 +401,8 @@ func TestLookupInvalidDomainById(t *testing.T) {
 func TestLookupDomainByName(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	dom, err := conn.LookupDomainByName("test")
@@ -416,8 +416,8 @@ func TestLookupDomainByName(t *testing.T) {
 func TestLookupInvalidDomainByName(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.LookupDomainByName("non_existent_domain")
@@ -430,8 +430,8 @@ func TestLookupInvalidDomainByName(t *testing.T) {
 func TestDomainCreateXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	// Test a minimally valid xml
@@ -479,8 +479,8 @@ func TestDomainCreateXML(t *testing.T) {
 func TestDomainDefineXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	// Test a minimally valid xml
@@ -522,8 +522,8 @@ func TestDomainDefineXML(t *testing.T) {
 func TestListDefinedInterfaces(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListDefinedInterfaces()
@@ -536,8 +536,8 @@ func TestListDefinedInterfaces(t *testing.T) {
 func TestListDefinedNetworks(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListDefinedNetworks()
@@ -550,8 +550,8 @@ func TestListDefinedNetworks(t *testing.T) {
 func TestListDefinedStoragePools(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.ListDefinedStoragePools()
@@ -564,8 +564,8 @@ func TestListDefinedStoragePools(t *testing.T) {
 func TestNumOfDefinedInterfaces(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfDefinedInterfaces(); err != nil {
@@ -577,8 +577,8 @@ func TestNumOfDefinedInterfaces(t *testing.T) {
 func TestNumOfDefinedNetworks(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfDefinedNetworks(); err != nil {
@@ -590,8 +590,8 @@ func TestNumOfDefinedNetworks(t *testing.T) {
 func TestNumOfDefinedStoragePools(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfDefinedStoragePools(); err != nil {
@@ -603,8 +603,8 @@ func TestNumOfDefinedStoragePools(t *testing.T) {
 func TestNumOfDomains(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfDomains(); err != nil {
@@ -616,8 +616,8 @@ func TestNumOfDomains(t *testing.T) {
 func TestNumOfInterfaces(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfInterfaces(); err != nil {
@@ -629,8 +629,8 @@ func TestNumOfInterfaces(t *testing.T) {
 func TestNumOfNetworks(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfNetworks(); err != nil {
@@ -642,8 +642,8 @@ func TestNumOfNetworks(t *testing.T) {
 func TestNumOfNWFilters(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfNWFilters(); err == nil {
@@ -655,8 +655,8 @@ func TestNumOfNWFilters(t *testing.T) {
 func TestNumOfSecrets(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if _, err := conn.NumOfSecrets(); err == nil {
@@ -668,8 +668,8 @@ func TestNumOfSecrets(t *testing.T) {
 func TestGetURI(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	uri, err := conn.GetURI()
@@ -685,8 +685,8 @@ func TestGetURI(t *testing.T) {
 func TestGetMaxVcpus(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	_, err := conn.GetMaxVcpus("")
@@ -698,8 +698,8 @@ func TestGetMaxVcpus(t *testing.T) {
 func TestInterfaceDefineXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	defName := "ethTest0"
@@ -733,8 +733,8 @@ func TestInterfaceDefineXML(t *testing.T) {
 func TestLookupInterfaceByName(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	testEth := "eth1"
@@ -758,8 +758,8 @@ func TestLookupInterfaceByName(t *testing.T) {
 func TestLookupInterfaceByMACString(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	testMAC := "aa:bb:cc:dd:ee:ff"
@@ -783,8 +783,8 @@ func TestLookupInterfaceByMACString(t *testing.T) {
 func TestStoragePoolDefineXML(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	defName := "default-pool-test-0"
@@ -818,8 +818,8 @@ func TestStoragePoolDefineXML(t *testing.T) {
 func TestLookupStoragePoolByName(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	testPool := "default-pool"
@@ -843,8 +843,8 @@ func TestLookupStoragePoolByName(t *testing.T) {
 func TestLookupStoragePoolByUUIDString(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	poolName := "default-pool"
@@ -891,8 +891,8 @@ func TestLookupStorageVolByKey(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -933,8 +933,8 @@ func TestLookupStorageVolByPath(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	if err := pool.Create(0); err != nil {
@@ -973,8 +973,8 @@ func TestLookupStorageVolByPath(t *testing.T) {
 func TestListAllDomains(t *testing.T) {
 	conn := buildTestConnection()
 	defer func() {
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	doms, err := conn.ListAllDomains(CONNECT_LIST_DOMAINS_PERSISTENT)
@@ -1008,8 +1008,8 @@ func TestListAllNetworks(t *testing.T) {
 		// the test connection is closed
 		net.Destroy()
 		net.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	nets, err := conn.ListAllNetworks(CONNECT_LIST_NETWORKS_INACTIVE)
@@ -1038,8 +1038,8 @@ func TestListAllStoragePools(t *testing.T) {
 	defer func() {
 		pool.Undefine()
 		pool.Free()
-		if res, _ := conn.CloseConnection(); res != 0 {
-			t.Errorf("CloseConnection() == %d, expected 0", res)
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
 	pools, err := conn.ListAllStoragePools(CONNECT_LIST_STORAGE_POOLS_INACTIVE)
