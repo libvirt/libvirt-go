@@ -50,13 +50,7 @@ import (
 var (
 	ignoreFuncs = []string{
 		/* TODO */
-		"virEventAddHandle",
-		"virEventAddTimeout",
 		"virEventRegisterImpl",
-		"virEventRemoveHandle",
-		"virEventRemoveTimeout",
-		"virEventUpdateHandle",
-		"virEventUpdateTimeout",
 
 		/* Wrapped in domain_events_cfuncs.go instead */
 		"virConnectDomainEventRegister",

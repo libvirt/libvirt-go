@@ -29,7 +29,7 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
-
+#include "events_cfuncs.h"
 */
 import "C"
 
@@ -54,4 +54,70 @@ func EventRunDefaultImpl() error {
 		return GetLastError()
 	}
 	return nil
+}
+
+type EventHandleCallback func(watch int, file int, events EventHandleType)
+
+//export eventHandleCallback
+func eventHandleCallback(watch int, fd int, events int, callbackID int) {
+	callbackFunc := getCallbackId(callbackID)
+
+	callback, ok := callbackFunc.(EventHandleCallback)
+	if !ok {
+		panic("Incorrect event handle callback data")
+	}
+
+	callback(watch, fd, (EventHandleType)(events))
+}
+
+func EventAddHandle(fd int, events EventHandleType, callback EventHandleCallback) (int, error) {
+	callbackID := registerCallbackId(callback)
+
+	ret := C.virEventAddHandle_cgo((C.int)(fd), (C.int)(events), (C.int)(callbackID))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return int(ret), nil
+}
+
+func EventUpdateHandle(watch int, events EventHandleType) {
+	C.virEventUpdateHandle((C.int)(watch), (C.int)(events))
+}
+
+func EventRemoveHandle(watch int) {
+	C.virEventRemoveHandle((C.int)(watch))
+}
+
+type EventTimeoutCallback func(timer int)
+
+//export eventTimeoutCallback
+func eventTimeoutCallback(timer int, callbackID int) {
+	callbackFunc := getCallbackId(callbackID)
+
+	callback, ok := callbackFunc.(EventTimeoutCallback)
+	if !ok {
+		panic("Incorrect event timeout callback data")
+	}
+
+	callback(timer)
+}
+
+func EventAddTimeout(freq int, callback EventTimeoutCallback) (int, error) {
+	callbackID := registerCallbackId(callback)
+
+	ret := C.virEventAddTimeout_cgo((C.int)(freq), (C.int)(callbackID))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return int(ret), nil
+}
+
+func EventUpdateTimeout(timer int, freq int) {
+	C.virEventUpdateTimeout((C.int)(timer), (C.int)(freq))
+}
+
+func EventRemoveTimeout(timer int) {
+	C.virEventRemoveTimeout((C.int)(timer))
 }
