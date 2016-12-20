@@ -422,7 +422,7 @@ func (c *Connect) Close() (int, error) {
 	return result, nil
 }
 
-type CloseCallback func(conn Connect, reason ConnectCloseReason)
+type CloseCallback func(conn *Connect, reason ConnectCloseReason)
 
 // Register a close callback for the given destination. Only one
 // callback per connection is allowed. Setting a callback will remove
@@ -462,7 +462,7 @@ func closeCallback(conn C.virConnectPtr, reason ConnectCloseReason, goCallbackId
 	if !ok {
 		panic("Inappropriate callback type called")
 	}
-	callback(Connect{ptr: conn}, reason)
+	callback(&Connect{ptr: conn}, reason)
 }
 
 func (c *Connect) GetCapabilities() (string, error) {

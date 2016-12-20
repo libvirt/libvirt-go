@@ -140,27 +140,27 @@ func TestMultipleCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn Connect, reason ConnectCloseReason) {
+	callback := func(conn *Connect, reason ConnectCloseReason) {
 		if reason != CONNECT_CLOSE_REASON_KEEPALIVE {
 			t.Errorf("Expected close reason to be %d, got %d",
 				CONNECT_CLOSE_REASON_KEEPALIVE, reason)
 		}
 	}
-	err := conn.RegisterCloseCallback(func(conn Connect, reason ConnectCloseReason) {
+	err := conn.RegisterCloseCallback(func(conn *Connect, reason ConnectCloseReason) {
 		callback(conn, reason)
 		nbCall1++
 	})
 	if err != nil {
 		t.Fatalf("Unable to register close callback: %+v", err)
 	}
-	err = conn.RegisterCloseCallback(func(conn Connect, reason ConnectCloseReason) {
+	err = conn.RegisterCloseCallback(func(conn *Connect, reason ConnectCloseReason) {
 		callback(conn, reason)
 		nbCall2++
 	})
 	if err != nil {
 		t.Fatalf("Unable to register close callback: %+v", err)
 	}
-	err = conn.RegisterCloseCallback(func(conn Connect, reason ConnectCloseReason) {
+	err = conn.RegisterCloseCallback(func(conn *Connect, reason ConnectCloseReason) {
 		callback(conn, reason)
 		nbCall3++
 	})
@@ -189,7 +189,7 @@ func TestUnregisterCloseCallback(t *testing.T) {
 		}
 	}()
 
-	callback := func(conn Connect, reason ConnectCloseReason) {
+	callback := func(conn *Connect, reason ConnectCloseReason) {
 		nbCall++
 	}
 	err := conn.RegisterCloseCallback(callback)
