@@ -1553,6 +1553,8 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 func TestDomainListAllInterfaceAddresses(t *testing.T) {
 	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
+		dom.Destroy()
+		dom.Undefine()
 		dom.Free()
 		if res, _ := conn.Close(); res != 0 {
 			t.Errorf("Close() == %d, expected 0", res)
@@ -1562,10 +1564,6 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer func() {
-		dom.Destroy()
-		dom.Free()
-	}()
 
 	ifaces, err := dom.ListAllInterfaceAddresses(0)
 	if err != nil {
@@ -1584,6 +1582,8 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 func TestDomainGetAllStats(t *testing.T) {
 	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
+		dom.Destroy()
+		dom.Undefine()
 		dom.Free()
 		if res, _ := conn.Close(); res != 0 {
 			t.Errorf("Close() == %d, expected 0", res)
@@ -1593,10 +1593,6 @@ func TestDomainGetAllStats(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer func() {
-		dom.Destroy()
-		dom.Free()
-	}()
 
 	stats, err := conn.GetAllDomainStats([]*Domain{}, DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_INTERFACE|DOMAIN_STATS_BALLOON|DOMAIN_STATS_BLOCK|DOMAIN_STATS_PERF|DOMAIN_STATS_VCPU, 0)
 
@@ -1615,16 +1611,16 @@ func TestDomainGetAllStats(t *testing.T) {
 }
 
 func TestDomainBlockCopy(t *testing.T) {
+	if VERSION_NUMBER < 1002008 {
+		return
+	}
 	dom, conn := buildTestQEMUDomain(true)
 	defer func() {
+		dom.Destroy()
 		dom.Free()
 		if res, _ := conn.Close(); res != 0 {
 			t.Errorf("Close() == %d, expected 0", res)
 		}
-	}()
-	defer func() {
-		dom.Destroy()
-		dom.Free()
 	}()
 
 	pool := getDefaultStoragePool(conn)
