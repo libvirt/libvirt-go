@@ -46,19 +46,70 @@ func buildTestQEMUConnection() *Connect {
 	return conn
 }
 
-func buildTestQEMUDomain() (*Domain, *Connect) {
+func buildTestQEMUDomain(transient bool) (*Domain, *Connect) {
 	conn := buildTestQEMUConnection()
-	dom, err := conn.DomainDefineXML(`<domain type="qemu">
-		<name>libvirt-go-test-` + strings.Replace(time.Now().String(), " ", "_", -1) + `</name>
+	xml := fmt.Sprintf(`<domain type="qemu">
+		<name>libvirt-go-test-%s</name>
 		<memory unit="KiB">128</memory>
+                <features>
+                  <acpi/>
+                  <apic/>
+                </features>
 		<os>
 			<type>hvm</type>
 		</os>
-	</domain>`)
+	</domain>`, strings.Replace(time.Now().String(), " ", "_", -1))
+	var dom *Domain
+	var err error
+	if transient {
+		if dom, err = conn.DomainCreateXML(xml, 0); err != nil {
+			panic(err)
+		}
+	} else {
+		if dom, err = conn.DomainDefineXML(xml); err != nil {
+			panic(err)
+		}
+	}
+	return dom, conn
+}
+
+func getDefaultStoragePool(conn *Connect) *StoragePool {
+	pool, err := conn.LookupStoragePoolByName("default")
+	if err == nil {
+		return pool
+	}
+
+	pool, err = conn.StoragePoolDefineXML(`<pool type='dir'>
+                                                 <name>default</name>
+                                                 <target>
+                                                   <path>/var/lib/libvirt/images</path>
+                                                 </target>
+                                               </pool>`, 0)
+	if err := pool.Create(0); err != nil {
+		pool.Undefine()
+		panic(err)
+	}
+
+	return pool
+}
+
+func getOrCreateStorageVol(pool *StoragePool, name string, size int64) *StorageVol {
+	vol, err := pool.LookupStorageVolByName(name)
+	if err == nil {
+		return vol
+	}
+
+	vol, err = pool.StorageVolCreateXML(fmt.Sprintf(
+		`<volume type="file">
+                   <name>%s</name>
+                   <allocation unit="b">%d</allocation>
+                   <capacity unit="b">%d</capacity>
+                   </volume>`, name, size, size), 0)
 	if err != nil {
 		panic(err)
 	}
-	return dom, conn
+
+	return vol
 }
 
 func TestMultipleCloseCallback(t *testing.T) {
@@ -231,7 +282,7 @@ func TestConnectionWithWrongCredentials(t *testing.T) {
 }
 
 func TestQemuMonitorCommand(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
+	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -258,7 +309,7 @@ func TestQemuMonitorCommand(t *testing.T) {
 }
 
 func TestDomainCreateWithFlags(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
+	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -1500,7 +1551,7 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 }*/
 
 func TestDomainListAllInterfaceAddresses(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
+	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
 		dom.Free()
 		if res, _ := conn.Close(); res != 0 {
@@ -1531,7 +1582,7 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 }
 
 func TestDomainGetAllStats(t *testing.T) {
-	dom, conn := buildTestQEMUDomain()
+	dom, conn := buildTestQEMUDomain(false)
 	defer func() {
 		dom.Free()
 		if res, _ := conn.Close(); res != 0 {
@@ -1560,5 +1611,75 @@ func TestDomainGetAllStats(t *testing.T) {
 
 	for _, stat := range stats {
 		stat.Domain.Free()
+	}
+}
+
+func TestDomainBlockCopy(t *testing.T) {
+	dom, conn := buildTestQEMUDomain(true)
+	defer func() {
+		dom.Free()
+		if res, _ := conn.Close(); res != 0 {
+			t.Errorf("Close() == %d, expected 0", res)
+		}
+	}()
+	defer func() {
+		dom.Destroy()
+		dom.Free()
+	}()
+
+	pool := getDefaultStoragePool(conn)
+	defer pool.Free()
+
+	srcVol := getOrCreateStorageVol(pool, "libvirt-go-test-block-copy-src.img", 1024*1024*10)
+	defer func() {
+		srcVol.Delete(0)
+		srcVol.Free()
+	}()
+
+	dstVol := getOrCreateStorageVol(pool, "libvirt-go-test-block-copy-dst.img", 1024*1024*10)
+	defer func() {
+		dstVol.Delete(0)
+		dstVol.Free()
+	}()
+
+	srcPath, err := srcVol.GetPath()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	dstPath, err := dstVol.GetPath()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	params := DomainBlockCopyParameters{
+		BandwidthSet:   true,
+		Bandwidth:      2147483648,
+		GranularitySet: true,
+		Granularity:    512,
+	}
+
+	srcXML := fmt.Sprintf(`<disk type="file">
+                                 <driver type="raw"/>
+                                 <source file="%s"/>
+                                 <target dev="vda"/>
+                               </disk>`, srcPath)
+
+	err = dom.AttachDeviceFlags(srcXML, DOMAIN_DEVICE_MODIFY_LIVE)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	dstXML := fmt.Sprintf(`<disk type='file'>
+                                  <driver type='raw'/>
+                                  <source file='%s'/>
+                               </disk>`, dstPath)
+
+	err = dom.BlockCopy(srcPath, dstXML, &params, DOMAIN_BLOCK_COPY_REUSE_EXT)
+	if err != nil {
+		t.Error(err)
+		return
 	}
 }
