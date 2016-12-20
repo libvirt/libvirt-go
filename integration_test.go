@@ -46,8 +46,17 @@ func buildTestQEMUConnection() *Connect {
 	return conn
 }
 
-func buildTestQEMUDomain(transient bool) (*Domain, *Connect) {
+func buildTestQEMUDomain(transient bool, name string) (*Domain, *Connect) {
 	conn := buildTestQEMUConnection()
+	fullname := fmt.Sprintf("libvirt-go-test-%s", name)
+
+	dom, err := conn.LookupDomainByName(fullname)
+	if err == nil {
+		dom.Destroy()
+		dom.Undefine()
+		dom.Free()
+	}
+
 	xml := fmt.Sprintf(`<domain type="qemu">
 		<name>libvirt-go-test-%s</name>
 		<memory unit="KiB">128</memory>
@@ -58,9 +67,7 @@ func buildTestQEMUDomain(transient bool) (*Domain, *Connect) {
 		<os>
 			<type>hvm</type>
 		</os>
-	</domain>`, strings.Replace(time.Now().String(), " ", "_", -1))
-	var dom *Domain
-	var err error
+	</domain>`, name)
 	if transient {
 		if dom, err = conn.DomainCreateXML(xml, 0); err != nil {
 			panic(err)
@@ -282,7 +289,7 @@ func TestConnectionWithWrongCredentials(t *testing.T) {
 }
 
 func TestQemuMonitorCommand(t *testing.T) {
-	dom, conn := buildTestQEMUDomain(false)
+	dom, conn := buildTestQEMUDomain(false, "monitor")
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -309,7 +316,7 @@ func TestQemuMonitorCommand(t *testing.T) {
 }
 
 func TestDomainCreateWithFlags(t *testing.T) {
-	dom, conn := buildTestQEMUDomain(false)
+	dom, conn := buildTestQEMUDomain(false, "create")
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -337,13 +344,18 @@ func TestDomainCreateWithFlags(t *testing.T) {
 	}
 }
 
-func defineTestLxcDomain(conn *Connect, title string) (*Domain, error) {
-	if title == "" {
-		title = time.Now().String()
+func defineTestLxcDomain(conn *Connect, name string) (*Domain, error) {
+	fullname := "libvirt-go-test-" + name
+	dom, err := conn.LookupDomainByName(fullname)
+	if err == nil {
+		dom.Destroy()
+		dom.Undefine()
+		dom.Free()
 	}
+
 	xml := `<domain type='lxc'>
-	  <name>libvirt-go-test-` + title + `</name>
-	  <title>` + title + `</title>
+	  <name>` + fullname + `</name>
+	  <title>` + name + `</title>
 	  <memory>102400</memory>
 	  <os>
 	    <type>exe</type>
@@ -353,7 +365,7 @@ func defineTestLxcDomain(conn *Connect, title string) (*Domain, error) {
 	    <console type='pty'/>
 	  </devices>
 	</domain>`
-	dom, err := conn.DomainDefineXML(xml)
+	dom, err = conn.DomainDefineXML(xml)
 	return dom, err
 }
 
@@ -374,29 +386,27 @@ func TestIntegrationGetMetadata(t *testing.T) {
 			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
-	title := time.Now().String()
-	dom, err := defineTestLxcDomain(conn, title)
+	dom, err := defineTestLxcDomain(conn, "meta")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	defer dom.Free()
+	defer func() {
+		dom.Undefine()
+		dom.Destroy()
+		dom.Free()
+	}()
 	if err := dom.Create(); err != nil {
 		t.Error(err)
 		return
 	}
 	v, err := dom.GetMetadata(DOMAIN_METADATA_TITLE, "", 0)
-	dom.Destroy()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if v != title {
-		t.Fatal("title didnt match: expected %s, got %s", title, v)
-		return
-	}
-	if err := dom.Undefine(); err != nil {
-		t.Error(err)
+	if v != "meta" {
+		t.Fatalf("title didnt match: expected meta, got %s", v)
 		return
 	}
 }
@@ -412,7 +422,7 @@ func TestIntegrationSetMetadata(t *testing.T) {
 			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
-	dom, err := defineTestLxcDomain(conn, "")
+	dom, err := defineTestLxcDomain(conn, "meta")
 	if err != nil {
 		t.Error(err)
 		return
@@ -697,7 +707,7 @@ func TestIntegrationDomainAttachDetachDevice(t *testing.T) {
 		}
 	}()
 
-	dom, err := defineTestLxcDomain(conn, "")
+	dom, err := defineTestLxcDomain(conn, "attach")
 	if err != nil {
 		t.Error(err)
 		return
@@ -1073,7 +1083,7 @@ func TestIntegrationGetDomainCPUStats(t *testing.T) {
 			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
-	dom, err := defineTestLxcDomain(conn, "")
+	dom, err := defineTestLxcDomain(conn, "cpustats")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1229,7 +1239,7 @@ func TestIntegrationDomainInterfaceStats(t *testing.T) {
 		return
 	}
 
-	dom, err := defineTestLxcDomain(conn, "")
+	dom, err := defineTestLxcDomain(conn, "ifacestats")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1527,7 +1537,7 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 		}
 	}()
 
-	dom, err := defineTestLxcDomain(conn, "")
+	dom, err := defineTestLxcDomain(conn, "memstats")
 	if err != nil {
 		t.Error(err)
 		return
@@ -1551,7 +1561,7 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 }*/
 
 func TestDomainListAllInterfaceAddresses(t *testing.T) {
-	dom, conn := buildTestQEMUDomain(false)
+	dom, conn := buildTestQEMUDomain(false, "ifaces")
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -1580,7 +1590,7 @@ func TestDomainListAllInterfaceAddresses(t *testing.T) {
 }
 
 func TestDomainGetAllStats(t *testing.T) {
-	dom, conn := buildTestQEMUDomain(false)
+	dom, conn := buildTestQEMUDomain(false, "stats")
 	defer func() {
 		dom.Destroy()
 		dom.Undefine()
@@ -1614,7 +1624,7 @@ func TestDomainBlockCopy(t *testing.T) {
 	if VERSION_NUMBER < 1002008 {
 		return
 	}
-	dom, conn := buildTestQEMUDomain(true)
+	dom, conn := buildTestQEMUDomain(true, "blockcopy")
 	defer func() {
 		dom.Destroy()
 		dom.Free()
