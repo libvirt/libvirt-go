@@ -58,11 +58,6 @@ var (
 		"virEventUpdateHandle",
 		"virEventUpdateTimeout",
 
-		/* TODO */
-		"virStreamEventAddCallback",
-		"virStreamEventRemoveCallback",
-		"virStreamEventUpdateCallback",
-
 		/* Wrapped in domain_events_cfuncs.go instead */
 		"virConnectDomainEventRegister",
 		"virConnectDomainEventRegisterAny",

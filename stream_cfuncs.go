@@ -30,6 +30,8 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "stream_cfuncs.h"
 
 int streamSourceCallback(virStreamPtr st, char *cdata, size_t nbytes, int callbackID);
@@ -60,6 +62,17 @@ int virStreamRecvAll_cgo(virStreamPtr st, int callbackID)
     return virStreamRecvAll(st, streamSinkCallbackHelper, &callbackID);
 }
 
+void streamEventCallback(virStreamPtr st, int events, int callbackID);
+
+static void streamEventCallbackHelper(virStreamPtr st, int events, void *opaque)
+{
+    streamEventCallback(st, events, (int)(intptr_t)opaque);
+}
+
+int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID)
+{
+    return virStreamEventAddCallback(st, events, streamEventCallbackHelper, (void *)(intptr_t)callbackID, NULL);
+}
 
 */
 import "C"

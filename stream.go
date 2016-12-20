@@ -188,3 +188,46 @@ func (v *Stream) SendAll(handler StreamSourceFunc) error {
 
 	return nil
 }
+
+type StreamEventCallback func(*Stream, StreamEventType)
+
+func (v *Stream) EventAddCallback(events StreamEventType, callback StreamEventCallback) error {
+	callbackID := registerCallbackId(callback)
+
+	ret := C.virStreamEventAddCallback_cgo(v.ptr, (C.int)(events), (C.int)(callbackID))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+//export streamEventCallback
+func streamEventCallback(st C.virStreamPtr, events int, callbackID int) {
+	callbackFunc := getCallbackId(callbackID)
+
+	callback, ok := callbackFunc.(StreamEventCallback)
+	if !ok {
+		panic("Incorrect stream event func callback")
+	}
+
+	callback(&Stream{ptr: st}, StreamEventType(events))
+}
+
+func (v *Stream) EventUpdateCallback(events StreamEventType) error {
+	ret := C.virStreamEventUpdateCallback(v.ptr, (C.int)(events))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (v *Stream) EventRemoveCallback() error {
+	ret := C.virStreamEventRemoveCallback(v.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
