@@ -52,21 +52,8 @@ var (
 		/* TODO */
 		"virEventRegisterImpl",
 
-		/* Wrapped in domain_events_cfuncs.go instead */
+		/* Obsolete we use virConnectDomainEventRegisterAny instead */
 		"virConnectDomainEventRegister",
-		"virConnectDomainEventRegisterAny",
-
-		/* Wrapped in network_events_cfuncs.go instead */
-		"virConnectNetworkEventDeregisterAny",
-		"virConnectNetworkEventRegisterAny",
-
-		/* Wrapped in node_device_cfuncs.go instead */
-		"virConnectNodeDeviceEventDeregisterAny",
-		"virConnectNodeDeviceEventRegisterAny",
-
-		/* Wrapped in storage_pool_cfuncs.go instead */
-		"virConnectStoragePoolEventDeregisterAny",
-		"virConnectStoragePoolEventRegisterAny",
 
 		/* Wrapped in connect_cfuncs.go instead */
 		"virConnectOpenAuth",
