@@ -94,6 +94,13 @@ const (
 	STORAGE_XML_INACTIVE = StorageXMLFlags(C.VIR_STORAGE_XML_INACTIVE)
 )
 
+type StorageVolInfoFlags int
+
+const (
+	STORAGE_VOL_USE_ALLOCATION = StorageVolInfoFlags(C.VIR_STORAGE_VOL_USE_ALLOCATION)
+	STORAGE_VOL_GET_PHYSICAL   = StorageVolInfoFlags(C.VIR_STORAGE_VOL_GET_PHYSICAL)
+)
+
 type StorageVol struct {
 	ptr C.virStorageVolPtr
 }
@@ -123,6 +130,23 @@ func (v *StorageVol) Free() error {
 func (v *StorageVol) GetInfo() (*StorageVolInfo, error) {
 	var cinfo C.virStorageVolInfo
 	result := C.virStorageVolGetInfo(v.ptr, &cinfo)
+	if result == -1 {
+		return nil, GetLastError()
+	}
+	return &StorageVolInfo{
+		Type:       StorageVolType(cinfo._type),
+		Capacity:   uint64(cinfo.capacity),
+		Allocation: uint64(cinfo.allocation),
+	}, nil
+}
+
+func (v *StorageVol) GetInfoFlags(flags StorageVolInfoFlags) (*StorageVolInfo, error) {
+	if C.LIBVIR_VERSION_NUMBER < 3000000 {
+		return nil, GetNotImplementedError()
+	}
+
+	var cinfo C.virStorageVolInfo
+	result := C.virStorageVolGetInfoFlagsCompat(v.ptr, &cinfo, C.uint(flags))
 	if result == -1 {
 		return nil, GetLastError()
 	}

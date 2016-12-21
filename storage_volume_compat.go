@@ -24,49 +24,24 @@
  *
  */
 
-#ifndef LIBVIRT_GO_STORAGE_VOLUME_COMPAT_H__
-#define LIBVIRT_GO_STORAGE_VOLUME_COMPAT_H__
+package libvirt
 
-/* 3.0.0 */
+/*
+#cgo pkg-config: libvirt
+#include <libvirt/libvirt.h>
+#include <assert.h>
+#include "storage_volume_compat.h"
 
 int virStorageVolGetInfoFlagsCompat(virStorageVolPtr vol,
 				    virStorageVolInfoPtr info,
-				    unsigned int flags);
-
-#ifndef VIR_STORAGE_VOL_USE_ALLOCATION
-#define VIR_STORAGE_VOL_USE_ALLOCATION 0
+				    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3000000
+    assert(0); // Caller should have checked version
+#else
+    return virStorageVolGetInfoFlags(vol, info, flags);
 #endif
+}
 
-#ifndef VIR_STORAGE_VOL_GET_PHYSICAL
-#define VIR_STORAGE_VOL_GET_PHYSICAL 1 << 0
-#endif
-
-
-/* 1.2.13 */
-
-#ifndef VIR_STORAGE_VOL_CREATE_REFLINK
-#define VIR_STORAGE_VOL_CREATE_REFLINK 1<< 1
-#endif
-
-
-/* 1.2.21 */
-
-#ifndef VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS
-#define VIR_STORAGE_VOL_DELETE_WITH_SNAPSHOTS 1 << 1
-#endif
-
-
-/* 1.3.2 */
-
-#ifndef VIR_STORAGE_VOL_WIPE_ALG_TRIM
-#define VIR_STORAGE_VOL_WIPE_ALG_TRIM 9
-#endif
-
-
-/* 1.3.4 */
-
-#ifndef VIR_STORAGE_VOL_PLOOP
-#define VIR_STORAGE_VOL_PLOOP 5
-#endif
-
-#endif /* LIBVIRT_GO_STORAGE_VOLUME_COMPAT_H__ */
+*/
+import "C"
