@@ -29,6 +29,7 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
+#include <stdint.h>
 #include "events_cfuncs.h"
 */
 import "C"
@@ -120,4 +121,114 @@ func EventUpdateTimeout(timer int, freq int) {
 
 func EventRemoveTimeout(timer int) {
 	C.virEventRemoveTimeout((C.int)(timer))
+}
+
+type EventHandleCallbackInfo struct {
+	callback uintptr
+	opaque   uintptr
+	free     uintptr
+}
+
+type EventTimeoutCallbackInfo struct {
+	callback uintptr
+	opaque   uintptr
+	free     uintptr
+}
+
+func (i *EventHandleCallbackInfo) Invoke(watch int, fd int, event EventHandleType) {
+	C.eventHandleCallbackInvoke(C.int(watch), C.int(fd), C.int(event), C.uintptr_t(i.callback), C.uintptr_t(i.opaque))
+}
+
+func (i *EventTimeoutCallbackInfo) Invoke(timer int) {
+	C.eventTimeoutCallbackInvoke(C.int(timer), C.uintptr_t(i.callback), C.uintptr_t(i.opaque))
+}
+
+func (i *EventHandleCallbackInfo) Free() {
+	C.eventHandleCallbackFree(C.uintptr_t(i.free), C.uintptr_t(i.opaque))
+}
+
+func (i *EventTimeoutCallbackInfo) Free() {
+	C.eventTimeoutCallbackFree(C.uintptr_t(i.free), C.uintptr_t(i.opaque))
+}
+
+type EventLoop interface {
+	AddHandleFunc(fd int, event EventHandleType, callback *EventHandleCallbackInfo) int
+	UpdateHandleFunc(watch int, event EventHandleType)
+	RemoveHandleFunc(watch int) int
+	AddTimeoutFunc(freq int, callback *EventTimeoutCallbackInfo) int
+	UpdateTimeoutFunc(timer int, freq int)
+	RemoveTimeoutFunc(timer int) int
+}
+
+var eventLoopImpl EventLoop
+
+func EventRegisterImpl(impl EventLoop) {
+	eventLoopImpl = impl
+	C.virEventRegisterImpl_cgo()
+}
+
+//export eventAddHandleFunc
+func eventAddHandleFunc(fd C.int, event C.int, callback uintptr, opaque uintptr, free uintptr) C.int {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	cbinfo := &EventHandleCallbackInfo{
+		callback: callback,
+		opaque:   opaque,
+		free:     free,
+	}
+
+	return C.int(eventLoopImpl.AddHandleFunc(int(fd), EventHandleType(event), cbinfo))
+}
+
+//export eventUpdateHandleFunc
+func eventUpdateHandleFunc(watch C.int, event C.int) {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	eventLoopImpl.UpdateHandleFunc(int(watch), EventHandleType(event))
+}
+
+//export eventRemoveHandleFunc
+func eventRemoveHandleFunc(watch C.int) {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	eventLoopImpl.RemoveHandleFunc(int(watch))
+}
+
+//export eventAddTimeoutFunc
+func eventAddTimeoutFunc(freq C.int, callback uintptr, opaque uintptr, free uintptr) C.int {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	cbinfo := &EventTimeoutCallbackInfo{
+		callback: callback,
+		opaque:   opaque,
+		free:     free,
+	}
+
+	return C.int(eventLoopImpl.AddTimeoutFunc(int(freq), cbinfo))
+}
+
+//export eventUpdateTimeoutFunc
+func eventUpdateTimeoutFunc(timer C.int, freq C.int) {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	eventLoopImpl.UpdateTimeoutFunc(int(timer), int(freq))
+}
+
+//export eventRemoveTimeoutFunc
+func eventRemoveTimeoutFunc(timer C.int) {
+	if eventLoopImpl == nil {
+		panic("Event loop impl is missing")
+	}
+
+	eventLoopImpl.RemoveTimeoutFunc(int(timer))
 }

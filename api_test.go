@@ -49,9 +49,6 @@ import (
  */
 var (
 	ignoreFuncs = []string{
-		/* TODO */
-		"virEventRegisterImpl",
-
 		/* Obsolete we use virConnectDomainEventRegisterAny instead */
 		"virConnectDomainEventRegister",
 

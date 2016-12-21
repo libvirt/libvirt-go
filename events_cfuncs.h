@@ -29,5 +29,11 @@
 
 int virEventAddHandle_cgo(int fd, int events, int callbackID);
 int virEventAddTimeout_cgo(int freq, int callbackID);
+void virEventRegisterImpl_cgo(void);
+
+void eventHandleCallbackInvoke(int watch, int fd, int events, uintptr_t callback, uintptr_t opaque);
+void eventTimeoutCallbackInvoke(int timer, uintptr_t callback, uintptr_t opaque);
+void eventHandleCallbackFree(uintptr_t callback, uintptr_t opaque);
+void eventTimeoutCallbackFree(uintptr_t callback, uintptr_t opaque);
 
 #endif /* LIBVIRT_GO_EVENTS_CFUNCS_H__ */
