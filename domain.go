@@ -1345,7 +1345,7 @@ func (d *Domain) SetMemoryStatsPeriod(period int, flags DomainMemoryModFlags) er
 	return nil
 }
 
-func (d *Domain) SetVcpus(vcpu uint16) error {
+func (d *Domain) SetVcpus(vcpu uint) error {
 	result := C.virDomainSetVcpus(d.ptr, C.uint(vcpu))
 	if result == -1 {
 		return GetLastError()
@@ -1353,7 +1353,7 @@ func (d *Domain) SetVcpus(vcpu uint16) error {
 	return nil
 }
 
-func (d *Domain) SetVcpusFlags(vcpu uint16, flags DomainVcpuFlags) error {
+func (d *Domain) SetVcpusFlags(vcpu uint, flags DomainVcpuFlags) error {
 	result := C.virDomainSetVcpusFlags(d.ptr, C.uint(vcpu), C.uint(flags))
 	if result == -1 {
 		return GetLastError()
