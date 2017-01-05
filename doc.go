@@ -23,7 +23,7 @@
  *
  */
 
-// Package libvirt provides a Go binding to the libvirt C library
+// Package libvirt-go provides a Go binding to the libvirt C library
 //
 // Through conditional compilation it supports libvirt versions 1.2.0 onwards.
 // This is done automatically, with no requirement to use magic Go build tags.
