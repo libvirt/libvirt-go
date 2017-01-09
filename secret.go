@@ -49,6 +49,20 @@ const (
 	SECRET_USAGE_TYPE_TLS    = SecretUsageType(C.VIR_SECRET_USAGE_TYPE_TLS)
 )
 
+type SecretEventLifecycleType int
+
+const (
+	SECRET_EVENT_DEFINED   = SecretEventLifecycleType(C.VIR_SECRET_EVENT_DEFINED)
+	SECRET_EVENT_UNDEFINED = SecretEventLifecycleType(C.VIR_SECRET_EVENT_UNDEFINED)
+)
+
+type SecretEventID int
+
+const (
+	SECRET_EVENT_ID_LIFECYCLE     = SecretEventID(C.VIR_SECRET_EVENT_ID_LIFECYCLE)
+	SECRET_EVENT_ID_VALUE_CHANGED = SecretEventID(C.VIR_SECRET_EVENT_ID_VALUE_CHANGED)
+)
+
 type Secret struct {
 	ptr C.virSecretPtr
 }

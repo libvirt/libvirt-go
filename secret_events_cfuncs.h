@@ -24,41 +24,17 @@
  *
  */
 
-#ifndef LIBVIRT_GO_SECRET_COMPAT_H__
-#define LIBVIRT_GO_SECRET_COMPAT_H__
+#ifndef LIBVIRT_GO_SECRET_EVENTS_CFUNCS_H__
+#define LIBVIRT_GO_SECRET_EVENTS_CFUNCS_H__
 
-/* 3.0.0 */
+void secretEventLifecycleCallback_cgo(virConnectPtr c, virSecretPtr d,
+				      int event, int detail, void* data);
+void secretEventGenericCallback_cgo(virConnectPtr c, virSecretPtr d,
+				    void* data);
 
-#ifndef VIR_SECRET_EVENT_DEFINED
-#define VIR_SECRET_EVENT_DEFINED 0
-#endif
-
-#ifndef VIR_SECRET_EVENT_UNDEFINED
-#define VIR_SECRET_EVENT_UNDEFINED 1
-#endif
-
-#ifndef VIR_SECRET_EVENT_ID_LIFECYCLE
-#define VIR_SECRET_EVENT_ID_LIFECYCLE 0
-#endif
-
-#ifndef VIR_SECRET_EVENT_ID_VALUE_CHANGED
-#define VIR_SECRET_EVENT_ID_VALUE_CHANGED 1
-#endif
+int virConnectSecretEventRegisterAny_cgo(virConnectPtr c,  virSecretPtr d,
+                                         int eventID, virConnectSecretEventGenericCallback cb,
+                                         long goCallbackId);
 
 
-#if LIBVIR_VERSION_NUMBER < 3000000
-typedef void (*virConnectSecretEventGenericCallback)(virConnectPtr conn,
-						     virSecretPtr secret,
-						     void *opaque);
-#endif
-
-int virConnectSecretEventDeregisterAnyCompat(virConnectPtr conn,
-					     int callbackID);
-
-/* 2.2.1 */
-
-#ifndef VIR_SECRET_USAGE_TYPE_TLS
-#define VIR_SECRET_USAGE_TYPE_TLS 4
-#endif
-
-#endif /* LIBVIRT_GO_SECRET_COMPAT_H__ */
+#endif /* LIBVIRT_GO_SECRET_EVENTS_CFUNCS_H__ */

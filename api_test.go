@@ -117,6 +117,10 @@ var (
 		"virConnectNodeDeviceEventGenericCallback",
 		"virConnectNodeDeviceEventLifecycleCallback",
 
+		/* Secret event callback typedefs */
+		"virConnectSecretEventGenericCallback",
+		"virConnectSecretEventLifecycleCallback",
+
 		/* Storage pool event callback typedefs */
 		"virConnectStoragePoolEventGenericCallback",
 		"virConnectStoragePoolEventLifecycleCallback",
@@ -214,6 +218,7 @@ var (
 		"VIR_GET_CPUMAP",
 		"VIR_NETWORK_EVENT_CALLBACK",
 		"VIR_NODE_DEVICE_EVENT_CALLBACK",
+		"VIR_SECRET_EVENT_CALLBACK",
 		"VIR_SECURITY_DOI_BUFLEN",
 		"VIR_SECURITY_LABEL_BUFLEN",
 		"VIR_SECURITY_MODEL_BUFLEN",
