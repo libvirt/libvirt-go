@@ -47,6 +47,8 @@ type StoragePoolEventLifecycle struct {
 
 type StoragePoolEventLifecycleCallback func(c *Connect, n *StoragePool, event *StoragePoolEventLifecycle)
 
+type StoragePoolEventGenericCallback func(c *Connect, n *StoragePool)
+
 //export storagePoolEventLifecycleCallback
 func storagePoolEventLifecycleCallback(c C.virConnectPtr, s C.virStoragePoolPtr,
 	event int, detail int,
@@ -68,6 +70,21 @@ func storagePoolEventLifecycleCallback(c C.virConnectPtr, s C.virStoragePoolPtr,
 	callback(connection, storage_pool, eventDetails)
 }
 
+//export storagePoolEventGenericCallback
+func storagePoolEventGenericCallback(c C.virConnectPtr, s C.virStoragePoolPtr,
+	goCallbackId int) {
+
+	storage_pool := &StoragePool{ptr: s}
+	connection := &Connect{ptr: c}
+
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(StoragePoolEventGenericCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, storage_pool)
+}
+
 func (c *Connect) StoragePoolEventLifecycleRegister(pool *StoragePool, callback StoragePoolEventLifecycleCallback) (int, error) {
 	if C.LIBVIR_VERSION_NUMBER < 2000000 {
 		return 0, GetNotImplementedError()
@@ -82,6 +99,29 @@ func (c *Connect) StoragePoolEventLifecycleRegister(pool *StoragePool, callback 
 	}
 	ret := C.virConnectStoragePoolEventRegisterAny_cgo(c.ptr, cpool,
 		C.VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE,
+		C.virConnectStoragePoolEventGenericCallback(callbackPtr),
+		C.long(goCallBackId))
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, GetLastError()
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) StoragePoolEventRefreshRegister(pool *StoragePool, callback StoragePoolEventGenericCallback) (int, error) {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return 0, GetNotImplementedError()
+	}
+
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.storagePoolEventGenericCallback_cgo)
+	var cpool C.virStoragePoolPtr
+	if pool != nil {
+		cpool = pool.ptr
+	}
+	ret := C.virConnectStoragePoolEventRegisterAny_cgo(c.ptr, cpool,
+		C.VIR_STORAGE_POOL_EVENT_ID_REFRESH,
 		C.virConnectStoragePoolEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
 	if ret == -1 {

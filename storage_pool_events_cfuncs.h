@@ -29,6 +29,8 @@
 
 void storagePoolEventLifecycleCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
 					   int event, int detail, void* data);
+void storagePoolEventGenericCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
+					 void* data);
 
 int virConnectStoragePoolEventRegisterAny_cgo(virConnectPtr c,  virStoragePoolPtr d,
 					      int eventID, virConnectStoragePoolEventGenericCallback cb,
