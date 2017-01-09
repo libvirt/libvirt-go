@@ -205,6 +205,16 @@ void domainEventDeviceRemovalFailedCallback_cgo(virConnectPtr conn,
     domainEventDeviceRemovalFailedCallback(conn, dom, devAlias, (int)(intptr_t)opaque);
 }
 
+extern void domainEventMetadataChangeCallback(virConnectPtr, virDomainPtr, int, const char *, int);
+void domainEventMetadataChangeCallback_cgo(virConnectPtr conn,
+					   virDomainPtr dom,
+					   int type,
+					   const char *nsuri,
+					   void *opaque)
+{
+    domainEventMetadataChangeCallback(conn, dom, type, nsuri, (int)(intptr_t)opaque);
+}
+
 int virConnectDomainEventRegisterAny_cgo(virConnectPtr c,  virDomainPtr d,
                                          int eventID, virConnectDomainEventGenericCallback cb,
                                          long goCallbackId) {

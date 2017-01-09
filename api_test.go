@@ -107,6 +107,7 @@ var (
 		"virConnectDomainEventTrayChangeCallback",
 		"virConnectDomainEventTunableCallback",
 		"virConnectDomainEventWatchdogCallback",
+		"virConnectDomainEventMetadataChangeCallback",
 
 		/* Network event callback typedefs */
 		"virConnectNetworkEventGenericCallback",

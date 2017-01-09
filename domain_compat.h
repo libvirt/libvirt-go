@@ -45,6 +45,9 @@
 #define VIR_PERF_PARAM_REF_CPU_CYCLES "ref_cpu_cycles"
 #endif
 
+#ifndef VIR_DOMAIN_EVENT_ID_METADATA_CHANGE
+#define VIR_DOMAIN_EVENT_ID_METADATA_CHANGE 23
+#endif
 
 /* 1.2.2 */
 
