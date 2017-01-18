@@ -3887,7 +3887,7 @@ func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThre
 	info := make([]DomainIOThreadInfo, int(ret))
 
 	for i := 0; i < int(ret); i++ {
-		cinfo := (*(**C.virDomainIOThreadInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cinfolist)) + (unsafe.Sizeof(*cinfolist) + uintptr(i)))))
+		cinfo := (*(**C.virDomainIOThreadInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cinfolist)) + (unsafe.Sizeof(*cinfolist) * uintptr(i)))))
 
 		ncpus := int(cinfo.cpumaplen * 8)
 		cpumap := make([]bool, ncpus)
