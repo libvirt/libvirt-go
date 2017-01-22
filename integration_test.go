@@ -1689,3 +1689,23 @@ func TestDomainBlockCopy(t *testing.T) {
 		return
 	}
 }
+
+func TestNodeGetMemoryStats(t *testing.T) {
+
+	c := buildTestQEMUConnection()
+	defer c.Close()
+
+	stats, err := c.GetMemoryStats(0, 0)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if stats.TotalSet && stats.Total == 0 {
+		t.Error("Expected non-zero total memory")
+	}
+	if stats.FreeSet && stats.Free == 0 {
+		t.Error("Expected non-zero free memory")
+	}
+}
