@@ -1709,3 +1709,23 @@ func TestNodeGetMemoryStats(t *testing.T) {
 		t.Error("Expected non-zero free memory")
 	}
 }
+
+func TestNodeGetCPUStats(t *testing.T) {
+
+	c := buildTestQEMUConnection()
+	defer c.Close()
+
+	stats, err := c.GetCPUStats(0, 0)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if stats.KernelSet && stats.Kernel == 0 {
+		t.Error("Expected non-zero kernel time")
+	}
+	if stats.UserSet && stats.User == 0 {
+		t.Error("Expected non-zero user time")
+	}
+}
