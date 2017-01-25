@@ -829,20 +829,25 @@ func TestSetMetadata(t *testing.T) {
 			t.Errorf("Close() == %d, expected 0", res)
 		}
 	}()
+	if err := dom.Create(); err != nil {
+		t.Error(err)
+		return
+	}
+	defer dom.Destroy()
 
-	data, err := dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, 0)
+	data, err := dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, DOMAIN_AFFECT_LIVE)
 	if err == nil {
 		t.Errorf("Expected an error for missing metadata")
 		return
 	}
 
-	err = dom.SetMetadata(DOMAIN_METADATA_ELEMENT, meta, xmlprefix, xmlns, 0)
+	err = dom.SetMetadata(DOMAIN_METADATA_ELEMENT, meta, xmlprefix, xmlns, DOMAIN_AFFECT_LIVE)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	data, err = dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, 0)
+	data, err = dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, DOMAIN_AFFECT_LIVE)
 	if err != nil {
 		t.Errorf("Unexpected an error for metadata")
 		return
@@ -853,13 +858,13 @@ func TestSetMetadata(t *testing.T) {
 		return
 	}
 
-	err = dom.SetMetadata(DOMAIN_METADATA_ELEMENT, "", "", xmlns, 0)
+	err = dom.SetMetadata(DOMAIN_METADATA_ELEMENT, "", "", xmlns, DOMAIN_AFFECT_LIVE)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	data, err = dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, 0)
+	data, err = dom.GetMetadata(DOMAIN_METADATA_ELEMENT, xmlns, DOMAIN_AFFECT_LIVE)
 	if err == nil {
 		t.Errorf("Expected an error for deleted metadata")
 		return
