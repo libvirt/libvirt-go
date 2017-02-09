@@ -118,3 +118,11 @@ func (n *Interface) Free() error {
 	n.ptr = nil
 	return nil
 }
+
+func (c *Interface) Ref() error {
+	ret := C.virInterfaceRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}

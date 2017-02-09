@@ -129,6 +129,14 @@ func (n *Network) Free() error {
 	return nil
 }
 
+func (c *Network) Ref() error {
+	ret := C.virNetworkRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (n *Network) Create() error {
 	result := C.virNetworkCreate(n.ptr)
 	if result == -1 {

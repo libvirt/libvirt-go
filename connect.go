@@ -423,6 +423,14 @@ func (c *Connect) Close() (int, error) {
 	return result, nil
 }
 
+func (c *Connect) Ref() error {
+	ret := C.virConnectRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 type CloseCallback func(conn *Connect, reason ConnectCloseReason)
 
 // Register a close callback for the given destination. Only one

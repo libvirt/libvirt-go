@@ -75,6 +75,14 @@ func (s *Secret) Free() error {
 	return nil
 }
 
+func (c *Secret) Ref() error {
+	ret := C.virSecretRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (s *Secret) Undefine() error {
 	result := C.virSecretUndefine(s.ptr)
 	if result == -1 {

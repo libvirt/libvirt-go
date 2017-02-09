@@ -868,6 +868,14 @@ func (d *Domain) Free() error {
 	return nil
 }
 
+func (c *Domain) Ref() error {
+	ret := C.virDomainRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (d *Domain) Create() error {
 	result := C.virDomainCreate(d.ptr)
 	if result == -1 {

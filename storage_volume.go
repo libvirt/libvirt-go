@@ -127,6 +127,14 @@ func (v *StorageVol) Free() error {
 	return nil
 }
 
+func (c *StorageVol) Ref() error {
+	ret := C.virStorageVolRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (v *StorageVol) GetInfo() (*StorageVolInfo, error) {
 	var cinfo C.virStorageVolInfo
 	result := C.virStorageVolGetInfo(v.ptr, &cinfo)

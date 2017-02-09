@@ -97,6 +97,14 @@ func (s *DomainSnapshot) Free() error {
 	return nil
 }
 
+func (c *DomainSnapshot) Ref() error {
+	ret := C.virDomainSnapshotRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (s *DomainSnapshot) Delete(flags DomainSnapshotDeleteFlags) error {
 	result := C.virDomainSnapshotDelete(s.ptr, C.uint(flags))
 	if result != 0 {

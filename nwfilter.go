@@ -50,6 +50,14 @@ func (f *NWFilter) Free() error {
 	return nil
 }
 
+func (c *NWFilter) Ref() error {
+	ret := C.virNWFilterRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (f *NWFilter) GetName() (string, error) {
 	name := C.virNWFilterGetName(f.ptr)
 	if name == nil {

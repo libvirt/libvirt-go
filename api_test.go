@@ -138,19 +138,6 @@ var (
 		"virEventUpdateHandleFunc",
 		"virEventUpdateTimeoutFunc",
 
-		/* Only needed at C level */
-		"virConnectRef",
-		"virDomainRef",
-		"virDomainSnapshotRef",
-		"virInterfaceRef",
-		"virNWFilterRef",
-		"virNetworkRef",
-		"virNodeDeviceRef",
-		"virSecretRef",
-		"virStoragePoolRef",
-		"virStorageVolRef",
-		"virStreamRef",
-
 		/* Typedefs that don't need exposing as is */
 		"virStreamSinkFunc",
 		"virStreamSourceFunc",

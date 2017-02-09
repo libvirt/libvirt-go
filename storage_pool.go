@@ -143,6 +143,14 @@ func (p *StoragePool) Free() error {
 	return nil
 }
 
+func (c *StoragePool) Ref() error {
+	ret := C.virStoragePoolRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (p *StoragePool) GetAutostart() (bool, error) {
 	var out C.int
 	result := C.virStoragePoolGetAutostart(p.ptr, (*C.int)(unsafe.Pointer(&out)))

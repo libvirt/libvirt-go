@@ -85,6 +85,14 @@ func (v *Stream) Free() error {
 	return nil
 }
 
+func (c *Stream) Ref() error {
+	ret := C.virStreamRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (v *Stream) Recv(p []byte) (int, error) {
 	n := C.virStreamRecv(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)))
 	if n < 0 {

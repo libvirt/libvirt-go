@@ -65,6 +65,14 @@ func (n *NodeDevice) Free() error {
 	return nil
 }
 
+func (c *NodeDevice) Ref() error {
+	ret := C.virNodeDeviceRef(c.ptr)
+	if ret == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 func (n *NodeDevice) Destroy() error {
 	result := C.virNodeDeviceDestroy(n.ptr)
 	if result == -1 {
