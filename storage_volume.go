@@ -120,10 +120,12 @@ func (v *StorageVol) Delete(flags StorageVolDeleteFlags) error {
 }
 
 func (v *StorageVol) Free() error {
-	if result := C.virStorageVolFree(v.ptr); result != 0 {
+	ret := C.virStorageVolFree(v.ptr)
+	if ret == -1 {
 		return GetLastError()
+	} else if ret == 0 {
+		v.ptr = nil
 	}
-	v.ptr = nil
 	return nil
 }
 

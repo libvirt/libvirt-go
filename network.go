@@ -122,10 +122,12 @@ type NetworkDHCPLease struct {
 }
 
 func (n *Network) Free() error {
-	if result := C.virNetworkFree(n.ptr); result != 0 {
+	ret := C.virNetworkFree(n.ptr)
+	if ret == -1 {
 		return GetLastError()
+	} else if ret == 0 {
+		n.ptr = nil
 	}
-	n.ptr = nil
 	return nil
 }
 

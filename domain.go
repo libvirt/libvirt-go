@@ -861,10 +861,12 @@ type DomainVcpuInfo struct {
 }
 
 func (d *Domain) Free() error {
-	if result := C.virDomainFree(d.ptr); result != 0 {
+	ret := C.virDomainFree(d.ptr)
+	if ret == -1 {
 		return GetLastError()
+	} else if ret == 0 {
+		d.ptr = nil
 	}
-	d.ptr = nil
 	return nil
 }
 

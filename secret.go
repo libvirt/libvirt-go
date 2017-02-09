@@ -68,10 +68,12 @@ type Secret struct {
 }
 
 func (s *Secret) Free() error {
-	if result := C.virSecretFree(s.ptr); result != 0 {
+	ret := C.virSecretFree(s.ptr)
+	if ret == -1 {
 		return GetLastError()
+	} else if ret == 0 {
+		s.ptr = nil
 	}
-	s.ptr = nil
 	return nil
 }
 

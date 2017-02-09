@@ -58,10 +58,12 @@ type NodeDevice struct {
 }
 
 func (n *NodeDevice) Free() error {
-	if result := C.virNodeDeviceFree(n.ptr); result != 0 {
+	ret := C.virNodeDeviceFree(n.ptr)
+	if ret == -1 {
 		return GetLastError()
+	} else if ret == 0 {
+		n.ptr = nil
 	}
-	n.ptr = nil
 	return nil
 }
 
