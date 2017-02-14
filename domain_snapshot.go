@@ -93,8 +93,6 @@ func (s *DomainSnapshot) Free() error {
 	ret := C.virDomainSnapshotFree(s.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		s.ptr = nil
 	}
 	return nil
 }

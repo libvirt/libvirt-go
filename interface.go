@@ -115,8 +115,6 @@ func (n *Interface) Free() error {
 	ret := C.virInterfaceFree(n.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		n.ptr = nil
 	}
 	return nil
 }

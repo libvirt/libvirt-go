@@ -125,8 +125,6 @@ func (n *Network) Free() error {
 	ret := C.virNetworkFree(n.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		n.ptr = nil
 	}
 	return nil
 }

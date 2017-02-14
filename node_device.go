@@ -61,8 +61,6 @@ func (n *NodeDevice) Free() error {
 	ret := C.virNodeDeviceFree(n.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		n.ptr = nil
 	}
 	return nil
 }

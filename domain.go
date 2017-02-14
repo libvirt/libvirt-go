@@ -864,8 +864,6 @@ func (d *Domain) Free() error {
 	ret := C.virDomainFree(d.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		d.ptr = nil
 	}
 	return nil
 }

@@ -46,8 +46,6 @@ func (f *NWFilter) Free() error {
 	ret := C.virNWFilterFree(f.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		f.ptr = nil
 	}
 	return nil
 }

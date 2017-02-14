@@ -80,8 +80,6 @@ func (v *Stream) Free() error {
 	ret := C.virStreamFree(v.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		v.ptr = nil
 	}
 	return nil
 }

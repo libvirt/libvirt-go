@@ -419,6 +419,7 @@ func (c *Connect) Close() (int, error) {
 	if result == 0 {
 		// No more reference to this connection, release data.
 		releaseConnectionData(c)
+		c.ptr = nil
 	}
 	return result, nil
 }

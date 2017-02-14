@@ -71,8 +71,6 @@ func (s *Secret) Free() error {
 	ret := C.virSecretFree(s.ptr)
 	if ret == -1 {
 		return GetLastError()
-	} else if ret == 0 {
-		s.ptr = nil
 	}
 	return nil
 }
