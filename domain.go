@@ -3967,10 +3967,12 @@ func (d *Domain) PinEmulator(cpumap []bool, flags DomainModificationImpact) erro
 	maplen := (len(cpumap) + 7) / 8
 	ccpumaps := make([]C.uchar, maplen)
 	for i := 0; i < len(cpumap); i++ {
-		byte := i / 8
-		bit := i % 8
+		if cpumap[i] {
+			byte := i / 8
+			bit := i % 8
 
-		ccpumaps[byte] |= (1 << uint(bit))
+			ccpumaps[byte] |= (1 << uint(bit))
+		}
 	}
 
 	ret := C.virDomainPinEmulator(d.ptr, &ccpumaps[0], C.int(maplen), C.uint(flags))
@@ -3989,10 +3991,12 @@ func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModific
 	maplen := (len(cpumap) + 7) / 8
 	ccpumaps := make([]C.uchar, maplen)
 	for i := 0; i < len(cpumap); i++ {
-		byte := i / 8
-		bit := i % 8
+		if cpumap[i] {
+			byte := i / 8
+			bit := i % 8
 
-		ccpumaps[byte] |= (1 << uint(bit))
+			ccpumaps[byte] |= (1 << uint(bit))
+		}
 	}
 
 	ret := C.virDomainPinIOThreadCompat(d.ptr, C.uint(iothreadid), &ccpumaps[0], C.int(maplen), C.uint(flags))
