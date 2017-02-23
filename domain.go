@@ -4221,3 +4221,35 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 
 	return nil
 }
+
+func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 3001000 {
+		return GetNotImplementedError()
+	}
+
+	cpumap := ""
+	for i := 0; i < len(cpus); i++ {
+		if cpus[i] {
+			if cpumap == "" {
+				cpumap = string(i)
+			} else {
+				cpumap += "," + string(i)
+			}
+		}
+	}
+
+	var cstate C.int
+	if state {
+		cstate = 1
+	} else {
+		cstate = 0
+	}
+	ccpumap := C.CString(cpumap)
+	defer C.free(unsafe.Pointer(ccpumap))
+	ret := C.virDomainSetVcpuCompat(d.ptr, ccpumap, cstate, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}

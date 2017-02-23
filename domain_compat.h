@@ -843,5 +843,12 @@ int virDomainSetGuestVcpusCompat(virDomainPtr domain,
 #define VIR_DOMAIN_TUNABLE_BLKDEV_GROUP_NAME "blkdeviotune.group_name"
 #endif
 
+/* 3.1.0 */
+
+int virDomainSetVcpuCompat(virDomainPtr domain,
+			   const char *cpumap,
+			   int state,
+			   unsigned int flags);
+
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
