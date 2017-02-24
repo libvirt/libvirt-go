@@ -2264,6 +2264,24 @@ type DomainStatsPerf struct {
 	StalledCyclesBackend     uint64
 	RefCpuCyclesSet          bool
 	RefCpuCycles             uint64
+	CpuClockSet              bool
+	CpuClock                 uint64
+	TaskClockSet             bool
+	TaskClock                uint64
+	PageFaultsSet            bool
+	PageFaults               uint64
+	ContextSwitchesSet       bool
+	ContextSwitches          uint64
+	CpuMigrationsSet         bool
+	CpuMigrations            uint64
+	PageFaultsMinSet         bool
+	PageFaultsMin            uint64
+	PageFaultsMajSet         bool
+	PageFaultsMaj            uint64
+	AlignmentFaultsSet       bool
+	AlignmentFaults          uint64
+	EmulationFaultsSet       bool
+	EmulationFaults          uint64
 }
 
 func getDomainStatsPerfFieldInfo(params *DomainStatsPerf) map[string]typedParamsFieldInfo {
@@ -2319,6 +2337,42 @@ func getDomainStatsPerfFieldInfo(params *DomainStatsPerf) map[string]typedParams
 		"perf.ref_cpu_cycles": typedParamsFieldInfo{
 			set: &params.RefCpuCyclesSet,
 			ul:  &params.RefCpuCycles,
+		},
+		"perf.cpu_clock": typedParamsFieldInfo{
+			set: &params.CpuClockSet,
+			ul:  &params.CpuClock,
+		},
+		"perf.task_clock": typedParamsFieldInfo{
+			set: &params.TaskClockSet,
+			ul:  &params.TaskClock,
+		},
+		"perf.page_faults": typedParamsFieldInfo{
+			set: &params.PageFaultsSet,
+			ul:  &params.PageFaults,
+		},
+		"perf.context_switches": typedParamsFieldInfo{
+			set: &params.ContextSwitchesSet,
+			ul:  &params.ContextSwitches,
+		},
+		"perf.cpu_migrations": typedParamsFieldInfo{
+			set: &params.CpuMigrationsSet,
+			ul:  &params.CpuMigrations,
+		},
+		"perf.page_faults_min": typedParamsFieldInfo{
+			set: &params.PageFaultsMinSet,
+			ul:  &params.PageFaultsMin,
+		},
+		"perf.page_faults_maj": typedParamsFieldInfo{
+			set: &params.PageFaultsMajSet,
+			ul:  &params.PageFaultsMaj,
+		},
+		"perf.alignment_faults": typedParamsFieldInfo{
+			set: &params.AlignmentFaultsSet,
+			ul:  &params.AlignmentFaults,
+		},
+		"perf.emulation_faults": typedParamsFieldInfo{
+			set: &params.EmulationFaultsSet,
+			ul:  &params.EmulationFaults,
 		},
 	}
 }

@@ -3195,6 +3195,24 @@ type DomainPerfEvents struct {
 	StalledCyclesBackend     bool
 	RefCpuCyclesSet          bool
 	RefCpuCycles             bool
+	CpuClockSet              bool
+	CpuClock                 bool
+	TaskClockSet             bool
+	TaskClock                bool
+	PageFaultsSet            bool
+	PageFaults               bool
+	ContextSwitchesSet       bool
+	ContextSwitches          bool
+	CpuMigrationsSet         bool
+	CpuMigrations            bool
+	PageFaultsMinSet         bool
+	PageFaultsMin            bool
+	PageFaultsMajSet         bool
+	PageFaultsMaj            bool
+	AlignmentFaultsSet       bool
+	AlignmentFaults          bool
+	EmulationFaultsSet       bool
+	EmulationFaults          bool
 }
 
 /* Remember to also update DomainStatsPerf in connect.go when adding to the stuct above */
@@ -3252,6 +3270,42 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 		C.VIR_PERF_PARAM_REF_CPU_CYCLES: typedParamsFieldInfo{
 			set: &params.RefCpuCyclesSet,
 			b:   &params.RefCpuCycles,
+		},
+		C.VIR_PERF_PARAM_CPU_CLOCK: typedParamsFieldInfo{
+			set: &params.CpuClockSet,
+			b:   &params.CpuClock,
+		},
+		C.VIR_PERF_PARAM_TASK_CLOCK: typedParamsFieldInfo{
+			set: &params.TaskClockSet,
+			b:   &params.TaskClock,
+		},
+		C.VIR_PERF_PARAM_PAGE_FAULTS: typedParamsFieldInfo{
+			set: &params.PageFaultsSet,
+			b:   &params.PageFaults,
+		},
+		C.VIR_PERF_PARAM_CONTEXT_SWITCHES: typedParamsFieldInfo{
+			set: &params.ContextSwitchesSet,
+			b:   &params.ContextSwitches,
+		},
+		C.VIR_PERF_PARAM_CPU_MIGRATIONS: typedParamsFieldInfo{
+			set: &params.CpuMigrationsSet,
+			b:   &params.CpuMigrations,
+		},
+		C.VIR_PERF_PARAM_PAGE_FAULTS_MIN: typedParamsFieldInfo{
+			set: &params.PageFaultsMinSet,
+			b:   &params.PageFaultsMin,
+		},
+		C.VIR_PERF_PARAM_PAGE_FAULTS_MAJ: typedParamsFieldInfo{
+			set: &params.PageFaultsMajSet,
+			b:   &params.PageFaultsMaj,
+		},
+		C.VIR_PERF_PARAM_ALIGNMENT_FAULTS: typedParamsFieldInfo{
+			set: &params.AlignmentFaultsSet,
+			b:   &params.AlignmentFaults,
+		},
+		C.VIR_PERF_PARAM_REF_EMULATION_FAULTS: typedParamsFieldInfo{
+			set: &params.EmulationFaultsSet,
+			b:   &params.EmulationFaults,
 		},
 	}
 }

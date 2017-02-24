@@ -45,6 +45,42 @@
 #define VIR_PERF_PARAM_REF_CPU_CYCLES "ref_cpu_cycles"
 #endif
 
+#ifndef VIR_PERF_PARAM_CPU_CLOCK
+#define VIR_PERF_PARAM_CPU_CLOCK "cpu_clock"
+#endif
+
+#ifndef VIR_PERF_PARAM_TASK_CLOCK
+#define VIR_PERF_PARAM_TASK_CLOCK "task_clock"
+#endif
+
+#ifndef VIR_PERF_PARAM_PAGE_FAULTS
+#define VIR_PERF_PARAM_PAGE_FAULTS "page_faults"
+#endif
+
+#ifndef VIR_PERF_PARAM_CONTEXT_SWITCHES
+#define VIR_PERF_PARAM_CONTEXT_SWITCHES "context_switches"
+#endif
+
+#ifndef VIR_PERF_PARAM_CPU_MIGRATIONS
+#define VIR_PERF_PARAM_CPU_MIGRATIONS "cpu_migrations"
+#endif
+
+#ifndef VIR_PERF_PARAM_PAGE_FAULTS_MIN
+#define VIR_PERF_PARAM_PAGE_FAULTS_MIN "page_faults_min"
+#endif
+
+#ifndef VIR_PERF_PARAM_PAGE_FAULTS_MAJ
+#define VIR_PERF_PARAM_PAGE_FAULTS_MAJ "page_faults_maj"
+#endif
+
+#ifndef VIR_PERF_PARAM_ALIGNMENT_FAULTS
+#define VIR_PERF_PARAM__ALIGNMENT_FAULTS "alignment_faults"
+#endif
+
+#ifndef VIR_PERF_PARAM_EMULATION_FAULTS
+#define VIR_PERF_PARAM_EMULATION_FAULTS "emulation_faults"
+#endif
+
 #ifndef VIR_DOMAIN_EVENT_ID_METADATA_CHANGE
 #define VIR_DOMAIN_EVENT_ID_METADATA_CHANGE 23
 #endif
