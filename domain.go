@@ -1768,7 +1768,7 @@ func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []bool, flags DomainModification
 	ccpumap := make([]C.uchar, maplen)
 	for i := 0; i < len(cpuMap); i++ {
 		if cpuMap[i] {
-			byte := (i + 7) / 8
+			byte := i / 8
 			bit := i % 8
 			ccpumap[byte] |= (1 << uint(bit))
 		}
