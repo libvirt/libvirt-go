@@ -272,7 +272,7 @@ func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection,
 
 func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002006 {
-		return []NetworkDHCPLease{}, GetNotImplementedError()
+		return []NetworkDHCPLease{}, GetNotImplementedError("virNetworkGetDHCPLeases")
 	}
 	var cLeases *C.virNetworkDHCPLeasePtr
 	numLeases := C.virNetworkGetDHCPLeasesCompat(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))

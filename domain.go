@@ -1797,7 +1797,7 @@ type DomainInterface struct {
 
 func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return []DomainInterface{}, GetNotImplementedError()
+		return []DomainInterface{}, GetNotImplementedError("virDomainInterfaceAddresses")
 	}
 
 	var cList *C.virDomainInterfacePtr
@@ -1956,7 +1956,7 @@ func getBlockCopyParameterFieldInfo(params *DomainBlockCopyParameters) map[strin
 
 func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyParameters, flags DomainBlockCopyFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002008 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainBlockCopy")
 	}
 	cdisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cdisk))
@@ -2357,7 +2357,7 @@ func (d *Domain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 
 func (d *Domain) MigrateStartPostCopy(flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainMigrateStartPostCopy")
 	}
 
 	ret := C.virDomainMigrateStartPostCopyCompat(d.ptr, C.uint(flags))
@@ -3258,7 +3258,7 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 
 func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvents, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return nil, GetNotImplementedError()
+		return nil, GetNotImplementedError("virDomainGetPerfEvents")
 	}
 
 	params := &DomainPerfEvents{}
@@ -3283,7 +3283,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 
 func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainSetPerfEvents")
 	}
 
 	info := getDomainPerfEventsFieldInfo(params)
@@ -3568,7 +3568,7 @@ func (d *Domain) GetSecurityLabelList() ([]SecurityLabel, error) {
 
 func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return 0, 0, GetNotImplementedError()
+		return 0, 0, GetNotImplementedError("virDomainGetTime")
 	}
 	var secs C.longlong
 	var nsecs C.uint
@@ -3582,7 +3582,7 @@ func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 
 func (d *Domain) SetTime(secs int64, nsecs uint, flags DomainSetTimeFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainSetTime")
 	}
 
 	ret := C.virDomainSetTimeCompat(d.ptr, C.longlong(secs), C.uint(nsecs), C.uint(flags))
@@ -3595,7 +3595,7 @@ func (d *Domain) SetTime(secs int64, nsecs uint, flags DomainSetTimeFlags) error
 
 func (d *Domain) SetUserPassword(user string, password string, flags DomainSetUserPasswordFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainSetUserPassword")
 	}
 	cuser := C.CString(user)
 	cpassword := C.CString(password)
@@ -3642,7 +3642,7 @@ func (d *Domain) ManagedSaveRemove(flags uint32) error {
 
 func (d *Domain) Rename(name string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002019 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainRename")
 	}
 	cname := C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
@@ -3695,7 +3695,7 @@ func (d *Domain) CoreDump(to string, flags DomainCoreDumpFlags) error {
 
 func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags DomainCoreDumpFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002003 {
-		GetNotImplementedError()
+		GetNotImplementedError("virDomainCoreDumpWithFormat")
 	}
 	cto := C.CString(to)
 	defer C.free(unsafe.Pointer(cto))
@@ -3721,7 +3721,7 @@ func (d *Domain) HasCurrentSnapshot(flags uint32) (bool, error) {
 
 func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainFSFreeze")
 	}
 	cmounts := make([](*C.char), len(mounts))
 
@@ -3741,7 +3741,7 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 
 func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainFSThaw")
 	}
 	cmounts := make([](*C.char), len(mounts))
 
@@ -3780,7 +3780,7 @@ type DomainFSInfo struct {
 
 func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002011 {
-		return []DomainFSInfo{}, GetNotImplementedError()
+		return []DomainFSInfo{}, GetNotImplementedError("virDomainGetFSInfo")
 	}
 	var cfsinfolist **C.virDomainFSInfo
 
@@ -3833,7 +3833,7 @@ func (d *Domain) PMWakeup(flags uint32) error {
 
 func (d *Domain) AddIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainAddIOThread")
 	}
 	ret := C.virDomainAddIOThreadCompat(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
@@ -3845,7 +3845,7 @@ func (d *Domain) AddIOThread(id uint, flags DomainModificationImpact) error {
 
 func (d *Domain) DelIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainDelIOThread")
 	}
 	ret := C.virDomainDelIOThreadCompat(d.ptr, C.uint(id), C.uint(flags))
 	if ret == -1 {
@@ -3887,7 +3887,7 @@ type DomainIOThreadInfo struct {
 
 func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThreadInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return []DomainIOThreadInfo{}, GetNotImplementedError()
+		return []DomainIOThreadInfo{}, GetNotImplementedError("virDomaingetIOThreadInfo")
 	}
 	var cinfolist **C.virDomainIOThreadInfo
 
@@ -3985,7 +3985,7 @@ func (d *Domain) PinEmulator(cpumap []bool, flags DomainModificationImpact) erro
 
 func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainPinIOThread")
 	}
 
 	maplen := (len(cpumap) + 7) / 8
@@ -4042,7 +4042,7 @@ func (d *Domain) OpenGraphics(idx uint, file os.File, flags DomainOpenGraphicsFl
 
 func (d *Domain) OpenGraphicsFD(idx uint, flags DomainOpenGraphicsFlags) (*os.File, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002008 {
-		return nil, GetNotImplementedError()
+		return nil, GetNotImplementedError("virDomainOpenGraphicsFD")
 	}
 	ret := C.virDomainOpenGraphicsFDCompat(d.ptr, C.uint(idx), C.uint(flags))
 	if ret == -1 {
@@ -4166,7 +4166,7 @@ func parseCPUString(cpumapstr string) ([]bool, error) {
 
 func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 	if C.LIBVIR_VERSION_NUMBER < 2000000 {
-		return nil, GetNotImplementedError()
+		return nil, GetNotImplementedError("virDomainGetGuestVcpus")
 	}
 
 	var VcpusSet, OnlineSet, OfflinableSet bool
@@ -4192,7 +4192,7 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 
 func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 2000000 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainSetGuestVcpus")
 	}
 
 	cpumap := ""
@@ -4224,7 +4224,7 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 
 func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3001000 {
-		return GetNotImplementedError()
+		return GetNotImplementedError("virDomainSetVcpu")
 	}
 
 	cpumap := ""

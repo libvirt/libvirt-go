@@ -793,7 +793,7 @@ func (c *Connect) DomainDefineXML(xmlConfig string) (*Domain, error) {
 
 func (c *Connect) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags) (*Domain, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002012 {
-		return nil, GetNotImplementedError()
+		return nil, GetNotImplementedError("virDomainDefineXMLFlags")
 	}
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
@@ -1446,7 +1446,7 @@ func (c *Connect) InterfaceChangeRollback(flags uint32) error {
 
 func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount uint, flags NodeAllocPagesFlags) (int, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002009 {
-		return 0, GetNotImplementedError()
+		return 0, GetNotImplementedError("virNodeAllocPages")
 	}
 	cpages := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes))
@@ -1573,7 +1573,7 @@ func (c *Connect) GetFreeMemory() (uint64, error) {
 
 func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint, flags uint32) ([]uint64, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002006 {
-		return []uint64{}, GetNotImplementedError()
+		return []uint64{}, GetNotImplementedError("virNodeGetFreePages")
 	}
 	cpageSizes := make([]C.uint, len(pageSizes))
 	ccounts := make([]C.ulonglong, len(pageSizes)*int(maxCells))
@@ -1896,7 +1896,7 @@ func (c *Connect) GetCPUModelNames(arch string, flags uint32) ([]string, error) 
 
 func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine string, virttype string, flags uint32) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002007 {
-		return "", GetNotImplementedError()
+		return "", GetNotImplementedError("virConnectGetDomainCapabilities")
 	}
 	var cemulatorbin *C.char
 	if emulatorbin != "" {
@@ -2368,7 +2368,7 @@ func getDomainStatsLengthsFieldInfo(params *domainStatsLengths) map[string]typed
 
 func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes, flags ConnectGetAllDomainStatsFlags) ([]DomainStats, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002008 {
-		return []DomainStats{}, GetNotImplementedError()
+		return []DomainStats{}, GetNotImplementedError("virConnectGetAllDomainStats")
 	}
 	var ret C.int
 	var cstats *C.virDomainStatsRecordPtr

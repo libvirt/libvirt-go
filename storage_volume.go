@@ -150,7 +150,7 @@ func (v *StorageVol) GetInfo() (*StorageVolInfo, error) {
 
 func (v *StorageVol) GetInfoFlags(flags StorageVolInfoFlags) (*StorageVolInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3000000 {
-		return nil, GetNotImplementedError()
+		return nil, GetNotImplementedError("virStorageVolGetInfoFlags")
 	}
 
 	var cinfo C.virStorageVolInfo
