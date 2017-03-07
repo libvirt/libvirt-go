@@ -3303,7 +3303,7 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 			set: &params.AlignmentFaultsSet,
 			b:   &params.AlignmentFaults,
 		},
-		C.VIR_PERF_PARAM_REF_EMULATION_FAULTS: typedParamsFieldInfo{
+		C.VIR_PERF_PARAM_EMULATION_FAULTS: typedParamsFieldInfo{
 			set: &params.EmulationFaultsSet,
 			b:   &params.EmulationFaults,
 		},

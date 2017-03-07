@@ -74,7 +74,7 @@
 #endif
 
 #ifndef VIR_PERF_PARAM_ALIGNMENT_FAULTS
-#define VIR_PERF_PARAM__ALIGNMENT_FAULTS "alignment_faults"
+#define VIR_PERF_PARAM_ALIGNMENT_FAULTS "alignment_faults"
 #endif
 
 #ifndef VIR_PERF_PARAM_EMULATION_FAULTS
