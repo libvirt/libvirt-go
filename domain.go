@@ -4074,8 +4074,11 @@ func (d *Domain) OpenChannel(name string, stream *Stream, flags DomainChannelFla
 }
 
 func (d *Domain) OpenConsole(devname string, stream *Stream, flags DomainConsoleFlags) error {
-	cdevname := C.CString(devname)
-	defer C.free(unsafe.Pointer(cdevname))
+	var cdevname *C.char
+	if devname != "" {
+		cdevname = C.CString(devname)
+		defer C.free(unsafe.Pointer(cdevname))
+	}
 
 	ret := C.virDomainOpenConsole(d.ptr, cdevname, stream.ptr, C.uint(flags))
 	if ret == -1 {
