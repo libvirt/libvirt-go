@@ -890,4 +890,9 @@ int virDomainSetVcpuCompat(virDomainPtr domain,
 #define VIR_MIGRATE_TLS 1 << 16
 #endif
 
+int virDomainSetBlockThresholdCompat(virDomainPtr domain,
+                                     const char *dev,
+                                     unsigned long long threshold,
+                                     unsigned int flags);
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

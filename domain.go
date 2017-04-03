@@ -4311,3 +4311,18 @@ func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
 
 	return nil
 }
+
+func (d *Domain) SetBlockThreshold(dev string, threshold uint64, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 3002000 {
+		return GetNotImplementedError("virDomainSetBlockThreshold")
+	}
+
+	cdev := C.CString(dev)
+	defer C.free(unsafe.Pointer(cdev))
+	ret := C.virDomainSetBlockThresholdCompat(d.ptr, cdev, C.ulonglong(threshold), C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
