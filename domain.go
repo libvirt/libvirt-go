@@ -823,6 +823,7 @@ const (
 	MIGRATE_AUTO_CONVERGE     = DomainMigrateFlags(C.VIR_MIGRATE_AUTO_CONVERGE)
 	MIGRATE_RDMA_PIN_ALL      = DomainMigrateFlags(C.VIR_MIGRATE_RDMA_PIN_ALL)
 	MIGRATE_POSTCOPY          = DomainMigrateFlags(C.VIR_MIGRATE_POSTCOPY)
+	MIGRATE_TLS               = DomainMigrateFlags(C.VIR_MIGRATE_TLS)
 )
 
 type VcpuState int

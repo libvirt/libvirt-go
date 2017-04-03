@@ -886,5 +886,10 @@ int virDomainSetVcpuCompat(virDomainPtr domain,
 			   int state,
 			   unsigned int flags);
 
+/* 3.2.0 */
+
+#ifndef VIR_MIGRATE_TLS
+#define VIR_MIGRATE_TLS 1 << 16
+#endif
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
