@@ -890,6 +890,10 @@ int virDomainSetVcpuCompat(virDomainPtr domain,
 #define VIR_MIGRATE_TLS 1 << 16
 #endif
 
+#ifndef VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD
+#define VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD 24
+#endif
+
 int virDomainSetBlockThresholdCompat(virDomainPtr domain,
                                      const char *dev,
                                      unsigned long long threshold,
