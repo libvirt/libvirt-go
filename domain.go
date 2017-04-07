@@ -1832,10 +1832,11 @@ func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) 
 
 		for k := 0; k < numAddr; k++ {
 			ifaces[i].Addrs[k] = DomainIPAddress{}
-			ifaces[i].Addrs[k].Type = int(addrSlice[k]._type)
-			ifaces[i].Addrs[k].Addr = C.GoString(addrSlice[k].addr)
-			ifaces[i].Addrs[k].Prefix = uint(addrSlice[k].prefix)
-
+			if addrSlice[k] != nil {
+				ifaces[i].Addrs[k].Type = int(addrSlice[k]._type)
+				ifaces[i].Addrs[k].Addr = C.GoString(addrSlice[k].addr)
+				ifaces[i].Addrs[k].Prefix = uint(addrSlice[k].prefix)
+			}
 		}
 		C.virDomainInterfaceFreeCompat(ifaceSlice[i])
 	}
