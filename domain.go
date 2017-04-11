@@ -1807,37 +1807,29 @@ func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) 
 		return nil, GetLastError()
 	}
 
-	hdr := reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(cList)),
-		Len:  int(numIfaces),
-		Cap:  int(numIfaces),
-	}
-
 	ifaces := make([]DomainInterface, numIfaces)
-	ifaceSlice := *(*[]C.virDomainInterfacePtr)(unsafe.Pointer(&hdr))
 
 	for i := 0; i < numIfaces; i++ {
-		ifaces[i].Name = C.GoString(ifaceSlice[i].name)
-		ifaces[i].Hwaddr = C.GoString(ifaceSlice[i].hwaddr)
+		var ciface *C.virDomainInterface
+		ciface = *(**C.virDomainInterface)(unsafe.Pointer(uintptr(unsafe.Pointer(cList)) + (unsafe.Sizeof(ciface) * uintptr(i))))
 
-		numAddr := int(ifaceSlice[i].naddrs)
-		addrHdr := reflect.SliceHeader{
-			Data: uintptr(unsafe.Pointer(&ifaceSlice[i].addrs)),
-			Len:  int(numAddr),
-			Cap:  int(numAddr),
-		}
+		ifaces[i].Name = C.GoString(ciface.name)
+		ifaces[i].Hwaddr = C.GoString(ciface.hwaddr)
+
+		numAddr := int(ciface.naddrs)
 
 		ifaces[i].Addrs = make([]DomainIPAddress, numAddr)
-		addrSlice := *(*[]C.virDomainIPAddressPtr)(unsafe.Pointer(&addrHdr))
 
 		for k := 0; k < numAddr; k++ {
+			var caddr *C.virDomainIPAddress
+			caddr = (*C.virDomainIPAddress)(unsafe.Pointer(uintptr(unsafe.Pointer(ciface.addrs)) + (unsafe.Sizeof(*caddr) * uintptr(k))))
 			ifaces[i].Addrs[k] = DomainIPAddress{}
-			ifaces[i].Addrs[k].Type = int(addrSlice[k]._type)
-			ifaces[i].Addrs[k].Addr = C.GoString(addrSlice[k].addr)
-			ifaces[i].Addrs[k].Prefix = uint(addrSlice[k].prefix)
+			ifaces[i].Addrs[k].Type = int(caddr._type)
+			ifaces[i].Addrs[k].Addr = C.GoString(caddr.addr)
+			ifaces[i].Addrs[k].Prefix = uint(caddr.prefix)
 
 		}
-		C.virDomainInterfaceFreeCompat(ifaceSlice[i])
+		C.virDomainInterfaceFreeCompat(ciface)
 	}
 	C.free(unsafe.Pointer(cList))
 	return ifaces, nil
