@@ -1796,7 +1796,7 @@ type DomainInterface struct {
 	Addrs  []DomainIPAddress
 }
 
-func (d *Domain) ListAllInterfaceAddresses(src uint) ([]DomainInterface, error) {
+func (d *Domain) ListAllInterfaceAddresses(src DomainInterfaceAddressesSource) ([]DomainInterface, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
 		return []DomainInterface{}, GetNotImplementedError("virDomainInterfaceAddresses")
 	}
