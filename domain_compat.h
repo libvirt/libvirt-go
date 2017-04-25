@@ -483,10 +483,6 @@ int virDomainPinIOThreadCompat(virDomainPtr domain,
 #define VIR_DOMAIN_EVENT_ID_DEVICE_ADDED 19
 #endif
 
-#ifndef VIR_DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN
-#define VIR_DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN 60
-#endif
-
 int virDomainAddIOThreadCompat(virDomainPtr domain,
 			       unsigned int iothread_id,
 			       unsigned int flags);

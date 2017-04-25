@@ -9,6 +9,11 @@ Make sure to have `libvirt-dev` package (or the development files otherwise some
 The libvirt go package provides API coverage for libvirt versions
 from 1.2.0 onwards, through conditional compilation of newer APIs.
 
+By default the binding will support APIs in libvirt.so, libvirt-qemu.so
+and libvirt-lxc.so. Coverage for the latter two libraries can be dropped
+from the build using build tags 'without_qemu' or 'without_lxc'
+respectively.
+
 ## Development status
 
 The Go API is considered to be production ready and aims to be kept
