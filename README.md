@@ -9,6 +9,22 @@ Make sure to have `libvirt-dev` package (or the development files otherwise some
 The libvirt go package provides API coverage for libvirt versions
 from 1.2.0 onwards, through conditional compilation of newer APIs.
 
+## Development status
+
+The Go API is considered to be production ready and aims to be kept
+stable across future versions. Note, however, that the following
+changes may apply to future versions:
+
+* Existing structs can be augmented with new fields, but no existing
+  fields will be changed / removed. New fields are needed when libvirt
+  defines new typed parameters for various methods
+
+* Any method with an 'flags uint32' parameter will have its parameter
+  type changed to a specific typedef, if & when the libvirt API defines
+  constants for the flags. To avoid breakage, always pass a literal
+  '0' to any 'flags uint32' parameter, since this will auto-cast to
+  any future typedef that is introduced.
+
 ## Documentation
 
 * [api documentation for the bindings](https://godoc.org/github.com/libvirt/libvirt-go)
