@@ -455,6 +455,16 @@ const (
 	DOMAIN_QEMU_MONITOR_COMMAND_HMP     = DomainQemuMonitorCommandFlags(C.VIR_DOMAIN_QEMU_MONITOR_COMMAND_HMP)
 )
 
+type DomainQemuAgentCommandTimeout int
+
+const (
+	DOMAIN_QEMU_AGENT_COMMAND_MIN      = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_MIN)
+	DOMAIN_QEMU_AGENT_COMMAND_BLOCK    = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_BLOCK)
+	DOMAIN_QEMU_AGENT_COMMAND_DEFAULT  = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_DEFAULT)
+	DOMAIN_QEMU_AGENT_COMMAND_NOWAIT   = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_NOWAIT)
+	DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN)
+)
+
 type DomainProcessSignal int
 
 const (
@@ -1741,6 +1751,20 @@ func (d *Domain) QemuMonitorCommand(command string, flags DomainQemuMonitorComma
 
 	rstring := C.GoString(cResult)
 	C.free(unsafe.Pointer(cResult))
+	return rstring, nil
+}
+
+func (d *Domain) QemuAgentCommand(command string, timeout DomainQemuAgentCommandTimeout, flags uint32) (string, error) {
+	cCommand := C.CString(command)
+	defer C.free(unsafe.Pointer(cCommand))
+	result := C.virDomainQemuAgentCommand(d.ptr, cCommand, C.int(timeout), C.uint(flags))
+
+	if result == nil {
+		return "", GetLastError()
+	}
+
+	rstring := C.GoString(result)
+	C.free(unsafe.Pointer(result))
 	return rstring, nil
 }
 
