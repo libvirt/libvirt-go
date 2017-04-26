@@ -101,3 +101,12 @@ func (d *Domain) QemuAgentCommand(command string, timeout DomainQemuAgentCommand
 	C.free(unsafe.Pointer(result))
 	return rstring, nil
 }
+
+func (c *Connect) DomainQemuAttach(pid uint32, flags uint32) (*Domain, error) {
+
+	ptr := C.virDomainQemuAttach(c.ptr, C.uint(pid), C.uint(flags))
+	if ptr == nil {
+		return nil, GetLastError()
+	}
+	return &Domain{ptr: ptr}, nil
+}
