@@ -109,6 +109,7 @@ var (
 		"virConnectDomainEventWatchdogCallback",
 		"virConnectDomainEventMetadataChangeCallback",
 		"virConnectDomainEventBlockThresholdCallback",
+		"virConnectDomainQemuMonitorEventCallback",
 
 		/* Network event callback typedefs */
 		"virConnectNetworkEventGenericCallback",
@@ -314,8 +315,8 @@ type API struct {
 	Files   []APIFile `xml:"files>file"`
 }
 
-func GetAPIPath() string {
-	cmd := exec.Command("pkg-config", "--variable=libvirt_api", "libvirt")
+func GetAPIPath(varname, modname string) string {
+	cmd := exec.Command("pkg-config", "--variable="+varname, modname)
 
 	cmdOutput := &bytes.Buffer{}
 	cmd.Stdout = cmdOutput
@@ -361,11 +362,8 @@ func GetSourceFiles() []string {
 	return src
 }
 
-func GetAPISymbols(api *API) (funcs map[string]bool, macros map[string]bool, enums map[string]bool) {
+func GetAPISymbols(api *API, funcs map[string]bool, macros map[string]bool, enums map[string]bool) {
 
-	funcs = make(map[string]bool)
-	macros = make(map[string]bool)
-	enums = make(map[string]bool)
 	for _, file := range api.Files {
 		for _, export := range file.Exports {
 			if export.Type == "function" {
@@ -461,10 +459,21 @@ func SetIgnores(ignores []string, symbols map[string]bool) {
 }
 
 func TestAPICoverage(t *testing.T) {
-	path := GetAPIPath()
-	api := GetAPI(path)
+	funcs := make(map[string]bool)
+	macros := make(map[string]bool)
+	enums := make(map[string]bool)
 
-	funcs, macros, enums := GetAPISymbols(api)
+	path := GetAPIPath("libvirt_api", "libvirt")
+	lxcpath := GetAPIPath("libvirt_lxc_api", "libvirt-lxc")
+	qemupath := GetAPIPath("libvirt_qemu_api", "libvirt-qemu")
+
+	api := GetAPI(path)
+	lxcapi := GetAPI(lxcpath)
+	qemuapi := GetAPI(qemupath)
+
+	GetAPISymbols(api, funcs, macros, enums)
+	GetAPISymbols(lxcapi, funcs, macros, enums)
+	GetAPISymbols(qemuapi, funcs, macros, enums)
 
 	SetIgnores(ignoreFuncs, funcs)
 	SetIgnores(ignoreMacros, macros)
