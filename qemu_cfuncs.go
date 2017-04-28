@@ -34,6 +34,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/libvirt-qemu.h>
 #include <libvirt/virterror.h>
+#include "qemu_compat.h"
 #include "qemu_cfuncs.h"
 #include "callbacks_cfuncs.h"
 #include <assert.h>
