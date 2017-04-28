@@ -812,6 +812,20 @@ const (
 	VCPU_BLOCKED = VcpuState(C.VIR_VCPU_BLOCKED)
 )
 
+type DomainJobOperationType int
+
+const (
+	DOMAIN_JOB_OPERATION_UNKNOWN         = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_UNKNOWN)
+	DOMAIN_JOB_OPERATION_START           = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_START)
+	DOMAIN_JOB_OPERATION_SAVE            = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_SAVE)
+	DOMAIN_JOB_OPERATION_RESTORE         = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_RESTORE)
+	DOMAIN_JOB_OPERATION_MIGRATION_IN    = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_MIGRATION_IN)
+	DOMAIN_JOB_OPERATION_MIGRATION_OUT   = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_MIGRATION_OUT)
+	DOMAIN_JOB_OPERATION_SNAPSHOT        = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_SNAPSHOT)
+	DOMAIN_JOB_OPERATION_SNAPSHOT_REVERT = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_SNAPSHOT_REVERT)
+	DOMAIN_JOB_OPERATION_DUMP            = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_DUMP)
+)
+
 type DomainBlockInfo struct {
 	Capacity   uint64
 	Allocation uint64
@@ -2760,6 +2774,8 @@ type DomainJobInfo struct {
 	CompressionOverflow       uint64
 	AutoConvergeThrottleSet   bool
 	AutoConvergeThrottle      int
+	OperationSet              bool
+	Operation                 DomainJobOperationType
 }
 
 func (d *Domain) GetJobInfo() (*DomainJobInfo, error) {
@@ -2910,6 +2926,10 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_AUTO_CONVERGE_THROTTLE: typedParamsFieldInfo{
 			set: &params.AutoConvergeThrottleSet,
 			i:   &params.AutoConvergeThrottle,
+		},
+		C.VIR_DOMAIN_JOB_OPERATION: typedParamsFieldInfo{
+			set: &params.OperationSet,
+			i:   (*int)(&params.Operation),
 		},
 	}
 }
