@@ -38,6 +38,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lxc_compat.h"
 */
 import "C"
 
@@ -136,4 +137,18 @@ func DomainLxcEnterSecurityLabel(model *NodeSecurityModel, label *SecurityLabel,
 	}
 
 	return &oldlabel, nil
+}
+
+func (d *Domain) DomainLxcEnterCGroup(flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 2000000 {
+		return GetNotImplementedError("virDomainLxcEnterCGroup")
+	}
+
+	ret := C.virDomainLxcEnterCGroupCompat(d.ptr, C.uint(flags))
+
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
 }
