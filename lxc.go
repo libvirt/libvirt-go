@@ -37,6 +37,7 @@ package libvirt
 #include <libvirt/libvirt-lxc.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
+#include <string.h>
 */
 import "C"
 
@@ -82,4 +83,57 @@ func (d *Domain) LxcEnterNamespace(fdlist []os.File, flags uint32) ([]os.File, e
 	}
 	defer C.free(coldfdlist)
 	return oldfdlist, nil
+}
+
+func DomainLxcEnterSecurityLabel(model *NodeSecurityModel, label *SecurityLabel, flags uint32) (*SecurityLabel, error) {
+	var cmodel C.virSecurityModel
+	var clabel C.virSecurityLabel
+	var coldlabel C.virSecurityLabel
+
+	cmodelstrlen := len(model.Model)
+	if cmodelstrlen > (C.VIR_SECURITY_MODEL_BUFLEN - 1) {
+		cmodelstrlen = C.VIR_SECURITY_MODEL_BUFLEN - 1
+	}
+	cmodelstr := C.CString(model.Model)
+	defer C.free(unsafe.Pointer(cmodelstr))
+
+	cdoistrlen := len(model.Doi)
+	if cdoistrlen >= (C.VIR_SECURITY_DOI_BUFLEN - 1) {
+		cdoistrlen = C.VIR_SECURITY_DOI_BUFLEN - 1
+	}
+	cdoistr := C.CString(model.Doi)
+	defer C.free(unsafe.Pointer(cdoistr))
+
+	C.memcpy(unsafe.Pointer(&cmodel.model), unsafe.Pointer(cmodelstr), C.size_t(cmodelstrlen))
+	C.memcpy(unsafe.Pointer(&cmodel.doi), unsafe.Pointer(cdoistr), C.size_t(cdoistrlen))
+
+	clabelstrlen := len(label.Label)
+	if clabelstrlen > (C.VIR_SECURITY_LABEL_BUFLEN - 1) {
+		clabelstrlen = C.VIR_SECURITY_LABEL_BUFLEN - 1
+	}
+	clabelstr := C.CString(label.Label)
+	defer C.free(unsafe.Pointer(clabelstr))
+
+	C.memcpy(unsafe.Pointer(&clabel.label), unsafe.Pointer(clabelstr), C.size_t(clabelstrlen))
+	if label.Enforcing {
+		clabel.enforcing = 1
+	} else {
+		clabel.enforcing = 0
+	}
+
+	ret := C.virDomainLxcEnterSecurityLabel(&cmodel, &clabel, &coldlabel, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	var oldlabel SecurityLabel
+
+	oldlabel.Label = C.GoString((*C.char)(unsafe.Pointer(&coldlabel.label)))
+	if coldlabel.enforcing != 0 {
+		oldlabel.Enforcing = true
+	} else {
+		oldlabel.Enforcing = false
+	}
+
+	return &oldlabel, nil
 }
