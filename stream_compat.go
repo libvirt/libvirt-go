@@ -19,19 +19,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Copyright (c) 2013 Alex Zorin
- * Copyright (C) 2016 Red Hat, Inc.
+ * Copyright (C) 2017 Red Hat, Inc.
  *
  */
 
-#ifndef LIBVIRT_GO_STREAM_CFUNCS_H__
-#define LIBVIRT_GO_STREAM_CFUNCS_H__
+package libvirt
 
-int virStreamSendAll_cgo(virStreamPtr st, int callbackID);
-int virStreamRecvAll_cgo(virStreamPtr st, int callbackID);
-int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);
-int virStreamSparseRecvAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID);
+/*
+#cgo pkg-config: libvirt
+#include <libvirt/libvirt.h>
+#include <assert.h>
+#include "stream_compat.h"
 
-int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID);
+int virStreamRecvFlagsCompat(virStreamPtr st,
+			     char *data,
+			     size_t nbytes,
+			     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3002000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamRecvFlags(st, data, nbytes, flags);
+#endif
+}
 
-#endif /* LIBVIRT_GO_STREAM_CFUNCS_H__ */
+int virStreamSendHoleCompat(virStreamPtr st,
+			    long long length,
+			    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3002000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamSendHole(st, length, flags);
+#endif
+}
+
+int virStreamRecvHoleCompat(virStreamPtr st,
+			    long long *length,
+			    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3002000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamRecvHole(st, length, flags);
+#endif
+}
+
+*/
+import "C"

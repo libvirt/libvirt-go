@@ -143,6 +143,9 @@ var (
 		/* Typedefs that don't need exposing as is */
 		"virStreamSinkFunc",
 		"virStreamSourceFunc",
+		"virStreamSinkHoleFunc",
+		"virStreamSourceHoleFunc",
+		"virStreamSourceSkipFunc",
 
 		/* Only needed at C level */
 		"virDomainGetConnect",

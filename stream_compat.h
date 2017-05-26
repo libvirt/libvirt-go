@@ -24,14 +24,26 @@
  *
  */
 
-#ifndef LIBVIRT_GO_STREAM_CFUNCS_H__
-#define LIBVIRT_GO_STREAM_CFUNCS_H__
+#ifndef LIBVIRT_GO_STREAM_COMPAT_H__
+#define LIBVIRT_GO_STREAM_COMPAT_H__
 
-int virStreamSendAll_cgo(virStreamPtr st, int callbackID);
-int virStreamRecvAll_cgo(virStreamPtr st, int callbackID);
-int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);
-int virStreamSparseRecvAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID);
+/* 3.4.0 */
 
-int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID);
+#ifndef VIR_STREAM_RECV_STOP_AT_HOLE
+#define VIR_STREAM_RECV_STOP_AT_HOLE (1 << 0)
+#endif
 
-#endif /* LIBVIRT_GO_STREAM_CFUNCS_H__ */
+int virStreamRecvFlagsCompat(virStreamPtr st,
+			     char *data,
+			     size_t nbytes,
+			     unsigned int flags);
+
+int virStreamSendHoleCompat(virStreamPtr st,
+			    long long length,
+			    unsigned int flags);
+
+int virStreamRecvHoleCompat(virStreamPtr,
+			    long long *length,
+			    unsigned int flags);
+
+#endif /* LIBVIRT_GO_STREAM_COMPAT_H__ */
