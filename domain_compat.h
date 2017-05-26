@@ -940,4 +940,16 @@ int virDomainSetBlockThresholdCompat(virDomainPtr domain,
 #define VIR_DOMAIN_JOB_OPERATION_DUMP 8
 #endif
 
+
+/* 3.4.0 */
+
+#ifndef VIR_DOMAIN_EVENT_SHUTDOWN_GUEST
+#define VIR_DOMAIN_EVENT_SHUTDOWN_GUEST 1
+#endif
+
+#ifndef VIR_DOMAIN_EVENT_SHUTDOWN_HOST
+#define VIR_DOMAIN_EVENT_SHUTDOWN_HOST 2
+#endif
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
