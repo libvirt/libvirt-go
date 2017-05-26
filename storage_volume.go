@@ -101,6 +101,18 @@ const (
 	STORAGE_VOL_GET_PHYSICAL   = StorageVolInfoFlags(C.VIR_STORAGE_VOL_GET_PHYSICAL)
 )
 
+type StorageVolUploadFlags int
+
+const (
+	STORAGE_VOL_UPLOAD_SPARSE_STREAM = StorageVolUploadFlags(C.VIR_STORAGE_VOL_UPLOAD_SPARSE_STREAM)
+)
+
+type StorageVolDownloadFlags int
+
+const (
+	STORAGE_VOL_DOWNLOAD_SPARSE_STREAM = StorageVolDownloadFlags(C.VIR_STORAGE_VOL_DOWNLOAD_SPARSE_STREAM)
+)
+
 type StorageVol struct {
 	ptr C.virStorageVolPtr
 }
@@ -224,7 +236,7 @@ func (v *StorageVol) WipePattern(algorithm StorageVolWipeAlgorithm, flags uint32
 	return nil
 }
 
-func (v *StorageVol) Upload(stream *Stream, offset, length uint64, flags uint32) error {
+func (v *StorageVol) Upload(stream *Stream, offset, length uint64, flags StorageVolUploadFlags) error {
 	if C.virStorageVolUpload(v.ptr, stream.ptr, C.ulonglong(offset),
 		C.ulonglong(length), C.uint(flags)) == -1 {
 		return GetLastError()
@@ -232,7 +244,7 @@ func (v *StorageVol) Upload(stream *Stream, offset, length uint64, flags uint32)
 	return nil
 }
 
-func (v *StorageVol) Download(stream *Stream, offset, length uint64, flags uint32) error {
+func (v *StorageVol) Download(stream *Stream, offset, length uint64, flags StorageVolDownloadFlags) error {
 	if C.virStorageVolDownload(v.ptr, stream.ptr, C.ulonglong(offset),
 		C.ulonglong(length), C.uint(flags)) == -1 {
 		return GetLastError()
