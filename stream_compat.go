@@ -36,7 +36,7 @@ int virStreamRecvFlagsCompat(virStreamPtr st,
 			     size_t nbytes,
 			     unsigned int flags)
 {
-#if LIBVIR_VERSION_NUMBER < 3002000
+#if LIBVIR_VERSION_NUMBER < 3004000
     assert(0); // Caller should have checked version
 #else
     return virStreamRecvFlags(st, data, nbytes, flags);
@@ -47,7 +47,7 @@ int virStreamSendHoleCompat(virStreamPtr st,
 			    long long length,
 			    unsigned int flags)
 {
-#if LIBVIR_VERSION_NUMBER < 3002000
+#if LIBVIR_VERSION_NUMBER < 3004000
     assert(0); // Caller should have checked version
 #else
     return virStreamSendHole(st, length, flags);
@@ -58,7 +58,7 @@ int virStreamRecvHoleCompat(virStreamPtr st,
 			    long long *length,
 			    unsigned int flags)
 {
-#if LIBVIR_VERSION_NUMBER < 3002000
+#if LIBVIR_VERSION_NUMBER < 3004000
     assert(0); // Caller should have checked version
 #else
     return virStreamRecvHole(st, length, flags);
