@@ -208,4 +208,8 @@ virDomainPtr virDomainDefineXMLFlagsCompat(virConnectPtr conn,
 #define VIR_CONNECT_LIST_NODE_DEVICES_CAP_MDEV 1 << 14
 #endif
 
+#ifndef VIR_CONNECT_LIST_NODE_DEVICES_CAP_CCW_DEV
+#define VIR_CONNECT_LIST_NODE_DEVICES_CAP_CCW_DEV 1 << 15
+#endif
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
