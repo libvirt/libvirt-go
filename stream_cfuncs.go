@@ -32,6 +32,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "stream_cfuncs.h"
 
 int streamSourceCallback(virStreamPtr st, char *cdata, size_t nbytes, int callbackID);
