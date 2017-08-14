@@ -143,7 +143,7 @@
 
 /* 3.7.0 */
 
-#ifdef VIR_FROM_RESCTRL
+#ifndef VIR_FROM_RESCTRL
 #define VIR_FROM_RESCTRL 67
 #endif
 
