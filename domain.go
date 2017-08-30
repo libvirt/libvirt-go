@@ -3808,8 +3808,11 @@ func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 }
 
 func (d *Domain) FSTrim(mount string, minimum uint64, flags uint32) error {
-	cmount := C.CString(mount)
-	defer C.free(unsafe.Pointer(cmount))
+	var cmount *C.char
+	if mount != "" {
+		cmount := C.CString(mount)
+		defer C.free(unsafe.Pointer(cmount))
+	}
 
 	ret := C.virDomainFSTrim(d.ptr, cmount, C.ulonglong(minimum), C.uint(flags))
 	if ret == -1 {
