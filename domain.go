@@ -2328,6 +2328,21 @@ func (d *Domain) MigrateSetMaxDowntime(downtime uint64, flags uint32) error {
 	return nil
 }
 
+func (d *Domain) MigrateGetMaxDowntime(flags uint32) (uint64, error) {
+	var downtimeLen C.ulonglong
+
+	if C.LIBVIR_VERSION_NUMBER < 3007000 {
+		return 0, GetNotImplementedError("virDomainMigrateGetMaxDowntime")
+	}
+
+	ret := C.virDomainMigrateGetMaxDowntimeCompat(d.ptr, &downtimeLen, C.uint(flags))
+	if ret == -1 {
+		return 0, GetLastError()
+	}
+
+	return uint64(downtimeLen), nil
+}
+
 func (d *Domain) MigrateStartPostCopy(flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
 		return GetNotImplementedError("virDomainMigrateStartPostCopy")

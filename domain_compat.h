@@ -958,4 +958,12 @@ int virDomainSetBlockThresholdCompat(virDomainPtr domain,
 #define VIR_DOMAIN_BLOCK_COPY_TRANSIENT_JOB 1 << 2
 #endif
 
+
+/* 3.7.0 */
+
+int virDomainMigrateGetMaxDowntimeCompat(virDomainPtr domain,
+					 unsigned long long *downtime,
+					 unsigned int flags);
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
