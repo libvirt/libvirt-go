@@ -1,2 +1,2 @@
-mech_list: scram-sha-1
+mech_list: digest-md5
 sasldb_path: /etc/libvirt/passwd.db
