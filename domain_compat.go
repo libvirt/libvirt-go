@@ -323,6 +323,27 @@ int virDomainMigrateGetMaxDowntimeCompat(virDomainPtr domain,
 }
 
 
+char *virDomainManagedSaveGetXMLDescCompat(virDomainPtr domain,
+					   unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3007000
+    assert(0); // Caller should have checked version
+#else
+    return virDomainManagedSaveGetXMLDesc(domain, flags);
+#endif
+}
+
+
+int virDomainManagedSaveDefineXMLCompat(virDomainPtr domain,
+					const char *dxml,
+					unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3007000
+    assert(0); // Caller should have checked version
+#else
+    return virDomainManagedSaveDefineXML(domain, dxml, flags);
+#endif
+}
 
 */
 import "C"

@@ -4319,3 +4319,33 @@ func (d *Domain) SetBlockThreshold(dev string, threshold uint64, flags uint32) e
 
 	return nil
 }
+
+func (d *Domain) ManagedSaveDefineXML(xml string, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 3007000 {
+		return GetNotImplementedError("virDomainManagedSaveDefineXML")
+	}
+
+	cxml := C.CString(xml)
+	defer C.free(unsafe.Pointer(cxml))
+	ret := C.virDomainManagedSaveDefineXMLCompat(d.ptr, cxml, C.uint(flags))
+	if ret == -1 {
+		return GetLastError()
+	}
+
+	return nil
+}
+
+func (d *Domain) ManagedSaveGetXMLDesc(flags uint32) (string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 3007000 {
+		return "", GetNotImplementedError("virDomainManagedSaveGetXMLDesc")
+	}
+
+	ret := C.virDomainManagedSaveGetXMLDescCompat(d.ptr, C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	xml := C.GoString(ret)
+	C.free(unsafe.Pointer(ret))
+	return xml, nil
+}

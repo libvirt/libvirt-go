@@ -965,5 +965,10 @@ int virDomainMigrateGetMaxDowntimeCompat(virDomainPtr domain,
 					 unsigned long long *downtime,
 					 unsigned int flags);
 
+char *virDomainManagedSaveGetXMLDescCompat(virDomainPtr domain,
+					   unsigned int flags);
+int virDomainManagedSaveDefineXMLCompat(virDomainPtr domain,
+					const char *dxml,
+					unsigned int flags);
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
