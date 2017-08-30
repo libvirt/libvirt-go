@@ -32,6 +32,7 @@ install:
   - make
   - sudo make install
   - popd
+  - sudo echo -e "mech_list: scram-sha-1\nsasldb_path: /etc/libvirt/passwd.db\n" > /etc/sasl2/libvirt.conf
   - sudo libvirtd -d -l -f libvirtd.conf
   - sudo virtlogd -d || true
   - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
