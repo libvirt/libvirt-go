@@ -142,7 +142,7 @@ func (n *NodeDevice) GetParent() (string, error) {
 	return C.GoString(result), nil
 }
 
-func (p *NodeDevice) NumOfStorageCaps() (int, error) {
+func (p *NodeDevice) NumOfCaps() (int, error) {
 	result := int(C.virNodeDeviceNumOfCaps(p.ptr))
 	if result == -1 {
 		return 0, GetLastError()
@@ -150,7 +150,7 @@ func (p *NodeDevice) NumOfStorageCaps() (int, error) {
 	return result, nil
 }
 
-func (p *NodeDevice) ListStorageCaps() ([]string, error) {
+func (p *NodeDevice) ListCaps() ([]string, error) {
 	const maxCaps = 1024
 	var names [maxCaps](*C.char)
 	namesPtr := unsafe.Pointer(&names)
