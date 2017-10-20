@@ -2860,6 +2860,8 @@ type DomainJobInfo struct {
 	MemBps                    uint64
 	MemDirtyRateSet           bool
 	MemDirtyRate              uint64
+	MemPageSizeSet            bool
+	MemPageSize               uint64
 	MemIterationSet           bool
 	MemIteration              uint64
 	DiskTotalSet              bool
@@ -2991,6 +2993,10 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE: typedParamsFieldInfo{
 			set: &params.MemDirtyRateSet,
 			ul:  &params.MemDirtyRate,
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_PAGE_SIZE: typedParamsFieldInfo{
+			set: &params.MemPageSizeSet,
+			ul:  &params.MemPageSize,
 		},
 		C.VIR_DOMAIN_JOB_MEMORY_ITERATION: typedParamsFieldInfo{
 			set: &params.MemIterationSet,

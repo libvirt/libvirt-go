@@ -971,4 +971,10 @@ int virDomainManagedSaveDefineXMLCompat(virDomainPtr domain,
 					const char *dxml,
 					unsigned int flags);
 
+/* 3.9.0 */
+
+#ifndef VIR_DOMAIN_JOB_MEMORY_PAGE_SIZE
+#define VIR_DOMAIN_JOB_MEMORY_PAGE_SIZE "memory_page_size"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
