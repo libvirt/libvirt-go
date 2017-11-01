@@ -1710,7 +1710,7 @@ func (d *Domain) MemoryStats(nrStats uint32, flags uint32) ([]DomainMemoryStat, 
 		return []DomainMemoryStat{}, GetLastError()
 	}
 
-	out := make([]DomainMemoryStat, result)
+	out := make([]DomainMemoryStat, 0)
 	for i := 0; i < int(result); i++ {
 		out = append(out, DomainMemoryStat{
 			Tag: int32(ptr[i].tag),
