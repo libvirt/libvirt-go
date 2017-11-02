@@ -1720,6 +1720,25 @@ func (d *Domain) MemoryStats(nrStats uint32, flags uint32) ([]DomainMemoryStat, 
 	return out, nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetConnect
+//
+// Contrary to the native C API behaviour, the Go API will
+// acquire a reference on the returned Connect, which must
+// be released by calling Close()
+func (d *Domain) DomainGetConnect() (*Connect, error) {
+	ptr := C.virDomainGetConnect(d.ptr)
+	if ptr == nil {
+		return nil, GetLastError()
+	}
+
+	ret := C.virConnectRef(ptr)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	return &Connect{ptr: ptr}, nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetVcpus
 func (d *Domain) GetVcpus() ([]DomainVcpuInfo, error) {
 	var cnodeinfo C.virNodeInfo
