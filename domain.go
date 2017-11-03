@@ -1726,6 +1726,12 @@ func (d *Domain) DomainGetConnect() (*Connect, error) {
 	if ptr == nil {
 		return nil, GetLastError()
 	}
+
+	ret := C.virConnectRef(ptr)
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
 	return &Connect{ptr: ptr}, nil
 }
 
