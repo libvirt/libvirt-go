@@ -111,7 +111,7 @@ func TestStoragePoolEventRegister(t *testing.T) {
 
 	// Deregister the event
 	if err := conn.StoragePoolEventDeregister(callbackId); err != nil {
-		t.Fatal("Event deregistration failed with: %v", err)
+		t.Fatalf("Event deregistration failed with: %v", err)
 	}
 	callbackId = -1 // Don't deregister twice
 

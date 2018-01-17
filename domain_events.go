@@ -724,7 +724,7 @@ func getDomainPinTempFieldInfo(numvcpu int, numiothread int, params *domainEvent
 		}
 	}
 	for i := 0; i < numiothread; i++ {
-		ret[fmt.Sprintf("cputune.iothreadpin%u", i)] = typedParamsFieldInfo{
+		ret[fmt.Sprintf("cputune.iothreadpin%d", i)] = typedParamsFieldInfo{
 			s: &params.IOThreadPin[i],
 		}
 	}

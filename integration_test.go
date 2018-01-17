@@ -1461,8 +1461,8 @@ func TestStorageVolUploadDownloadCallbacks(t *testing.T) {
 	}
 
 	if sent != len(input) {
-		t.Fatal("Wanted %d but only sent %d bytes",
-			len(input), sent)
+		t.Fatalf("Wanted %d but only sent %d bytes",
+			 len(input), sent)
 	}
 
 	// 4. finish!
