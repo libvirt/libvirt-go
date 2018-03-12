@@ -409,6 +409,7 @@ const (
 	KEYCODE_SET_USB    = KeycodeSet(C.VIR_KEYCODE_SET_USB)
 	KEYCODE_SET_WIN32  = KeycodeSet(C.VIR_KEYCODE_SET_WIN32)
 	KEYCODE_SET_RFB    = KeycodeSet(C.VIR_KEYCODE_SET_RFB)
+	KEYCODE_SET_QNUM   = KeycodeSet(C.VIR_KEYCODE_SET_QNUM)
 )
 
 type ConnectDomainEventBlockJobStatus int

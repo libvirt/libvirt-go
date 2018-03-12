@@ -1018,4 +1018,10 @@ int virDomainSetLifecycleActionCompat(virDomainPtr domain,
                                       unsigned int action,
                                       unsigned int flags);
 
+/* 4.2.0 */
+
+#ifndef VIR_KEYCODE_SET_QNUM
+#define VIR_KEYCODE_SET_QNUM 9
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
