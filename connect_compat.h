@@ -217,4 +217,16 @@ virDomainPtr virDomainDefineXMLFlagsCompat(virConnectPtr conn,
 virStoragePoolPtr virStoragePoolLookupByTargetPathCompat(virConnectPtr conn,
 							 const char *path);
 
+/* 4.4.0 */
+
+char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
+					    const char *emulator,
+					    const char *arch,
+					    const char *machine,
+					    const char *virttype,
+					    const char **xmlCPUs,
+					    unsigned int ncpus,
+					    unsigned int flags);
+
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */

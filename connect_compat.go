@@ -126,6 +126,22 @@ virStoragePoolPtr virStoragePoolLookupByTargetPathCompat(virConnectPtr conn,
 #endif
 }
 
+char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
+					    const char *emulator,
+					    const char *arch,
+					    const char *machine,
+					    const char *virttype,
+					    const char **xmlCPUs,
+					    unsigned int ncpus,
+					    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4004000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectBaselineHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPUs, ncpus, flags);
+#endif
+}
+
 
 */
 import "C"

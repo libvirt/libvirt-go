@@ -1945,6 +1945,46 @@ func (c *Connect) BaselineCPU(xmlCPUs []string, flags ConnectBaselineCPUFlags) (
 	return C.GoString(ret), nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectBaselineHypervisorCPU
+func (c *Connect) BaselineHypervisorCPU(emulator string, arch string, machine string, virttype string, xmlCPUs []string, flags ConnectBaselineCPUFlags) (string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4004000 {
+		return "", GetNotImplementedError("virConnectBaselineHypervisorCPU")
+	}
+
+	var cemulator, carch, cmachine, cvirttype *C.char
+	if emulator != "" {
+		cemulator = C.CString(emulator)
+		defer C.free(unsafe.Pointer(cemulator))
+	}
+	if arch != "" {
+		carch = C.CString(arch)
+		defer C.free(unsafe.Pointer(carch))
+	}
+	if machine != "" {
+		cmachine = C.CString(machine)
+		defer C.free(unsafe.Pointer(cmachine))
+	}
+	if virttype != "" {
+		cvirttype = C.CString(virttype)
+		defer C.free(unsafe.Pointer(cvirttype))
+	}
+	cxmlCPUs := make([]*C.char, len(xmlCPUs))
+	for i := 0; i < len(xmlCPUs); i++ {
+		cxmlCPUs[i] = C.CString(xmlCPUs[i])
+		defer C.free(unsafe.Pointer(cxmlCPUs[i]))
+	}
+
+	ret := C.virConnectBaselineHypervisorCPU(c.ptr, cemulator, carch, cmachine, cvirttype,
+		&cxmlCPUs[0], C.uint(len(xmlCPUs)), C.uint(flags))
+	if ret == nil {
+		return "", GetLastError()
+	}
+
+	defer C.free(unsafe.Pointer(ret))
+
+	return C.GoString(ret), nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectCompareCPU
 func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (CPUCompareResult, error) {
 	cxmlDesc := C.CString(xmlDesc)
