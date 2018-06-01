@@ -1974,7 +1974,7 @@ func (c *Connect) BaselineHypervisorCPU(emulator string, arch string, machine st
 		defer C.free(unsafe.Pointer(cxmlCPUs[i]))
 	}
 
-	ret := C.virConnectBaselineHypervisorCPU(c.ptr, cemulator, carch, cmachine, cvirttype,
+	ret := C.virConnectBaselineHypervisorCPUCompat(c.ptr, cemulator, carch, cmachine, cvirttype,
 		&cxmlCPUs[0], C.uint(len(xmlCPUs)), C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
