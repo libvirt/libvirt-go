@@ -357,5 +357,15 @@ int virDomainSetLifecycleActionCompat(virDomainPtr domain,
 #endif
 }
 
+int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
+				     const char *alias,
+				     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4004000
+    assert(0); // Caller should have checked version
+#else
+    return virDomainDetachDeviceAlias(domain, alias, flags);
+#endif
+}
 */
 import "C"

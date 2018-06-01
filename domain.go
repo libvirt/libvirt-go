@@ -1494,6 +1494,21 @@ func (d *Domain) DetachDeviceFlags(xml string, flags DomainDeviceModifyFlags) er
 	return nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainDetachDeviceAlias
+func (d *Domain) DetachDeviceAlias(alias string, flags DomainDeviceModifyFlags) error {
+	if C.LIBVIR_VERSION_NUMBER < 4004000 {
+		return GetNotImplementedError("virDomainDetachDeviceAlias")
+	}
+
+	cAlias := C.CString(alias)
+	defer C.free(unsafe.Pointer(cAlias))
+	result := C.virDomainDetachDeviceAliasCompat(d.ptr, cAlias, C.uint(flags))
+	if result == -1 {
+		return GetLastError()
+	}
+	return nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainUpdateDeviceFlags
 func (d *Domain) UpdateDeviceFlags(xml string, flags DomainDeviceModifyFlags) error {
 	cXml := C.CString(xml)

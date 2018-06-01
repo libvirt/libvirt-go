@@ -1028,4 +1028,12 @@ int virDomainSetLifecycleActionCompat(virDomainPtr domain,
 #define VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_ARP 1
 #endif
 
+
+/* 4.4.0 */
+
+int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
+				     const char *alias,
+				     unsigned int flags);
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
