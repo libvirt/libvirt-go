@@ -228,5 +228,12 @@ char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
 					    unsigned int ncpus,
 					    unsigned int flags);
 
+int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
+					 const char *emulator,
+					 const char *arch,
+					 const char *machine,
+					 const char *virttype,
+					 const char *xmlCPU,
+					 unsigned int flags);
 
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */

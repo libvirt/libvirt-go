@@ -142,6 +142,20 @@ char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
 #endif
 }
 
+int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
+                                         const char *emulator,
+                                         const char *arch,
+                                         const char *machine,
+                                         const char *virttype,
+                                         const char *xmlCPU,
+                                         unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4004000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectCompareHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPU, flags);
+#endif
+}
 
 */
 import "C"

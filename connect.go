@@ -1998,6 +1998,41 @@ func (c *Connect) CompareCPU(xmlDesc string, flags ConnectCompareCPUFlags) (CPUC
 	return CPUCompareResult(ret), nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectCompareHypervisorCPU
+func (c *Connect) CompareHypervisorCPU(emulator string, arch string, machine string, virttype string, xmlDesc string, flags ConnectCompareCPUFlags) (CPUCompareResult, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4004000 {
+		return CPU_COMPARE_ERROR, GetNotImplementedError("virConnectCompareHypervisorCPU")
+	}
+
+	var cemulator, carch, cmachine, cvirttype *C.char
+	if emulator != "" {
+		cemulator = C.CString(emulator)
+		defer C.free(unsafe.Pointer(cemulator))
+	}
+	if arch != "" {
+		carch = C.CString(arch)
+		defer C.free(unsafe.Pointer(carch))
+	}
+	if machine != "" {
+		cmachine = C.CString(machine)
+		defer C.free(unsafe.Pointer(cmachine))
+	}
+	if virttype != "" {
+		cvirttype = C.CString(virttype)
+		defer C.free(unsafe.Pointer(cvirttype))
+	}
+
+	cxmlDesc := C.CString(xmlDesc)
+	defer C.free(unsafe.Pointer(cxmlDesc))
+
+	ret := C.virConnectCompareHypervisorCPUCompat(c.ptr, cemulator, carch, cmachine, cvirttype, cxmlDesc, C.uint(flags))
+	if ret == C.VIR_CPU_COMPARE_ERROR {
+		return CPU_COMPARE_ERROR, GetLastError()
+	}
+
+	return CPUCompareResult(ret), nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virConnectDomainXMLFromNative
 func (c *Connect) DomainXMLFromNative(nativeFormat string, nativeConfig string, flags uint32) (string, error) {
 	cnativeFormat := C.CString(nativeFormat)
