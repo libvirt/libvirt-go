@@ -32,10 +32,6 @@ import (
 	"time"
 )
 
-func init() {
-	EventRegisterDefaultImpl()
-}
-
 func TestNetworkEventRegister(t *testing.T) {
 
 	if true {

@@ -32,10 +32,6 @@ import (
 	"time"
 )
 
-func init() {
-	EventRegisterDefaultImpl()
-}
-
 func TestStoragePoolEventRegister(t *testing.T) {
 
 	if true {

@@ -32,10 +32,6 @@ import (
 	"time"
 )
 
-func init() {
-	EventRegisterDefaultImpl()
-}
-
 func TestNodeDeviceEventRegister(t *testing.T) {
 
 	if true {

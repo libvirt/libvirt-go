@@ -32,10 +32,6 @@ import (
 	"time"
 )
 
-func init() {
-	EventRegisterDefaultImpl()
-}
-
 func TestDomainEventRegister(t *testing.T) {
 
 	callbackId := -1
