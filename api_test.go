@@ -69,6 +69,8 @@ var (
 		"virCopyLastError",
 		"virFreeError",
 		"virGetLastErrorMessage",
+		"virGetLastErrorCode",
+		"virGetLastErrorDomain",
 		"virResetLastError",
 		"virSaveLastError",
 		"virDefaultErrorFunc",
