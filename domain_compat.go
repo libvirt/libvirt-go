@@ -367,5 +367,18 @@ int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
     return virDomainDetachDeviceAlias(domain, alias, flags);
 #endif
 }
+
+int virDomainGetLaunchSecurityInfoCompat(virDomainPtr domain,
+					 virTypedParameterPtr *params,
+					 int *nparams,
+					 unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virDomainGetLaunchSecurityInfo(domain, params, nparams, flags);
+#endif
+}
+
 */
 import "C"

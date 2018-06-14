@@ -4573,3 +4573,44 @@ func (d *Domain) SetLifecycleAction(lifecycleType uint32, action uint32, flags u
 
 	return nil
 }
+
+type DomainLaunchSecurityParameters struct {
+	SEVMeasurementSet bool
+	SEVMeasurement    string
+}
+
+func getDomainLaunchSecurityFieldInfo(params *DomainLaunchSecurityParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT: typedParamsFieldInfo{
+			set: &params.SEVMeasurementSet,
+			s:   &params.SEVMeasurement,
+		},
+	}
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetLaunchSecurityInfo
+func (d *Domain) GetLaunchSecurityInfo(flags uint32) (*DomainLaunchSecurityParameters, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4005000 {
+		return nil, GetNotImplementedError("virDomainGetLaunchSecurityInfo")
+	}
+
+	params := &DomainLaunchSecurityParameters{}
+	info := getDomainLaunchSecurityFieldInfo(params)
+
+	var cparams *C.virTypedParameter
+	var nparams C.int
+
+	ret := C.virDomainGetLaunchSecurityInfoCompat(d.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	_, err := typedParamsUnpackLen(cparams, int(nparams), info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}

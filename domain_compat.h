@@ -1035,5 +1035,11 @@ int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
 				     const char *alias,
 				     unsigned int flags);
 
+/* 4.5.0 */
+
+int virDomainGetLaunchSecurityInfoCompat(virDomainPtr domain,
+                                         virTypedParameterPtr *params,
+                                         int *nparams,
+                                         unsigned int flags);
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
