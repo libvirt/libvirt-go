@@ -2765,3 +2765,62 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 
 	return stats, nil
 }
+
+type NodeSEVParameters struct {
+	PDHSet             bool
+	PDH                string
+	CertChainSet       bool
+	CertChain          string
+	CBitPosSet         bool
+	CBitPos            uint
+	ReducedPhysBitsSet bool
+	ReducedPhysBits    uint
+}
+
+func getNodeSEVFieldInfo(params *NodeSEVParameters) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_NODE_SEV_PDH: typedParamsFieldInfo{
+			set: &params.PDHSet,
+			s:   &params.PDH,
+		},
+		C.VIR_NODE_SEV_CERT_CHAIN: typedParamsFieldInfo{
+			set: &params.CertChainSet,
+			s:   &params.CertChain,
+		},
+		C.VIR_NODE_SEV_CBITPOS: typedParamsFieldInfo{
+			set: &params.CBitPosSet,
+			ui:  &params.CBitPos,
+		},
+		C.VIR_NODE_SEV_REDUCED_PHYS_BITS: typedParamsFieldInfo{
+			set: &params.ReducedPhysBitsSet,
+			ui:  &params.ReducedPhysBits,
+		},
+	}
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-host.html#virNodeGetSEVInfo
+func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4005000 {
+		return nil, GetNotImplementedError("virNodeGetSEVInfo")
+	}
+
+	params := &NodeSEVParameters{}
+	info := getNodeSEVFieldInfo(params)
+
+	var cparams *C.virTypedParameter
+	var nparams C.int
+
+	ret := C.virNodeGetSEVInfoCompat(c.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
+	if ret == -1 {
+		return nil, GetLastError()
+	}
+
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	_, err := typedParamsUnpackLen(cparams, int(nparams), info)
+	if err != nil {
+		return nil, err
+	}
+
+	return params, nil
+}

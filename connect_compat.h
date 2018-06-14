@@ -236,4 +236,11 @@ int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
 					 const char *xmlCPU,
 					 unsigned int flags);
 
+/* 4.5.0 */
+
+int virNodeGetSEVInfoCompat(virConnectPtr conn,
+                            virTypedParameterPtr *params,
+                            int *nparams,
+                            unsigned int flags);
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
