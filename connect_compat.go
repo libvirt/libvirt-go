@@ -157,17 +157,5 @@ int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
 #endif
 }
 
-int virNodeGetSEVInfoCompat(virConnectPtr conn,
-                            virTypedParameterPtr *params,
-                            int *nparams,
-                            unsigned int flags)
-{
-#if LIBVIR_VERSION_NUMBER < 4005000
-    assert(0); // Caller should have checked version
-#else
-    return virNodeGetSEVInfo(conn, params, nparams, flags);
-#endif
-}
-
 */
 import "C"
