@@ -243,4 +243,20 @@ int virNodeGetSEVInfoCompat(virConnectPtr conn,
                             int *nparams,
                             unsigned int flags);
 
+#ifndef VIR_NODE_SEV_CBITPOS
+#define VIR_NODE_SEV_CBITPOS "cbitpos"
+#endif
+
+#ifndef VIR_NODE_SEV_REDUCED_PHYS_BITS
+#define VIR_NODE_SEV_REDUCED_PHYS_BITS "reduced-phys-bits"
+#endif
+
+#ifndef VIR_NODE_SEV_PDH
+#define VIR_NODE_SEV_PDH "pdh"
+#endif
+
+#ifndef VIR_NODE_SEV_CERT_CHAIN
+#define VIR_NODE_SEV_CERT_CHAIN "cert-chain"
+#endif
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */

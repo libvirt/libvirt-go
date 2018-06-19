@@ -1042,4 +1042,8 @@ int virDomainGetLaunchSecurityInfoCompat(virDomainPtr domain,
                                          int *nparams,
                                          unsigned int flags);
 
+#ifndef VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT
+#define VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT "sev-measurement"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
