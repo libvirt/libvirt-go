@@ -1266,6 +1266,20 @@ func (c *Connect) LookupNWFilterByUUID(uuid []byte) (*NWFilter, error) {
 	return &NWFilter{ptr: ptr}, nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingLookupByPortDev
+func (c *Connect) LookupNWFilterBindingByPortDev(name string) (*NWFilterBinding, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4005000 {
+		return nil, GetNotImplementedError("virNWFilterBindingLookupByPortDev")
+	}
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
+	ptr := C.virNWFilterBindingLookupByPortDevCompat(c.ptr, cName)
+	if ptr == nil {
+		return nil, GetLastError()
+	}
+	return &NWFilterBinding{ptr: ptr}, nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-storage.html#virStorageVolLookupByKey
 func (c *Connect) LookupStorageVolByKey(key string) (*StorageVol, error) {
 	cKey := C.CString(key)
@@ -1452,6 +1466,30 @@ func (c *Connect) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	slice := *(*[]C.virNWFilterPtr)(unsafe.Pointer(&hdr))
 	for _, ptr := range slice {
 		filters = append(filters, NWFilter{ptr})
+	}
+	C.free(unsafe.Pointer(cList))
+	return filters, nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virConnectListAllNWFilterBindings
+func (c *Connect) ListAllNWFilterBindings(flags uint32) ([]NWFilterBinding, error) {
+	var cList *C.virNWFilterBindingPtr
+	if C.LIBVIR_VERSION_NUMBER < 4005000 {
+		return []NWFilterBinding{}, GetNotImplementedError("virConnectListAllNWFilterBindings")
+	}
+	numNWFilters := C.virConnectListAllNWFilterBindingsCompat(c.ptr, (**C.virNWFilterBindingPtr)(&cList), C.uint(flags))
+	if numNWFilters == -1 {
+		return nil, GetLastError()
+	}
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(cList)),
+		Len:  int(numNWFilters),
+		Cap:  int(numNWFilters),
+	}
+	var filters []NWFilterBinding
+	slice := *(*[]C.virNWFilterBindingPtr)(unsafe.Pointer(&hdr))
+	for _, ptr := range slice {
+		filters = append(filters, NWFilterBinding{ptr})
 	}
 	C.free(unsafe.Pointer(cList))
 	return filters, nil
@@ -2823,4 +2861,18 @@ func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
 	}
 
 	return params, nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virNWFilterBindingCreateXML
+func (c *Connect) NWFilterBindingCreateXML(xmlConfig string, flags uint32) (*NWFilterBinding, error) {
+	if C.LIBVIR_VERSION_NUMBER < 4005000 {
+		return nil, GetNotImplementedError("virNWFilterBindingCreateXML")
+	}
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	ptr := C.virNWFilterBindingCreateXMLCompat(c.ptr, cXml, C.uint(flags))
+	if ptr == nil {
+		return nil, GetLastError()
+	}
+	return &NWFilterBinding{ptr: ptr}, nil
 }

@@ -259,4 +259,19 @@ int virNodeGetSEVInfoCompat(virConnectPtr conn,
 #define VIR_NODE_SEV_CERT_CHAIN "cert-chain"
 #endif
 
+#if LIBVIR_VERSION_NUMBER < 4005000
+typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
+#endif
+
+int virConnectListAllNWFilterBindingsCompat(virConnectPtr conn,
+                                            virNWFilterBindingPtr **bindings,
+                                            unsigned int flags);
+
+virNWFilterBindingPtr virNWFilterBindingCreateXMLCompat(virConnectPtr conn,
+							const char *xml,
+							unsigned int flags);
+
+virNWFilterBindingPtr virNWFilterBindingLookupByPortDevCompat(virConnectPtr conn,
+							      const char *portdev);
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */

@@ -169,5 +169,38 @@ int virNodeGetSEVInfoCompat(virConnectPtr conn,
 #endif
 }
 
+int virConnectListAllNWFilterBindingsCompat(virConnectPtr conn,
+                                            virNWFilterBindingPtr **bindings,
+                                            unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectListAllNWFilterBindings(conn, bindings, flags);
+#endif
+}
+
+virNWFilterBindingPtr virNWFilterBindingCreateXMLCompat(virConnectPtr conn,
+							const char *xml,
+							unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virNWFilterBindingCreateXML(conn, xml, flags);
+#endif
+}
+
+virNWFilterBindingPtr virNWFilterBindingLookupByPortDevCompat(virConnectPtr conn,
+							      const char *portdev)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virNWFilterBindingLookupByPortDev(conn, portdev);
+#endif
+}
+
+
 */
 import "C"
