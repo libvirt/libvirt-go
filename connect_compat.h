@@ -274,4 +274,8 @@ virNWFilterBindingPtr virNWFilterBindingCreateXMLCompat(virConnectPtr conn,
 virNWFilterBindingPtr virNWFilterBindingLookupByPortDevCompat(virConnectPtr conn,
 							      const char *portdev);
 
+#ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_NOWAIT
+#define VIR_CONNECT_GET_ALL_DOMAINS_STATS_NOWAIT 1 << 29
+#endif
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
