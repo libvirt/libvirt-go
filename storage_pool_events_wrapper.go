@@ -28,10 +28,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
-#include "storage_pool_compat.h"
 #include "storage_pool_events_wrapper.h"
 #include "callbacks_wrapper.h"
 #include <stdint.h>

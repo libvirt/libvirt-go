@@ -27,9 +27,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
 #include <assert.h>
-#include "nwfilter_binding_compat.h"
 #include "nwfilter_binding_wrapper.h"
 
 const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding)

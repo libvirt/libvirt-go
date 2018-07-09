@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_STREAM_WRAPPER_H__
 #define LIBVIRT_GO_STREAM_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "stream_compat.h"
+
 int virStreamSendAllWrapper(virStreamPtr st, int callbackID);
 int virStreamRecvAllWrapper(virStreamPtr st, int callbackID);
 int virStreamSparseSendAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);

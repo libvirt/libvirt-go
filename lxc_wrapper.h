@@ -27,7 +27,9 @@
 #ifndef LIBVIRT_GO_LXC_COMPAT_H__
 #define LIBVIRT_GO_LXC_COMPAT_H__
 
-/* 2.0.0 */
+#include <libvirt/libvirt.h>
+#include <libvirt/libvirt-lxc.h>
+#include <libvirt/virterror.h>
 
 int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
 				  unsigned int flags);

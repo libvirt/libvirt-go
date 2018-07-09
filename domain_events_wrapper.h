@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "domain_compat.h"
+
 void domainEventLifecycleCallbackHelper(virConnectPtr c, virDomainPtr d,
                                      int event, int detail, void* data);
 

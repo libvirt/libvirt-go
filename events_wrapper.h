@@ -27,6 +27,9 @@
 #ifndef LIBVIRT_GO_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+
 int virEventAddHandleWrapper(int fd, int events, int callbackID);
 int virEventAddTimeoutWrapper(int freq, int callbackID);
 void virEventRegisterImplWrapper(void);

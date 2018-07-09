@@ -28,8 +28,6 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
 #include "connect_wrapper.h"
 #include "callbacks_wrapper.h"

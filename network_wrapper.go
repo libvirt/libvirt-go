@@ -28,9 +28,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
 #include <assert.h>
-#include "network_compat.h"
 #include "network_wrapper.h"
 
 void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease)

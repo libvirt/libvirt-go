@@ -27,6 +27,11 @@
 #ifndef LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/libvirt-qemu.h>
+#include <libvirt/virterror.h>
+#include "qemu_compat.h"
+
 void domainQemuMonitorEventCallbackHelper(virConnectPtr c, virDomainPtr d,
 					const char *event, long long secs,
 					unsigned int micros, const char *details, void *data);

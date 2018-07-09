@@ -28,9 +28,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
 #include <assert.h>
-#include "storage_volume_compat.h"
 #include "storage_volume_wrapper.h"
 
 int virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,

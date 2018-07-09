@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "network_compat.h"
+
 void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,
                                      int event, int detail, void* data);
 

@@ -33,11 +33,7 @@ package libvirt
 // Can't rely on pkg-config for libvirt-qemu since it was not
 // installed until 2.6.0 onwards
 #cgo LDFLAGS: -lvirt-qemu
-#include <libvirt/libvirt.h>
-#include <libvirt/libvirt-qemu.h>
-#include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "qemu_compat.h"
 #include "qemu_wrapper.h"
 */
 import "C"

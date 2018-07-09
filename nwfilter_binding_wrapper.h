@@ -26,6 +26,10 @@
 #ifndef LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__
 #define LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "nwfilter_binding_compat.h"
+
 const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding);
 const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding);
 char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,

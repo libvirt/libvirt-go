@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_NODE_DEVICE_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_NODE_DEVICE_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "node_device_compat.h"
+
 void nodeDeviceEventLifecycleCallbackHelper(virConnectPtr c, virNodeDevicePtr d,
                                          int event, int detail, void* data);
 

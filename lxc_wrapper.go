@@ -31,8 +31,6 @@ package libvirt
 // Can't rely on pkg-config for libvirt-lxc since it was not
 // installed until 2.6.0 onwards
 #cgo LDFLAGS: -lvirt-lxc
-#include <libvirt/libvirt.h>
-#include <libvirt/libvirt-lxc.h>
 #include <assert.h>
 #include "lxc_wrapper.h"
 

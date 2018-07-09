@@ -28,13 +28,10 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
-#include "network_compat.h"
+#include <stdint.h>
 #include "network_events_wrapper.h"
 #include "callbacks_wrapper.h"
-#include <stdint.h>
 
 extern void networkEventLifecycleCallback(virConnectPtr, virNetworkPtr, int, int, int);
 void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,

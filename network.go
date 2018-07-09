@@ -28,10 +28,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "network_compat.h"
 #include "network_wrapper.h"
 */
 import "C"

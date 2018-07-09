@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_NETWORK_WRAPPER_H__
 #define LIBVIRT_GO_NETWORK_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "network_compat.h"
+
 void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease);
 
 int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,

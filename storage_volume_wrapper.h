@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_STORAGE_VOLUME_WRAPPER_H__
 #define LIBVIRT_GO_STORAGE_VOLUME_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "storage_volume_compat.h"
+
 int virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
 				    virStorageVolInfoPtr info,
 				    unsigned int flags);

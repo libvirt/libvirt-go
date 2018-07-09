@@ -27,10 +27,7 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "nwfilter_binding_compat.h"
 #include "nwfilter_binding_wrapper.h"
 */
 import "C"

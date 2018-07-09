@@ -36,10 +36,7 @@ import (
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "connect_compat.h"
 #include "connect_wrapper.h"
 */
 import "C"

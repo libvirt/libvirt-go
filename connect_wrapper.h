@@ -26,6 +26,11 @@
 
 #ifndef LIBVIRT_GO_CONNECT_WRAPPER_H__
 #define LIBVIRT_GO_CONNECT_WRAPPER_H__
+
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "connect_compat.h"
+
 void closeCallbackHelper(virConnectPtr conn, int reason, void *opaque);
 int virConnectRegisterCloseCallbackHelper(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
 

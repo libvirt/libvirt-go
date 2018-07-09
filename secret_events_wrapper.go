@@ -28,13 +28,10 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
-#include "secret_compat.h"
+#include <stdint.h>
 #include "secret_events_wrapper.h"
 #include "callbacks_wrapper.h"
-#include <stdint.h>
 
 extern void secretEventLifecycleCallback(virConnectPtr, virSecretPtr, int, int, int);
 void secretEventLifecycleCallbackHelper(virConnectPtr c, virSecretPtr d,

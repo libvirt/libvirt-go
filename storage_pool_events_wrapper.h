@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_STORAGE_POOL_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_STORAGE_POOL_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "storage_pool_compat.h"
+
 void storagePoolEventLifecycleCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
 					   int event, int detail, void* data);
 void storagePoolEventGenericCallbackHelper(virConnectPtr c, virStoragePoolPtr d,

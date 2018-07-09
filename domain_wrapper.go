@@ -28,7 +28,6 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
 #include <assert.h>
 #include "domain_wrapper.h"
 

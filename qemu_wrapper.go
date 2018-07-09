@@ -31,14 +31,10 @@ package libvirt
 // Can't rely on pkg-config for libvirt-qemu since it was not
 // installed until 2.6.0 onwards
 #cgo LDFLAGS: -lvirt-qemu
-#include <libvirt/libvirt.h>
-#include <libvirt/libvirt-qemu.h>
-#include <libvirt/virterror.h>
-#include "qemu_compat.h"
-#include "qemu_wrapper.h"
-#include "callbacks_wrapper.h"
 #include <assert.h>
 #include <stdint.h>
+#include "qemu_wrapper.h"
+#include "callbacks_wrapper.h"
 
 
 extern void domainQemuMonitorEventCallback(virConnectPtr, virDomainPtr, const char *, long long, unsigned int, const char *, int);

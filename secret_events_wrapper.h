@@ -27,6 +27,10 @@
 #ifndef LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
 
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include "secret_compat.h"
+
 void secretEventLifecycleCallbackHelper(virConnectPtr c, virSecretPtr d,
                                      int event, int detail, void* data);
 void secretEventGenericCallbackHelper(virConnectPtr c, virSecretPtr d,

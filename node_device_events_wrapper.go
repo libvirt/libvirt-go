@@ -28,13 +28,10 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
-#include "node_device_compat.h"
+#include <stdint.h>
 #include "node_device_events_wrapper.h"
 #include "callbacks_wrapper.h"
-#include <stdint.h>
 
 extern void nodeDeviceEventLifecycleCallback(virConnectPtr, virNodeDevicePtr, int, int, int);
 void nodeDeviceEventLifecycleCallbackHelper(virConnectPtr c, virNodeDevicePtr d,
