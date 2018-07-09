@@ -48,10 +48,12 @@ virConnectStoragePoolEventRegisterAnyWrapper(virConnectPtr c,
                                              virStoragePoolPtr d,
                                              int eventID,
                                              virConnectStoragePoolEventGenericCallback cb,
-                                             long goCallbackId);
+                                             long goCallbackId,
+					     virErrorPtr err);
 
 int
 virConnectStoragePoolEventDeregisterAnyWrapper(virConnectPtr conn,
-                                               int callbackID);
+                                               int callbackID,
+					       virErrorPtr err);
 
 #endif /* LIBVIRT_GO_STORAGE_POOL_EVENTS_WRAPPER_H__ */

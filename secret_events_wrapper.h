@@ -47,10 +47,12 @@ virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,
                                         virSecretPtr d,
                                         int eventID,
                                         virConnectSecretEventGenericCallback cb,
-                                        long goCallbackId);
+                                        long goCallbackId,
+					virErrorPtr err);
 
 int
 virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
-                                          int callbackID);
+                                          int callbackID,
+					  virErrorPtr err);
 
 #endif /* LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__ */

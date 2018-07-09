@@ -39,21 +39,11 @@ static void eventAddHandleHelper(int watch, int fd, int events, void *opaque)
     eventHandleCallback(watch, fd, events, (int)(intptr_t)opaque);
 }
 
-int virEventAddHandleWrapper(int fd, int events, int callbackID)
-{
-    return virEventAddHandle(fd, events, eventAddHandleHelper, (void *)(intptr_t)callbackID, NULL);
-}
-
 void eventTimeoutCallback(int timer, int callbackID);
 
 static void eventAddTimeoutHelper(int timer, void *opaque)
 {
     eventTimeoutCallback(timer, (int)(intptr_t)opaque);
-}
-
-int virEventAddTimeoutWrapper(int freq, int callbackID)
-{
-    return virEventAddTimeout(freq, eventAddTimeoutHelper, (void *)(intptr_t)callbackID, NULL);
 }
 
 int eventAddHandleFunc(int fd, int event, uintptr_t callback, uintptr_t opaque, uintptr_t freecb);
@@ -123,6 +113,79 @@ void eventHandleCallbackFree(uintptr_t callback, uintptr_t opaque)
 void eventTimeoutCallbackFree(uintptr_t callback, uintptr_t opaque)
 {
     ((virFreeCallback)callback)((void *)opaque);
+}
+
+
+int
+virEventAddHandleWrapper(int fd,
+                         int events,
+                         int callbackID,
+                         virErrorPtr err)
+{
+    int ret = virEventAddHandle(fd, events, eventAddHandleHelper, (void *)(intptr_t)callbackID, NULL);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virEventAddTimeoutWrapper(int timeout,
+                          int callbackID,
+                          virErrorPtr err)
+{
+    int ret = virEventAddTimeout(timeout, eventAddTimeoutHelper, (void *)(intptr_t)callbackID, NULL);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virEventRegisterDefaultImplWrapper(virErrorPtr err)
+{
+    int ret = virEventRegisterDefaultImpl();
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virEventRemoveHandleWrapper(int watch,
+                            virErrorPtr err)
+{
+    int ret = virEventRemoveHandle(watch);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virEventRemoveTimeoutWrapper(int timer,
+                             virErrorPtr err)
+{
+    int ret = virEventRemoveTimeout(timer);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virEventRunDefaultImplWrapper(virErrorPtr err)
+{
+    int ret = virEventRunDefaultImpl();
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 }
 
 

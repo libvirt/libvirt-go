@@ -94,13 +94,14 @@ func (c *Connect) NodeDeviceEventLifecycleRegister(device *NodeDevice, callback 
 	if device != nil {
 		cdevice = device.ptr
 	}
+	var err C.virError
 	ret := C.virConnectNodeDeviceEventRegisterAnyWrapper(c.ptr, cdevice,
 		C.VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE,
 		C.virConnectNodeDeviceEventGenericCallback(callbackPtr),
-		C.long(goCallBackId))
+		C.long(goCallBackId), &err)
 	if ret == -1 {
 		freeCallbackId(goCallBackId)
-		return 0, GetLastError()
+		return 0, makeError(&err)
 	}
 	return int(ret), nil
 }
@@ -113,13 +114,14 @@ func (c *Connect) NodeDeviceEventUpdateRegister(device *NodeDevice, callback Nod
 	if device != nil {
 		cdevice = device.ptr
 	}
+	var err C.virError
 	ret := C.virConnectNodeDeviceEventRegisterAnyWrapper(c.ptr, cdevice,
 		C.VIR_NODE_DEVICE_EVENT_ID_UPDATE,
 		C.virConnectNodeDeviceEventGenericCallback(callbackPtr),
-		C.long(goCallBackId))
+		C.long(goCallBackId), &err)
 	if ret == -1 {
 		freeCallbackId(goCallBackId)
-		return 0, GetLastError()
+		return 0, makeError(&err)
 	}
 	return int(ret), nil
 }
@@ -129,8 +131,10 @@ func (c *Connect) NodeDeviceEventDeregister(callbackId int) error {
 		return GetNotImplementedError("virConnectNodeDeviceEventDeregisterAny")
 	}
 	// Deregister the callback
-	if i := int(C.virConnectNodeDeviceEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
-		return GetLastError()
+	var err C.virError
+	ret := int(C.virConnectNodeDeviceEventDeregisterAnyWrapper(c.ptr, C.int(callbackId), &err))
+	if ret < 0 {
+		return makeError(&err)
 	}
 	return nil
 }

@@ -196,7 +196,12 @@ virConnectDomainEventRegisterAnyWrapper(virConnectPtr c,
                                         virDomainPtr d,
                                         int eventID,
                                         virConnectDomainEventGenericCallback cb,
-                                        long goCallbackId);
+                                        long goCallbackId,
+					virErrorPtr err);
+int
+virConnectDomainEventDeregisterAnyWrapper(virConnectPtr conn,
+                                          int callbackID,
+                                          virErrorPtr err);
 
 
 #endif /* LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__ */

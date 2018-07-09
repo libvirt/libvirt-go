@@ -43,18 +43,13 @@ virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,
                                          virNetworkPtr d,
                                          int eventID,
                                          virConnectNetworkEventGenericCallback cb,
-                                         long goCallbackId);
-
-int
-virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,
-                                         virNetworkPtr d,
-                                         int eventID,
-                                         virConnectNetworkEventGenericCallback cb,
-                                         long goCallbackId);
+                                         long goCallbackId,
+					 virErrorPtr err);
 
 int
 virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
-                                           int callbackID);
+                                           int callbackID,
+					   virErrorPtr err);
 
 
 #endif /* LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__ */

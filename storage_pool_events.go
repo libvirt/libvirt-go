@@ -95,13 +95,14 @@ func (c *Connect) StoragePoolEventLifecycleRegister(pool *StoragePool, callback 
 	if pool != nil {
 		cpool = pool.ptr
 	}
+	var err C.virError
 	ret := C.virConnectStoragePoolEventRegisterAnyWrapper(c.ptr, cpool,
 		C.VIR_STORAGE_POOL_EVENT_ID_LIFECYCLE,
 		C.virConnectStoragePoolEventGenericCallback(callbackPtr),
-		C.long(goCallBackId))
+		C.long(goCallBackId), &err)
 	if ret == -1 {
 		freeCallbackId(goCallBackId)
-		return 0, GetLastError()
+		return 0, makeError(&err)
 	}
 	return int(ret), nil
 }
@@ -118,13 +119,14 @@ func (c *Connect) StoragePoolEventRefreshRegister(pool *StoragePool, callback St
 	if pool != nil {
 		cpool = pool.ptr
 	}
+	var err C.virError
 	ret := C.virConnectStoragePoolEventRegisterAnyWrapper(c.ptr, cpool,
 		C.VIR_STORAGE_POOL_EVENT_ID_REFRESH,
 		C.virConnectStoragePoolEventGenericCallback(callbackPtr),
-		C.long(goCallBackId))
+		C.long(goCallBackId), &err)
 	if ret == -1 {
 		freeCallbackId(goCallBackId)
-		return 0, GetLastError()
+		return 0, makeError(&err)
 	}
 	return int(ret), nil
 }
@@ -135,8 +137,10 @@ func (c *Connect) StoragePoolEventDeregister(callbackId int) error {
 	}
 
 	// Deregister the callback
-	if i := int(C.virConnectStoragePoolEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
-		return GetLastError()
+	var err C.virError
+	ret := int(C.virConnectStoragePoolEventDeregisterAnyWrapper(c.ptr, C.int(callbackId), &err))
+	if ret < 0 {
+		return makeError(&err)
 	}
 	return nil
 }

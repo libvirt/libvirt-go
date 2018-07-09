@@ -47,24 +47,41 @@ void storagePoolEventGenericCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
     storagePoolEventGenericCallback(c, d, (int)(intptr_t)data);
 }
 
-int virConnectStoragePoolEventRegisterAnyWrapper(virConnectPtr c,  virStoragePoolPtr d,
-                                              int eventID, virConnectStoragePoolEventGenericCallback cb,
-                                              long goCallbackId) {
+
+int
+virConnectStoragePoolEventRegisterAnyWrapper(virConnectPtr c,
+                                             virStoragePoolPtr d,
+                                             int eventID,
+                                             virConnectStoragePoolEventGenericCallback cb,
+                                             long goCallbackId,
+                                             virErrorPtr err)
+{
 #if LIBVIR_VERSION_NUMBER < 2000000
     assert(0); // Caller should have checked version
 #else
     void* id = (void*)goCallbackId;
-    return virConnectStoragePoolEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
+    int ret = virConnectStoragePoolEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
-int virConnectStoragePoolEventDeregisterAnyWrapper(virConnectPtr conn,
-						  int callbackID)
+
+int
+virConnectStoragePoolEventDeregisterAnyWrapper(virConnectPtr conn,
+                                               int callbackID,
+                                               virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 2000000
     assert(0); // Caller shouuld have checked version
 #else
-    return virConnectStoragePoolEventDeregisterAny(conn, callbackID);
+    int ret = virConnectStoragePoolEventDeregisterAny(conn, callbackID);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
