@@ -30,5 +30,93 @@ package libvirt
 #include <assert.h>
 #include "nwfilter_wrapper.h"
 
+
+int
+virNWFilterFreeWrapper(virNWFilterPtr nwfilter,
+                       virErrorPtr err)
+{
+    int ret = virNWFilterFree(nwfilter);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virNWFilterGetNameWrapper(virNWFilterPtr nwfilter,
+                          virErrorPtr err)
+{
+    const char * ret = virNWFilterGetName(nwfilter);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNWFilterGetUUIDWrapper(virNWFilterPtr nwfilter,
+                          unsigned char *uuid,
+                          virErrorPtr err)
+{
+    int ret = virNWFilterGetUUID(nwfilter, uuid);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNWFilterGetUUIDStringWrapper(virNWFilterPtr nwfilter,
+                                char *buf,
+                                virErrorPtr err)
+{
+    int ret = virNWFilterGetUUIDString(nwfilter, buf);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virNWFilterGetXMLDescWrapper(virNWFilterPtr nwfilter,
+                             unsigned int flags,
+                             virErrorPtr err)
+{
+    char * ret = virNWFilterGetXMLDesc(nwfilter, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNWFilterRefWrapper(virNWFilterPtr nwfilter,
+                      virErrorPtr err)
+{
+    int ret = virNWFilterRef(nwfilter);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNWFilterUndefineWrapper(virNWFilterPtr nwfilter,
+                           virErrorPtr err)
+{
+    int ret = virNWFilterUndefine(nwfilter);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 */
 import "C"
