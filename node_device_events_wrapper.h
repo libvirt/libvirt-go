@@ -28,13 +28,16 @@
 #define LIBVIRT_GO_NODE_DEVICE_EVENTS_WRAPPER_H__
 
 void nodeDeviceEventLifecycleCallbackHelper(virConnectPtr c, virNodeDevicePtr d,
-					  int event, int detail, void* data);
+                                         int event, int detail, void* data);
 
 void nodeDeviceEventGenericCallbackHelper(virConnectPtr c, virNodeDevicePtr d, void* data);
 
 int virConnectNodeDeviceEventRegisterAnyWrapper(virConnectPtr c,  virNodeDevicePtr d,
-					     int eventID, virConnectNodeDeviceEventGenericCallback cb,
-					     long goCallbackId);
+                                            int eventID, virConnectNodeDeviceEventGenericCallback cb,
+                                            long goCallbackId);
+
+int virConnectNodeDeviceEventDeregisterAnyWrapper(virConnectPtr conn,
+						 int callbackID);
 
 
 #endif /* LIBVIRT_GO_NODE_DEVICE_EVENTS_WRAPPER_H__ */
