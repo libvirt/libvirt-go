@@ -31,9 +31,86 @@
 #include <libvirt/virterror.h>
 #include "storage_volume_compat.h"
 
+virStoragePoolPtr
+virStoragePoolLookupByVolumeWrapper(virStorageVolPtr vol,
+                                    virErrorPtr err);
+
+int
+virStorageVolDeleteWrapper(virStorageVolPtr vol,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virStorageVolDownloadWrapper(virStorageVolPtr vol,
+                             virStreamPtr stream,
+                             unsigned long long offset,
+                             unsigned long long length,
+                             unsigned int flags,
+                             virErrorPtr err);
+
+int
+virStorageVolFreeWrapper(virStorageVolPtr vol,
+                         virErrorPtr err);
+
+virConnectPtr
+virStorageVolGetConnectWrapper(virStorageVolPtr vol,
+                               virErrorPtr err);
+
+int
+virStorageVolGetInfoWrapper(virStorageVolPtr vol,
+                            virStorageVolInfoPtr info,
+                            virErrorPtr err);
+
 int
 virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
                                  virStorageVolInfoPtr info,
-                                 unsigned int flags);
+                                 unsigned int flags,
+                                 virErrorPtr err);
+
+const char *
+virStorageVolGetKeyWrapper(virStorageVolPtr vol,
+                           virErrorPtr err);
+
+const char *
+virStorageVolGetNameWrapper(virStorageVolPtr vol,
+                            virErrorPtr err);
+
+char *
+virStorageVolGetPathWrapper(virStorageVolPtr vol,
+                            virErrorPtr err);
+
+char *
+virStorageVolGetXMLDescWrapper(virStorageVolPtr vol,
+                               unsigned int flags,
+                               virErrorPtr err);
+
+int
+virStorageVolRefWrapper(virStorageVolPtr vol,
+                        virErrorPtr err);
+
+int
+virStorageVolResizeWrapper(virStorageVolPtr vol,
+                           unsigned long long capacity,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virStorageVolUploadWrapper(virStorageVolPtr vol,
+                           virStreamPtr stream,
+                           unsigned long long offset,
+                           unsigned long long length,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virStorageVolWipeWrapper(virStorageVolPtr vol,
+                         unsigned int flags,
+                         virErrorPtr err);
+
+int
+virStorageVolWipePatternWrapper(virStorageVolPtr vol,
+                                unsigned int algorithm,
+                                unsigned int flags,
+                                virErrorPtr err);
 
 #endif /* LIBVIRT_GO_STORAGE_VOLUME_WRAPPER_H__ */
