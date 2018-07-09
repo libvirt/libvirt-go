@@ -27,10 +27,10 @@
 #ifndef LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
 
-void networkEventLifecycleCallback_cgo(virConnectPtr c, virNetworkPtr d,
+void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,
                                      int event, int detail, void* data);
 
-int virConnectNetworkEventRegisterAny_cgo(virConnectPtr c,  virNetworkPtr d,
+int virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,  virNetworkPtr d,
                                          int eventID, virConnectNetworkEventGenericCallback cb,
                                          long goCallbackId);
 

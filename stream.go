@@ -223,7 +223,7 @@ func (v *Stream) RecvAll(handler StreamSinkFunc) error {
 
 	callbackID := registerCallbackId(handler)
 
-	ret := C.virStreamRecvAll_cgo(v.ptr, (C.int)(callbackID))
+	ret := C.virStreamRecvAllWrapper(v.ptr, (C.int)(callbackID))
 	freeCallbackId(callbackID)
 	if ret == -1 {
 		return GetLastError()
@@ -241,7 +241,7 @@ func (v *Stream) SparseRecvAll(handler StreamSinkFunc, holeHandler StreamSinkHol
 	callbackID := registerCallbackId(handler)
 	holeCallbackID := registerCallbackId(holeHandler)
 
-	ret := C.virStreamSparseRecvAll_cgo(v.ptr, (C.int)(callbackID), (C.int)(holeCallbackID))
+	ret := C.virStreamSparseRecvAllWrapper(v.ptr, (C.int)(callbackID), (C.int)(holeCallbackID))
 	freeCallbackId(callbackID)
 	freeCallbackId(holeCallbackID)
 	if ret == -1 {
@@ -328,7 +328,7 @@ func (v *Stream) SendAll(handler StreamSourceFunc) error {
 
 	callbackID := registerCallbackId(handler)
 
-	ret := C.virStreamSendAll_cgo(v.ptr, (C.int)(callbackID))
+	ret := C.virStreamSendAllWrapper(v.ptr, (C.int)(callbackID))
 	freeCallbackId(callbackID)
 	if ret == -1 {
 		return GetLastError()
@@ -347,7 +347,7 @@ func (v *Stream) SparseSendAll(handler StreamSourceFunc, holeHandler StreamSourc
 	holeCallbackID := registerCallbackId(holeHandler)
 	skipCallbackID := registerCallbackId(skipHandler)
 
-	ret := C.virStreamSparseSendAll_cgo(v.ptr, (C.int)(callbackID), (C.int)(holeCallbackID), (C.int)(skipCallbackID))
+	ret := C.virStreamSparseSendAllWrapper(v.ptr, (C.int)(callbackID), (C.int)(holeCallbackID), (C.int)(skipCallbackID))
 	freeCallbackId(callbackID)
 	freeCallbackId(holeCallbackID)
 	freeCallbackId(skipCallbackID)
@@ -364,7 +364,7 @@ type StreamEventCallback func(*Stream, StreamEventType)
 func (v *Stream) EventAddCallback(events StreamEventType, callback StreamEventCallback) error {
 	callbackID := registerCallbackId(callback)
 
-	ret := C.virStreamEventAddCallback_cgo(v.ptr, (C.int)(events), (C.int)(callbackID))
+	ret := C.virStreamEventAddCallbackWrapper(v.ptr, (C.int)(events), (C.int)(callbackID))
 	if ret == -1 {
 		return GetLastError()
 	}

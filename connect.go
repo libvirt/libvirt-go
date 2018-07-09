@@ -452,8 +452,8 @@ type CloseCallback func(conn *Connect, reason ConnectCloseReason)
 func (c *Connect) RegisterCloseCallback(callback CloseCallback) error {
 	c.UnregisterCloseCallback()
 	goCallbackId := registerCallbackId(callback)
-	callbackPtr := unsafe.Pointer(C.closeCallback_cgo)
-	res := C.virConnectRegisterCloseCallback_cgo(c.ptr, C.virConnectCloseFunc(callbackPtr), C.long(goCallbackId))
+	callbackPtr := unsafe.Pointer(C.closeCallbackHelper)
+	res := C.virConnectRegisterCloseCallbackHelper(c.ptr, C.virConnectCloseFunc(callbackPtr), C.long(goCallbackId))
 	if res != 0 {
 		freeCallbackId(goCallbackId)
 		return GetLastError()
@@ -469,7 +469,7 @@ func (c *Connect) UnregisterCloseCallback() error {
 	if connData.closeCallbackId == nil {
 		return nil
 	}
-	callbackPtr := unsafe.Pointer(C.closeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.closeCallbackHelper)
 	res := C.virConnectUnregisterCloseCallback(c.ptr, C.virConnectCloseFunc(callbackPtr))
 	if res != 0 {
 		return GetLastError()

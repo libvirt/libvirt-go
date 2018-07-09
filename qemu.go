@@ -160,12 +160,12 @@ func (c *Connect) DomainQemuMonitorEventRegister(dom *Domain, event string, call
 	defer C.free(unsafe.Pointer(cEvent))
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainQemuMonitorEventCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainQemuMonitorEventCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainQemuMonitorEventRegister_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainQemuMonitorEventRegisterWrapper(c.ptr, cdom,
 		cEvent,
 		C.virConnectDomainQemuMonitorEventCallback(callbackPtr),
 		C.long(goCallBackId),

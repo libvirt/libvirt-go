@@ -394,7 +394,7 @@ func ProcessFile(path string) []string {
 
 	defer file.Close()
 
-	re, err := regexp.Compile("C\\.((vir|VIR|LIBVIR)[a-zA-Z0-9_]+?)(Compat|_cgo)?\\b")
+	re, err := regexp.Compile("C\\.((vir|VIR|LIBVIR)[a-zA-Z0-9_]+?)(Compat|Wrapper)?\\b")
 	if err != nil {
 		panic(err)
 	}

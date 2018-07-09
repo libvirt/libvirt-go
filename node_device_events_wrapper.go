@@ -37,26 +37,26 @@ package libvirt
 #include <stdint.h>
 
 extern void nodeDeviceEventLifecycleCallback(virConnectPtr, virNodeDevicePtr, int, int, int);
-void nodeDeviceEventLifecycleCallback_cgo(virConnectPtr c, virNodeDevicePtr d,
+void nodeDeviceEventLifecycleCallbackHelper(virConnectPtr c, virNodeDevicePtr d,
                                            int event, int detail, void *data)
 {
     nodeDeviceEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
 }
 
 extern void nodeDeviceEventGenericCallback(virConnectPtr, virNodeDevicePtr, int);
-void nodeDeviceEventGenericCallback_cgo(virConnectPtr c, virNodeDevicePtr d, void *data)
+void nodeDeviceEventGenericCallbackHelper(virConnectPtr c, virNodeDevicePtr d, void *data)
 {
     nodeDeviceEventGenericCallback(c, d, (int)(intptr_t)data);
 }
 
-int virConnectNodeDeviceEventRegisterAny_cgo(virConnectPtr c,  virNodeDevicePtr d,
+int virConnectNodeDeviceEventRegisterAnyWrapper(virConnectPtr c,  virNodeDevicePtr d,
                                               int eventID, virConnectNodeDeviceEventGenericCallback cb,
                                               long goCallbackId) {
     void* id = (void*)goCallbackId;
 #if LIBVIR_VERSION_NUMBER < 2002000
     assert(0); // Caller should have checked version
 #else
-    return virConnectNodeDeviceEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+    return virConnectNodeDeviceEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
 #endif
 }
 

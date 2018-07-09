@@ -26,8 +26,8 @@
 
 #ifndef LIBVIRT_GO_CONNECT_WRAPPER_H__
 #define LIBVIRT_GO_CONNECT_WRAPPER_H__
-void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque);
-int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
+void closeCallbackHelper(virConnectPtr conn, int reason, void *opaque);
+int virConnectRegisterCloseCallbackHelper(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
 
 virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags);
 

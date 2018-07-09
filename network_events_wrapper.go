@@ -37,20 +37,20 @@ package libvirt
 #include <stdint.h>
 
 extern void networkEventLifecycleCallback(virConnectPtr, virNetworkPtr, int, int, int);
-void networkEventLifecycleCallback_cgo(virConnectPtr c, virNetworkPtr d,
+void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,
                                      int event, int detail, void *data)
 {
     networkEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
 }
 
-int virConnectNetworkEventRegisterAny_cgo(virConnectPtr c,  virNetworkPtr d,
+int virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,  virNetworkPtr d,
                                          int eventID, virConnectNetworkEventGenericCallback cb,
                                          long goCallbackId) {
     void* id = (void*)goCallbackId;
 #if LIBVIR_VERSION_NUMBER < 1002001
     assert(0); // Caller should have checked version
 #else
-    return virConnectNetworkEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+    return virConnectNetworkEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
 #endif
 }
 

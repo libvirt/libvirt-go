@@ -27,12 +27,12 @@
 #ifndef LIBVIRT_GO_STORAGE_POOL_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_STORAGE_POOL_EVENTS_WRAPPER_H__
 
-void storagePoolEventLifecycleCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
+void storagePoolEventLifecycleCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
 					   int event, int detail, void* data);
-void storagePoolEventGenericCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
+void storagePoolEventGenericCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
 					 void* data);
 
-int virConnectStoragePoolEventRegisterAny_cgo(virConnectPtr c,  virStoragePoolPtr d,
+int virConnectStoragePoolEventRegisterAnyWrapper(virConnectPtr c,  virStoragePoolPtr d,
 					      int eventID, virConnectStoragePoolEventGenericCallback cb,
 					      long goCallbackId);
 

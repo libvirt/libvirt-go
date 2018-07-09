@@ -27,11 +27,11 @@
 #ifndef LIBVIRT_GO_STREAM_WRAPPER_H__
 #define LIBVIRT_GO_STREAM_WRAPPER_H__
 
-int virStreamSendAll_cgo(virStreamPtr st, int callbackID);
-int virStreamRecvAll_cgo(virStreamPtr st, int callbackID);
-int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);
-int virStreamSparseRecvAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID);
+int virStreamSendAllWrapper(virStreamPtr st, int callbackID);
+int virStreamRecvAllWrapper(virStreamPtr st, int callbackID);
+int virStreamSparseSendAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);
+int virStreamSparseRecvAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID);
 
-int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID);
+int virStreamEventAddCallbackWrapper(virStreamPtr st, int events, int callbackID);
 
 #endif /* LIBVIRT_GO_STREAM_WRAPPER_H__ */

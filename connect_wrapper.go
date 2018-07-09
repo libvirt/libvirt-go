@@ -34,21 +34,21 @@ package libvirt
 #include "callbacks_wrapper.h"
 
 extern void closeCallback(virConnectPtr, int, long);
-void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque)
+void closeCallbackHelper(virConnectPtr conn, int reason, void *opaque)
 {
     closeCallback(conn, reason, (long)opaque);
 }
 
-int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId)
+int virConnectRegisterCloseCallbackHelper(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId)
 {
     void *id = (void*)goCallbackId;
-    return virConnectRegisterCloseCallback(c, cb, id, freeGoCallback_cgo);
+    return virConnectRegisterCloseCallback(c, cb, id, freeGoCallbackHelper);
 }
 
 #include <stdio.h>
 
 extern int connectAuthCallback(virConnectCredentialPtr, unsigned int, int);
-int connectAuthCallback_cgo(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata)
+int connectAuthCallbackHelper(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata)
 {
     int *callbackID = cbdata;
 
@@ -60,7 +60,7 @@ virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncred
     virConnectAuth auth = {
        .credtype = credtype,
        .ncredtype = ncredtype,
-       .cb = connectAuthCallback_cgo,
+       .cb = connectAuthCallbackHelper,
        .cbdata = &callbackID,
     };
 

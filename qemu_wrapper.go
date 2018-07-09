@@ -42,21 +42,21 @@ package libvirt
 
 
 extern void domainQemuMonitorEventCallback(virConnectPtr, virDomainPtr, const char *, long long, unsigned int, const char *, int);
-void domainQemuMonitorEventCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainQemuMonitorEventCallbackHelper(virConnectPtr c, virDomainPtr d,
 					const char *event, long long secs,
 					unsigned int micros, const char *details, void *data)
 {
     domainQemuMonitorEventCallback(c, d, event, secs, micros, details, (int)(intptr_t)data);
 }
 
-int virConnectDomainQemuMonitorEventRegister_cgo(virConnectPtr c,  virDomainPtr d,
+int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainPtr d,
                                                     const char *event, virConnectDomainQemuMonitorEventCallback cb,
                                                     long goCallbackId, unsigned int flags) {
 #if LIBVIR_VERSION_NUMBER < 1002003
     assert(0); // Caller should have checked version
 #else
     void* id = (void*)goCallbackId;
-    return virConnectDomainQemuMonitorEventRegister(c, d, event, cb, id, freeGoCallback_cgo, flags);
+    return virConnectDomainQemuMonitorEventRegister(c, d, event, cb, id, freeGoCallbackHelper, flags);
 #endif
 }
 

@@ -33,7 +33,7 @@ package libvirt
 #include "callbacks_wrapper.h"
 
 extern void freeCallbackId(long);
-void freeGoCallback_cgo(void* goCallbackId) {
+void freeGoCallbackHelper(void* goCallbackId) {
    freeCallbackId((long)goCallbackId);
 }
 

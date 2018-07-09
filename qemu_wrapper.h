@@ -27,11 +27,11 @@
 #ifndef LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 
-void domainQemuMonitorEventCallback_cgo(virConnectPtr c, virDomainPtr d,
+void domainQemuMonitorEventCallbackHelper(virConnectPtr c, virDomainPtr d,
 					const char *event, long long secs,
 					unsigned int micros, const char *details, void *data);
 
-int virConnectDomainQemuMonitorEventRegister_cgo(virConnectPtr c,  virDomainPtr d,
+int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainPtr d,
 						 const char *event, virConnectDomainQemuMonitorEventCallback cb,
 						 long goCallbackId, unsigned int flags);
 

@@ -963,12 +963,12 @@ func domainEventBlockThresholdCallback(c C.virConnectPtr, d C.virDomainPtr, dev 
 func (c *Connect) DomainEventLifecycleRegister(dom *Domain, callback DomainEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventLifecycleCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventLifecycleCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_LIFECYCLE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -982,12 +982,12 @@ func (c *Connect) DomainEventLifecycleRegister(dom *Domain, callback DomainEvent
 func (c *Connect) DomainEventRebootRegister(dom *Domain, callback DomainEventGenericCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventGenericCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventGenericCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_REBOOT,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1001,12 +1001,12 @@ func (c *Connect) DomainEventRebootRegister(dom *Domain, callback DomainEventGen
 func (c *Connect) DomainEventRTCChangeRegister(dom *Domain, callback DomainEventRTCChangeCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventRTCChangeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventRTCChangeCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_RTC_CHANGE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1020,12 +1020,12 @@ func (c *Connect) DomainEventRTCChangeRegister(dom *Domain, callback DomainEvent
 func (c *Connect) DomainEventWatchdogRegister(dom *Domain, callback DomainEventWatchdogCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventWatchdogCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventWatchdogCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_WATCHDOG,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1039,12 +1039,12 @@ func (c *Connect) DomainEventWatchdogRegister(dom *Domain, callback DomainEventW
 func (c *Connect) DomainEventIOErrorRegister(dom *Domain, callback DomainEventIOErrorCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventIOErrorCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventIOErrorCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_IO_ERROR,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1058,12 +1058,12 @@ func (c *Connect) DomainEventIOErrorRegister(dom *Domain, callback DomainEventIO
 func (c *Connect) DomainEventGraphicsRegister(dom *Domain, callback DomainEventGraphicsCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventGraphicsCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventGraphicsCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_GRAPHICS,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1077,12 +1077,12 @@ func (c *Connect) DomainEventGraphicsRegister(dom *Domain, callback DomainEventG
 func (c *Connect) DomainEventIOErrorReasonRegister(dom *Domain, callback DomainEventIOErrorReasonCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventIOErrorReasonCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventIOErrorReasonCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_IO_ERROR_REASON,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1096,12 +1096,12 @@ func (c *Connect) DomainEventIOErrorReasonRegister(dom *Domain, callback DomainE
 func (c *Connect) DomainEventControlErrorRegister(dom *Domain, callback DomainEventGenericCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventGenericCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventGenericCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_CONTROL_ERROR,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1115,12 +1115,12 @@ func (c *Connect) DomainEventControlErrorRegister(dom *Domain, callback DomainEv
 func (c *Connect) DomainEventBlockJobRegister(dom *Domain, callback DomainEventBlockJobCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1134,12 +1134,12 @@ func (c *Connect) DomainEventBlockJobRegister(dom *Domain, callback DomainEventB
 func (c *Connect) DomainEventDiskChangeRegister(dom *Domain, callback DomainEventDiskChangeCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventDiskChangeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventDiskChangeCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_DISK_CHANGE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1153,12 +1153,12 @@ func (c *Connect) DomainEventDiskChangeRegister(dom *Domain, callback DomainEven
 func (c *Connect) DomainEventTrayChangeRegister(dom *Domain, callback DomainEventTrayChangeCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventTrayChangeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventTrayChangeCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_TRAY_CHANGE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1172,12 +1172,12 @@ func (c *Connect) DomainEventTrayChangeRegister(dom *Domain, callback DomainEven
 func (c *Connect) DomainEventPMWakeupRegister(dom *Domain, callback DomainEventPMWakeupCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventPMWakeupCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventPMWakeupCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_PMWAKEUP,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1191,12 +1191,12 @@ func (c *Connect) DomainEventPMWakeupRegister(dom *Domain, callback DomainEventP
 func (c *Connect) DomainEventPMSuspendRegister(dom *Domain, callback DomainEventPMSuspendCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_PMSUSPEND,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1210,12 +1210,12 @@ func (c *Connect) DomainEventPMSuspendRegister(dom *Domain, callback DomainEvent
 func (c *Connect) DomainEventBalloonChangeRegister(dom *Domain, callback DomainEventBalloonChangeCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventBalloonChangeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventBalloonChangeCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BALLOON_CHANGE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1229,12 +1229,12 @@ func (c *Connect) DomainEventBalloonChangeRegister(dom *Domain, callback DomainE
 func (c *Connect) DomainEventPMSuspendDiskRegister(dom *Domain, callback DomainEventPMSuspendDiskCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendDiskCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventPMSuspendDiskCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_PMSUSPEND_DISK,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1248,12 +1248,12 @@ func (c *Connect) DomainEventPMSuspendDiskRegister(dom *Domain, callback DomainE
 func (c *Connect) DomainEventDeviceRemovedRegister(dom *Domain, callback DomainEventDeviceRemovedCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovedCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovedCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVED,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1267,12 +1267,12 @@ func (c *Connect) DomainEventDeviceRemovedRegister(dom *Domain, callback DomainE
 func (c *Connect) DomainEventBlockJob2Register(dom *Domain, callback DomainEventBlockJobCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventBlockJobCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BLOCK_JOB_2,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1286,12 +1286,12 @@ func (c *Connect) DomainEventBlockJob2Register(dom *Domain, callback DomainEvent
 func (c *Connect) DomainEventTunableRegister(dom *Domain, callback DomainEventTunableCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventTunableCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventTunableCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_TUNABLE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1305,12 +1305,12 @@ func (c *Connect) DomainEventTunableRegister(dom *Domain, callback DomainEventTu
 func (c *Connect) DomainEventAgentLifecycleRegister(dom *Domain, callback DomainEventAgentLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventAgentLifecycleCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventAgentLifecycleCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_AGENT_LIFECYCLE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1324,12 +1324,12 @@ func (c *Connect) DomainEventAgentLifecycleRegister(dom *Domain, callback Domain
 func (c *Connect) DomainEventDeviceAddedRegister(dom *Domain, callback DomainEventDeviceAddedCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventDeviceAddedCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceAddedCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_DEVICE_ADDED,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1343,12 +1343,12 @@ func (c *Connect) DomainEventDeviceAddedRegister(dom *Domain, callback DomainEve
 func (c *Connect) DomainEventMigrationIterationRegister(dom *Domain, callback DomainEventMigrationIterationCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventMigrationIterationCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventMigrationIterationCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_MIGRATION_ITERATION,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1362,12 +1362,12 @@ func (c *Connect) DomainEventMigrationIterationRegister(dom *Domain, callback Do
 func (c *Connect) DomainEventJobCompletedRegister(dom *Domain, callback DomainEventJobCompletedCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventJobCompletedCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventJobCompletedCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_JOB_COMPLETED,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1381,12 +1381,12 @@ func (c *Connect) DomainEventJobCompletedRegister(dom *Domain, callback DomainEv
 func (c *Connect) DomainEventDeviceRemovalFailedRegister(dom *Domain, callback DomainEventDeviceRemovalFailedCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovalFailedCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventDeviceRemovalFailedCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_DEVICE_REMOVAL_FAILED,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1400,12 +1400,12 @@ func (c *Connect) DomainEventDeviceRemovalFailedRegister(dom *Domain, callback D
 func (c *Connect) DomainEventMetadataChangeRegister(dom *Domain, callback DomainEventMetadataChangeCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventMetadataChangeCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventMetadataChangeCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_METADATA_CHANGE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -1419,12 +1419,12 @@ func (c *Connect) DomainEventMetadataChangeRegister(dom *Domain, callback Domain
 func (c *Connect) DomainEventBlockThresholdRegister(dom *Domain, callback DomainEventBlockThresholdCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainEventBlockThresholdCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.domainEventBlockThresholdCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
-	ret := C.virConnectDomainEventRegisterAny_cgo(c.ptr, cdom,
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))

@@ -37,27 +37,27 @@ package libvirt
 #include <stdint.h>
 
 extern void secretEventLifecycleCallback(virConnectPtr, virSecretPtr, int, int, int);
-void secretEventLifecycleCallback_cgo(virConnectPtr c, virSecretPtr d,
+void secretEventLifecycleCallbackHelper(virConnectPtr c, virSecretPtr d,
                                      int event, int detail, void *data)
 {
     secretEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
 }
 
 extern void secretEventGenericCallback(virConnectPtr, virSecretPtr, int);
-void secretEventGenericCallback_cgo(virConnectPtr c, virSecretPtr d,
+void secretEventGenericCallbackHelper(virConnectPtr c, virSecretPtr d,
                                     void *data)
 {
     secretEventGenericCallback(c, d, (int)(intptr_t)data);
 }
 
-int virConnectSecretEventRegisterAny_cgo(virConnectPtr c,  virSecretPtr d,
+int virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,  virSecretPtr d,
                                          int eventID, virConnectSecretEventGenericCallback cb,
                                          long goCallbackId) {
     void* id = (void*)goCallbackId;
 #if LIBVIR_VERSION_NUMBER < 3000000
     assert(0); // Caller should have checked version
 #else
-    return virConnectSecretEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+    return virConnectSecretEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
 #endif
 }
 

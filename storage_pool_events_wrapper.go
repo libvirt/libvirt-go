@@ -37,27 +37,27 @@ package libvirt
 #include <stdint.h>
 
 extern void storagePoolEventLifecycleCallback(virConnectPtr, virStoragePoolPtr, int, int, int);
-void storagePoolEventLifecycleCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
+void storagePoolEventLifecycleCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
                                            int event, int detail, void *data)
 {
     storagePoolEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
 }
 
 extern void storagePoolEventGenericCallback(virConnectPtr, virStoragePoolPtr, int);
-void storagePoolEventGenericCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
+void storagePoolEventGenericCallbackHelper(virConnectPtr c, virStoragePoolPtr d,
                                          void *data)
 {
     storagePoolEventGenericCallback(c, d, (int)(intptr_t)data);
 }
 
-int virConnectStoragePoolEventRegisterAny_cgo(virConnectPtr c,  virStoragePoolPtr d,
+int virConnectStoragePoolEventRegisterAnyWrapper(virConnectPtr c,  virStoragePoolPtr d,
                                               int eventID, virConnectStoragePoolEventGenericCallback cb,
                                               long goCallbackId) {
 #if LIBVIR_VERSION_NUMBER < 2000000
     assert(0); // Caller should have checked version
 #else
     void* id = (void*)goCallbackId;
-    return virConnectStoragePoolEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+    return virConnectStoragePoolEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
 #endif
 }
 

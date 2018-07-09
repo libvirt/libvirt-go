@@ -41,7 +41,7 @@ static void eventAddHandleHelper(int watch, int fd, int events, void *opaque)
     eventHandleCallback(watch, fd, events, (int)(intptr_t)opaque);
 }
 
-int virEventAddHandle_cgo(int fd, int events, int callbackID)
+int virEventAddHandleWrapper(int fd, int events, int callbackID)
 {
     return virEventAddHandle(fd, events, eventAddHandleHelper, (void *)(intptr_t)callbackID, NULL);
 }
@@ -53,7 +53,7 @@ static void eventAddTimeoutHelper(int timer, void *opaque)
     eventTimeoutCallback(timer, (int)(intptr_t)opaque);
 }
 
-int virEventAddTimeout_cgo(int freq, int callbackID)
+int virEventAddTimeoutWrapper(int freq, int callbackID)
 {
     return virEventAddTimeout(freq, eventAddTimeoutHelper, (void *)(intptr_t)callbackID, NULL);
 }
@@ -96,7 +96,7 @@ int eventRemoveTimeoutFuncHelper(int timer)
 }
 
 
-void virEventRegisterImpl_cgo(void)
+void virEventRegisterImplWrapper(void)
 {
     virEventRegisterImpl(eventAddHandleFuncHelper,
                          eventUpdateHandleFuncHelper,

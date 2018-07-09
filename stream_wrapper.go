@@ -83,13 +83,13 @@ static int streamSinkHoleCallbackHelper(virStreamPtr st, long long length, void 
     return streamSinkHoleCallback(st, length, cbdata->holeCallbackID);
 }
 
-int virStreamSendAll_cgo(virStreamPtr st, int callbackID)
+int virStreamSendAllWrapper(virStreamPtr st, int callbackID)
 {
     struct CallbackData cbdata = { .callbackID = callbackID };
     return virStreamSendAll(st, streamSourceCallbackHelper, &cbdata);
 }
 
-int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID)
+int virStreamSparseSendAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID)
 {
     struct CallbackData cbdata = { .callbackID = callbackID, .holeCallbackID = holeCallbackID, .skipCallbackID = skipCallbackID };
 #if LIBVIR_VERSION_NUMBER < 3004000
@@ -100,13 +100,13 @@ int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallback
 }
 
 
-int virStreamRecvAll_cgo(virStreamPtr st, int callbackID)
+int virStreamRecvAllWrapper(virStreamPtr st, int callbackID)
 {
     struct CallbackData cbdata = { .callbackID = callbackID };
     return virStreamRecvAll(st, streamSinkCallbackHelper, &cbdata);
 }
 
-int virStreamSparseRecvAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID)
+int virStreamSparseRecvAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID)
 {
     struct CallbackData cbdata = { .callbackID = callbackID, .holeCallbackID = holeCallbackID };
 #if LIBVIR_VERSION_NUMBER < 3004000
@@ -123,7 +123,7 @@ static void streamEventCallbackHelper(virStreamPtr st, int events, void *opaque)
     streamEventCallback(st, events, (int)(intptr_t)opaque);
 }
 
-int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID)
+int virStreamEventAddCallbackWrapper(virStreamPtr st, int events, int callbackID)
 {
     return virStreamEventAddCallback(st, events, streamEventCallbackHelper, (void *)(intptr_t)callbackID, NULL);
 }

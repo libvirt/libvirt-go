@@ -27,6 +27,6 @@
 #ifndef LIBVIRT_GO_CALLBACKS_WRAPPER_H__
 #define LIBVIRT_GO_CALLBACKS_WRAPPER_H__
 
-void freeGoCallback_cgo(void* goCallbackId);
+void freeGoCallbackHelper(void* goCallbackId);
 
 #endif /* LIBVIRT_GO_CALLBACKS_WRAPPER_H__ */

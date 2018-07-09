@@ -91,12 +91,12 @@ func (c *Connect) SecretEventLifecycleRegister(secret *Secret, callback SecretEv
 		return 0, GetNotImplementedError("virConnectSecretEventRegisterAny")
 	}
 
-	callbackPtr := unsafe.Pointer(C.secretEventLifecycleCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.secretEventLifecycleCallbackHelper)
 	var csecret C.virSecretPtr
 	if secret != nil {
 		csecret = secret.ptr
 	}
-	ret := C.virConnectSecretEventRegisterAny_cgo(c.ptr, csecret,
+	ret := C.virConnectSecretEventRegisterAnyWrapper(c.ptr, csecret,
 		C.VIR_SECRET_EVENT_ID_LIFECYCLE,
 		C.virConnectSecretEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -113,12 +113,12 @@ func (c *Connect) SecretEventValueChangedRegister(secret *Secret, callback Secre
 		return 0, GetNotImplementedError("virConnectSecretEventRegisterAny")
 	}
 
-	callbackPtr := unsafe.Pointer(C.secretEventGenericCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.secretEventGenericCallbackHelper)
 	var csecret C.virSecretPtr
 	if secret != nil {
 		csecret = secret.ptr
 	}
-	ret := C.virConnectSecretEventRegisterAny_cgo(c.ptr, csecret,
+	ret := C.virConnectSecretEventRegisterAnyWrapper(c.ptr, csecret,
 		C.VIR_SECRET_EVENT_ID_VALUE_CHANGED,
 		C.virConnectSecretEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))

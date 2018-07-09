@@ -27,9 +27,9 @@
 #ifndef LIBVIRT_GO_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_EVENTS_WRAPPER_H__
 
-int virEventAddHandle_cgo(int fd, int events, int callbackID);
-int virEventAddTimeout_cgo(int freq, int callbackID);
-void virEventRegisterImpl_cgo(void);
+int virEventAddHandleWrapper(int fd, int events, int callbackID);
+int virEventAddTimeoutWrapper(int freq, int callbackID);
+void virEventRegisterImplWrapper(void);
 
 void eventHandleCallbackInvoke(int watch, int fd, int events, uintptr_t callback, uintptr_t opaque);
 void eventTimeoutCallbackInvoke(int timer, uintptr_t callback, uintptr_t opaque);

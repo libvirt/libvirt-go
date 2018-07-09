@@ -27,12 +27,12 @@
 #ifndef LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
 #define LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
 
-void secretEventLifecycleCallback_cgo(virConnectPtr c, virSecretPtr d,
+void secretEventLifecycleCallbackHelper(virConnectPtr c, virSecretPtr d,
 				      int event, int detail, void* data);
-void secretEventGenericCallback_cgo(virConnectPtr c, virSecretPtr d,
+void secretEventGenericCallbackHelper(virConnectPtr c, virSecretPtr d,
 				    void* data);
 
-int virConnectSecretEventRegisterAny_cgo(virConnectPtr c,  virSecretPtr d,
+int virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,  virSecretPtr d,
                                          int eventID, virConnectSecretEventGenericCallback cb,
                                          long goCallbackId);
 

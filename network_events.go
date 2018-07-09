@@ -74,12 +74,12 @@ func (c *Connect) NetworkEventLifecycleRegister(net *Network, callback NetworkEv
 		return 0, GetNotImplementedError("virConnectNetworkEventRegisterAny")
 	}
 
-	callbackPtr := unsafe.Pointer(C.networkEventLifecycleCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.networkEventLifecycleCallbackHelper)
 	var cnet C.virNetworkPtr
 	if net != nil {
 		cnet = net.ptr
 	}
-	ret := C.virConnectNetworkEventRegisterAny_cgo(c.ptr, cnet,
+	ret := C.virConnectNetworkEventRegisterAnyWrapper(c.ptr, cnet,
 		C.VIR_NETWORK_EVENT_ID_LIFECYCLE,
 		C.virConnectNetworkEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))

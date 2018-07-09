@@ -91,12 +91,12 @@ func (c *Connect) NodeDeviceEventLifecycleRegister(device *NodeDevice, callback 
 	}
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.nodeDeviceEventLifecycleCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.nodeDeviceEventLifecycleCallbackHelper)
 	var cdevice C.virNodeDevicePtr
 	if device != nil {
 		cdevice = device.ptr
 	}
-	ret := C.virConnectNodeDeviceEventRegisterAny_cgo(c.ptr, cdevice,
+	ret := C.virConnectNodeDeviceEventRegisterAnyWrapper(c.ptr, cdevice,
 		C.VIR_NODE_DEVICE_EVENT_ID_LIFECYCLE,
 		C.virConnectNodeDeviceEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
@@ -110,12 +110,12 @@ func (c *Connect) NodeDeviceEventLifecycleRegister(device *NodeDevice, callback 
 func (c *Connect) NodeDeviceEventUpdateRegister(device *NodeDevice, callback NodeDeviceEventGenericCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.nodeDeviceEventGenericCallback_cgo)
+	callbackPtr := unsafe.Pointer(C.nodeDeviceEventGenericCallbackHelper)
 	var cdevice C.virNodeDevicePtr
 	if device != nil {
 		cdevice = device.ptr
 	}
-	ret := C.virConnectNodeDeviceEventRegisterAny_cgo(c.ptr, cdevice,
+	ret := C.virConnectNodeDeviceEventRegisterAnyWrapper(c.ptr, cdevice,
 		C.VIR_NODE_DEVICE_EVENT_ID_UPDATE,
 		C.virConnectNodeDeviceEventGenericCallback(callbackPtr),
 		C.long(goCallBackId))
