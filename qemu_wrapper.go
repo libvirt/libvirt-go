@@ -45,26 +45,89 @@ void domainQemuMonitorEventCallbackHelper(virConnectPtr c, virDomainPtr d,
     domainQemuMonitorEventCallback(c, d, event, secs, micros, details, (int)(intptr_t)data);
 }
 
-int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainPtr d,
-                                                    const char *event, virConnectDomainQemuMonitorEventCallback cb,
-                                                    long goCallbackId, unsigned int flags) {
-#if LIBVIR_VERSION_NUMBER < 1002003
-    assert(0); // Caller should have checked version
-#else
-    void* id = (void*)goCallbackId;
-    return virConnectDomainQemuMonitorEventRegister(c, d, event, cb, id, freeGoCallbackHelper, flags);
-#endif
-}
 
-int virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
-						     int callbackID)
+int
+virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
+                                                  int callbackID,
+                                                  virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 1002003
     assert(0); // Caller should have checked version
 #else
-    return virConnectDomainQemuMonitorEventDeregister(conn, callbackID);
+    int ret = virConnectDomainQemuMonitorEventDeregister(conn, callbackID);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
+
+
+int
+virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr conn,
+                                                virDomainPtr dom,
+                                                const char *event,
+                                                long goCallbackId,
+                                                unsigned int flags,
+                                                virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 1002003
+    assert(0); // Caller should have checked version
+#else
+    void *id = (void*)goCallbackId;
+    int ret = virConnectDomainQemuMonitorEventRegister(conn, dom, event, domainQemuMonitorEventCallbackHelper,
+                                                       id, freeGoCallbackHelper, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
+char *
+virDomainQemuAgentCommandWrapper(virDomainPtr domain,
+                                 const char *cmd,
+                                 int timeout,
+                                 unsigned int flags,
+                                 virErrorPtr err)
+{
+    char * ret = virDomainQemuAgentCommand(domain, cmd, timeout, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virDomainPtr
+virDomainQemuAttachWrapper(virConnectPtr conn,
+                           unsigned int pid_value,
+                           unsigned int flags,
+                           virErrorPtr err)
+{
+    virDomainPtr ret = virDomainQemuAttach(conn, pid_value, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainQemuMonitorCommandWrapper(virDomainPtr domain,
+                                   const char *cmd,
+                                   char **result,
+                                   unsigned int flags,
+                                   virErrorPtr err)
+{
+    int ret = virDomainQemuMonitorCommand(domain, cmd, result, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
 
 */
 import "C"

@@ -42,16 +42,37 @@ domainQemuMonitorEventCallbackHelper(virConnectPtr c,
                                      void *data);
 
 int
-virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,
-                                                virDomainPtr d,
-                                                const char *event,
-                                                virConnectDomainQemuMonitorEventCallback cb,
-                                                long goCallbackId,
-                                                unsigned int flags);
+virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
+                                                  int callbackID,
+                                                  virErrorPtr err);
 
 int
-virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
-                                                  int callbackID);
+virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr conn,
+                                                virDomainPtr dom,
+                                                const char *event,
+                                                long goCallbackId,
+                                                unsigned int flags,
+                                                virErrorPtr err);
+
+char *
+virDomainQemuAgentCommandWrapper(virDomainPtr domain,
+                                 const char *cmd,
+                                 int timeout,
+                                 unsigned int flags,
+                                 virErrorPtr err);
+
+virDomainPtr
+virDomainQemuAttachWrapper(virConnectPtr conn,
+                           unsigned int pid_value,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virDomainQemuMonitorCommandWrapper(virDomainPtr domain,
+                                   const char *cmd,
+                                   char **result,
+                                   unsigned int flags,
+                                   virErrorPtr err);
 
 
 #endif /* LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__ */

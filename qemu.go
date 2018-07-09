@@ -81,10 +81,11 @@ func (d *Domain) QemuMonitorCommand(command string, flags DomainQemuMonitorComma
 	var cResult *C.char
 	cCommand := C.CString(command)
 	defer C.free(unsafe.Pointer(cCommand))
-	result := C.virDomainQemuMonitorCommand(d.ptr, cCommand, &cResult, C.uint(flags))
+	var err C.virError
+	result := C.virDomainQemuMonitorCommandWrapper(d.ptr, cCommand, &cResult, C.uint(flags), &err)
 
 	if result != 0 {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 
 	rstring := C.GoString(cResult)
@@ -95,10 +96,11 @@ func (d *Domain) QemuMonitorCommand(command string, flags DomainQemuMonitorComma
 func (d *Domain) QemuAgentCommand(command string, timeout DomainQemuAgentCommandTimeout, flags uint32) (string, error) {
 	cCommand := C.CString(command)
 	defer C.free(unsafe.Pointer(cCommand))
-	result := C.virDomainQemuAgentCommand(d.ptr, cCommand, C.int(timeout), C.uint(flags))
+	var err C.virError
+	result := C.virDomainQemuAgentCommandWrapper(d.ptr, cCommand, C.int(timeout), C.uint(flags), &err)
 
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 
 	rstring := C.GoString(result)
@@ -107,10 +109,10 @@ func (d *Domain) QemuAgentCommand(command string, timeout DomainQemuAgentCommand
 }
 
 func (c *Connect) DomainQemuAttach(pid uint32, flags uint32) (*Domain, error) {
-
-	ptr := C.virDomainQemuAttach(c.ptr, C.uint(pid), C.uint(flags))
+	var err C.virError
+	ptr := C.virDomainQemuAttachWrapper(c.ptr, C.uint(pid), C.uint(flags), &err)
 	if ptr == nil {
-		return nil, GetLastError()
+		return nil, makeError(&err)
 	}
 	return &Domain{ptr: ptr}, nil
 }
@@ -156,19 +158,18 @@ func (c *Connect) DomainQemuMonitorEventRegister(dom *Domain, event string, call
 	defer C.free(unsafe.Pointer(cEvent))
 	goCallBackId := registerCallbackId(callback)
 
-	callbackPtr := unsafe.Pointer(C.domainQemuMonitorEventCallbackHelper)
 	var cdom C.virDomainPtr
 	if dom != nil {
 		cdom = dom.ptr
 	}
+	var err C.virError
 	ret := C.virConnectDomainQemuMonitorEventRegisterWrapper(c.ptr, cdom,
 		cEvent,
-		C.virConnectDomainQemuMonitorEventCallback(callbackPtr),
 		C.long(goCallBackId),
-		C.uint(flags))
-	if ret == -1 {
+		C.uint(flags), &err)
+	if ret < 0 {
 		freeCallbackId(goCallBackId)
-		return 0, GetLastError()
+		return 0, makeError(&err)
 	}
 	return int(ret), nil
 }
@@ -179,8 +180,10 @@ func (c *Connect) DomainQemuEventDeregister(callbackId int) error {
 	}
 
 	// Deregister the callback
-	if i := int(C.virConnectDomainQemuMonitorEventDeregisterWrapper(c.ptr, C.int(callbackId))); i != 0 {
-		return GetLastError()
+	var err C.virError
+	ret := int(C.virConnectDomainQemuMonitorEventDeregisterWrapper(c.ptr, C.int(callbackId), &err))
+	if ret < 0 {
+		return makeError(&err)
 	}
 	return nil
 }
