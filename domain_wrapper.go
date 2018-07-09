@@ -30,7 +30,7 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <assert.h>
-#include "domain_compat.h"
+#include "domain_wrapper.h"
 
 int virDomainCoreDumpWithFormatWrapper(virDomainPtr domain,
 				      const char *to,

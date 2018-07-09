@@ -32,6 +32,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include "domain_compat.h"
+#include "domain_wrapper.h"
 */
 import "C"
 

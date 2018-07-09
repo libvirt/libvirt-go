@@ -68,11 +68,6 @@
 #define VIR_MIGRATE_AUTO_CONVERGE 1 << 13
 #endif
 
-int virDomainCoreDumpWithFormatWrapper(virDomainPtr domain,
-				      const char *to,
-				      unsigned int dumpformat,
-				      unsigned int flags);
-
 
 /* 1.2.5 */
 
@@ -87,27 +82,6 @@ int virDomainCoreDumpWithFormatWrapper(virDomainPtr domain,
 #ifndef VIR_DOMAIN_TIME_SYNC
 #define VIR_DOMAIN_TIME_SYNC 1 << 0
 #endif
-
-int virDomainGetTimeWrapper(virDomainPtr dom,
-			   long long *seconds,
-			   unsigned int *nseconds,
-			   unsigned int flags);
-
-int virDomainSetTimeWrapper(virDomainPtr dom,
-			   long long seconds,
-			   unsigned int nseconds,
-			   unsigned int flags);
-
-int virDomainFSFreezeWrapper(virDomainPtr dom,
-			    const char **mountpoints,
-			    unsigned int nmountpoints,
-			    unsigned int flags);
-
-int virDomainFSThawWrapper(virDomainPtr dom,
-			  const char **mountpoints,
-			  unsigned int nmountpoints,
-			  unsigned int flags);
-
 
 /* 1.2.6 */
 
@@ -160,17 +134,6 @@ int virDomainFSThawWrapper(virDomainPtr dom,
 #ifndef VIR_DOMAIN_STATS_STATE
 #define VIR_DOMAIN_STATS_STATE 1 << 0
 #endif
-
-int virDomainBlockCopyWrapper(virDomainPtr dom, const char *disk,
-			     const char *destxml,
-			     virTypedParameterPtr params,
-			     int nparams,
-			     unsigned int flags);
-
-int virDomainOpenGraphicsFDWrapper(virDomainPtr dom,
-				  unsigned int idx,
-				  unsigned int flags);
-
 
 /* 1.2.9 */
 
@@ -374,13 +337,6 @@ struct _virDomainFSInfo {
 };
 #endif
 
-void virDomainFSInfoFreeWrapper(virDomainFSInfoPtr info);
-
-int virDomainGetFSInfoWrapper(virDomainPtr dom,
-			     virDomainFSInfoPtr **info,
-			     unsigned int flags);
-
-
 /* 1.2.12 */
 
 #ifndef VIR_DOMAIN_DEFINE_VALIDATE
@@ -450,24 +406,6 @@ struct _virDomainInterface {
 };
 #endif
 
-int virDomainInterfaceAddressesWrapper(virDomainPtr dom,
-				      virDomainInterfacePtr **ifaces,
-				      unsigned int source,
-				      unsigned int flags);
-
-void virDomainInterfaceFreeWrapper(virDomainInterfacePtr iface);
-
-void virDomainIOThreadInfoFreeWrapper(virDomainIOThreadInfoPtr info);
-
-int virDomainGetIOThreadInfoWrapper(virDomainPtr domain,
-				   virDomainIOThreadInfoPtr **info,
-				   unsigned int flags);
-int virDomainPinIOThreadWrapper(virDomainPtr domain,
-			       unsigned int iothread_id,
-			       unsigned char *cpumap,
-			       int maplen,
-			       unsigned int flags);
-
 
 /* 1.2.15 */
 
@@ -483,24 +421,12 @@ int virDomainPinIOThreadWrapper(virDomainPtr domain,
 #define VIR_DOMAIN_EVENT_ID_DEVICE_ADDED 19
 #endif
 
-int virDomainAddIOThreadWrapper(virDomainPtr domain,
-			       unsigned int iothread_id,
-			       unsigned int flags);
-int virDomainDelIOThreadWrapper(virDomainPtr domain,
-			       unsigned int iothread_id,
-			       unsigned int flags);
-
 
 /* 1.2.16 */
 
 #ifndef VIR_DOMAIN_PASSWORD_ENCRYPTED
 #define VIR_DOMAIN_PASSWORD_ENCRYPTED 1 << 0
 #endif
-
-int virDomainSetUserPasswordWrapper(virDomainPtr dom,
-				   const char *user,
-				   const char *password,
-				   unsigned int flags);
 
 
 /* 1.2.17 */
@@ -527,10 +453,6 @@ int virDomainSetUserPasswordWrapper(virDomainPtr dom,
 #ifndef VIR_DOMAIN_EVENT_UNDEFINED_RENAMED
 #define VIR_DOMAIN_EVENT_UNDEFINED_RENAMED 1
 #endif
-
-int virDomainRenameWrapper(virDomainPtr dom,
-			  const char *new_name,
-			  unsigned int flags);
 
 
 /* 1.3.1 */
@@ -617,18 +539,6 @@ int virDomainRenameWrapper(virDomainPtr dom,
 #define VIR_DOMAIN_TUNABLE_CPU_GLOBAL_QUOTA "cputune.global_quota"
 #endif
 
-int virDomainGetPerfEventsWrapper(virDomainPtr dom,
-				 virTypedParameterPtr *params,
-				 int *nparams,
-				 unsigned int flags);
-int virDomainSetPerfEventsWrapper(virDomainPtr dom,
-				 virTypedParameterPtr params,
-				 int nparams,
-				 unsigned int flags);
-int virDomainMigrateStartPostCopyWrapper(virDomainPtr domain,
-					unsigned int flags);
-
-
 /* 1.3.4 */
 
 #ifndef VIR_MIGRATE_PARAM_COMPRESSION
@@ -684,17 +594,6 @@ int virDomainMigrateStartPostCopyWrapper(virDomainPtr domain,
 #ifndef VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT
 #define VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT "auto_converge.increment"
 #endif
-
-int virDomainGetGuestVcpusWrapper(virDomainPtr domain,
-				 virTypedParameterPtr *params,
-				 unsigned int *nparams,
-				 unsigned int flags);
-
-int virDomainSetGuestVcpusWrapper(virDomainPtr domain,
-				 const char *cpumap,
-				 int state,
-				 unsigned int flags);
-
 
 /* 2.1.0 */
 
@@ -876,13 +775,6 @@ int virDomainSetGuestVcpusWrapper(virDomainPtr domain,
 #define VIR_DOMAIN_TUNABLE_BLKDEV_GROUP_NAME "blkdeviotune.group_name"
 #endif
 
-/* 3.1.0 */
-
-int virDomainSetVcpuWrapper(virDomainPtr domain,
-			   const char *cpumap,
-			   int state,
-			   unsigned int flags);
-
 /* 3.2.0 */
 
 #ifndef VIR_MIGRATE_TLS
@@ -892,11 +784,6 @@ int virDomainSetVcpuWrapper(virDomainPtr domain,
 #ifndef VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD
 #define VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD 24
 #endif
-
-int virDomainSetBlockThresholdWrapper(virDomainPtr domain,
-                                     const char *dev,
-                                     unsigned long long threshold,
-                                     unsigned int flags);
 
 /* 3.3.0 */
 
@@ -959,18 +846,6 @@ int virDomainSetBlockThresholdWrapper(virDomainPtr domain,
 #endif
 
 
-/* 3.7.0 */
-
-int virDomainMigrateGetMaxDowntimeWrapper(virDomainPtr domain,
-					 unsigned long long *downtime,
-					 unsigned int flags);
-
-char *virDomainManagedSaveGetXMLDescWrapper(virDomainPtr domain,
-					   unsigned int flags);
-int virDomainManagedSaveDefineXMLWrapper(virDomainPtr domain,
-					const char *dxml,
-					unsigned int flags);
-
 /* 3.9.0 */
 
 #ifndef VIR_DOMAIN_JOB_MEMORY_PAGE_SIZE
@@ -1013,11 +888,6 @@ int virDomainManagedSaveDefineXMLWrapper(virDomainPtr domain,
 #define VIR_DOMAIN_LIFECYCLE_ACTION_COREDUMP_RESTART 5
 #endif
 
-int virDomainSetLifecycleActionWrapper(virDomainPtr domain,
-                                      unsigned int type,
-                                      unsigned int action,
-                                      unsigned int flags);
-
 /* 4.2.0 */
 
 #ifndef VIR_KEYCODE_SET_QNUM
@@ -1028,19 +898,8 @@ int virDomainSetLifecycleActionWrapper(virDomainPtr domain,
 #define VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_ARP 1
 #endif
 
-
-/* 4.4.0 */
-
-int virDomainDetachDeviceAliasWrapper(virDomainPtr domain,
-				     const char *alias,
-				     unsigned int flags);
-
 /* 4.5.0 */
 
-int virDomainGetLaunchSecurityInfoWrapper(virDomainPtr domain,
-                                         virTypedParameterPtr *params,
-                                         int *nparams,
-                                         unsigned int flags);
 
 #ifndef VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT
 #define VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT "sev-measurement"
