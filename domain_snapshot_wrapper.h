@@ -29,4 +29,74 @@
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 
+
+int
+virDomainRevertToSnapshotWrapper(virDomainSnapshotPtr snapshot,
+                                 unsigned int flags,
+                                 virErrorPtr err);
+
+int
+virDomainSnapshotDeleteWrapper(virDomainSnapshotPtr snapshot,
+                               unsigned int flags,
+                               virErrorPtr err);
+
+int
+virDomainSnapshotFreeWrapper(virDomainSnapshotPtr snapshot,
+                             virErrorPtr err);
+
+virConnectPtr
+virDomainSnapshotGetConnectWrapper(virDomainSnapshotPtr snapshot,
+                                   virErrorPtr err);
+
+virDomainPtr
+virDomainSnapshotGetDomainWrapper(virDomainSnapshotPtr snapshot,
+                                  virErrorPtr err);
+
+const char *
+virDomainSnapshotGetNameWrapper(virDomainSnapshotPtr snapshot,
+                                virErrorPtr err);
+
+virDomainSnapshotPtr
+virDomainSnapshotGetParentWrapper(virDomainSnapshotPtr snapshot,
+                                  unsigned int flags,
+                                  virErrorPtr err);
+
+char *
+virDomainSnapshotGetXMLDescWrapper(virDomainSnapshotPtr snapshot,
+                                   unsigned int flags,
+                                   virErrorPtr err);
+
+int
+virDomainSnapshotHasMetadataWrapper(virDomainSnapshotPtr snapshot,
+                                    unsigned int flags,
+                                    virErrorPtr err);
+
+int
+virDomainSnapshotIsCurrentWrapper(virDomainSnapshotPtr snapshot,
+                                  unsigned int flags,
+                                  virErrorPtr err);
+
+int
+virDomainSnapshotListAllChildrenWrapper(virDomainSnapshotPtr snapshot,
+                                        virDomainSnapshotPtr **snaps,
+                                        unsigned int flags,
+                                        virErrorPtr err);
+
+int
+virDomainSnapshotListChildrenNamesWrapper(virDomainSnapshotPtr snapshot,
+                                          char **names,
+                                          int nameslen,
+                                          unsigned int flags,
+                                          virErrorPtr err);
+
+int
+virDomainSnapshotNumChildrenWrapper(virDomainSnapshotPtr snapshot,
+                                    unsigned int flags,
+                                    virErrorPtr err);
+
+int
+virDomainSnapshotRefWrapper(virDomainSnapshotPtr snapshot,
+                            virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_DOMAIN_SNAPSHOT_WRAPPER_H__ */

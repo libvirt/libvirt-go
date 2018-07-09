@@ -30,5 +30,186 @@ package libvirt
 #include <assert.h>
 #include "domain_snapshot_wrapper.h"
 
+
+int
+virDomainRevertToSnapshotWrapper(virDomainSnapshotPtr snapshot,
+                                 unsigned int flags,
+                                 virErrorPtr err)
+{
+    int ret = virDomainRevertToSnapshot(snapshot, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotDeleteWrapper(virDomainSnapshotPtr snapshot,
+                               unsigned int flags,
+                               virErrorPtr err)
+{
+    int ret = virDomainSnapshotDelete(snapshot, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotFreeWrapper(virDomainSnapshotPtr snapshot,
+                             virErrorPtr err)
+{
+    int ret = virDomainSnapshotFree(snapshot);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virConnectPtr
+virDomainSnapshotGetConnectWrapper(virDomainSnapshotPtr snapshot,
+                                   virErrorPtr err)
+{
+    virConnectPtr ret = virDomainSnapshotGetConnect(snapshot);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virDomainPtr
+virDomainSnapshotGetDomainWrapper(virDomainSnapshotPtr snapshot,
+                                  virErrorPtr err)
+{
+    virDomainPtr ret = virDomainSnapshotGetDomain(snapshot);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virDomainSnapshotGetNameWrapper(virDomainSnapshotPtr snapshot,
+                                virErrorPtr err)
+{
+    const char * ret = virDomainSnapshotGetName(snapshot);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virDomainSnapshotPtr
+virDomainSnapshotGetParentWrapper(virDomainSnapshotPtr snapshot,
+                                  unsigned int flags,
+                                  virErrorPtr err)
+{
+    virDomainSnapshotPtr ret = virDomainSnapshotGetParent(snapshot, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virDomainSnapshotGetXMLDescWrapper(virDomainSnapshotPtr snapshot,
+                                   unsigned int flags,
+                                   virErrorPtr err)
+{
+    char * ret = virDomainSnapshotGetXMLDesc(snapshot, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotHasMetadataWrapper(virDomainSnapshotPtr snapshot,
+                                    unsigned int flags,
+                                    virErrorPtr err)
+{
+    int ret = virDomainSnapshotHasMetadata(snapshot, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotIsCurrentWrapper(virDomainSnapshotPtr snapshot,
+                                  unsigned int flags,
+                                  virErrorPtr err)
+{
+    int ret = virDomainSnapshotIsCurrent(snapshot, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotListAllChildrenWrapper(virDomainSnapshotPtr snapshot,
+                                        virDomainSnapshotPtr **snaps,
+                                        unsigned int flags,
+                                        virErrorPtr err)
+{
+    int ret = virDomainSnapshotListAllChildren(snapshot, snaps, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotListChildrenNamesWrapper(virDomainSnapshotPtr snapshot,
+                                          char **names,
+                                          int nameslen,
+                                          unsigned int flags,
+                                          virErrorPtr err)
+{
+    int ret = virDomainSnapshotListChildrenNames(snapshot, names, nameslen, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotNumChildrenWrapper(virDomainSnapshotPtr snapshot,
+                                    unsigned int flags,
+                                    virErrorPtr err)
+{
+    int ret = virDomainSnapshotNumChildren(snapshot, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainSnapshotRefWrapper(virDomainSnapshotPtr snapshot,
+                            virErrorPtr err)
+{
+    int ret = virDomainSnapshotRef(snapshot);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 */
 import "C"
