@@ -30,13 +30,36 @@
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 
-int virEventAddHandleWrapper(int fd, int events, int callbackID);
-int virEventAddTimeoutWrapper(int freq, int callbackID);
-void virEventRegisterImplWrapper(void);
+int
+virEventAddHandleWrapper(int fd,
+                         int events,
+                         int callbackID);
 
-void eventHandleCallbackInvoke(int watch, int fd, int events, uintptr_t callback, uintptr_t opaque);
-void eventTimeoutCallbackInvoke(int timer, uintptr_t callback, uintptr_t opaque);
-void eventHandleCallbackFree(uintptr_t callback, uintptr_t opaque);
-void eventTimeoutCallbackFree(uintptr_t callback, uintptr_t opaque);
+int
+virEventAddTimeoutWrapper(int freq,
+                          int callbackID);
+
+void
+virEventRegisterImplWrapper(void);
+
+void
+eventHandleCallbackInvoke(int watch,
+                          int fd,
+                          int events,
+                          uintptr_t callback,
+                          uintptr_t opaque);
+
+void
+eventTimeoutCallbackInvoke(int timer,
+                           uintptr_t callback,
+                           uintptr_t opaque);
+
+void
+eventHandleCallbackFree(uintptr_t callback,
+                        uintptr_t opaque);
+
+void
+eventTimeoutCallbackFree(uintptr_t callback,
+                         uintptr_t opaque);
 
 #endif /* LIBVIRT_GO_EVENTS_WRAPPER_H__ */

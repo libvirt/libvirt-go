@@ -31,8 +31,9 @@
 #include <libvirt/virterror.h>
 #include "storage_volume_compat.h"
 
-int virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
-				    virStorageVolInfoPtr info,
-				    unsigned int flags);
+int
+virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
+                                 virStorageVolInfoPtr info,
+                                 unsigned int flags);
 
 #endif /* LIBVIRT_GO_STORAGE_VOLUME_WRAPPER_H__ */

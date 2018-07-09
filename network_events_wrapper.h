@@ -31,20 +31,30 @@
 #include <libvirt/virterror.h>
 #include "network_compat.h"
 
-void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,
-                                     int event, int detail, void* data);
+void
+networkEventLifecycleCallbackHelper(virConnectPtr c,
+                                    virNetworkPtr d,
+                                    int event,
+                                    int detail,
+                                    void* data);
 
-int virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,  virNetworkPtr d,
-                                         int eventID, virConnectNetworkEventGenericCallback cb,
+int
+virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,
+                                         virNetworkPtr d,
+                                         int eventID,
+                                         virConnectNetworkEventGenericCallback cb,
                                          long goCallbackId);
 
-int virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,
-                                             virNetworkPtr d,
-                                             int eventID,
-                                             virConnectNetworkEventGenericCallback cb,
-                                             long goCallbackId);
-int virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
-                                             int callbackID);
+int
+virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,
+                                         virNetworkPtr d,
+                                         int eventID,
+                                         virConnectNetworkEventGenericCallback cb,
+                                         long goCallbackId);
+
+int
+virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
+                                           int callbackID);
 
 
 #endif /* LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__ */

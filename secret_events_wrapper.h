@@ -31,16 +31,26 @@
 #include <libvirt/virterror.h>
 #include "secret_compat.h"
 
-void secretEventLifecycleCallbackHelper(virConnectPtr c, virSecretPtr d,
-                                     int event, int detail, void* data);
-void secretEventGenericCallbackHelper(virConnectPtr c, virSecretPtr d,
+void
+secretEventLifecycleCallbackHelper(virConnectPtr c,
+                                   virSecretPtr d,
+                                   int event,
+                                   int detail,
                                    void* data);
 
-int virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,  virSecretPtr d,
-                                         int eventID, virConnectSecretEventGenericCallback cb,
-                                         long goCallbackId);
+void secretEventGenericCallbackHelper(virConnectPtr c,
+                                      virSecretPtr d,
+                                      void* data);
 
-int virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
-                                              int callbackID);
+int
+virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,
+                                        virSecretPtr d,
+                                        int eventID,
+                                        virConnectSecretEventGenericCallback cb,
+                                        long goCallbackId);
+
+int
+virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
+                                          int callbackID);
 
 #endif /* LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__ */

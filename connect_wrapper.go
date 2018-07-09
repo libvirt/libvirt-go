@@ -54,7 +54,7 @@ int connectAuthCallbackHelper(virConnectCredentialPtr cred, unsigned int ncred, 
     return connectAuthCallback(cred, ncred, *callbackID);
 }
 
-virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags)
+virConnectPtr virConnectOpenAuthWrapper(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags)
 {
     virConnectAuth auth = {
        .credtype = credtype,

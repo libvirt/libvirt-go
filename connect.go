@@ -395,7 +395,7 @@ func NewConnectWithAuth(uri string, auth *ConnectAuth, flags ConnectFlags) (*Con
 
 	callbackID := registerCallbackId(auth.Callback)
 
-	ptr := C.virConnectOpenAuthWrap(cUri, &ccredtype[0], C.uint(len(auth.CredType)), C.int(callbackID), C.uint(flags))
+	ptr := C.virConnectOpenAuthWrapper(cUri, &ccredtype[0], C.uint(len(auth.CredType)), C.int(callbackID), C.uint(flags))
 	freeCallbackId(callbackID)
 	if ptr == nil {
 		return nil, GetLastError()

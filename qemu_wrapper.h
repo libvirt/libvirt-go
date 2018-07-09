@@ -32,16 +32,26 @@
 #include <libvirt/virterror.h>
 #include "qemu_compat.h"
 
-void domainQemuMonitorEventCallbackHelper(virConnectPtr c, virDomainPtr d,
-					const char *event, long long secs,
-					unsigned int micros, const char *details, void *data);
+void
+domainQemuMonitorEventCallbackHelper(virConnectPtr c,
+                                     virDomainPtr d,
+                                     const char *event,
+                                     long long secs,
+                                     unsigned int micros,
+                                     const char *details,
+                                     void *data);
 
-int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainPtr d,
-						 const char *event, virConnectDomainQemuMonitorEventCallback cb,
-						 long goCallbackId, unsigned int flags);
+int
+virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,
+                                                virDomainPtr d,
+                                                const char *event,
+                                                virConnectDomainQemuMonitorEventCallback cb,
+                                                long goCallbackId,
+                                                unsigned int flags);
 
-int virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
-						     int callbackID);
+int
+virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
+                                                  int callbackID);
 
 
 #endif /* LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__ */

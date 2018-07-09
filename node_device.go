@@ -28,10 +28,8 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "node_device_compat.h"
+#include "node_device_wrapper.h"
 */
 import "C"
 

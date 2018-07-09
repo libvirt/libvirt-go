@@ -31,8 +31,9 @@
 #include <libvirt/libvirt-lxc.h>
 #include <libvirt/virterror.h>
 
-int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
-				  unsigned int flags);
+int
+virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
+                               unsigned int flags);
 
 
 #endif /* LIBVIRT_GO_LXC_COMPAT_H__ */

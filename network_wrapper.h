@@ -31,11 +31,13 @@
 #include <libvirt/virterror.h>
 #include "network_compat.h"
 
-void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease);
+void
+virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease);
 
-int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
-                                   const char *mac,
-                                   virNetworkDHCPLeasePtr **leases,
-                                   unsigned int flags);
+int
+virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
+                               const char *mac,
+                               virNetworkDHCPLeasePtr **leases,
+                               unsigned int flags);
 
 #endif /* LIBVIRT_GO_NETWORK_WRAPPER_H__ */

@@ -30,13 +30,24 @@
 #include <libvirt/virterror.h>
 #include "nwfilter_binding_compat.h"
 
-const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding);
-const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding);
-char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
-					 unsigned int flags);
-int virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding);
-int virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding);
-int virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding);
+const char *
+virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding);
+
+const char *
+virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding);
+
+char *
+virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
+                                    unsigned int flags);
+
+int
+virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding);
+
+int
+virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding);
+
+int
+virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding);
 
 
 #endif /* LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__ */
