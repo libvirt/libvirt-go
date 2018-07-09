@@ -30,5 +30,155 @@ package libvirt
 #include <assert.h>
 #include "node_device_wrapper.h"
 
+
+int
+virNodeDeviceDestroyWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err)
+{
+    int ret = virNodeDeviceDestroy(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceDetachFlagsWrapper(virNodeDevicePtr dev,
+                                const char *driverName,
+                                unsigned int flags,
+                                virErrorPtr err)
+{
+    int ret = virNodeDeviceDetachFlags(dev, driverName, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceDettachWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err)
+{
+    int ret = virNodeDeviceDettach(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceFreeWrapper(virNodeDevicePtr dev,
+                         virErrorPtr err)
+{
+    int ret = virNodeDeviceFree(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virNodeDeviceGetNameWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err)
+{
+    const char * ret = virNodeDeviceGetName(dev);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virNodeDeviceGetParentWrapper(virNodeDevicePtr dev,
+                              virErrorPtr err)
+{
+    const char * ret = virNodeDeviceGetParent(dev);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virNodeDeviceGetXMLDescWrapper(virNodeDevicePtr dev,
+                               unsigned int flags,
+                               virErrorPtr err)
+{
+    char * ret = virNodeDeviceGetXMLDesc(dev, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceListCapsWrapper(virNodeDevicePtr dev,
+                             char ** const names,
+                             int maxnames,
+                             virErrorPtr err)
+{
+    int ret = virNodeDeviceListCaps(dev, names, maxnames);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceNumOfCapsWrapper(virNodeDevicePtr dev,
+                              virErrorPtr err)
+{
+    int ret = virNodeDeviceNumOfCaps(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceReAttachWrapper(virNodeDevicePtr dev,
+                             virErrorPtr err)
+{
+    int ret = virNodeDeviceReAttach(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceRefWrapper(virNodeDevicePtr dev,
+                        virErrorPtr err)
+{
+    int ret = virNodeDeviceRef(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNodeDeviceResetWrapper(virNodeDevicePtr dev,
+                          virErrorPtr err)
+{
+    int ret = virNodeDeviceReset(dev);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 */
 import "C"

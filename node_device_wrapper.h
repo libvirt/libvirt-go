@@ -30,4 +30,59 @@
 #include <libvirt/virterror.h>
 #include "node_device_compat.h"
 
+
+int
+virNodeDeviceDestroyWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err);
+
+int
+virNodeDeviceDetachFlagsWrapper(virNodeDevicePtr dev,
+                                const char *driverName,
+                                unsigned int flags,
+                                virErrorPtr err);
+
+int
+virNodeDeviceDettachWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err);
+
+int
+virNodeDeviceFreeWrapper(virNodeDevicePtr dev,
+                         virErrorPtr err);
+
+const char *
+virNodeDeviceGetNameWrapper(virNodeDevicePtr dev,
+                            virErrorPtr err);
+
+const char *
+virNodeDeviceGetParentWrapper(virNodeDevicePtr dev,
+                              virErrorPtr err);
+
+char *
+virNodeDeviceGetXMLDescWrapper(virNodeDevicePtr dev,
+                               unsigned int flags,
+                               virErrorPtr err);
+
+int
+virNodeDeviceListCapsWrapper(virNodeDevicePtr dev,
+                             char **const names,
+                             int maxnames,
+                             virErrorPtr err);
+
+int
+virNodeDeviceNumOfCapsWrapper(virNodeDevicePtr dev,
+                              virErrorPtr err);
+
+int
+virNodeDeviceReAttachWrapper(virNodeDevicePtr dev,
+                             virErrorPtr err);
+
+int
+virNodeDeviceRefWrapper(virNodeDevicePtr dev,
+                        virErrorPtr err);
+
+int
+virNodeDeviceResetWrapper(virNodeDevicePtr dev,
+                          virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_NODE_DEVICE_WRAPPER_H__ */
