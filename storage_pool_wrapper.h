@@ -30,4 +30,121 @@
 #include <libvirt/virterror.h>
 #include "storage_pool_compat.h"
 
+int
+virStoragePoolBuildWrapper(virStoragePoolPtr pool,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virStoragePoolCreateWrapper(virStoragePoolPtr pool,
+                            unsigned int flags,
+                            virErrorPtr err);
+
+int
+virStoragePoolDeleteWrapper(virStoragePoolPtr pool,
+                            unsigned int flags,
+                            virErrorPtr err);
+
+int
+virStoragePoolDestroyWrapper(virStoragePoolPtr pool,
+                             virErrorPtr err);
+
+int
+virStoragePoolFreeWrapper(virStoragePoolPtr pool,
+                          virErrorPtr err);
+
+int
+virStoragePoolGetAutostartWrapper(virStoragePoolPtr pool,
+                                  int *autostart,
+                                  virErrorPtr err);
+
+virConnectPtr
+virStoragePoolGetConnectWrapper(virStoragePoolPtr pool,
+                                virErrorPtr err);
+
+int
+virStoragePoolGetInfoWrapper(virStoragePoolPtr pool,
+                             virStoragePoolInfoPtr info,
+                             virErrorPtr err);
+
+const char *
+virStoragePoolGetNameWrapper(virStoragePoolPtr pool,
+                             virErrorPtr err);
+
+int
+virStoragePoolGetUUIDWrapper(virStoragePoolPtr pool,
+                             unsigned char *uuid,
+                             virErrorPtr err);
+
+int
+virStoragePoolGetUUIDStringWrapper(virStoragePoolPtr pool,
+                                   char *buf,
+                                   virErrorPtr err);
+
+char *
+virStoragePoolGetXMLDescWrapper(virStoragePoolPtr pool,
+                                unsigned int flags,
+                                virErrorPtr err);
+
+int
+virStoragePoolIsActiveWrapper(virStoragePoolPtr pool,
+                              virErrorPtr err);
+
+int
+virStoragePoolIsPersistentWrapper(virStoragePoolPtr pool,
+                                  virErrorPtr err);
+
+int
+virStoragePoolListAllVolumesWrapper(virStoragePoolPtr pool,
+                                    virStorageVolPtr **vols,
+                                    unsigned int flags,
+                                    virErrorPtr err);
+
+int
+virStoragePoolListVolumesWrapper(virStoragePoolPtr pool,
+                                 char **const names,
+                                 int maxnames,
+                                 virErrorPtr err);
+
+int
+virStoragePoolNumOfVolumesWrapper(virStoragePoolPtr pool,
+                                  virErrorPtr err);
+
+int
+virStoragePoolRefWrapper(virStoragePoolPtr pool,
+                         virErrorPtr err);
+
+int
+virStoragePoolRefreshWrapper(virStoragePoolPtr pool,
+                             unsigned int flags,
+                             virErrorPtr err);
+
+int
+virStoragePoolSetAutostartWrapper(virStoragePoolPtr pool,
+                                  int autostart,
+                                  virErrorPtr err);
+
+int
+virStoragePoolUndefineWrapper(virStoragePoolPtr pool,
+                              virErrorPtr err);
+
+virStorageVolPtr
+virStorageVolCreateXMLWrapper(virStoragePoolPtr pool,
+                              const char *xmlDesc,
+                              unsigned int flags,
+                              virErrorPtr err);
+
+virStorageVolPtr
+virStorageVolCreateXMLFromWrapper(virStoragePoolPtr pool,
+                                  const char *xmlDesc,
+                                  virStorageVolPtr clonevol,
+                                  unsigned int flags,
+                                  virErrorPtr err);
+
+virStorageVolPtr
+virStorageVolLookupByNameWrapper(virStoragePoolPtr pool,
+                                 const char *name,
+                                 virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_STORAGE_POOL_WRAPPER_H__ */
