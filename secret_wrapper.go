@@ -30,5 +30,146 @@ package libvirt
 #include <assert.h>
 #include "secret_wrapper.h"
 
+
+int
+virSecretFreeWrapper(virSecretPtr secret,
+                     virErrorPtr err)
+{
+    int ret = virSecretFree(secret);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virConnectPtr
+virSecretGetConnectWrapper(virSecretPtr secret,
+                           virErrorPtr err)
+{
+    virConnectPtr ret = virSecretGetConnect(secret);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretGetUUIDWrapper(virSecretPtr secret,
+                        unsigned char *uuid,
+                        virErrorPtr err)
+{
+    int ret = virSecretGetUUID(secret, uuid);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretGetUUIDStringWrapper(virSecretPtr secret,
+                              char *buf,
+                              virErrorPtr err)
+{
+    int ret = virSecretGetUUIDString(secret, buf);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virSecretGetUsageIDWrapper(virSecretPtr secret,
+                           virErrorPtr err)
+{
+    const char * ret = virSecretGetUsageID(secret);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretGetUsageTypeWrapper(virSecretPtr secret,
+                             virErrorPtr err)
+{
+    int ret = virSecretGetUsageType(secret);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+unsigned char *
+virSecretGetValueWrapper(virSecretPtr secret,
+                         size_t *value_size,
+                         unsigned int flags,
+                         virErrorPtr err)
+{
+    unsigned char * ret = virSecretGetValue(secret, value_size, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virSecretGetXMLDescWrapper(virSecretPtr secret,
+                           unsigned int flags,
+                           virErrorPtr err)
+{
+    char * ret = virSecretGetXMLDesc(secret, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretRefWrapper(virSecretPtr secret,
+                    virErrorPtr err)
+{
+    int ret = virSecretRef(secret);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretSetValueWrapper(virSecretPtr secret,
+                         const unsigned char *value,
+                         size_t value_size,
+                         unsigned int flags,
+                         virErrorPtr err)
+{
+    int ret = virSecretSetValue(secret, value, value_size, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virSecretUndefineWrapper(virSecretPtr secret,
+                         virErrorPtr err)
+{
+    int ret = virSecretUndefine(secret);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 */
 import "C"

@@ -30,4 +30,57 @@
 #include <libvirt/virterror.h>
 #include "secret_compat.h"
 
+int
+virSecretFreeWrapper(virSecretPtr secret,
+                     virErrorPtr err);
+
+virConnectPtr
+virSecretGetConnectWrapper(virSecretPtr secret,
+                           virErrorPtr err);
+
+int
+virSecretGetUUIDWrapper(virSecretPtr secret,
+                        unsigned char *uuid,
+                        virErrorPtr err);
+
+int
+virSecretGetUUIDStringWrapper(virSecretPtr secret,
+                              char *buf,
+                              virErrorPtr err);
+
+const char *
+virSecretGetUsageIDWrapper(virSecretPtr secret,
+                           virErrorPtr err);
+
+int
+virSecretGetUsageTypeWrapper(virSecretPtr secret,
+                             virErrorPtr err);
+
+unsigned char *
+virSecretGetValueWrapper(virSecretPtr secret,
+                         size_t *value_size,
+                         unsigned int flags,
+                         virErrorPtr err);
+
+char *
+virSecretGetXMLDescWrapper(virSecretPtr secret,
+                           unsigned int flags,
+                           virErrorPtr err);
+
+int
+virSecretRefWrapper(virSecretPtr secret,
+                    virErrorPtr err);
+
+int
+virSecretSetValueWrapper(virSecretPtr secret,
+                         const unsigned char *value,
+                         size_t value_size,
+                         unsigned int flags,
+                         virErrorPtr err);
+
+int
+virSecretUndefineWrapper(virSecretPtr secret,
+                         virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_SECRET_WRAPPER_H__ */
