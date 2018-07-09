@@ -23,11 +23,16 @@
  *
  */
 
-#ifndef LIBVIRT_GO_NWFILTER_BINDING_COMPAT_H__
-#define LIBVIRT_GO_NWFILTER_BINDING_COMPAT_H__
+#ifndef LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__
+#define LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__
 
-#if LIBVIR_VERSION_NUMBER < 4005000
-typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
-#endif
+const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding);
+const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding);
+char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
+					 unsigned int flags);
+int virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding);
+int virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding);
+int virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding);
 
-#endif /* LIBVIRT_GO_NWFILTER_BINDING_COMPAT_H__ */
+
+#endif /* LIBVIRT_GO_NWFILTER_BINDING_WRAPPER_H__ */

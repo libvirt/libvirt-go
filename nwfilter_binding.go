@@ -31,6 +31,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include "nwfilter_binding_compat.h"
+#include "nwfilter_binding_wrapper.h"
 */
 import "C"
 
