@@ -47,24 +47,6 @@
 #define VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE 1 << 0
 #endif
 
-int virNodeGetFreePagesWrapper(virConnectPtr conn,
-			      unsigned int npages,
-			      unsigned int *pages,
-			      int startcell,
-			      unsigned int cellcount,
-			      unsigned long long *counts,
-			      unsigned int flags);
-
-
-/* 1.2.7 */
-
-char * virConnectGetDomainCapabilitiesWrapper(virConnectPtr conn,
-					     const char *emulatorbin,
-					     const char *arch,
-					     const char *machine,
-					     const char *virttype,
-					     unsigned int flags);
-
 
 /* 1.2.8 */
 
@@ -118,18 +100,6 @@ struct _virDomainStatsRecord {
 };
 #endif
 
-int virConnectGetAllDomainStatsWrapper(virConnectPtr conn,
-				      unsigned int stats,
-				      virDomainStatsRecordPtr **retStats,
-				      unsigned int flags);
-
-int virDomainListGetStatsWrapper(virDomainPtr *doms,
-				unsigned int stats,
-				virDomainStatsRecordPtr **retStats,
-				unsigned int flags);
-
-void virDomainStatsRecordListFreeWrapper(virDomainStatsRecordPtr *stats);
-
 
 /* 1.2.9 */
 #ifndef VIR_NODE_ALLOC_PAGES_ADD
@@ -139,14 +109,6 @@ void virDomainStatsRecordListFreeWrapper(virDomainStatsRecordPtr *stats);
 #ifndef VIR_NODE_ALLOC_PAGES_SET
 #define VIR_NODE_ALLOC_PAGES_SET 1 << 0
 #endif
-
-int virNodeAllocPagesWrapper(virConnectPtr conn,
-			    unsigned int npages,
-			    unsigned int *pageSizes,
-			    unsigned long long *pageCounts,
-			    int startCell,
-			    unsigned int cellCount,
-			    unsigned int flags);
 
 
 /* 1.2.11 */
@@ -178,10 +140,6 @@ int virNodeAllocPagesWrapper(virConnectPtr conn,
 #define VIR_CONNECT_GET_ALL_DOMAINS_STATS_BACKING 1 << 30
 #endif
 
-virDomainPtr virDomainDefineXMLFlagsWrapper(virConnectPtr conn,
-					   const char *xml,
-					   unsigned int flags);
-
 /* 1.2.14 */
 
 #ifndef VIR_CONNECT_BASELINE_CPU_MIGRATABLE
@@ -212,36 +170,8 @@ virDomainPtr virDomainDefineXMLFlagsWrapper(virConnectPtr conn,
 #define VIR_CONNECT_LIST_NODE_DEVICES_CAP_CCW_DEV 1 << 15
 #endif
 
-/* 4.1.0 */
-
-virStoragePoolPtr virStoragePoolLookupByTargetPathWrapper(virConnectPtr conn,
-							 const char *path);
-
-/* 4.4.0 */
-
-char *virConnectBaselineHypervisorCPUWrapper(virConnectPtr conn,
-					    const char *emulator,
-					    const char *arch,
-					    const char *machine,
-					    const char *virttype,
-					    const char **xmlCPUs,
-					    unsigned int ncpus,
-					    unsigned int flags);
-
-int virConnectCompareHypervisorCPUWrapper(virConnectPtr conn,
-					 const char *emulator,
-					 const char *arch,
-					 const char *machine,
-					 const char *virttype,
-					 const char *xmlCPU,
-					 unsigned int flags);
 
 /* 4.5.0 */
-
-int virNodeGetSEVInfoWrapper(virConnectPtr conn,
-                            virTypedParameterPtr *params,
-                            int *nparams,
-                            unsigned int flags);
 
 #ifndef VIR_NODE_SEV_CBITPOS
 #define VIR_NODE_SEV_CBITPOS "cbitpos"
@@ -262,17 +192,6 @@ int virNodeGetSEVInfoWrapper(virConnectPtr conn,
 #if LIBVIR_VERSION_NUMBER < 4005000
 typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
 #endif
-
-int virConnectListAllNWFilterBindingsWrapper(virConnectPtr conn,
-                                            virNWFilterBindingPtr **bindings,
-                                            unsigned int flags);
-
-virNWFilterBindingPtr virNWFilterBindingCreateXMLWrapper(virConnectPtr conn,
-							const char *xml,
-							unsigned int flags);
-
-virNWFilterBindingPtr virNWFilterBindingLookupByPortDevWrapper(virConnectPtr conn,
-							      const char *portdev);
 
 #ifndef VIR_CONNECT_GET_ALL_DOMAINS_STATS_NOWAIT
 #define VIR_CONNECT_GET_ALL_DOMAINS_STATS_NOWAIT 1 << 29

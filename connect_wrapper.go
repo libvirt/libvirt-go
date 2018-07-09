@@ -30,6 +30,7 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
+#include <assert.h>
 #include "connect_wrapper.h"
 #include "callbacks_wrapper.h"
 
@@ -66,6 +67,177 @@ virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncred
 
     return virConnectOpenAuth(name, &auth, flags);
 }
+
+
+int virNodeGetFreePagesWrapper(virConnectPtr conn,
+                               unsigned int npages,
+                               unsigned int *pages,
+                               int startcell,
+                               unsigned int cellcount,
+                               unsigned long long *counts,
+                               unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002006
+    assert(0); // Caller should have checked version
+#else
+    return virNodeGetFreePages(conn, npages, pages, startcell, cellcount, counts, flags);
+#endif
+}
+
+char * virConnectGetDomainCapabilitiesWrapper(virConnectPtr conn,
+                                              const char *emulatorbin,
+                                              const char *arch,
+                                              const char *machine,
+                                              const char *virttype,
+                                              unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002007
+    assert(0); // Caller should have checked version
+#else
+    return virConnectGetDomainCapabilities(conn, emulatorbin, arch, machine, virttype, flags);
+#endif
+}
+
+int virConnectGetAllDomainStatsWrapper(virConnectPtr conn,
+                                       unsigned int stats,
+                                       virDomainStatsRecordPtr **retStats,
+                                       unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002008
+    assert(0); // Caller should have checked version
+#else
+    return virConnectGetAllDomainStats(conn, stats, retStats, flags);
+#endif
+}
+
+int virDomainListGetStatsWrapper(virDomainPtr *doms,
+                                 unsigned int stats,
+                                 virDomainStatsRecordPtr **retStats,
+                                 unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002008
+    assert(0); // Caller should have checked version
+#else
+    return virDomainListGetStats(doms, stats, retStats, flags);
+#endif
+}
+
+void virDomainStatsRecordListFreeWrapper(virDomainStatsRecordPtr *stats)
+{
+}
+
+int virNodeAllocPagesWrapper(virConnectPtr conn,
+                             unsigned int npages,
+                             unsigned int *pageSizes,
+                             unsigned long long *pageCounts,
+                             int startCell,
+                             unsigned int cellCount,
+                             unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002009
+    assert(0); // Caller should have checked version
+#else
+    return virNodeAllocPages(conn, npages, pageSizes, pageCounts, startCell, cellCount, flags);
+#endif
+}
+
+
+virDomainPtr virDomainDefineXMLFlagsWrapper(virConnectPtr conn,
+                                            const char *xml,
+                                            unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 1002012
+    assert(0); // Caller should have checked version
+#else
+    return virDomainDefineXMLFlags(conn, xml, flags);
+#endif
+}
+
+virStoragePoolPtr virStoragePoolLookupByTargetPathWrapper(virConnectPtr conn,
+                                                          const char *path)
+{
+#if LIBVIR_VERSION_NUMBER < 4001000
+    assert(0); // Caller should have checked version
+#else
+    return virStoragePoolLookupByTargetPath(conn, path);
+#endif
+}
+
+char *virConnectBaselineHypervisorCPUWrapper(virConnectPtr conn,
+                                             const char *emulator,
+                                             const char *arch,
+                                             const char *machine,
+                                             const char *virttype,
+                                             const char **xmlCPUs,
+                                             unsigned int ncpus,
+                                             unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4004000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectBaselineHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPUs, ncpus, flags);
+#endif
+}
+
+int virConnectCompareHypervisorCPUWrapper(virConnectPtr conn,
+                                          const char *emulator,
+                                          const char *arch,
+                                          const char *machine,
+                                          const char *virttype,
+                                          const char *xmlCPU,
+                                          unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4004000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectCompareHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPU, flags);
+#endif
+}
+
+int virNodeGetSEVInfoWrapper(virConnectPtr conn,
+                             virTypedParameterPtr *params,
+                             int *nparams,
+                             unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virNodeGetSEVInfo(conn, params, nparams, flags);
+#endif
+}
+
+int virConnectListAllNWFilterBindingsWrapper(virConnectPtr conn,
+                                             virNWFilterBindingPtr **bindings,
+                                             unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectListAllNWFilterBindings(conn, bindings, flags);
+#endif
+}
+
+virNWFilterBindingPtr virNWFilterBindingCreateXMLWrapper(virConnectPtr conn,
+                                                         const char *xml,
+                                                         unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virNWFilterBindingCreateXML(conn, xml, flags);
+#endif
+}
+
+virNWFilterBindingPtr virNWFilterBindingLookupByPortDevWrapper(virConnectPtr conn,
+                                                               const char *portdev)
+{
+#if LIBVIR_VERSION_NUMBER < 4005000
+    assert(0); // Caller should have checked version
+#else
+    return virNWFilterBindingLookupByPortDev(conn, portdev);
+#endif
+}
+
 
 */
 import "C"

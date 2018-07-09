@@ -31,4 +31,79 @@ int virConnectRegisterCloseCallbackHelper(virConnectPtr c, virConnectCloseFunc c
 
 virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags);
 
+int virNodeGetFreePagesWrapper(virConnectPtr conn,
+                               unsigned int npages,
+                               unsigned int *pages,
+                               int startcell,
+                               unsigned int cellcount,
+                               unsigned long long *counts,
+                               unsigned int flags);
+
+char * virConnectGetDomainCapabilitiesWrapper(virConnectPtr conn,
+                                              const char *emulatorbin,
+                                              const char *arch,
+                                              const char *machine,
+                                              const char *virttype,
+                                              unsigned int flags);
+
+int virConnectGetAllDomainStatsWrapper(virConnectPtr conn,
+                                       unsigned int stats,
+                                       virDomainStatsRecordPtr **retStats,
+                                       unsigned int flags);
+
+int virDomainListGetStatsWrapper(virDomainPtr *doms,
+                                 unsigned int stats,
+                                 virDomainStatsRecordPtr **retStats,
+                                 unsigned int flags);
+
+void virDomainStatsRecordListFreeWrapper(virDomainStatsRecordPtr *stats);
+
+int virNodeAllocPagesWrapper(virConnectPtr conn,
+                             unsigned int npages,
+                             unsigned int *pageSizes,
+                             unsigned long long *pageCounts,
+                             int startCell,
+                             unsigned int cellCount,
+                             unsigned int flags);
+
+virDomainPtr virDomainDefineXMLFlagsWrapper(virConnectPtr conn,
+                                            const char *xml,
+                                            unsigned int flags);
+
+virStoragePoolPtr virStoragePoolLookupByTargetPathWrapper(virConnectPtr conn,
+                                                          const char *path);
+
+char *virConnectBaselineHypervisorCPUWrapper(virConnectPtr conn,
+                                             const char *emulator,
+                                             const char *arch,
+                                             const char *machine,
+                                             const char *virttype,
+                                             const char **xmlCPUs,
+                                             unsigned int ncpus,
+                                             unsigned int flags);
+
+int virConnectCompareHypervisorCPUWrapper(virConnectPtr conn,
+                                          const char *emulator,
+                                          const char *arch,
+                                          const char *machine,
+                                          const char *virttype,
+                                          const char *xmlCPU,
+                                          unsigned int flags);
+
+int virNodeGetSEVInfoWrapper(virConnectPtr conn,
+                             virTypedParameterPtr *params,
+                             int *nparams,
+                             unsigned int flags);
+
+int virConnectListAllNWFilterBindingsWrapper(virConnectPtr conn,
+                                             virNWFilterBindingPtr **bindings,
+                                             unsigned int flags);
+
+virNWFilterBindingPtr virNWFilterBindingCreateXMLWrapper(virConnectPtr conn,
+                                                         const char *xml,
+                                                         unsigned int flags);
+
+virNWFilterBindingPtr virNWFilterBindingLookupByPortDevWrapper(virConnectPtr conn,
+                                                               const char *portdev);
+
 #endif /* LIBVIRT_GO_CONNECT_WRAPPER_H__ */
