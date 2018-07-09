@@ -583,6 +583,17 @@ func (err Error) Error() string {
 		err.Code, err.Domain, err.Message)
 }
 
+func makeError(err *C.virError) Error {
+	ret := Error{
+		Code:    ErrorNumber(err.code),
+		Domain:  ErrorDomain(err.domain),
+		Message: C.GoString(err.message),
+		Level:   ErrorLevel(err.level),
+	}
+	C.virResetError(err)
+	return ret
+}
+
 func GetLastError() Error {
 	err := C.virGetLastError()
 	if err == nil {
