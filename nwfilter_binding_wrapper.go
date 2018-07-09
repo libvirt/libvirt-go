@@ -30,63 +30,100 @@ package libvirt
 #include <assert.h>
 #include "nwfilter_binding_wrapper.h"
 
-const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding)
+
+int
+virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding,
+                                virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingGetPortDev(binding);
+    int ret = virNWFilterBindingDelete(binding);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
 
-const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding)
+int
+virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding,
+                              virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingGetFilterName(binding);
+    int ret = virNWFilterBindingFree(binding);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
 
-char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
-					 unsigned int flags)
+const char *
+virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding,
+                                       virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingGetXMLDesc(binding, flags);
+    const char * ret = virNWFilterBindingGetFilterName(binding);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
 
-int virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding)
+const char *
+virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding,
+                                    virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingDelete(binding);
+    const char * ret = virNWFilterBindingGetPortDev(binding);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
 
-int virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding)
+char *
+virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
+                                    unsigned int flags,
+                                    virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingRef(binding);
+    char * ret = virNWFilterBindingGetXMLDesc(binding, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 
 
-int virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding)
+int
+virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding,
+                             virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
 #else
-    return virNWFilterBindingFree(binding);
+    int ret = virNWFilterBindingRef(binding);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
 }
 

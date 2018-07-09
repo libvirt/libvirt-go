@@ -45,9 +45,10 @@ func (f *NWFilterBinding) Free() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingFree")
 	}
-	ret := C.virNWFilterBindingFreeWrapper(f.ptr)
+	var err C.virError
+	ret := C.virNWFilterBindingFreeWrapper(f.ptr, &err)
 	if ret == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
@@ -57,9 +58,10 @@ func (c *NWFilterBinding) Ref() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingRef")
 	}
-	ret := C.virNWFilterBindingRefWrapper(c.ptr)
+	var err C.virError
+	ret := C.virNWFilterBindingRefWrapper(c.ptr, &err)
 	if ret == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
@@ -69,9 +71,10 @@ func (f *NWFilterBinding) Delete() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingDelete")
 	}
-	result := C.virNWFilterBindingDeleteWrapper(f.ptr)
+	var err C.virError
+	result := C.virNWFilterBindingDeleteWrapper(f.ptr, &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
@@ -81,9 +84,10 @@ func (f *NWFilterBinding) GetPortDev() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetPortDev")
 	}
-	result := C.virNWFilterBindingGetPortDevWrapper(f.ptr)
+	var err C.virError
+	result := C.virNWFilterBindingGetPortDevWrapper(f.ptr, &err)
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	name := C.GoString(result)
 	C.free(unsafe.Pointer(result))
@@ -95,9 +99,10 @@ func (f *NWFilterBinding) GetFilterName() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetFilterName")
 	}
-	result := C.virNWFilterBindingGetFilterNameWrapper(f.ptr)
+	var err C.virError
+	result := C.virNWFilterBindingGetFilterNameWrapper(f.ptr, &err)
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	name := C.GoString(result)
 	C.free(unsafe.Pointer(result))
@@ -109,9 +114,10 @@ func (f *NWFilterBinding) GetXMLDesc(flags uint32) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetXMLDesc")
 	}
-	result := C.virNWFilterBindingGetXMLDescWrapper(f.ptr, C.uint(flags))
+	var err C.virError
+	result := C.virNWFilterBindingGetXMLDescWrapper(f.ptr, C.uint(flags), &err)
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	xml := C.GoString(result)
 	C.free(unsafe.Pointer(result))
