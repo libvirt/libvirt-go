@@ -33,5 +33,17 @@ int virStreamSparseSendAllWrapper(virStreamPtr st, int callbackID, int holeCallb
 int virStreamSparseRecvAllWrapper(virStreamPtr st, int callbackID, int holeCallbackID);
 
 int virStreamEventAddCallbackWrapper(virStreamPtr st, int events, int callbackID);
+int virStreamRecvFlagsWrapper(virStreamPtr st,
+			     char *data,
+			     size_t nbytes,
+			     unsigned int flags);
+
+int virStreamSendHoleWrapper(virStreamPtr st,
+			    long long length,
+			    unsigned int flags);
+
+int virStreamRecvHoleWrapper(virStreamPtr,
+			    long long *length,
+			    unsigned int flags);
 
 #endif /* LIBVIRT_GO_STREAM_WRAPPER_H__ */

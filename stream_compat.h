@@ -33,17 +33,4 @@
 #define VIR_STREAM_RECV_STOP_AT_HOLE (1 << 0)
 #endif
 
-int virStreamRecvFlagsWrapper(virStreamPtr st,
-			     char *data,
-			     size_t nbytes,
-			     unsigned int flags);
-
-int virStreamSendHoleWrapper(virStreamPtr st,
-			    long long length,
-			    unsigned int flags);
-
-int virStreamRecvHoleWrapper(virStreamPtr,
-			    long long *length,
-			    unsigned int flags);
-
 #endif /* LIBVIRT_GO_STREAM_COMPAT_H__ */

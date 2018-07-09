@@ -128,5 +128,39 @@ int virStreamEventAddCallbackWrapper(virStreamPtr st, int events, int callbackID
     return virStreamEventAddCallback(st, events, streamEventCallbackHelper, (void *)(intptr_t)callbackID, NULL);
 }
 
+int virStreamRecvFlagsWrapper(virStreamPtr st,
+			     char *data,
+			     size_t nbytes,
+			     unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3004000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamRecvFlags(st, data, nbytes, flags);
+#endif
+}
+
+int virStreamSendHoleWrapper(virStreamPtr st,
+			    long long length,
+			    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3004000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamSendHole(st, length, flags);
+#endif
+}
+
+int virStreamRecvHoleWrapper(virStreamPtr st,
+			    long long *length,
+			    unsigned int flags)
+{
+#if LIBVIR_VERSION_NUMBER < 3004000
+    assert(0); // Caller should have checked version
+#else
+    return virStreamRecvHole(st, length, flags);
+#endif
+}
+
 */
 import "C"
