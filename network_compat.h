@@ -56,9 +56,6 @@ typedef void (*virConnectNetworkEventGenericCallback)(virConnectPtr conn,
                                                       void *opaque);
 #endif
 
-int virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
-					      int callbackID);
-
 
 /* 1.2.5 */
 
@@ -85,12 +82,5 @@ struct _virNetworkDHCPLease {
     char *clientid;             /* Client ID or DUID */
 };
 #endif
-
-void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease);
-
-int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
-				  const char *mac,
-				  virNetworkDHCPLeasePtr **leases,
-				  unsigned int flags);
 
 #endif /* LIBVIRT_GO_NETWORK_COMPAT_H__ */

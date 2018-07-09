@@ -29,38 +29,23 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
 #include <assert.h>
 #include "network_compat.h"
-#include "network_events_wrapper.h"
-#include "callbacks_wrapper.h"
-#include <stdint.h>
+#include "network_wrapper.h"
 
-extern void networkEventLifecycleCallback(virConnectPtr, virNetworkPtr, int, int, int);
-void networkEventLifecycleCallbackHelper(virConnectPtr c, virNetworkPtr d,
-                                     int event, int detail, void *data)
+void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease)
 {
-    networkEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
 }
 
-int virConnectNetworkEventRegisterAnyWrapper(virConnectPtr c,  virNetworkPtr d,
-                                         int eventID, virConnectNetworkEventGenericCallback cb,
-                                         long goCallbackId) {
-    void* id = (void*)goCallbackId;
-#if LIBVIR_VERSION_NUMBER < 1002001
-    assert(0); // Caller should have checked version
-#else
-    return virConnectNetworkEventRegisterAny(c, d, eventID, cb, id, freeGoCallbackHelper);
-#endif
-}
-
-int virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
-					      int callbackID)
+int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
+				  const char *mac,
+				  virNetworkDHCPLeasePtr **leases,
+				  unsigned int flags)
 {
-#if LIBVIR_VERSION_NUMBER < 1002001
+#if LIBVIR_VERSION_NUMBER < 1002006
     assert(0); // Caller should have checked version
 #else
-    return virConnectNetworkEventDeregisterAny(conn, callbackID);
+    return virNetworkGetDHCPLeases(network, mac, leases, flags);
 #endif
 }
 

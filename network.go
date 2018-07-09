@@ -32,6 +32,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include "network_compat.h"
+#include "network_wrapper.h"
 */
 import "C"
 
