@@ -61,5 +61,16 @@ int virConnectSecretEventRegisterAnyWrapper(virConnectPtr c,  virSecretPtr d,
 #endif
 }
 
+int virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
+					      int callbackID)
+{
+#if LIBVIR_VERSION_NUMBER < 3000000
+    assert(0); // Caller should have checked version
+#else
+    return virConnectSecretEventDeregisterAny(conn, callbackID);
+#endif
+}
+
+
 */
 import "C"
