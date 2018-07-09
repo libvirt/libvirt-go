@@ -52,7 +52,7 @@ var (
 		/* Obsolete we use virConnectDomainEventRegisterAny instead */
 		"virConnectDomainEventRegister",
 
-		/* Wrapped in connect_cfuncs.go instead */
+		/* Wrapped in connect_wrapper.go instead */
 		"virConnectOpenAuth",
 		"virConnectRegisterCloseCallback",
 

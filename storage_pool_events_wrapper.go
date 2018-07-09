@@ -24,17 +24,42 @@
  *
  */
 
-#ifndef LIBVIRT_GO_STORAGE_POOL_EVENTS_CFUNCS_H__
-#define LIBVIRT_GO_STORAGE_POOL_EVENTS_CFUNCS_H__
+package libvirt
 
+/*
+#cgo pkg-config: libvirt
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+#include <assert.h>
+#include "storage_pool_compat.h"
+#include "storage_pool_events_wrapper.h"
+#include "callbacks_wrapper.h"
+#include <stdint.h>
+
+extern void storagePoolEventLifecycleCallback(virConnectPtr, virStoragePoolPtr, int, int, int);
 void storagePoolEventLifecycleCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
-					   int event, int detail, void* data);
+                                           int event, int detail, void *data)
+{
+    storagePoolEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
+}
+
+extern void storagePoolEventGenericCallback(virConnectPtr, virStoragePoolPtr, int);
 void storagePoolEventGenericCallback_cgo(virConnectPtr c, virStoragePoolPtr d,
-					 void* data);
+                                         void *data)
+{
+    storagePoolEventGenericCallback(c, d, (int)(intptr_t)data);
+}
 
 int virConnectStoragePoolEventRegisterAny_cgo(virConnectPtr c,  virStoragePoolPtr d,
-					      int eventID, virConnectStoragePoolEventGenericCallback cb,
-					      long goCallbackId);
+                                              int eventID, virConnectStoragePoolEventGenericCallback cb,
+                                              long goCallbackId) {
+#if LIBVIR_VERSION_NUMBER < 2000000
+    assert(0); // Caller should have checked version
+#else
+    void* id = (void*)goCallbackId;
+    return virConnectStoragePoolEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+#endif
+}
 
-
-#endif /* LIBVIRT_GO_STORAGE_POOL_EVENTS_CFUNCS_H__ */
+*/
+import "C"

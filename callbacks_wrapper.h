@@ -1,4 +1,4 @@
- /*
+/*
  * This file is part of the libvirt-go project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,16 +24,9 @@
  *
  */
 
-#ifndef LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__
-#define LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_CALLBACKS_WRAPPER_H__
+#define LIBVIRT_GO_CALLBACKS_WRAPPER_H__
 
-void domainQemuMonitorEventCallback_cgo(virConnectPtr c, virDomainPtr d,
-					const char *event, long long secs,
-					unsigned int micros, const char *details, void *data);
+void freeGoCallback_cgo(void* goCallbackId);
 
-int virConnectDomainQemuMonitorEventRegister_cgo(virConnectPtr c,  virDomainPtr d,
-						 const char *event, virConnectDomainQemuMonitorEventCallback cb,
-						 long goCallbackId, unsigned int flags);
-
-
-#endif /* LIBVIRT_GO_DOMAIN_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_CALLBACKS_WRAPPER_H__ */

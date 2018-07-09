@@ -35,7 +35,7 @@ import (
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include "storage_pool_compat.h"
-#include "storage_pool_events_cfuncs.h"
+#include "storage_pool_events_wrapper.h"
 */
 import "C"
 

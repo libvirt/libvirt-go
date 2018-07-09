@@ -1,4 +1,4 @@
-/*
+ /*
  * This file is part of the libvirt-go project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,18 +24,16 @@
  *
  */
 
-package libvirt
+#ifndef LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
+#define LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__
 
-/*
-#cgo pkg-config: libvirt
-#include <libvirt/libvirt.h>
-#include <libvirt/virterror.h>
-#include "callbacks_cfuncs.h"
+void domainQemuMonitorEventCallback_cgo(virConnectPtr c, virDomainPtr d,
+					const char *event, long long secs,
+					unsigned int micros, const char *details, void *data);
 
-extern void freeCallbackId(long);
-void freeGoCallback_cgo(void* goCallbackId) {
-   freeCallbackId((long)goCallbackId);
-}
+int virConnectDomainQemuMonitorEventRegister_cgo(virConnectPtr c,  virDomainPtr d,
+						 const char *event, virConnectDomainQemuMonitorEventCallback cb,
+						 long goCallbackId, unsigned int flags);
 
-*/
-import "C"
+
+#endif /* LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__ */

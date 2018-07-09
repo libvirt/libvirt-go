@@ -24,15 +24,17 @@
  *
  */
 
-#ifndef LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__
-#define LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
+#define LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__
 
-void networkEventLifecycleCallback_cgo(virConnectPtr c, virNetworkPtr d,
-                                     int event, int detail, void* data);
+void secretEventLifecycleCallback_cgo(virConnectPtr c, virSecretPtr d,
+				      int event, int detail, void* data);
+void secretEventGenericCallback_cgo(virConnectPtr c, virSecretPtr d,
+				    void* data);
 
-int virConnectNetworkEventRegisterAny_cgo(virConnectPtr c,  virNetworkPtr d,
-                                         int eventID, virConnectNetworkEventGenericCallback cb,
+int virConnectSecretEventRegisterAny_cgo(virConnectPtr c,  virSecretPtr d,
+                                         int eventID, virConnectSecretEventGenericCallback cb,
                                          long goCallbackId);
 
 
-#endif /* LIBVIRT_GO_NETWORK_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_SECRET_EVENTS_WRAPPER_H__ */

@@ -24,11 +24,11 @@
  *
  */
 
-#ifndef LIBVIRT_GO_CONNECT_CFUNCS_H__
-#define LIBVIRT_GO_CONNECT_CFUNCS_H__
+#ifndef LIBVIRT_GO_CONNECT_WRAPPER_H__
+#define LIBVIRT_GO_CONNECT_WRAPPER_H__
 void closeCallback_cgo(virConnectPtr conn, int reason, void *opaque);
 int virConnectRegisterCloseCallback_cgo(virConnectPtr c, virConnectCloseFunc cb, long goCallbackId);
 
 virConnectPtr virConnectOpenAuthWrap(const char *name, int *credtype, uint ncredtype, int callbackID, unsigned int flags);
 
-#endif /* LIBVIRT_GO_CONNECT_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_CONNECT_WRAPPER_H__ */

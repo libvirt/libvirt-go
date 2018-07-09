@@ -33,7 +33,7 @@ package libvirt
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "stream_cfuncs.h"
+#include "stream_wrapper.h"
 
 int streamSourceCallback(virStreamPtr st, char *cdata, size_t nbytes, int callbackID);
 int streamSourceHoleCallback(virStreamPtr st, int *inData, long long *length, int callbackID);

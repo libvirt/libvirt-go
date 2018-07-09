@@ -28,36 +28,35 @@ package libvirt
 
 /*
 #cgo pkg-config: libvirt
+// Can't rely on pkg-config for libvirt-qemu since it was not
+// installed until 2.6.0 onwards
+#cgo LDFLAGS: -lvirt-qemu
 #include <libvirt/libvirt.h>
+#include <libvirt/libvirt-qemu.h>
 #include <libvirt/virterror.h>
+#include "qemu_compat.h"
+#include "qemu_wrapper.h"
+#include "callbacks_wrapper.h"
 #include <assert.h>
-#include "secret_compat.h"
-#include "secret_events_cfuncs.h"
-#include "callbacks_cfuncs.h"
 #include <stdint.h>
 
-extern void secretEventLifecycleCallback(virConnectPtr, virSecretPtr, int, int, int);
-void secretEventLifecycleCallback_cgo(virConnectPtr c, virSecretPtr d,
-                                     int event, int detail, void *data)
+
+extern void domainQemuMonitorEventCallback(virConnectPtr, virDomainPtr, const char *, long long, unsigned int, const char *, int);
+void domainQemuMonitorEventCallback_cgo(virConnectPtr c, virDomainPtr d,
+					const char *event, long long secs,
+					unsigned int micros, const char *details, void *data)
 {
-    secretEventLifecycleCallback(c, d, event, detail, (int)(intptr_t)data);
+    domainQemuMonitorEventCallback(c, d, event, secs, micros, details, (int)(intptr_t)data);
 }
 
-extern void secretEventGenericCallback(virConnectPtr, virSecretPtr, int);
-void secretEventGenericCallback_cgo(virConnectPtr c, virSecretPtr d,
-                                    void *data)
-{
-    secretEventGenericCallback(c, d, (int)(intptr_t)data);
-}
-
-int virConnectSecretEventRegisterAny_cgo(virConnectPtr c,  virSecretPtr d,
-                                         int eventID, virConnectSecretEventGenericCallback cb,
-                                         long goCallbackId) {
-    void* id = (void*)goCallbackId;
-#if LIBVIR_VERSION_NUMBER < 3000000
+int virConnectDomainQemuMonitorEventRegister_cgo(virConnectPtr c,  virDomainPtr d,
+                                                    const char *event, virConnectDomainQemuMonitorEventCallback cb,
+                                                    long goCallbackId, unsigned int flags) {
+#if LIBVIR_VERSION_NUMBER < 1002003
     assert(0); // Caller should have checked version
 #else
-    return virConnectSecretEventRegisterAny(c, d, eventID, cb, id, freeGoCallback_cgo);
+    void* id = (void*)goCallbackId;
+    return virConnectDomainQemuMonitorEventRegister(c, d, event, cb, id, freeGoCallback_cgo, flags);
 #endif
 }
 

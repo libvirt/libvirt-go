@@ -30,8 +30,8 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
-#include "domain_events_cfuncs.h"
-#include "callbacks_cfuncs.h"
+#include "domain_events_wrapper.h"
+#include "callbacks_wrapper.h"
 #include <stdint.h>
 
 extern void domainEventLifecycleCallback(virConnectPtr, virDomainPtr, int, int, int);

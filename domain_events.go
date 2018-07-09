@@ -34,7 +34,7 @@ import (
 /*
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
-#include "domain_events_cfuncs.h"
+#include "domain_events_wrapper.h"
 #include "domain_compat.h"
 */
 import "C"

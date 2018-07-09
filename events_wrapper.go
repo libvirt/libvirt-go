@@ -32,7 +32,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "events_cfuncs.h"
+#include "events_wrapper.h"
 
 void eventHandleCallback(int watch, int fd, int events, int callbackID);
 

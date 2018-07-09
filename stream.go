@@ -31,7 +31,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include <stdlib.h>
-#include "stream_cfuncs.h"
+#include "stream_wrapper.h"
 #include "stream_compat.h"
 */
 import "C"

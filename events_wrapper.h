@@ -24,14 +24,16 @@
  *
  */
 
-#ifndef LIBVIRT_GO_STREAM_CFUNCS_H__
-#define LIBVIRT_GO_STREAM_CFUNCS_H__
+#ifndef LIBVIRT_GO_EVENTS_WRAPPER_H__
+#define LIBVIRT_GO_EVENTS_WRAPPER_H__
 
-int virStreamSendAll_cgo(virStreamPtr st, int callbackID);
-int virStreamRecvAll_cgo(virStreamPtr st, int callbackID);
-int virStreamSparseSendAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID, int skipCallbackID);
-int virStreamSparseRecvAll_cgo(virStreamPtr st, int callbackID, int holeCallbackID);
+int virEventAddHandle_cgo(int fd, int events, int callbackID);
+int virEventAddTimeout_cgo(int freq, int callbackID);
+void virEventRegisterImpl_cgo(void);
 
-int virStreamEventAddCallback_cgo(virStreamPtr st, int events, int callbackID);
+void eventHandleCallbackInvoke(int watch, int fd, int events, uintptr_t callback, uintptr_t opaque);
+void eventTimeoutCallbackInvoke(int timer, uintptr_t callback, uintptr_t opaque);
+void eventHandleCallbackFree(uintptr_t callback, uintptr_t opaque);
+void eventTimeoutCallbackFree(uintptr_t callback, uintptr_t opaque);
 
-#endif /* LIBVIRT_GO_STREAM_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_EVENTS_WRAPPER_H__ */

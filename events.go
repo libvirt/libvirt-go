@@ -30,7 +30,7 @@ package libvirt
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include <stdint.h>
-#include "events_cfuncs.h"
+#include "events_wrapper.h"
 */
 import "C"
 

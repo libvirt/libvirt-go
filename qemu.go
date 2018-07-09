@@ -38,7 +38,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include "qemu_compat.h"
-#include "qemu_cfuncs.h"
+#include "qemu_wrapper.h"
 */
 import "C"
 

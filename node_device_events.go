@@ -35,7 +35,7 @@ import (
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include "node_device_compat.h"
-#include "node_device_events_cfuncs.h"
+#include "node_device_events_wrapper.h"
 */
 import "C"
 

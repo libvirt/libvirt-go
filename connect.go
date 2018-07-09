@@ -40,7 +40,7 @@ import (
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include "connect_compat.h"
-#include "connect_cfuncs.h"
+#include "connect_wrapper.h"
 */
 import "C"
 

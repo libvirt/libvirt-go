@@ -35,7 +35,7 @@ import (
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include "secret_compat.h"
-#include "secret_events_cfuncs.h"
+#include "secret_events_wrapper.h"
 */
 import "C"
 

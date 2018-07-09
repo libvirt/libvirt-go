@@ -35,7 +35,7 @@ import (
 #cgo pkg-config: libvirt
 #include <libvirt/libvirt.h>
 #include "network_compat.h"
-#include "network_events_cfuncs.h"
+#include "network_events_wrapper.h"
 */
 import "C"
 

@@ -24,17 +24,15 @@
  *
  */
 
-#ifndef LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__
-#define LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__
+#ifndef LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
+#define LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__
 
-void nodeDeviceEventLifecycleCallback_cgo(virConnectPtr c, virNodeDevicePtr d,
-					  int event, int detail, void* data);
+void networkEventLifecycleCallback_cgo(virConnectPtr c, virNetworkPtr d,
+                                     int event, int detail, void* data);
 
-void nodeDeviceEventGenericCallback_cgo(virConnectPtr c, virNodeDevicePtr d, void* data);
-
-int virConnectNodeDeviceEventRegisterAny_cgo(virConnectPtr c,  virNodeDevicePtr d,
-					     int eventID, virConnectNodeDeviceEventGenericCallback cb,
-					     long goCallbackId);
+int virConnectNetworkEventRegisterAny_cgo(virConnectPtr c,  virNetworkPtr d,
+                                         int eventID, virConnectNetworkEventGenericCallback cb,
+                                         long goCallbackId);
 
 
-#endif /* LIBVIRT_GO_NODE_DEVICE_EVENTS_CFUNCS_H__ */
+#endif /* LIBVIRT_GO_NETWORK_EVENTS_WRAPPER_H__ */
