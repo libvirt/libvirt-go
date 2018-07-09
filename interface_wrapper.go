@@ -30,5 +30,129 @@ package libvirt
 #include <assert.h>
 #include "interface_wrapper.h"
 
+
+int
+virInterfaceCreateWrapper(virInterfacePtr iface,
+                          unsigned int flags,
+                          virErrorPtr err)
+{
+    int ret = virInterfaceCreate(iface, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virInterfaceDestroyWrapper(virInterfacePtr iface,
+                           unsigned int flags,
+                           virErrorPtr err)
+{
+    int ret = virInterfaceDestroy(iface, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virInterfaceFreeWrapper(virInterfacePtr iface,
+                        virErrorPtr err)
+{
+    int ret = virInterfaceFree(iface);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virConnectPtr
+virInterfaceGetConnectWrapper(virInterfacePtr iface,
+                              virErrorPtr err)
+{
+    virConnectPtr ret = virInterfaceGetConnect(iface);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virInterfaceGetMACStringWrapper(virInterfacePtr iface,
+                                virErrorPtr err)
+{
+    const char * ret = virInterfaceGetMACString(iface);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+const char *
+virInterfaceGetNameWrapper(virInterfacePtr iface,
+                           virErrorPtr err)
+{
+    const char * ret = virInterfaceGetName(iface);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virInterfaceGetXMLDescWrapper(virInterfacePtr iface,
+                              unsigned int flags,
+                              virErrorPtr err)
+{
+    char * ret = virInterfaceGetXMLDesc(iface, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virInterfaceIsActiveWrapper(virInterfacePtr iface,
+                            virErrorPtr err)
+{
+    int ret = virInterfaceIsActive(iface);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virInterfaceRefWrapper(virInterfacePtr iface,
+                       virErrorPtr err)
+{
+    int ret = virInterfaceRef(iface);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virInterfaceUndefineWrapper(virInterfacePtr iface,
+                            virErrorPtr err)
+{
+    int ret = virInterfaceUndefine(iface);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 */
 import "C"
