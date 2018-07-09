@@ -171,7 +171,7 @@ func (v *StorageVol) GetInfoFlags(flags StorageVolInfoFlags) (*StorageVolInfo, e
 	}
 
 	var cinfo C.virStorageVolInfo
-	result := C.virStorageVolGetInfoFlagsCompat(v.ptr, &cinfo, C.uint(flags))
+	result := C.virStorageVolGetInfoFlagsWrapper(v.ptr, &cinfo, C.uint(flags))
 	if result == -1 {
 		return nil, GetLastError()
 	}

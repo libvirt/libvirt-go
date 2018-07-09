@@ -31,7 +31,7 @@ package libvirt
 #include <assert.h>
 #include "stream_compat.h"
 
-int virStreamRecvFlagsCompat(virStreamPtr st,
+int virStreamRecvFlagsWrapper(virStreamPtr st,
 			     char *data,
 			     size_t nbytes,
 			     unsigned int flags)
@@ -43,7 +43,7 @@ int virStreamRecvFlagsCompat(virStreamPtr st,
 #endif
 }
 
-int virStreamSendHoleCompat(virStreamPtr st,
+int virStreamSendHoleWrapper(virStreamPtr st,
 			    long long length,
 			    unsigned int flags)
 {
@@ -54,7 +54,7 @@ int virStreamSendHoleCompat(virStreamPtr st,
 #endif
 }
 
-int virStreamRecvHoleCompat(virStreamPtr st,
+int virStreamRecvHoleWrapper(virStreamPtr st,
 			    long long *length,
 			    unsigned int flags)
 {

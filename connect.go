@@ -833,7 +833,7 @@ func (c *Connect) DomainDefineXMLFlags(xmlConfig string, flags DomainDefineFlags
 	}
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
-	ptr := C.virDomainDefineXMLFlagsCompat(c.ptr, cXml, C.uint(flags))
+	ptr := C.virDomainDefineXMLFlagsWrapper(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1210,7 +1210,7 @@ func (c *Connect) LookupStoragePoolByTargetPath(path string) (*StoragePool, erro
 	}
 	cPath := C.CString(path)
 	defer C.free(unsafe.Pointer(cPath))
-	ptr := C.virStoragePoolLookupByTargetPathCompat(c.ptr, cPath)
+	ptr := C.virStoragePoolLookupByTargetPathWrapper(c.ptr, cPath)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1274,7 +1274,7 @@ func (c *Connect) LookupNWFilterBindingByPortDev(name string) (*NWFilterBinding,
 	}
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
-	ptr := C.virNWFilterBindingLookupByPortDevCompat(c.ptr, cName)
+	ptr := C.virNWFilterBindingLookupByPortDevWrapper(c.ptr, cName)
 	if ptr == nil {
 		return nil, GetLastError()
 	}
@@ -1478,7 +1478,7 @@ func (c *Connect) ListAllNWFilterBindings(flags uint32) ([]NWFilterBinding, erro
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return []NWFilterBinding{}, GetNotImplementedError("virConnectListAllNWFilterBindings")
 	}
-	numNWFilters := C.virConnectListAllNWFilterBindingsCompat(c.ptr, (**C.virNWFilterBindingPtr)(&cList), C.uint(flags))
+	numNWFilters := C.virConnectListAllNWFilterBindingsWrapper(c.ptr, (**C.virNWFilterBindingPtr)(&cList), C.uint(flags))
 	if numNWFilters == -1 {
 		return nil, GetLastError()
 	}
@@ -1601,7 +1601,7 @@ func (c *Connect) AllocPages(pageSizes map[int]int64, startCell int, cellCount u
 		i++
 	}
 
-	ret := C.virNodeAllocPagesCompat(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpages)),
+	ret := C.virNodeAllocPagesWrapper(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpages)),
 		(*C.ulonglong)(unsafe.Pointer(&ccounts)), C.int(startCell), C.uint(cellCount), C.uint(flags))
 	if ret == -1 {
 		return 0, GetLastError()
@@ -1730,7 +1730,7 @@ func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint,
 		cpageSizes[i] = C.uint(pageSizes[i])
 	}
 
-	ret := C.virNodeGetFreePagesCompat(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
+	ret := C.virNodeGetFreePagesWrapper(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
 		C.uint(maxCells), (*C.ulonglong)(unsafe.Pointer(&ccounts)), C.uint(flags))
 	if ret == -1 {
 		return []uint64{}, GetLastError()
@@ -2013,7 +2013,7 @@ func (c *Connect) BaselineHypervisorCPU(emulator string, arch string, machine st
 		defer C.free(unsafe.Pointer(cxmlCPUs[i]))
 	}
 
-	ret := C.virConnectBaselineHypervisorCPUCompat(c.ptr, cemulator, carch, cmachine, cvirttype,
+	ret := C.virConnectBaselineHypervisorCPUWrapper(c.ptr, cemulator, carch, cmachine, cvirttype,
 		&cxmlCPUs[0], C.uint(len(xmlCPUs)), C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
@@ -2064,7 +2064,7 @@ func (c *Connect) CompareHypervisorCPU(emulator string, arch string, machine str
 	cxmlDesc := C.CString(xmlDesc)
 	defer C.free(unsafe.Pointer(cxmlDesc))
 
-	ret := C.virConnectCompareHypervisorCPUCompat(c.ptr, cemulator, carch, cmachine, cvirttype, cxmlDesc, C.uint(flags))
+	ret := C.virConnectCompareHypervisorCPUWrapper(c.ptr, cemulator, carch, cmachine, cvirttype, cxmlDesc, C.uint(flags))
 	if ret == C.VIR_CPU_COMPARE_ERROR {
 		return CPU_COMPARE_ERROR, GetLastError()
 	}
@@ -2155,7 +2155,7 @@ func (c *Connect) GetDomainCapabilities(emulatorbin string, arch string, machine
 		defer C.free(unsafe.Pointer(cvirttype))
 	}
 
-	ret := C.virConnectGetDomainCapabilitiesCompat(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
+	ret := C.virConnectGetDomainCapabilitiesWrapper(c.ptr, cemulatorbin, carch, cmachine, cvirttype, C.uint(flags))
 	if ret == nil {
 		return "", GetLastError()
 	}
@@ -2674,15 +2674,15 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 			cdoms[i] = doms[i].ptr
 		}
 
-		ret = C.virDomainListGetStatsCompat(&cdoms[0], C.uint(statsTypes), &cstats, C.uint(flags))
+		ret = C.virDomainListGetStatsWrapper(&cdoms[0], C.uint(statsTypes), &cstats, C.uint(flags))
 	} else {
-		ret = C.virConnectGetAllDomainStatsCompat(c.ptr, C.uint(statsTypes), &cstats, C.uint(flags))
+		ret = C.virConnectGetAllDomainStatsWrapper(c.ptr, C.uint(statsTypes), &cstats, C.uint(flags))
 	}
 	if ret == -1 {
 		return []DomainStats{}, GetLastError()
 	}
 
-	defer C.virDomainStatsRecordListFreeCompat(cstats)
+	defer C.virDomainStatsRecordListFreeWrapper(cstats)
 
 	stats := make([]DomainStats, ret)
 	for i := 0; i < int(ret); i++ {
@@ -2849,7 +2849,7 @@ func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
 	var cparams *C.virTypedParameter
 	var nparams C.int
 
-	ret := C.virNodeGetSEVInfoCompat(c.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
+	ret := C.virNodeGetSEVInfoWrapper(c.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags))
 	if ret == -1 {
 		return nil, GetLastError()
 	}
@@ -2871,7 +2871,7 @@ func (c *Connect) NWFilterBindingCreateXML(xmlConfig string, flags uint32) (*NWF
 	}
 	cXml := C.CString(string(xmlConfig))
 	defer C.free(unsafe.Pointer(cXml))
-	ptr := C.virNWFilterBindingCreateXMLCompat(c.ptr, cXml, C.uint(flags))
+	ptr := C.virNWFilterBindingCreateXMLWrapper(c.ptr, cXml, C.uint(flags))
 	if ptr == nil {
 		return nil, GetLastError()
 	}

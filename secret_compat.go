@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "secret_compat.h"
 
-int virConnectSecretEventDeregisterAnyCompat(virConnectPtr conn,
+int virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
 					      int callbackID)
 {
 #if LIBVIR_VERSION_NUMBER < 3000000

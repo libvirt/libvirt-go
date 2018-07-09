@@ -131,7 +131,7 @@ func (c *Connect) NodeDeviceEventDeregister(callbackId int) error {
 		return GetNotImplementedError("virConnectNodeDeviceEventDeregisterAny")
 	}
 	// Deregister the callback
-	if i := int(C.virConnectNodeDeviceEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectNodeDeviceEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil

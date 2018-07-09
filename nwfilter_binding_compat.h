@@ -30,15 +30,15 @@
 typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
 #endif
 
-const char *virNWFilterBindingGetPortDevCompat(virNWFilterBindingPtr binding);
-const char *virNWFilterBindingGetFilterNameCompat(virNWFilterBindingPtr binding);
+const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding);
+const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding);
 
-char *virNWFilterBindingGetXMLDescCompat(virNWFilterBindingPtr binding,
+char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
 					 unsigned int flags);
 
-int virNWFilterBindingDeleteCompat(virNWFilterBindingPtr binding);
-int virNWFilterBindingRefCompat(virNWFilterBindingPtr binding);
-int virNWFilterBindingFreeCompat(virNWFilterBindingPtr binding);
+int virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding);
+int virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding);
+int virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding);
 
 
 #endif /* LIBVIRT_GO_NWFILTER_BINDING_COMPAT_H__ */

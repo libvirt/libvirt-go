@@ -34,7 +34,7 @@ package libvirt
 #include "qemu_compat.h"
 
 
-int virConnectDomainQemuMonitorEventDeregisterCompat(virConnectPtr conn,
+int virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
 						     int callbackID)
 {
 #if LIBVIR_VERSION_NUMBER < 1002003

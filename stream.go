@@ -122,7 +122,7 @@ func (v *Stream) RecvFlags(p []byte, flags StreamRecvFlagsValues) (int, error) {
 		return 0, GetNotImplementedError("virStreamRecvFlags")
 	}
 
-	n := C.virStreamRecvFlagsCompat(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)), C.uint(flags))
+	n := C.virStreamRecvFlagsWrapper(v.ptr, (*C.char)(unsafe.Pointer(&p[0])), C.size_t(len(p)), C.uint(flags))
 	if n < 0 {
 		return 0, GetLastError()
 	}
@@ -140,7 +140,7 @@ func (v *Stream) RecvHole(flags uint) (int64, error) {
 	}
 
 	var len C.longlong
-	ret := C.virStreamRecvHoleCompat(v.ptr, &len, C.uint(flags))
+	ret := C.virStreamRecvHoleWrapper(v.ptr, &len, C.uint(flags))
 	if ret < 0 {
 		return 0, GetLastError()
 	}
@@ -167,7 +167,7 @@ func (v *Stream) SendHole(len int64, flags uint32) error {
 		return GetNotImplementedError("virStreamSendHole")
 	}
 
-	ret := C.virStreamSendHoleCompat(v.ptr, C.longlong(len), C.uint(flags))
+	ret := C.virStreamSendHoleWrapper(v.ptr, C.longlong(len), C.uint(flags))
 	if ret < 0 {
 		return GetLastError()
 	}

@@ -36,7 +36,7 @@ package libvirt
 #include <assert.h>
 #include "lxc_compat.h"
 
-int virDomainLxcEnterCGroupCompat(virDomainPtr domain,
+int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
 				  unsigned int flags)
 {
 #if LIBVIR_VERSION_NUMBER < 2000000

@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "domain_compat.h"
 
-int virDomainCoreDumpWithFormatCompat(virDomainPtr domain,
+int virDomainCoreDumpWithFormatWrapper(virDomainPtr domain,
 				      const char *to,
 				      unsigned int dumpformat,
 				      unsigned int flags)
@@ -45,7 +45,7 @@ int virDomainCoreDumpWithFormatCompat(virDomainPtr domain,
 }
 
 
-int virDomainGetTimeCompat(virDomainPtr dom,
+int virDomainGetTimeWrapper(virDomainPtr dom,
 			   long long *seconds,
 			   unsigned int *nseconds,
 			   unsigned int flags)
@@ -57,7 +57,7 @@ int virDomainGetTimeCompat(virDomainPtr dom,
 #endif
 }
 
-int virDomainSetTimeCompat(virDomainPtr dom,
+int virDomainSetTimeWrapper(virDomainPtr dom,
 			   long long seconds,
 			   unsigned int nseconds,
 			   unsigned int flags)
@@ -69,7 +69,7 @@ int virDomainSetTimeCompat(virDomainPtr dom,
 #endif
 }
 
-int virDomainFSFreezeCompat(virDomainPtr dom,
+int virDomainFSFreezeWrapper(virDomainPtr dom,
 			    const char **mountpoints,
 			    unsigned int nmountpoints,
 			    unsigned int flags)
@@ -81,7 +81,7 @@ int virDomainFSFreezeCompat(virDomainPtr dom,
 #endif
 }
 
-int virDomainFSThawCompat(virDomainPtr dom,
+int virDomainFSThawWrapper(virDomainPtr dom,
 			  const char **mountpoints,
 			  unsigned int nmountpoints,
 			  unsigned int flags)
@@ -93,7 +93,7 @@ int virDomainFSThawCompat(virDomainPtr dom,
 #endif
 }
 
-int virDomainBlockCopyCompat(virDomainPtr dom, const char *disk,
+int virDomainBlockCopyWrapper(virDomainPtr dom, const char *disk,
 			     const char *destxml,
 			     virTypedParameterPtr params,
 			     int nparams,
@@ -106,7 +106,7 @@ int virDomainBlockCopyCompat(virDomainPtr dom, const char *disk,
 #endif
 }
 
-int virDomainOpenGraphicsFDCompat(virDomainPtr dom,
+int virDomainOpenGraphicsFDWrapper(virDomainPtr dom,
 				  unsigned int idx,
 				  unsigned int flags)
 {
@@ -117,11 +117,11 @@ int virDomainOpenGraphicsFDCompat(virDomainPtr dom,
 #endif
 }
 
-void virDomainFSInfoFreeCompat(virDomainFSInfoPtr info)
+void virDomainFSInfoFreeWrapper(virDomainFSInfoPtr info)
 {
 }
 
-int virDomainGetFSInfoCompat(virDomainPtr dom,
+int virDomainGetFSInfoWrapper(virDomainPtr dom,
 			     virDomainFSInfoPtr **info,
 			     unsigned int flags)
 {
@@ -132,7 +132,7 @@ int virDomainGetFSInfoCompat(virDomainPtr dom,
 #endif
 }
 
-int virDomainInterfaceAddressesCompat(virDomainPtr dom,
+int virDomainInterfaceAddressesWrapper(virDomainPtr dom,
 				      virDomainInterfacePtr **ifaces,
 				      unsigned int source,
 				      unsigned int flags)
@@ -144,15 +144,15 @@ int virDomainInterfaceAddressesCompat(virDomainPtr dom,
 #endif
 }
 
-void virDomainInterfaceFreeCompat(virDomainInterfacePtr iface)
+void virDomainInterfaceFreeWrapper(virDomainInterfacePtr iface)
 {
 }
 
-void virDomainIOThreadInfoFreeCompat(virDomainIOThreadInfoPtr info)
+void virDomainIOThreadInfoFreeWrapper(virDomainIOThreadInfoPtr info)
 {
 }
 
-int virDomainGetIOThreadInfoCompat(virDomainPtr domain,
+int virDomainGetIOThreadInfoWrapper(virDomainPtr domain,
 				   virDomainIOThreadInfoPtr **info,
 				   unsigned int flags)
 {
@@ -162,7 +162,7 @@ int virDomainGetIOThreadInfoCompat(virDomainPtr domain,
     return virDomainGetIOThreadInfo(domain, info, flags);
 #endif
 }
-int virDomainPinIOThreadCompat(virDomainPtr domain,
+int virDomainPinIOThreadWrapper(virDomainPtr domain,
 			       unsigned int iothread_id,
 			       unsigned char *cpumap,
 			       int maplen,
@@ -175,7 +175,7 @@ int virDomainPinIOThreadCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainAddIOThreadCompat(virDomainPtr domain,
+int virDomainAddIOThreadWrapper(virDomainPtr domain,
 			       unsigned int iothread_id,
 			       unsigned int flags)
 {
@@ -187,7 +187,7 @@ int virDomainAddIOThreadCompat(virDomainPtr domain,
 }
 
 
-int virDomainDelIOThreadCompat(virDomainPtr domain,
+int virDomainDelIOThreadWrapper(virDomainPtr domain,
 			       unsigned int iothread_id,
 			       unsigned int flags)
 {
@@ -199,7 +199,7 @@ int virDomainDelIOThreadCompat(virDomainPtr domain,
 }
 
 
-int virDomainSetUserPasswordCompat(virDomainPtr dom,
+int virDomainSetUserPasswordWrapper(virDomainPtr dom,
 				   const char *user,
 				   const char *password,
 				   unsigned int flags)
@@ -212,7 +212,7 @@ int virDomainSetUserPasswordCompat(virDomainPtr dom,
 }
 
 
-int virDomainRenameCompat(virDomainPtr dom,
+int virDomainRenameWrapper(virDomainPtr dom,
 			  const char *new_name,
 			  unsigned int flags)
 {
@@ -224,7 +224,7 @@ int virDomainRenameCompat(virDomainPtr dom,
 }
 
 
-int virDomainGetPerfEventsCompat(virDomainPtr dom,
+int virDomainGetPerfEventsWrapper(virDomainPtr dom,
 				 virTypedParameterPtr *params,
 				 int *nparams,
 				 unsigned int flags)
@@ -237,7 +237,7 @@ int virDomainGetPerfEventsCompat(virDomainPtr dom,
 }
 
 
-int virDomainSetPerfEventsCompat(virDomainPtr dom,
+int virDomainSetPerfEventsWrapper(virDomainPtr dom,
 				 virTypedParameterPtr params,
 				 int nparams,
 				 unsigned int flags)
@@ -250,7 +250,7 @@ int virDomainSetPerfEventsCompat(virDomainPtr dom,
 }
 
 
-int virDomainMigrateStartPostCopyCompat(virDomainPtr domain,
+int virDomainMigrateStartPostCopyWrapper(virDomainPtr domain,
 					unsigned int flags)
 {
 #if LIBVIR_VERSION_NUMBER < 1003003
@@ -261,7 +261,7 @@ int virDomainMigrateStartPostCopyCompat(virDomainPtr domain,
 }
 
 
-int virDomainGetGuestVcpusCompat(virDomainPtr domain,
+int virDomainGetGuestVcpusWrapper(virDomainPtr domain,
 				 virTypedParameterPtr *params,
 				 unsigned int *nparams,
 				 unsigned int flags)
@@ -274,7 +274,7 @@ int virDomainGetGuestVcpusCompat(virDomainPtr domain,
 }
 
 
-int virDomainSetGuestVcpusCompat(virDomainPtr domain,
+int virDomainSetGuestVcpusWrapper(virDomainPtr domain,
 				 const char *cpumap,
 				 int state,
 				 unsigned int flags)
@@ -286,7 +286,7 @@ int virDomainSetGuestVcpusCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainSetVcpuCompat(virDomainPtr domain,
+int virDomainSetVcpuWrapper(virDomainPtr domain,
 			   const char *cpumap,
 			   int state,
 			   unsigned int flags)
@@ -299,7 +299,7 @@ int virDomainSetVcpuCompat(virDomainPtr domain,
 }
 
 
-int virDomainSetBlockThresholdCompat(virDomainPtr domain,
+int virDomainSetBlockThresholdWrapper(virDomainPtr domain,
                                      const char *dev,
                                      unsigned long long threshold,
                                      unsigned int flags)
@@ -311,7 +311,7 @@ int virDomainSetBlockThresholdCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainMigrateGetMaxDowntimeCompat(virDomainPtr domain,
+int virDomainMigrateGetMaxDowntimeWrapper(virDomainPtr domain,
 					 unsigned long long *downtime,
 					 unsigned int flags)
 {
@@ -323,7 +323,7 @@ int virDomainMigrateGetMaxDowntimeCompat(virDomainPtr domain,
 }
 
 
-char *virDomainManagedSaveGetXMLDescCompat(virDomainPtr domain,
+char *virDomainManagedSaveGetXMLDescWrapper(virDomainPtr domain,
 					   unsigned int flags)
 {
 #if LIBVIR_VERSION_NUMBER < 3007000
@@ -334,7 +334,7 @@ char *virDomainManagedSaveGetXMLDescCompat(virDomainPtr domain,
 }
 
 
-int virDomainManagedSaveDefineXMLCompat(virDomainPtr domain,
+int virDomainManagedSaveDefineXMLWrapper(virDomainPtr domain,
 					const char *dxml,
 					unsigned int flags)
 {
@@ -345,7 +345,7 @@ int virDomainManagedSaveDefineXMLCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainSetLifecycleActionCompat(virDomainPtr domain,
+int virDomainSetLifecycleActionWrapper(virDomainPtr domain,
                                       unsigned int type,
                                       unsigned int action,
                                       unsigned int flags)
@@ -357,7 +357,7 @@ int virDomainSetLifecycleActionCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
+int virDomainDetachDeviceAliasWrapper(virDomainPtr domain,
 				     const char *alias,
 				     unsigned int flags)
 {
@@ -368,7 +368,7 @@ int virDomainDetachDeviceAliasCompat(virDomainPtr domain,
 #endif
 }
 
-int virDomainGetLaunchSecurityInfoCompat(virDomainPtr domain,
+int virDomainGetLaunchSecurityInfoWrapper(virDomainPtr domain,
 					 virTypedParameterPtr *params,
 					 int *nparams,
 					 unsigned int flags)

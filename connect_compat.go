@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "connect_compat.h"
 
-int virNodeGetFreePagesCompat(virConnectPtr conn,
+int virNodeGetFreePagesWrapper(virConnectPtr conn,
 			      unsigned int npages,
 			      unsigned int *pages,
 			      int startcell,
@@ -47,7 +47,7 @@ int virNodeGetFreePagesCompat(virConnectPtr conn,
 #endif
 }
 
-char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,
+char * virConnectGetDomainCapabilitiesWrapper(virConnectPtr conn,
 					     const char *emulatorbin,
 					     const char *arch,
 					     const char *machine,
@@ -61,7 +61,7 @@ char * virConnectGetDomainCapabilitiesCompat(virConnectPtr conn,
 #endif
 }
 
-int virConnectGetAllDomainStatsCompat(virConnectPtr conn,
+int virConnectGetAllDomainStatsWrapper(virConnectPtr conn,
 				      unsigned int stats,
 				      virDomainStatsRecordPtr **retStats,
 				      unsigned int flags)
@@ -73,7 +73,7 @@ int virConnectGetAllDomainStatsCompat(virConnectPtr conn,
 #endif
 }
 
-int virDomainListGetStatsCompat(virDomainPtr *doms,
+int virDomainListGetStatsWrapper(virDomainPtr *doms,
 				unsigned int stats,
 				virDomainStatsRecordPtr **retStats,
 				unsigned int flags)
@@ -85,11 +85,11 @@ int virDomainListGetStatsCompat(virDomainPtr *doms,
 #endif
 }
 
-void virDomainStatsRecordListFreeCompat(virDomainStatsRecordPtr *stats)
+void virDomainStatsRecordListFreeWrapper(virDomainStatsRecordPtr *stats)
 {
 }
 
-int virNodeAllocPagesCompat(virConnectPtr conn,
+int virNodeAllocPagesWrapper(virConnectPtr conn,
 			    unsigned int npages,
 			    unsigned int *pageSizes,
 			    unsigned long long *pageCounts,
@@ -105,7 +105,7 @@ int virNodeAllocPagesCompat(virConnectPtr conn,
 }
 
 
-virDomainPtr virDomainDefineXMLFlagsCompat(virConnectPtr conn,
+virDomainPtr virDomainDefineXMLFlagsWrapper(virConnectPtr conn,
 					   const char *xml,
 					   unsigned int flags)
 {
@@ -116,7 +116,7 @@ virDomainPtr virDomainDefineXMLFlagsCompat(virConnectPtr conn,
 #endif
 }
 
-virStoragePoolPtr virStoragePoolLookupByTargetPathCompat(virConnectPtr conn,
+virStoragePoolPtr virStoragePoolLookupByTargetPathWrapper(virConnectPtr conn,
 							 const char *path)
 {
 #if LIBVIR_VERSION_NUMBER < 4001000
@@ -126,7 +126,7 @@ virStoragePoolPtr virStoragePoolLookupByTargetPathCompat(virConnectPtr conn,
 #endif
 }
 
-char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
+char *virConnectBaselineHypervisorCPUWrapper(virConnectPtr conn,
 					    const char *emulator,
 					    const char *arch,
 					    const char *machine,
@@ -142,7 +142,7 @@ char *virConnectBaselineHypervisorCPUCompat(virConnectPtr conn,
 #endif
 }
 
-int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
+int virConnectCompareHypervisorCPUWrapper(virConnectPtr conn,
                                          const char *emulator,
                                          const char *arch,
                                          const char *machine,
@@ -157,7 +157,7 @@ int virConnectCompareHypervisorCPUCompat(virConnectPtr conn,
 #endif
 }
 
-int virNodeGetSEVInfoCompat(virConnectPtr conn,
+int virNodeGetSEVInfoWrapper(virConnectPtr conn,
                             virTypedParameterPtr *params,
                             int *nparams,
                             unsigned int flags)
@@ -169,7 +169,7 @@ int virNodeGetSEVInfoCompat(virConnectPtr conn,
 #endif
 }
 
-int virConnectListAllNWFilterBindingsCompat(virConnectPtr conn,
+int virConnectListAllNWFilterBindingsWrapper(virConnectPtr conn,
                                             virNWFilterBindingPtr **bindings,
                                             unsigned int flags)
 {
@@ -180,7 +180,7 @@ int virConnectListAllNWFilterBindingsCompat(virConnectPtr conn,
 #endif
 }
 
-virNWFilterBindingPtr virNWFilterBindingCreateXMLCompat(virConnectPtr conn,
+virNWFilterBindingPtr virNWFilterBindingCreateXMLWrapper(virConnectPtr conn,
 							const char *xml,
 							unsigned int flags)
 {
@@ -191,7 +191,7 @@ virNWFilterBindingPtr virNWFilterBindingCreateXMLCompat(virConnectPtr conn,
 #endif
 }
 
-virNWFilterBindingPtr virNWFilterBindingLookupByPortDevCompat(virConnectPtr conn,
+virNWFilterBindingPtr virNWFilterBindingLookupByPortDevWrapper(virConnectPtr conn,
 							      const char *portdev)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000

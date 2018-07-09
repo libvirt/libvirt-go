@@ -144,7 +144,7 @@ func (d *Domain) DomainLxcEnterCGroup(flags uint32) error {
 		return GetNotImplementedError("virDomainLxcEnterCGroup")
 	}
 
-	ret := C.virDomainLxcEnterCGroupCompat(d.ptr, C.uint(flags))
+	ret := C.virDomainLxcEnterCGroupWrapper(d.ptr, C.uint(flags))
 
 	if ret == -1 {
 		return GetLastError()

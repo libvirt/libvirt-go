@@ -29,7 +29,7 @@
 
 /* 3.0.0 */
 
-int virStorageVolGetInfoFlagsCompat(virStorageVolPtr vol,
+int virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
 				    virStorageVolInfoPtr info,
 				    unsigned int flags);
 

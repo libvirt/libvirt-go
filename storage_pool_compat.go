@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "storage_pool_compat.h"
 
-int virConnectStoragePoolEventDeregisterAnyCompat(virConnectPtr conn,
+int virConnectStoragePoolEventDeregisterAnyWrapper(virConnectPtr conn,
 						  int callbackID)
 {
 #if LIBVIR_VERSION_NUMBER < 2000000

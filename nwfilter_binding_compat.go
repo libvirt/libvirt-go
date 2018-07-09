@@ -31,7 +31,7 @@ package libvirt
 #include <assert.h>
 #include "nwfilter_binding_compat.h"
 
-const char *virNWFilterBindingGetPortDevCompat(virNWFilterBindingPtr binding)
+const char *virNWFilterBindingGetPortDevWrapper(virNWFilterBindingPtr binding)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
@@ -41,7 +41,7 @@ const char *virNWFilterBindingGetPortDevCompat(virNWFilterBindingPtr binding)
 }
 
 
-const char *virNWFilterBindingGetFilterNameCompat(virNWFilterBindingPtr binding)
+const char *virNWFilterBindingGetFilterNameWrapper(virNWFilterBindingPtr binding)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
@@ -51,7 +51,7 @@ const char *virNWFilterBindingGetFilterNameCompat(virNWFilterBindingPtr binding)
 }
 
 
-char *virNWFilterBindingGetXMLDescCompat(virNWFilterBindingPtr binding,
+char *virNWFilterBindingGetXMLDescWrapper(virNWFilterBindingPtr binding,
 					 unsigned int flags)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
@@ -62,7 +62,7 @@ char *virNWFilterBindingGetXMLDescCompat(virNWFilterBindingPtr binding,
 }
 
 
-int virNWFilterBindingDeleteCompat(virNWFilterBindingPtr binding)
+int virNWFilterBindingDeleteWrapper(virNWFilterBindingPtr binding)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
@@ -72,7 +72,7 @@ int virNWFilterBindingDeleteCompat(virNWFilterBindingPtr binding)
 }
 
 
-int virNWFilterBindingRefCompat(virNWFilterBindingPtr binding)
+int virNWFilterBindingRefWrapper(virNWFilterBindingPtr binding)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version
@@ -82,7 +82,7 @@ int virNWFilterBindingRefCompat(virNWFilterBindingPtr binding)
 }
 
 
-int virNWFilterBindingFreeCompat(virNWFilterBindingPtr binding)
+int virNWFilterBindingFreeWrapper(virNWFilterBindingPtr binding)
 {
 #if LIBVIR_VERSION_NUMBER < 4005000
     assert(0); // Caller should have checked version

@@ -47,7 +47,7 @@ func (f *NWFilterBinding) Free() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingFree")
 	}
-	ret := C.virNWFilterBindingFreeCompat(f.ptr)
+	ret := C.virNWFilterBindingFreeWrapper(f.ptr)
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -59,7 +59,7 @@ func (c *NWFilterBinding) Ref() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingRef")
 	}
-	ret := C.virNWFilterBindingRefCompat(c.ptr)
+	ret := C.virNWFilterBindingRefWrapper(c.ptr)
 	if ret == -1 {
 		return GetLastError()
 	}
@@ -71,7 +71,7 @@ func (f *NWFilterBinding) Delete() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return GetNotImplementedError("virNWFilterBindingDelete")
 	}
-	result := C.virNWFilterBindingDeleteCompat(f.ptr)
+	result := C.virNWFilterBindingDeleteWrapper(f.ptr)
 	if result == -1 {
 		return GetLastError()
 	}
@@ -83,7 +83,7 @@ func (f *NWFilterBinding) GetPortDev() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetPortDev")
 	}
-	result := C.virNWFilterBindingGetPortDevCompat(f.ptr)
+	result := C.virNWFilterBindingGetPortDevWrapper(f.ptr)
 	if result == nil {
 		return "", GetLastError()
 	}
@@ -97,7 +97,7 @@ func (f *NWFilterBinding) GetFilterName() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetFilterName")
 	}
-	result := C.virNWFilterBindingGetFilterNameCompat(f.ptr)
+	result := C.virNWFilterBindingGetFilterNameWrapper(f.ptr)
 	if result == nil {
 		return "", GetLastError()
 	}
@@ -111,7 +111,7 @@ func (f *NWFilterBinding) GetXMLDesc(flags uint32) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return "", GetNotImplementedError("virNWFilterBindingGetXMLDesc")
 	}
-	result := C.virNWFilterBindingGetXMLDescCompat(f.ptr, C.uint(flags))
+	result := C.virNWFilterBindingGetXMLDescWrapper(f.ptr, C.uint(flags))
 	if result == nil {
 		return "", GetLastError()
 	}

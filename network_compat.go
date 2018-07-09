@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "network_compat.h"
 
-int virConnectNetworkEventDeregisterAnyCompat(virConnectPtr conn,
+int virConnectNetworkEventDeregisterAnyWrapper(virConnectPtr conn,
 					      int callbackID)
 {
 #if LIBVIR_VERSION_NUMBER < 1002001
@@ -42,11 +42,11 @@ int virConnectNetworkEventDeregisterAnyCompat(virConnectPtr conn,
 #endif
 }
 
-void virNetworkDHCPLeaseFreeCompat(virNetworkDHCPLeasePtr lease)
+void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease)
 {
 }
 
-int virNetworkGetDHCPLeasesCompat(virNetworkPtr network,
+int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
 				  const char *mac,
 				  virNetworkDHCPLeasePtr **leases,
 				  unsigned int flags)

@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "storage_volume_compat.h"
 
-int virStorageVolGetInfoFlagsCompat(virStorageVolPtr vol,
+int virStorageVolGetInfoFlagsWrapper(virStorageVolPtr vol,
 				    virStorageVolInfoPtr info,
 				    unsigned int flags)
 {

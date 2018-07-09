@@ -52,7 +52,7 @@ typedef void (*virConnectSecretEventGenericCallback)(virConnectPtr conn,
 						     void *opaque);
 #endif
 
-int virConnectSecretEventDeregisterAnyCompat(virConnectPtr conn,
+int virConnectSecretEventDeregisterAnyWrapper(virConnectPtr conn,
 					     int callbackID);
 
 /* 2.2.1 */

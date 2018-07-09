@@ -29,7 +29,7 @@
 
 /* 2.0.0 */
 
-int virDomainLxcEnterCGroupCompat(virDomainPtr domain,
+int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
 				  unsigned int flags);
 
 

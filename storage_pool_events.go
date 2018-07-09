@@ -137,7 +137,7 @@ func (c *Connect) StoragePoolEventDeregister(callbackId int) error {
 	}
 
 	// Deregister the callback
-	if i := int(C.virConnectStoragePoolEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectStoragePoolEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil

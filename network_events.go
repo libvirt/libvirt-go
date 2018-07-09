@@ -95,7 +95,7 @@ func (c *Connect) NetworkEventDeregister(callbackId int) error {
 		return GetNotImplementedError("virConnectNetworkEventDeregisterAny")
 	}
 	// Deregister the callback
-	if i := int(C.virConnectNetworkEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectNetworkEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil

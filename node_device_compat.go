@@ -32,7 +32,7 @@ package libvirt
 #include <assert.h>
 #include "node_device_compat.h"
 
-int virConnectNodeDeviceEventDeregisterAnyCompat(virConnectPtr conn,
+int virConnectNodeDeviceEventDeregisterAnyWrapper(virConnectPtr conn,
 						 int callbackID)
 {
 #if LIBVIR_VERSION_NUMBER < 2002000

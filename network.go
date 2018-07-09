@@ -291,7 +291,7 @@ func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 		return []NetworkDHCPLease{}, GetNotImplementedError("virNetworkGetDHCPLeases")
 	}
 	var cLeases *C.virNetworkDHCPLeasePtr
-	numLeases := C.virNetworkGetDHCPLeasesCompat(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
+	numLeases := C.virNetworkGetDHCPLeasesWrapper(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
 	if numLeases == -1 {
 		return nil, GetLastError()
 	}
@@ -314,7 +314,7 @@ func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 			Hostname:   C.GoString(clease.hostname),
 			Clientid:   C.GoString(clease.clientid),
 		})
-		C.virNetworkDHCPLeaseFreeCompat(clease)
+		C.virNetworkDHCPLeaseFreeWrapper(clease)
 	}
 	C.free(unsafe.Pointer(cLeases))
 	return leases, nil

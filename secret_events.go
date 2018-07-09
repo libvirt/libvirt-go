@@ -134,7 +134,7 @@ func (c *Connect) SecretEventDeregister(callbackId int) error {
 		return GetNotImplementedError("virConnectSecretEventDeregisterAny")
 	}
 	// Deregister the callback
-	if i := int(C.virConnectSecretEventDeregisterAnyCompat(c.ptr, C.int(callbackId))); i != 0 {
+	if i := int(C.virConnectSecretEventDeregisterAnyWrapper(c.ptr, C.int(callbackId))); i != 0 {
 		return GetLastError()
 	}
 	return nil
