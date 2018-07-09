@@ -38,7 +38,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lxc_compat.h"
+#include "lxc_wrapper.h"
 */
 import "C"
 

@@ -34,7 +34,7 @@ package libvirt
 #include <libvirt/libvirt.h>
 #include <libvirt/libvirt-lxc.h>
 #include <assert.h>
-#include "lxc_compat.h"
+#include "lxc_wrapper.h"
 
 int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
 				  unsigned int flags)
