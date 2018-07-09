@@ -31,9 +31,33 @@
 #include <libvirt/libvirt-lxc.h>
 #include <libvirt/virterror.h>
 
+
 int
 virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
-                               unsigned int flags);
+                               unsigned int flags,
+                               virErrorPtr err);
+
+int
+virDomainLxcEnterNamespaceWrapper(virDomainPtr domain,
+                                  unsigned int nfdlist,
+                                  int *fdlist,
+                                  unsigned int *noldfdlist,
+                                  int **oldfdlist,
+                                  unsigned int flags,
+                                  virErrorPtr err);
+
+int
+virDomainLxcEnterSecurityLabelWrapper(virSecurityModelPtr model,
+                                      virSecurityLabelPtr label,
+                                      virSecurityLabelPtr oldlabel,
+                                      unsigned int flags,
+                                      virErrorPtr err);
+
+int
+virDomainLxcOpenNamespaceWrapper(virDomainPtr domain,
+                                 int **fdlist,
+                                 unsigned int flags,
+                                 virErrorPtr err);
 
 
 #endif /* LIBVIRT_GO_LXC_COMPAT_H__ */

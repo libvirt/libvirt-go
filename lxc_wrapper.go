@@ -34,14 +34,66 @@ package libvirt
 #include <assert.h>
 #include "lxc_wrapper.h"
 
-int virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
-				  unsigned int flags)
+int
+virDomainLxcEnterCGroupWrapper(virDomainPtr domain,
+                               unsigned int flags,
+                               virErrorPtr err)
 {
 #if LIBVIR_VERSION_NUMBER < 2000000
     assert(0); // Caller should have checked version
 #else
-    return virDomainLxcEnterCGroup(domain, flags);
+    int ret = virDomainLxcEnterCGroup(domain, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 #endif
+}
+
+
+int
+virDomainLxcEnterNamespaceWrapper(virDomainPtr domain,
+                                  unsigned int nfdlist,
+                                  int *fdlist,
+                                  unsigned int *noldfdlist,
+                                  int **oldfdlist,
+                                  unsigned int flags,
+                                  virErrorPtr err)
+{
+    int ret = virDomainLxcEnterNamespace(domain, nfdlist, fdlist, noldfdlist, oldfdlist, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainLxcEnterSecurityLabelWrapper(virSecurityModelPtr model,
+                                      virSecurityLabelPtr label,
+                                      virSecurityLabelPtr oldlabel,
+                                      unsigned int flags,
+                                      virErrorPtr err)
+{
+    int ret = virDomainLxcEnterSecurityLabel(model, label, oldlabel, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virDomainLxcOpenNamespaceWrapper(virDomainPtr domain,
+                                 int **fdlist,
+                                 unsigned int flags,
+                                 virErrorPtr err)
+{
+    int ret = virDomainLxcOpenNamespace(domain, fdlist, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 }
 
 
