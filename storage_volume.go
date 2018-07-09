@@ -239,6 +239,7 @@ func (v *StorageVol) Wipe(flags uint32) error {
 	}
 	return nil
 }
+
 // See also https://libvirt.org/html/libvirt-libvirt-storage.html#virStorageVolWipePattern
 func (v *StorageVol) WipePattern(algorithm StorageVolWipeAlgorithm, flags uint32) error {
 	result := C.virStorageVolWipePattern(v.ptr, C.uint(algorithm), C.uint(flags))
