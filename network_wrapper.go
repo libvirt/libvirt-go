@@ -31,21 +31,237 @@ package libvirt
 #include <assert.h>
 #include "network_wrapper.h"
 
-void virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease)
+int
+virNetworkCreateWrapper(virNetworkPtr network,
+                        virErrorPtr err)
 {
+    int ret = virNetworkCreate(network);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
 }
 
-int virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
-				  const char *mac,
-				  virNetworkDHCPLeasePtr **leases,
-				  unsigned int flags)
+
+void
+virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease)
 {
 #if LIBVIR_VERSION_NUMBER < 1002006
     assert(0); // Caller should have checked version
 #else
-    return virNetworkGetDHCPLeases(network, mac, leases, flags);
+    virNetworkDHCPLeaseFree(lease);
 #endif
 }
+
+
+int
+virNetworkDestroyWrapper(virNetworkPtr network,
+                         virErrorPtr err)
+{
+    int ret = virNetworkDestroy(network);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkFreeWrapper(virNetworkPtr network,
+                      virErrorPtr err)
+{
+    int ret = virNetworkFree(network);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkGetAutostartWrapper(virNetworkPtr network,
+                              int *autostart,
+                              virErrorPtr err)
+{
+    int ret = virNetworkGetAutostart(network, autostart);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virNetworkGetBridgeNameWrapper(virNetworkPtr network,
+                               virErrorPtr err)
+{
+    char * ret = virNetworkGetBridgeName(network);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virConnectPtr
+virNetworkGetConnectWrapper(virNetworkPtr net,
+                            virErrorPtr err)
+{
+    virConnectPtr ret = virNetworkGetConnect(net);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
+                               const char *mac,
+                               virNetworkDHCPLeasePtr **leases,
+                               unsigned int flags,
+                               virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 1002006
+    assert(0); // Caller should have checked version
+#else
+    int ret = virNetworkGetDHCPLeases(network, mac, leases, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
+const char *
+virNetworkGetNameWrapper(virNetworkPtr network,
+                         virErrorPtr err)
+{
+    const char * ret = virNetworkGetName(network);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkGetUUIDWrapper(virNetworkPtr network,
+                         unsigned char *uuid,
+                         virErrorPtr err)
+{
+    int ret = virNetworkGetUUID(network, uuid);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkGetUUIDStringWrapper(virNetworkPtr network,
+                               char *buf,
+                               virErrorPtr err)
+{
+    int ret = virNetworkGetUUIDString(network, buf);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+char *
+virNetworkGetXMLDescWrapper(virNetworkPtr network,
+                            unsigned int flags,
+                            virErrorPtr err)
+{
+    char * ret = virNetworkGetXMLDesc(network, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkIsActiveWrapper(virNetworkPtr net,
+                          virErrorPtr err)
+{
+    int ret = virNetworkIsActive(net);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkIsPersistentWrapper(virNetworkPtr net,
+                              virErrorPtr err)
+{
+    int ret = virNetworkIsPersistent(net);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkRefWrapper(virNetworkPtr network,
+                     virErrorPtr err)
+{
+    int ret = virNetworkRef(network);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkSetAutostartWrapper(virNetworkPtr network,
+                              int autostart,
+                              virErrorPtr err)
+{
+    int ret = virNetworkSetAutostart(network, autostart);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkUndefineWrapper(virNetworkPtr network,
+                          virErrorPtr err)
+{
+    int ret = virNetworkUndefine(network);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+int
+virNetworkUpdateWrapper(virNetworkPtr network,
+                        unsigned int command,
+                        unsigned int section,
+                        int parentIndex,
+                        const char *xml,
+                        unsigned int flags,
+                        virErrorPtr err)
+{
+    int ret = virNetworkUpdate(network, command, section, parentIndex, xml, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
 
 */
 import "C"

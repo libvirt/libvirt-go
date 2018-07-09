@@ -121,45 +121,50 @@ type NetworkDHCPLease struct {
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkFree
 func (n *Network) Free() error {
-	ret := C.virNetworkFree(n.ptr)
+	var err C.virError
+	ret := C.virNetworkFreeWrapper(n.ptr, &err)
 	if ret == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkRef
 func (c *Network) Ref() error {
-	ret := C.virNetworkRef(c.ptr)
+	var err C.virError
+	ret := C.virNetworkRefWrapper(c.ptr, &err)
 	if ret == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkCreate
 func (n *Network) Create() error {
-	result := C.virNetworkCreate(n.ptr)
+	var err C.virError
+	result := C.virNetworkCreateWrapper(n.ptr, &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkDestroy
 func (n *Network) Destroy() error {
-	result := C.virNetworkDestroy(n.ptr)
+	var err C.virError
+	result := C.virNetworkDestroyWrapper(n.ptr, &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkIsActive
 func (n *Network) IsActive() (bool, error) {
-	result := C.virNetworkIsActive(n.ptr)
+	var err C.virError
+	result := C.virNetworkIsActiveWrapper(n.ptr, &err)
 	if result == -1 {
-		return false, GetLastError()
+		return false, makeError(&err)
 	}
 	if result == 1 {
 		return true, nil
@@ -169,9 +174,10 @@ func (n *Network) IsActive() (bool, error) {
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkIsPersistent
 func (n *Network) IsPersistent() (bool, error) {
-	result := C.virNetworkIsPersistent(n.ptr)
+	var err C.virError
+	result := C.virNetworkIsPersistentWrapper(n.ptr, &err)
 	if result == -1 {
-		return false, GetLastError()
+		return false, makeError(&err)
 	}
 	if result == 1 {
 		return true, nil
@@ -182,9 +188,10 @@ func (n *Network) IsPersistent() (bool, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkGetAutostart
 func (n *Network) GetAutostart() (bool, error) {
 	var out C.int
-	result := C.virNetworkGetAutostart(n.ptr, (*C.int)(unsafe.Pointer(&out)))
+	var err C.virError
+	result := C.virNetworkGetAutostartWrapper(n.ptr, (*C.int)(unsafe.Pointer(&out)), &err)
 	if result == -1 {
-		return false, GetLastError()
+		return false, makeError(&err)
 	}
 	switch out {
 	case 1:
@@ -203,18 +210,20 @@ func (n *Network) SetAutostart(autostart bool) error {
 	default:
 		cAutostart = 0
 	}
-	result := C.virNetworkSetAutostart(n.ptr, cAutostart)
+	var err C.virError
+	result := C.virNetworkSetAutostartWrapper(n.ptr, cAutostart, &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkGetName
 func (n *Network) GetName() (string, error) {
-	name := C.virNetworkGetName(n.ptr)
+	var err C.virError
+	name := C.virNetworkGetNameWrapper(n.ptr, &err)
 	if name == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	return C.GoString(name), nil
 }
@@ -223,9 +232,10 @@ func (n *Network) GetName() (string, error) {
 func (n *Network) GetUUID() ([]byte, error) {
 	var cUuid [C.VIR_UUID_BUFLEN](byte)
 	cuidPtr := unsafe.Pointer(&cUuid)
-	result := C.virNetworkGetUUID(n.ptr, (*C.uchar)(cuidPtr))
+	var err C.virError
+	result := C.virNetworkGetUUIDWrapper(n.ptr, (*C.uchar)(cuidPtr), &err)
 	if result != 0 {
-		return []byte{}, GetLastError()
+		return []byte{}, makeError(&err)
 	}
 	return C.GoBytes(cuidPtr, C.VIR_UUID_BUFLEN), nil
 }
@@ -234,18 +244,20 @@ func (n *Network) GetUUID() ([]byte, error) {
 func (n *Network) GetUUIDString() (string, error) {
 	var cUuid [C.VIR_UUID_STRING_BUFLEN](C.char)
 	cuidPtr := unsafe.Pointer(&cUuid)
-	result := C.virNetworkGetUUIDString(n.ptr, (*C.char)(cuidPtr))
+	var err C.virError
+	result := C.virNetworkGetUUIDStringWrapper(n.ptr, (*C.char)(cuidPtr), &err)
 	if result != 0 {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	return C.GoString((*C.char)(cuidPtr)), nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkGetBridgeName
 func (n *Network) GetBridgeName() (string, error) {
-	result := C.virNetworkGetBridgeName(n.ptr)
+	var err C.virError
+	result := C.virNetworkGetBridgeNameWrapper(n.ptr, &err)
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	bridge := C.GoString(result)
 	C.free(unsafe.Pointer(result))
@@ -254,9 +266,10 @@ func (n *Network) GetBridgeName() (string, error) {
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkGetXMLDesc
 func (n *Network) GetXMLDesc(flags NetworkXMLFlags) (string, error) {
-	result := C.virNetworkGetXMLDesc(n.ptr, C.uint(flags))
+	var err C.virError
+	result := C.virNetworkGetXMLDescWrapper(n.ptr, C.uint(flags), &err)
 	if result == nil {
-		return "", GetLastError()
+		return "", makeError(&err)
 	}
 	xml := C.GoString(result)
 	C.free(unsafe.Pointer(result))
@@ -265,9 +278,10 @@ func (n *Network) GetXMLDesc(flags NetworkXMLFlags) (string, error) {
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkUndefine
 func (n *Network) Undefine() error {
-	result := C.virNetworkUndefine(n.ptr)
+	var err C.virError
+	result := C.virNetworkUndefineWrapper(n.ptr, &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
@@ -276,9 +290,10 @@ func (n *Network) Undefine() error {
 func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection, parentIndex int, xml string, flags NetworkUpdateFlags) error {
 	cxml := C.CString(xml)
 	defer C.free(unsafe.Pointer(cxml))
-	result := C.virNetworkUpdate(n.ptr, C.uint(cmd), C.uint(section), C.int(parentIndex), cxml, C.uint(flags))
+	var err C.virError
+	result := C.virNetworkUpdateWrapper(n.ptr, C.uint(cmd), C.uint(section), C.int(parentIndex), cxml, C.uint(flags), &err)
 	if result == -1 {
-		return GetLastError()
+		return makeError(&err)
 	}
 	return nil
 }
@@ -289,9 +304,10 @@ func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 		return []NetworkDHCPLease{}, GetNotImplementedError("virNetworkGetDHCPLeases")
 	}
 	var cLeases *C.virNetworkDHCPLeasePtr
-	numLeases := C.virNetworkGetDHCPLeasesWrapper(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0))
+	var err C.virError
+	numLeases := C.virNetworkGetDHCPLeasesWrapper(n.ptr, nil, (**C.virNetworkDHCPLeasePtr)(&cLeases), C.uint(0), &err)
 	if numLeases == -1 {
-		return nil, GetLastError()
+		return nil, makeError(&err)
 	}
 	hdr := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cLeases)),

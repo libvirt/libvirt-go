@@ -31,13 +31,89 @@
 #include <libvirt/virterror.h>
 #include "network_compat.h"
 
+int
+virNetworkCreateWrapper(virNetworkPtr network,
+                        virErrorPtr err);
+
 void
 virNetworkDHCPLeaseFreeWrapper(virNetworkDHCPLeasePtr lease);
+
+int
+virNetworkDestroyWrapper(virNetworkPtr network,
+                         virErrorPtr err);
+
+int
+virNetworkFreeWrapper(virNetworkPtr network,
+                      virErrorPtr err);
+
+int
+virNetworkGetAutostartWrapper(virNetworkPtr network,
+                              int *autostart,
+                              virErrorPtr err);
+
+char *
+virNetworkGetBridgeNameWrapper(virNetworkPtr network,
+                               virErrorPtr err);
+
+virConnectPtr
+virNetworkGetConnectWrapper(virNetworkPtr net,
+                            virErrorPtr err);
 
 int
 virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
                                const char *mac,
                                virNetworkDHCPLeasePtr **leases,
-                               unsigned int flags);
+                               unsigned int flags,
+                               virErrorPtr err);
+
+const char *
+virNetworkGetNameWrapper(virNetworkPtr network,
+                         virErrorPtr err);
+
+int
+virNetworkGetUUIDWrapper(virNetworkPtr network,
+                         unsigned char *uuid,
+                         virErrorPtr err);
+
+int
+virNetworkGetUUIDStringWrapper(virNetworkPtr network,
+                               char *buf,
+                               virErrorPtr err);
+
+char *
+virNetworkGetXMLDescWrapper(virNetworkPtr network,
+                            unsigned int flags,
+                            virErrorPtr err);
+
+int
+virNetworkIsActiveWrapper(virNetworkPtr net,
+                          virErrorPtr err);
+
+int
+virNetworkIsPersistentWrapper(virNetworkPtr net,
+                              virErrorPtr err);
+
+int
+virNetworkRefWrapper(virNetworkPtr network,
+                     virErrorPtr err);
+
+int
+virNetworkSetAutostartWrapper(virNetworkPtr network,
+                              int autostart,
+                              virErrorPtr err);
+
+int
+virNetworkUndefineWrapper(virNetworkPtr network,
+                          virErrorPtr err);
+
+int
+virNetworkUpdateWrapper(virNetworkPtr network,
+                        unsigned int command,
+                        unsigned int section,
+                        int parentIndex,
+                        const char *xml,
+                        unsigned int flags,
+                        virErrorPtr err);
+
 
 #endif /* LIBVIRT_GO_NETWORK_WRAPPER_H__ */
