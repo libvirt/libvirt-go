@@ -32,43 +32,89 @@
 #include "stream_compat.h"
 
 int
-virStreamSendAllWrapper(virStreamPtr st,
-                        int callbackID);
-
-int
-virStreamRecvAllWrapper(virStreamPtr st,
-                        int callbackID);
-
-int
-virStreamSparseSendAllWrapper(virStreamPtr st,
-                              int callbackID,
-                              int holeCallbackID,
-                              int skipCallbackID);
-
-int
-virStreamSparseRecvAllWrapper(virStreamPtr st,
-                              int callbackID,
-                              int holeCallbackID);
+virStreamAbortWrapper(virStreamPtr stream,
+                      virErrorPtr err);
 
 int
 virStreamEventAddCallbackWrapper(virStreamPtr st,
                                  int events,
-                                 int callbackID);
+                                 int callbackID,
+                                 virErrorPtr err);
+
+int
+virStreamEventRemoveCallbackWrapper(virStreamPtr stream,
+                                    virErrorPtr err);
+
+int
+virStreamEventUpdateCallbackWrapper(virStreamPtr stream,
+                                    int events,
+                                    virErrorPtr err);
+
+int
+virStreamFinishWrapper(virStreamPtr stream,
+                       virErrorPtr err);
+
+int
+virStreamFreeWrapper(virStreamPtr stream,
+                     virErrorPtr err);
+
+int
+virStreamRecvWrapper(virStreamPtr stream,
+                     char *data,
+                     size_t nbytes,
+                     virErrorPtr err);
+
+int
+virStreamRecvAllWrapper(virStreamPtr st,
+                        int callbackID,
+                        virErrorPtr err);
 
 int
 virStreamRecvFlagsWrapper(virStreamPtr st,
                           char *data,
                           size_t nbytes,
-                          unsigned int flags);
-
-int
-virStreamSendHoleWrapper(virStreamPtr st,
-                         long long length,
-                         unsigned int flags);
+                          unsigned int flags,
+                          virErrorPtr err);
 
 int
 virStreamRecvHoleWrapper(virStreamPtr,
                          long long *length,
-                         unsigned int flags);
+                         unsigned int flags,
+                         virErrorPtr err);
+
+int
+virStreamRefWrapper(virStreamPtr stream,
+                    virErrorPtr err);
+
+int
+virStreamSendWrapper(virStreamPtr stream,
+                     const char *data,
+                     size_t nbytes,
+                     virErrorPtr err);
+
+int
+virStreamSendAllWrapper(virStreamPtr st,
+                        int callbackID,
+                        virErrorPtr err);
+
+int
+virStreamSendHoleWrapper(virStreamPtr st,
+                         long long length,
+                         unsigned int flags,
+                         virErrorPtr err);
+
+int
+virStreamSparseRecvAllWrapper(virStreamPtr st,
+                              int callbackID,
+                              int holeCallbackID,
+                              virErrorPtr err);
+
+int
+virStreamSparseSendAllWrapper(virStreamPtr st,
+                              int callbackID,
+                              int holeCallbackID,
+                              int skipCallbackID,
+                              virErrorPtr err);
+
 
 #endif /* LIBVIRT_GO_STREAM_WRAPPER_H__ */
