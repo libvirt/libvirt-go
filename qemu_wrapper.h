@@ -35,5 +35,8 @@ int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainP
 						 const char *event, virConnectDomainQemuMonitorEventCallback cb,
 						 long goCallbackId, unsigned int flags);
 
+int virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
+						     int callbackID);
+
 
 #endif /* LIBVIRT_GO_DOMAIN_EVENTS_WRAPPER_H__ */

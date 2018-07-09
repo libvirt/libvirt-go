@@ -60,5 +60,15 @@ int virConnectDomainQemuMonitorEventRegisterWrapper(virConnectPtr c,  virDomainP
 #endif
 }
 
+int virConnectDomainQemuMonitorEventDeregisterWrapper(virConnectPtr conn,
+						     int callbackID)
+{
+#if LIBVIR_VERSION_NUMBER < 1002003
+    assert(0); // Caller should have checked version
+#else
+    return virConnectDomainQemuMonitorEventDeregister(conn, callbackID);
+#endif
+}
+
 */
 import "C"
