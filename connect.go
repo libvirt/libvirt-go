@@ -2915,6 +2915,10 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		stats[i] = domstats
 	}
 
+	for i := 0; i < len(stats); i++ {
+		C.virDomainRef(stats[i].Domain.ptr)
+	}
+
 	return stats, nil
 }
 
