@@ -594,26 +594,6 @@ func makeError(err *C.virError) Error {
 	return ret
 }
 
-func GetLastError() Error {
-	err := C.virGetLastError()
-	if err == nil {
-		return Error{
-			Code:    ERR_OK,
-			Domain:  FROM_NONE,
-			Message: "Missing error",
-			Level:   ERR_NONE,
-		}
-	}
-	virErr := Error{
-		Code:    ErrorNumber(err.code),
-		Domain:  ErrorDomain(err.domain),
-		Message: C.GoString(err.message),
-		Level:   ErrorLevel(err.level),
-	}
-	C.virResetError(err)
-	return virErr
-}
-
 func GetNotImplementedError(apiname string) Error {
 	return Error{
 		Code:    ERR_NO_SUPPORT,

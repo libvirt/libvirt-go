@@ -68,6 +68,7 @@ var (
 		/* Only needed at C level */
 		"virCopyLastError",
 		"virFreeError",
+		"virGetLastError",
 		"virGetLastErrorMessage",
 		"virGetLastErrorCode",
 		"virGetLastErrorDomain",
