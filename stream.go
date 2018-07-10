@@ -121,7 +121,7 @@ func (v *Stream) Recv(p []byte) (int, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-stream.html#virStreamRecvFlags
 func (v *Stream) RecvFlags(p []byte, flags StreamRecvFlagsValues) (int, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3004000 {
-		return 0, GetNotImplementedError("virStreamRecvFlags")
+		return 0, makeNotImplementedError("virStreamRecvFlags")
 	}
 
 	var err C.virError
@@ -139,7 +139,7 @@ func (v *Stream) RecvFlags(p []byte, flags StreamRecvFlagsValues) (int, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-stream.html#virStreamRecvHole
 func (v *Stream) RecvHole(flags uint) (int64, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3004000 {
-		return 0, GetNotImplementedError("virStreamSparseRecvHole")
+		return 0, makeNotImplementedError("virStreamSparseRecvHole")
 	}
 
 	var len C.longlong
@@ -169,7 +169,7 @@ func (v *Stream) Send(p []byte) (int, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-stream.html#virStreamSendHole
 func (v *Stream) SendHole(len int64, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3004000 {
-		return GetNotImplementedError("virStreamSendHole")
+		return makeNotImplementedError("virStreamSendHole")
 	}
 
 	var err C.virError
@@ -242,7 +242,7 @@ func (v *Stream) RecvAll(handler StreamSinkFunc) error {
 // See also https://libvirt.org/html/libvirt-libvirt-stream.html#virStreamSparseRecvAll
 func (v *Stream) SparseRecvAll(handler StreamSinkFunc, holeHandler StreamSinkHoleFunc) error {
 	if C.LIBVIR_VERSION_NUMBER < 3004000 {
-		return GetNotImplementedError("virStreamSparseSendAll")
+		return makeNotImplementedError("virStreamSparseSendAll")
 	}
 
 	callbackID := registerCallbackId(handler)
@@ -349,7 +349,7 @@ func (v *Stream) SendAll(handler StreamSourceFunc) error {
 // See also https://libvirt.org/html/libvirt-libvirt-stream.html#virStreamSparseSendAll
 func (v *Stream) SparseSendAll(handler StreamSourceFunc, holeHandler StreamSourceHoleFunc, skipHandler StreamSourceSkipFunc) error {
 	if C.LIBVIR_VERSION_NUMBER < 3004000 {
-		return GetNotImplementedError("virStreamSparseSendAll")
+		return makeNotImplementedError("virStreamSparseSendAll")
 	}
 
 	callbackID := registerCallbackId(handler)

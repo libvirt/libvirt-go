@@ -151,7 +151,7 @@ func domainQemuMonitorEventCallback(c C.virConnectPtr, d C.virDomainPtr,
 
 func (c *Connect) DomainQemuMonitorEventRegister(dom *Domain, event string, callback DomainQemuMonitorEventCallback, flags DomainQemuMonitorEventFlags) (int, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002003 {
-		return 0, GetNotImplementedError("virConnectDomainQemuMonitorEventRegister")
+		return 0, makeNotImplementedError("virConnectDomainQemuMonitorEventRegister")
 	}
 
 	cEvent := C.CString(event)
@@ -176,7 +176,7 @@ func (c *Connect) DomainQemuMonitorEventRegister(dom *Domain, event string, call
 
 func (c *Connect) DomainQemuEventDeregister(callbackId int) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002003 {
-		return GetNotImplementedError("virConnectDomainQemuMonitorEventDeregister")
+		return makeNotImplementedError("virConnectDomainQemuMonitorEventDeregister")
 	}
 
 	// Deregister the callback

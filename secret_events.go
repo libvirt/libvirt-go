@@ -86,7 +86,7 @@ func secretEventGenericCallback(c C.virConnectPtr, n C.virSecretPtr,
 func (c *Connect) SecretEventLifecycleRegister(secret *Secret, callback SecretEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 	if C.LIBVIR_VERSION_NUMBER < 3000000 {
-		return 0, GetNotImplementedError("virConnectSecretEventRegisterAny")
+		return 0, makeNotImplementedError("virConnectSecretEventRegisterAny")
 	}
 
 	callbackPtr := unsafe.Pointer(C.secretEventLifecycleCallbackHelper)
@@ -109,7 +109,7 @@ func (c *Connect) SecretEventLifecycleRegister(secret *Secret, callback SecretEv
 func (c *Connect) SecretEventValueChangedRegister(secret *Secret, callback SecretEventGenericCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 	if C.LIBVIR_VERSION_NUMBER < 3000000 {
-		return 0, GetNotImplementedError("virConnectSecretEventRegisterAny")
+		return 0, makeNotImplementedError("virConnectSecretEventRegisterAny")
 	}
 
 	callbackPtr := unsafe.Pointer(C.secretEventGenericCallbackHelper)
@@ -131,7 +131,7 @@ func (c *Connect) SecretEventValueChangedRegister(secret *Secret, callback Secre
 
 func (c *Connect) SecretEventDeregister(callbackId int) error {
 	if C.LIBVIR_VERSION_NUMBER < 3000000 {
-		return GetNotImplementedError("virConnectSecretEventDeregisterAny")
+		return makeNotImplementedError("virConnectSecretEventDeregisterAny")
 	}
 	// Deregister the callback
 	var err C.virError

@@ -301,7 +301,7 @@ func (n *Network) Update(cmd NetworkUpdateCommand, section NetworkUpdateSection,
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkGetDHCPLeases
 func (n *Network) GetDHCPLeases() ([]NetworkDHCPLease, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002006 {
-		return []NetworkDHCPLease{}, GetNotImplementedError("virNetworkGetDHCPLeases")
+		return []NetworkDHCPLease{}, makeNotImplementedError("virNetworkGetDHCPLeases")
 	}
 	var cLeases *C.virNetworkDHCPLeasePtr
 	var err C.virError

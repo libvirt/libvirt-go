@@ -1540,7 +1540,7 @@ func (d *Domain) DetachDeviceFlags(xml string, flags DomainDeviceModifyFlags) er
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainDetachDeviceAlias
 func (d *Domain) DetachDeviceAlias(alias string, flags DomainDeviceModifyFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 4004000 {
-		return GetNotImplementedError("virDomainDetachDeviceAlias")
+		return makeNotImplementedError("virDomainDetachDeviceAlias")
 	}
 
 	cAlias := C.CString(alias)
@@ -1925,7 +1925,7 @@ type DomainInterface struct {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainInterfaceAddresses
 func (d *Domain) ListAllInterfaceAddresses(src DomainInterfaceAddressesSource) ([]DomainInterface, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return []DomainInterface{}, GetNotImplementedError("virDomainInterfaceAddresses")
+		return []DomainInterface{}, makeNotImplementedError("virDomainInterfaceAddresses")
 	}
 
 	var cList *C.virDomainInterfacePtr
@@ -2090,7 +2090,7 @@ func getBlockCopyParameterFieldInfo(params *DomainBlockCopyParameters) map[strin
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainBlockCopy
 func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyParameters, flags DomainBlockCopyFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002008 {
-		return GetNotImplementedError("virDomainBlockCopy")
+		return makeNotImplementedError("virDomainBlockCopy")
 	}
 	cdisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cdisk))
@@ -2531,7 +2531,7 @@ func (d *Domain) MigrateGetMaxDowntime(flags uint32) (uint64, error) {
 	var downtimeLen C.ulonglong
 
 	if C.LIBVIR_VERSION_NUMBER < 3007000 {
-		return 0, GetNotImplementedError("virDomainMigrateGetMaxDowntime")
+		return 0, makeNotImplementedError("virDomainMigrateGetMaxDowntime")
 	}
 
 	var err C.virError
@@ -2546,7 +2546,7 @@ func (d *Domain) MigrateGetMaxDowntime(flags uint32) (uint64, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainMigrateStartPostCopy
 func (d *Domain) MigrateStartPostCopy(flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return GetNotImplementedError("virDomainMigrateStartPostCopy")
+		return makeNotImplementedError("virDomainMigrateStartPostCopy")
 	}
 
 	var err C.virError
@@ -3549,7 +3549,7 @@ func getDomainPerfEventsFieldInfo(params *DomainPerfEvents) map[string]typedPara
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetPerfEvents
 func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvents, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return nil, GetNotImplementedError("virDomainGetPerfEvents")
+		return nil, makeNotImplementedError("virDomainGetPerfEvents")
 	}
 
 	params := &DomainPerfEvents{}
@@ -3576,7 +3576,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetPerfEvents
 func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1003003 {
-		return GetNotImplementedError("virDomainSetPerfEvents")
+		return makeNotImplementedError("virDomainSetPerfEvents")
 	}
 
 	info := getDomainPerfEventsFieldInfo(params)
@@ -3875,7 +3875,7 @@ func (d *Domain) GetSecurityLabelList() ([]SecurityLabel, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetTime
 func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return 0, 0, GetNotImplementedError("virDomainGetTime")
+		return 0, 0, makeNotImplementedError("virDomainGetTime")
 	}
 	var secs C.longlong
 	var nsecs C.uint
@@ -3891,7 +3891,7 @@ func (d *Domain) GetTime(flags uint32) (int64, uint, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetTime
 func (d *Domain) SetTime(secs int64, nsecs uint, flags DomainSetTimeFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError("virDomainSetTime")
+		return makeNotImplementedError("virDomainSetTime")
 	}
 
 	var err C.virError
@@ -3906,7 +3906,7 @@ func (d *Domain) SetTime(secs int64, nsecs uint, flags DomainSetTimeFlags) error
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetUserPassword
 func (d *Domain) SetUserPassword(user string, password string, flags DomainSetUserPasswordFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError("virDomainSetUserPassword")
+		return makeNotImplementedError("virDomainSetUserPassword")
 	}
 	cuser := C.CString(user)
 	cpassword := C.CString(password)
@@ -3961,7 +3961,7 @@ func (d *Domain) ManagedSaveRemove(flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainRename
 func (d *Domain) Rename(name string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002019 {
-		return GetNotImplementedError("virDomainRename")
+		return makeNotImplementedError("virDomainRename")
 	}
 	cname := C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
@@ -4024,7 +4024,7 @@ func (d *Domain) CoreDump(to string, flags DomainCoreDumpFlags) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainCoreDumpWithFormat
 func (d *Domain) CoreDumpWithFormat(to string, format DomainCoreDumpFormat, flags DomainCoreDumpFlags) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002003 {
-		GetNotImplementedError("virDomainCoreDumpWithFormat")
+		makeNotImplementedError("virDomainCoreDumpWithFormat")
 	}
 	cto := C.CString(to)
 	defer C.free(unsafe.Pointer(cto))
@@ -4054,7 +4054,7 @@ func (d *Domain) HasCurrentSnapshot(flags uint32) (bool, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFSFreeze
 func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError("virDomainFSFreeze")
+		return makeNotImplementedError("virDomainFSFreeze")
 	}
 	cmounts := make([](*C.char), len(mounts))
 
@@ -4076,7 +4076,7 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFSThaw
 func (d *Domain) FSThaw(mounts []string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
-		return GetNotImplementedError("virDomainFSThaw")
+		return makeNotImplementedError("virDomainFSThaw")
 	}
 	cmounts := make([](*C.char), len(mounts))
 
@@ -4122,7 +4122,7 @@ type DomainFSInfo struct {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetFSInfo
 func (d *Domain) GetFSInfo(flags uint32) ([]DomainFSInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002011 {
-		return []DomainFSInfo{}, GetNotImplementedError("virDomainGetFSInfo")
+		return []DomainFSInfo{}, makeNotImplementedError("virDomainGetFSInfo")
 	}
 	var cfsinfolist **C.virDomainFSInfo
 
@@ -4181,7 +4181,7 @@ func (d *Domain) PMWakeup(flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainAddIOThread
 func (d *Domain) AddIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError("virDomainAddIOThread")
+		return makeNotImplementedError("virDomainAddIOThread")
 	}
 	var err C.virError
 	ret := C.virDomainAddIOThreadWrapper(d.ptr, C.uint(id), C.uint(flags), &err)
@@ -4195,7 +4195,7 @@ func (d *Domain) AddIOThread(id uint, flags DomainModificationImpact) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainDelIOThread
 func (d *Domain) DelIOThread(id uint, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002015 {
-		return GetNotImplementedError("virDomainDelIOThread")
+		return makeNotImplementedError("virDomainDelIOThread")
 	}
 	var err C.virError
 	ret := C.virDomainDelIOThreadWrapper(d.ptr, C.uint(id), C.uint(flags), &err)
@@ -4241,7 +4241,7 @@ type DomainIOThreadInfo struct {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetIOThreadInfo
 func (d *Domain) GetIOThreadInfo(flags DomainModificationImpact) ([]DomainIOThreadInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return []DomainIOThreadInfo{}, GetNotImplementedError("virDomaingetIOThreadInfo")
+		return []DomainIOThreadInfo{}, makeNotImplementedError("virDomaingetIOThreadInfo")
 	}
 	var cinfolist **C.virDomainIOThreadInfo
 
@@ -4345,7 +4345,7 @@ func (d *Domain) PinEmulator(cpumap []bool, flags DomainModificationImpact) erro
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainPinIOThread
 func (d *Domain) PinIOThread(iothreadid uint, cpumap []bool, flags DomainModificationImpact) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002014 {
-		return GetNotImplementedError("virDomainPinIOThread")
+		return makeNotImplementedError("virDomainPinIOThread")
 	}
 
 	maplen := (len(cpumap) + 7) / 8
@@ -4413,7 +4413,7 @@ func (d *Domain) OpenGraphics(idx uint, file os.File, flags DomainOpenGraphicsFl
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainOpenGraphicsFD
 func (d *Domain) OpenGraphicsFD(idx uint, flags DomainOpenGraphicsFlags) (*os.File, error) {
 	if C.LIBVIR_VERSION_NUMBER < 1002008 {
-		return nil, GetNotImplementedError("virDomainOpenGraphicsFD")
+		return nil, makeNotImplementedError("virDomainOpenGraphicsFD")
 	}
 	var err C.virError
 	ret := C.virDomainOpenGraphicsFDWrapper(d.ptr, C.uint(idx), C.uint(flags), &err)
@@ -4545,7 +4545,7 @@ func parseCPUString(cpumapstr string) ([]bool, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetGuestVcpus
 func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 	if C.LIBVIR_VERSION_NUMBER < 2000000 {
-		return nil, GetNotImplementedError("virDomainGetGuestVcpus")
+		return nil, makeNotImplementedError("virDomainGetGuestVcpus")
 	}
 
 	var VcpusSet, OnlineSet, OfflinableSet bool
@@ -4573,7 +4573,7 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetGuestVcpus
 func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 2000000 {
-		return GetNotImplementedError("virDomainSetGuestVcpus")
+		return makeNotImplementedError("virDomainSetGuestVcpus")
 	}
 
 	cpumap := ""
@@ -4607,7 +4607,7 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetVcpu
 func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3001000 {
-		return GetNotImplementedError("virDomainSetVcpu")
+		return makeNotImplementedError("virDomainSetVcpu")
 	}
 
 	cpumap := ""
@@ -4641,7 +4641,7 @@ func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetBlockThreshold
 func (d *Domain) SetBlockThreshold(dev string, threshold uint64, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3002000 {
-		return GetNotImplementedError("virDomainSetBlockThreshold")
+		return makeNotImplementedError("virDomainSetBlockThreshold")
 	}
 
 	cdev := C.CString(dev)
@@ -4658,7 +4658,7 @@ func (d *Domain) SetBlockThreshold(dev string, threshold uint64, flags uint32) e
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainManagedSaveDefineXML
 func (d *Domain) ManagedSaveDefineXML(xml string, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3007000 {
-		return GetNotImplementedError("virDomainManagedSaveDefineXML")
+		return makeNotImplementedError("virDomainManagedSaveDefineXML")
 	}
 
 	cxml := C.CString(xml)
@@ -4675,7 +4675,7 @@ func (d *Domain) ManagedSaveDefineXML(xml string, flags uint32) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainManagedSaveGetXMLDesc
 func (d *Domain) ManagedSaveGetXMLDesc(flags uint32) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3007000 {
-		return "", GetNotImplementedError("virDomainManagedSaveGetXMLDesc")
+		return "", makeNotImplementedError("virDomainManagedSaveGetXMLDesc")
 	}
 
 	var err C.virError
@@ -4711,7 +4711,7 @@ const (
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetLifecycleAction
 func (d *Domain) SetLifecycleAction(lifecycleType uint32, action uint32, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3009000 {
-		return GetNotImplementedError("virDomainSetLifecycleAction")
+		return makeNotImplementedError("virDomainSetLifecycleAction")
 	}
 
 	var err C.virError
@@ -4740,7 +4740,7 @@ func getDomainLaunchSecurityFieldInfo(params *DomainLaunchSecurityParameters) ma
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetLaunchSecurityInfo
 func (d *Domain) GetLaunchSecurityInfo(flags uint32) (*DomainLaunchSecurityParameters, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return nil, GetNotImplementedError("virDomainGetLaunchSecurityInfo")
+		return nil, makeNotImplementedError("virDomainGetLaunchSecurityInfo")
 	}
 
 	params := &DomainLaunchSecurityParameters{}

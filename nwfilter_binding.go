@@ -43,7 +43,7 @@ type NWFilterBinding struct {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingFree
 func (f *NWFilterBinding) Free() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return GetNotImplementedError("virNWFilterBindingFree")
+		return makeNotImplementedError("virNWFilterBindingFree")
 	}
 	var err C.virError
 	ret := C.virNWFilterBindingFreeWrapper(f.ptr, &err)
@@ -56,7 +56,7 @@ func (f *NWFilterBinding) Free() error {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingRef
 func (c *NWFilterBinding) Ref() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return GetNotImplementedError("virNWFilterBindingRef")
+		return makeNotImplementedError("virNWFilterBindingRef")
 	}
 	var err C.virError
 	ret := C.virNWFilterBindingRefWrapper(c.ptr, &err)
@@ -69,7 +69,7 @@ func (c *NWFilterBinding) Ref() error {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingDelete
 func (f *NWFilterBinding) Delete() error {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return GetNotImplementedError("virNWFilterBindingDelete")
+		return makeNotImplementedError("virNWFilterBindingDelete")
 	}
 	var err C.virError
 	result := C.virNWFilterBindingDeleteWrapper(f.ptr, &err)
@@ -82,7 +82,7 @@ func (f *NWFilterBinding) Delete() error {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingGetPortDev
 func (f *NWFilterBinding) GetPortDev() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return "", GetNotImplementedError("virNWFilterBindingGetPortDev")
+		return "", makeNotImplementedError("virNWFilterBindingGetPortDev")
 	}
 	var err C.virError
 	result := C.virNWFilterBindingGetPortDevWrapper(f.ptr, &err)
@@ -97,7 +97,7 @@ func (f *NWFilterBinding) GetPortDev() (string, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingGetFilterName
 func (f *NWFilterBinding) GetFilterName() (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return "", GetNotImplementedError("virNWFilterBindingGetFilterName")
+		return "", makeNotImplementedError("virNWFilterBindingGetFilterName")
 	}
 	var err C.virError
 	result := C.virNWFilterBindingGetFilterNameWrapper(f.ptr, &err)
@@ -112,7 +112,7 @@ func (f *NWFilterBinding) GetFilterName() (string, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingGetXMLDesc
 func (f *NWFilterBinding) GetXMLDesc(flags uint32) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
-		return "", GetNotImplementedError("virNWFilterBindingGetXMLDesc")
+		return "", makeNotImplementedError("virNWFilterBindingGetXMLDesc")
 	}
 	var err C.virError
 	result := C.virNWFilterBindingGetXMLDescWrapper(f.ptr, C.uint(flags), &err)

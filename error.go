@@ -594,7 +594,7 @@ func makeError(err *C.virError) Error {
 	return ret
 }
 
-func GetNotImplementedError(apiname string) Error {
+func makeNotImplementedError(apiname string) Error {
 	return Error{
 		Code:    ERR_NO_SUPPORT,
 		Domain:  FROM_NONE,

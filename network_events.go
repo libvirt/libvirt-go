@@ -69,7 +69,7 @@ func networkEventLifecycleCallback(c C.virConnectPtr, n C.virNetworkPtr,
 func (c *Connect) NetworkEventLifecycleRegister(net *Network, callback NetworkEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 	if C.LIBVIR_VERSION_NUMBER < 1002001 {
-		return 0, GetNotImplementedError("virConnectNetworkEventRegisterAny")
+		return 0, makeNotImplementedError("virConnectNetworkEventRegisterAny")
 	}
 
 	callbackPtr := unsafe.Pointer(C.networkEventLifecycleCallbackHelper)
@@ -91,7 +91,7 @@ func (c *Connect) NetworkEventLifecycleRegister(net *Network, callback NetworkEv
 
 func (c *Connect) NetworkEventDeregister(callbackId int) error {
 	if C.LIBVIR_VERSION_NUMBER < 1002001 {
-		return GetNotImplementedError("virConnectNetworkEventDeregisterAny")
+		return makeNotImplementedError("virConnectNetworkEventDeregisterAny")
 	}
 	// Deregister the callback
 	var err C.virError

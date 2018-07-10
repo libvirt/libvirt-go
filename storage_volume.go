@@ -169,7 +169,7 @@ func (v *StorageVol) GetInfo() (*StorageVolInfo, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-storage.html#virStorageVolGetInfoFlags
 func (v *StorageVol) GetInfoFlags(flags StorageVolInfoFlags) (*StorageVolInfo, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3000000 {
-		return nil, GetNotImplementedError("virStorageVolGetInfoFlags")
+		return nil, makeNotImplementedError("virStorageVolGetInfoFlags")
 	}
 
 	var cinfo C.virStorageVolInfo
