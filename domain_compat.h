@@ -1046,4 +1046,10 @@ int virDomainGetLaunchSecurityInfoCompat(virDomainPtr domain,
 #define VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT "sev-measurement"
 #endif
 
+/* 4.6.0 */
+
+#ifndef VIR_DOMAIN_MEMORY_STAT_DISK_CACHES
+#define VIR_DOMAIN_MEMORY_STAT_DISK_CACHES 10
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
