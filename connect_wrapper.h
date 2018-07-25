@@ -326,7 +326,7 @@ virConnectOpenWrapper(const char *name,
 virConnectPtr
 virConnectOpenAuthWrapper(const char *name,
                           int *credtype,
-                          uint ncredtype,
+                          unsigned int ncredtype,
                           int callbackID,
                           unsigned int flags,
                           virErrorPtr err);
