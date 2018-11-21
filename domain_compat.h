@@ -917,4 +917,20 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_SHUTOFF_DAEMON 8
 #endif
 
+#ifndef VIR_DOMAIN_STATS_IOTHREAD
+#define VIR_DOMAIN_STATS_IOTHREAD (1 << 7)
+#endif
+
+#ifndef VIR_DOMAIN_IOTHREAD_POLL_GROW
+#define VIR_DOMAIN_IOTHREAD_POLL_GROW "poll_grow"
+#endif
+
+#ifndef VIR_DOMAIN_IOTHREAD_POLL_SHRINK
+#define VIR_DOMAIN_IOTHREAD_POLL_SHRINK "poll_shrink"
+#endif
+
+#ifndef VIR_DOMAIN_IOTHREAD_POLL_MAX_NS
+#define VIR_DOMAIN_IOTHREAD_POLL_MAX_NS "poll_max_ns"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
