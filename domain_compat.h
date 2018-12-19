@@ -933,4 +933,10 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_IOTHREAD_POLL_MAX_NS "poll_max_ns"
 #endif
 
+/* 5.0.0 */
+
+#ifndef VIR_DOMAIN_JOB_MEMORY_POSTCOPY_REQS
+#define VIR_DOMAIN_JOB_MEMORY_POSTCOPY_REQS "memory_postcopy_requests"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

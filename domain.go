@@ -3016,6 +3016,8 @@ type DomainJobInfo struct {
 	AutoConvergeThrottle      int
 	OperationSet              bool
 	Operation                 DomainJobOperationType
+	MemPostcopyReqsSet        bool
+	MemPostcopyReqs           uint64
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetJobInfo
@@ -3176,6 +3178,10 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_OPERATION: typedParamsFieldInfo{
 			set: &params.OperationSet,
 			i:   (*int)(&params.Operation),
+		},
+		C.VIR_DOMAIN_JOB_MEMORY_POSTCOPY_REQS: typedParamsFieldInfo{
+			set: &params.MemPostcopyReqsSet,
+			ul:  &params.MemPostcopyReqs,
 		},
 	}
 }
@@ -4211,12 +4217,12 @@ func (d *Domain) DelIOThread(id uint, flags DomainModificationImpact) error {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetIOThreadParams
 
 type DomainSetIOThreadParams struct {
-	PollMaxNsSet   bool
-	PollMaxNs      uint64
-	PollGrowSet    bool
-	PollGrow       uint
-	PollShrinkSet  bool
-	PollShrink     uint
+	PollMaxNsSet  bool
+	PollMaxNs     uint64
+	PollGrowSet   bool
+	PollGrow      uint
+	PollShrinkSet bool
+	PollShrink    uint
 }
 
 func getSetIOThreadParamsFieldInfo(params *DomainSetIOThreadParams) map[string]typedParamsFieldInfo {
