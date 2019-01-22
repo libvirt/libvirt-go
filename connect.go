@@ -2811,7 +2811,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		state := &DomainStatsState{}
 		stateInfo := getDomainStatsStateFieldInfo(state)
 
-		count, gerr := typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), stateInfo)
+		count, gerr := typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, stateInfo)
 		if gerr != nil {
 			return []DomainStats{}, gerr
 		}
@@ -2822,7 +2822,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		cpu := &DomainStatsCPU{}
 		cpuInfo := getDomainStatsCPUFieldInfo(cpu)
 
-		count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), cpuInfo)
+		count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, cpuInfo)
 		if gerr != nil {
 			return []DomainStats{}, gerr
 		}
@@ -2833,7 +2833,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		balloon := &DomainStatsBalloon{}
 		balloonInfo := getDomainStatsBalloonFieldInfo(balloon)
 
-		count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), balloonInfo)
+		count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, balloonInfo)
 		if gerr != nil {
 			return []DomainStats{}, gerr
 		}
@@ -2844,7 +2844,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		perf := &DomainStatsPerf{}
 		perfInfo := getDomainStatsPerfFieldInfo(perf)
 
-		count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), perfInfo)
+		count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, perfInfo)
 		if gerr != nil {
 			return []DomainStats{}, gerr
 		}
@@ -2855,7 +2855,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 		lengths := domainStatsLengths{}
 		lengthsInfo := getDomainStatsLengthsFieldInfo(&lengths)
 
-		count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), lengthsInfo)
+		count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, lengthsInfo)
 		if gerr != nil {
 			return []DomainStats{}, gerr
 		}
@@ -2871,7 +2871,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 				vcpu := DomainStatsVcpu{}
 				vcpuInfo := getDomainStatsVcpuFieldInfo(j, &vcpu)
 
-				count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), vcpuInfo)
+				count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, vcpuInfo)
 				if gerr != nil {
 					return []DomainStats{}, gerr
 				}
@@ -2889,7 +2889,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 				block := DomainStatsBlock{}
 				blockInfo := getDomainStatsBlockFieldInfo(j, &block)
 
-				count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), blockInfo)
+				count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, blockInfo)
 				if gerr != nil {
 					return []DomainStats{}, gerr
 				}
@@ -2905,7 +2905,7 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 				net := DomainStatsNet{}
 				netInfo := getDomainStatsNetFieldInfo(j, &net)
 
-				count, gerr = typedParamsUnpackLen(cdomstats.params, int(cdomstats.nparams), netInfo)
+				count, gerr = typedParamsUnpackLen(cdomstats.params, cdomstats.nparams, netInfo)
 				if gerr != nil {
 					return []DomainStats{}, gerr
 				}
@@ -2977,7 +2977,7 @@ func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
 
 	defer C.virTypedParamsFree(cparams, nparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, gerr := typedParamsUnpackLen(cparams, nparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}

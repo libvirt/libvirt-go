@@ -135,5 +135,106 @@ virTypedParamsAddStringWrapper(virTypedParameterPtr *params,
     return ret;
 }
 
+
+int
+virTypedParamsGetIntWrapper(virTypedParameterPtr params,
+			    int nparams,
+			    const char *name,
+			    int *value,
+			    virErrorPtr err)
+{
+    int ret = virTypedParamsGetInt(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetUIntWrapper(virTypedParameterPtr params,
+			     int nparams,
+			     const char *name,
+			     unsigned int *value,
+			     virErrorPtr err)
+{
+    int ret = virTypedParamsGetUInt(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetLLongWrapper(virTypedParameterPtr params,
+			      int nparams,
+			      const char *name,
+			      long long *value,
+			      virErrorPtr err)
+{
+    int ret = virTypedParamsGetLLong(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetULLongWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       unsigned long long *value,
+			       virErrorPtr err)
+{
+    int ret = virTypedParamsGetULLong(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetDoubleWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       double *value,
+			       virErrorPtr err)
+{
+    int ret = virTypedParamsGetDouble(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetBooleanWrapper(virTypedParameterPtr params,
+				int nparams,
+				const char *name,
+				int *value,
+				virErrorPtr err)
+{
+    int ret = virTypedParamsGetBoolean(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+int
+virTypedParamsGetStringWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       const char **value,
+			       virErrorPtr err)
+{
+    int ret = virTypedParamsGetString(params, nparams, name, value);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+
 */
 import "C"

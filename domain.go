@@ -3207,7 +3207,7 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 	params := DomainJobInfo{}
 	info := getDomainJobInfoFieldInfo(&params)
 
-	_, gerr := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, gerr := typedParamsUnpackLen(cparams, nparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3585,7 +3585,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 
 	defer C.virTypedParamsFree(cparams, nparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, gerr := typedParamsUnpackLen(cparams, nparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -4644,7 +4644,7 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 
 	defer C.virTypedParamsFree(cparams, C.int(nparams))
 
-	_, gerr := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, gerr := typedParamsUnpackLen(cparams, C.int(nparams), info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -4861,7 +4861,7 @@ func (d *Domain) GetLaunchSecurityInfo(flags uint32) (*DomainLaunchSecurityParam
 
 	defer C.virTypedParamsFree(cparams, nparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, int(nparams), info)
+	_, gerr := typedParamsUnpackLen(cparams, nparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}

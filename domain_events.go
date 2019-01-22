@@ -763,7 +763,7 @@ func domainEventTunableGetPin(params C.virTypedParameterPtr, nparams C.int) *Dom
 	numvcpus, numiothreads := countPinInfo(params, nparams)
 	pinInfo := getDomainPinTempFieldInfo(numvcpus, numiothreads, &pin)
 
-	num, err := typedParamsUnpackLen(params, int(nparams), pinInfo)
+	num, err := typedParamsUnpackLen(params, nparams, pinInfo)
 	if num == 0 || err != nil {
 		return nil
 	}
@@ -820,7 +820,7 @@ func domainEventTunableCallback(c C.virConnectPtr, d C.virDomainPtr, params C.vi
 	var sched DomainSchedulerParameters
 	schedInfo := getDomainTuneSchedulerParametersFieldInfo(&sched)
 
-	num, _ := typedParamsUnpackLen(params, int(nparams), schedInfo)
+	num, _ := typedParamsUnpackLen(params, nparams, schedInfo)
 	if num > 0 {
 		eventDetails.CpuSched = &sched
 	}
@@ -831,12 +831,12 @@ func domainEventTunableCallback(c C.virConnectPtr, d C.virDomainPtr, params C.vi
 			s:   &eventDetails.BlkdevDisk,
 		},
 	}
-	typedParamsUnpackLen(params, int(nparams), blknameInfo)
+	typedParamsUnpackLen(params, nparams, blknameInfo)
 
 	var blktune DomainBlockIoTuneParameters
 	blktuneInfo := getTuneBlockIoTuneParametersFieldInfo(&blktune)
 
-	num, _ = typedParamsUnpackLen(params, int(nparams), blktuneInfo)
+	num, _ = typedParamsUnpackLen(params, nparams, blktuneInfo)
 	if num > 0 {
 		eventDetails.BlkdevTune = &blktune
 	}
@@ -910,7 +910,7 @@ func domainEventJobCompletedCallback(c C.virConnectPtr, d C.virDomainPtr, params
 	eventDetails := &DomainEventJobCompleted{}
 	info := getDomainJobInfoFieldInfo(&eventDetails.Info)
 
-	typedParamsUnpackLen(params, int(nparams), info)
+	typedParamsUnpackLen(params, nparams, info)
 
 	callbackFunc := getCallbackId(goCallbackId)
 	callback, ok := callbackFunc.(DomainEventJobCompletedCallback)

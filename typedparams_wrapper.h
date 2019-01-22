@@ -79,4 +79,48 @@ virTypedParamsAddStringWrapper(virTypedParameterPtr *params,
 			       const char *value,
 			       virErrorPtr err);
 
+int
+virTypedParamsGetIntWrapper(virTypedParameterPtr params,
+			    int nparams,
+			    const char *name,
+			    int *value,
+			    virErrorPtr err);
+int
+virTypedParamsGetUIntWrapper(virTypedParameterPtr params,
+			     int nparams,
+			     const char *name,
+			     unsigned int *value,
+			     virErrorPtr err);
+int
+virTypedParamsGetLLongWrapper(virTypedParameterPtr params,
+			      int nparams,
+			      const char *name,
+			      long long *value,
+			      virErrorPtr err);
+int
+virTypedParamsGetULLongWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       unsigned long long *value,
+			       virErrorPtr err);
+int
+virTypedParamsGetDoubleWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       double *value,
+			       virErrorPtr err);
+int
+virTypedParamsGetBooleanWrapper(virTypedParameterPtr params,
+				int nparams,
+				const char *name,
+				int *value,
+				virErrorPtr err);
+int
+virTypedParamsGetStringWrapper(virTypedParameterPtr params,
+			       int nparams,
+			       const char *name,
+			       const char **value,
+			       virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_TYPEDPARAMS_WRAPPER_H__ */
