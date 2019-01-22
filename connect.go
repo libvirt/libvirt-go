@@ -1738,22 +1738,22 @@ type NodeCPUStats struct {
 
 // See also https://libvirt.org/html/libvirt-libvirt-host.html#virNodeGetCPUStats
 func (c *Connect) GetCPUStats(cpuNum int, flags uint32) (*NodeCPUStats, error) {
-	var nparams C.int
+	var cnparams C.int
 
 	var err C.virError
-	ret := C.virNodeGetCPUStatsWrapper(c.ptr, C.int(cpuNum), nil, &nparams, C.uint(0), &err)
+	ret := C.virNodeGetCPUStatsWrapper(c.ptr, C.int(cpuNum), nil, &cnparams, C.uint(0), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	params := make([]C.virNodeCPUStats, nparams)
-	ret = C.virNodeGetCPUStatsWrapper(c.ptr, C.int(cpuNum), (*C.virNodeCPUStats)(unsafe.Pointer(&params[0])), &nparams, C.uint(flags), &err)
+	params := make([]C.virNodeCPUStats, cnparams)
+	ret = C.virNodeGetCPUStatsWrapper(c.ptr, C.int(cpuNum), (*C.virNodeCPUStats)(unsafe.Pointer(&params[0])), &cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
 	stats := &NodeCPUStats{}
-	for i := 0; i < int(nparams); i++ {
+	for i := 0; i < int(cnparams); i++ {
 		param := params[i]
 		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
 		switch field {
@@ -1897,21 +1897,21 @@ func (c *Connect) GetMemoryParameters(flags uint32) (*NodeMemoryParameters, erro
 	params := &NodeMemoryParameters{}
 	info := getMemoryParameterFieldInfo(params)
 
-	var nparams C.int
+	var cnparams C.int
 
 	var err C.virError
-	ret := C.virNodeGetMemoryParametersWrapper(c.ptr, nil, &nparams, C.uint(0), &err)
+	ret := C.virNodeGetMemoryParametersWrapper(c.ptr, nil, &cnparams, C.uint(0), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	cparams := make([]C.virTypedParameter, nparams)
-	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, C.uint(flags), &err)
+	cparams := make([]C.virTypedParameter, cnparams)
+	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams)
 
 	_, gerr := typedParamsUnpack(cparams, info)
 	if gerr != nil {
@@ -1934,22 +1934,22 @@ type NodeMemoryStats struct {
 
 // See also https://libvirt.org/html/libvirt-libvirt-host.html#virNodeGetMemoryStats
 func (c *Connect) GetMemoryStats(cellNum int, flags uint32) (*NodeMemoryStats, error) {
-	var nparams C.int
+	var cnparams C.int
 
 	var err C.virError
-	ret := C.virNodeGetMemoryStatsWrapper(c.ptr, C.int(cellNum), nil, &nparams, 0, &err)
+	ret := C.virNodeGetMemoryStatsWrapper(c.ptr, C.int(cellNum), nil, &cnparams, 0, &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	params := make([]C.virNodeMemoryStats, nparams)
-	ret = C.virNodeGetMemoryStatsWrapper(c.ptr, C.int(cellNum), (*C.virNodeMemoryStats)(unsafe.Pointer(&params[0])), &nparams, C.uint(flags), &err)
+	params := make([]C.virNodeMemoryStats, cnparams)
+	ret = C.virNodeGetMemoryStatsWrapper(c.ptr, C.int(cellNum), (*C.virNodeMemoryStats)(unsafe.Pointer(&params[0])), &cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
 	stats := &NodeMemoryStats{}
-	for i := 0; i < int(nparams); i++ {
+	for i := 0; i < int(cnparams); i++ {
 		param := params[i]
 		field := C.GoString((*C.char)(unsafe.Pointer(&param.field)))
 		switch field {
@@ -1995,28 +1995,28 @@ func (c *Connect) GetSecurityModel() (*NodeSecurityModel, error) {
 func (c *Connect) SetMemoryParameters(params *NodeMemoryParameters, flags uint32) error {
 	info := getMemoryParameterFieldInfo(params)
 
-	var nparams C.int
+	var cnparams C.int
 
 	var err C.virError
-	ret := C.virNodeGetMemoryParametersWrapper(c.ptr, nil, &nparams, 0, &err)
+	ret := C.virNodeGetMemoryParametersWrapper(c.ptr, nil, &cnparams, 0, &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
 
-	cparams := make([]C.virTypedParameter, nparams)
-	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &nparams, 0, &err)
+	cparams := make([]C.virTypedParameter, cnparams)
+	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &cnparams, 0, &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams)
+	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams)
 
 	gerr := typedParamsPack(cparams, info)
 	if gerr != nil {
 		return gerr
 	}
 
-	ret = C.virNodeSetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	ret = C.virNodeSetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
@@ -2967,17 +2967,17 @@ func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
 	info := getNodeSEVFieldInfo(params)
 
 	var cparams *C.virTypedParameter
-	var nparams C.int
+	var cnparams C.int
 
 	var err C.virError
-	ret := C.virNodeGetSEVInfoWrapper(c.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &nparams, C.uint(flags), &err)
+	ret := C.virNodeGetSEVInfoWrapper(c.ptr, (*C.virTypedParameterPtr)(unsafe.Pointer(&cparams)), &cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	defer C.virTypedParamsFree(cparams, nparams)
+	defer C.virTypedParamsFree(cparams, cnparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, nparams, info)
+	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
