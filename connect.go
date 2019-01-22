@@ -1995,28 +1995,15 @@ func (c *Connect) GetSecurityModel() (*NodeSecurityModel, error) {
 func (c *Connect) SetMemoryParameters(params *NodeMemoryParameters, flags uint32) error {
 	info := getMemoryParameterFieldInfo(params)
 
-	var cnparams C.int
-
-	var err C.virError
-	ret := C.virNodeGetMemoryParametersWrapper(c.ptr, nil, &cnparams, 0, &err)
-	if ret == -1 {
-		return makeError(&err)
-	}
-
-	cparams := make([]C.virTypedParameter, cnparams)
-	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &cnparams, 0, &err)
-	if ret == -1 {
-		return makeError(&err)
-	}
-
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams)
-
-	gerr := typedParamsPack(cparams, info)
+	cparams, cnparams, gerr := typedParamsPackNew(info)
 	if gerr != nil {
 		return gerr
 	}
 
-	ret = C.virNodeSetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams, C.uint(flags), &err)
+	defer C.virTypedParamsFree(cparams, cnparams)
+
+	var err C.virError
+	ret := C.virNodeSetMemoryParametersWrapper(c.ptr, cparams, cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
