@@ -32,6 +32,7 @@ package libvirt
 #include <libvirt/virterror.h>
 #include <stdlib.h>
 #include <string.h>
+#include "typedparams_wrapper.h"
 */
 import "C"
 
@@ -197,66 +198,70 @@ func typedParamsPack(cparams []C.virTypedParameter, infomap map[string]typedPara
 	return typedParamsPackLen(&cparams[0], len(cparams), infomap)
 }
 
-func typedParamsPackNew(infomap map[string]typedParamsFieldInfo) (*[]C.virTypedParameter, error) {
-	nparams := 0
-	for _, value := range infomap {
+func typedParamsPackNew(infomap map[string]typedParamsFieldInfo) (*C.virTypedParameter, C.int, error) {
+	var cparams C.virTypedParameterPtr
+	var nparams C.int
+	var maxparams C.int
+
+	defer C.virTypedParamsFree(cparams, nparams)
+
+	for name, value := range infomap {
 		if !*value.set {
 			continue
 		}
 
+		cname := C.CString(name)
+		defer C.free(unsafe.Pointer(cname))
 		if value.sl != nil {
-			nparams += len(*value.sl)
-		} else {
-			nparams++
-		}
-	}
-
-	cparams := make([]C.virTypedParameter, nparams)
-	nparams = 0
-	for key, value := range infomap {
-		if !*value.set {
-			continue
-		}
-
-		cfield := C.CString(key)
-		defer C.free(unsafe.Pointer(cfield))
-		clen := len(key) + 1
-		if clen > C.VIR_TYPED_PARAM_FIELD_LENGTH {
-			clen = C.VIR_TYPED_PARAM_FIELD_LENGTH
-		}
-		if value.sl != nil {
+			/* We're not actually using virTypedParamsAddStringList, as it is
+			 * easier to avoid creating a 'char **' in Go to hold all the strings.
+			 * We none the less do a version check, because earlier libvirts
+			 * would not expect to see multiple string values in a typed params
+			 * list with the same field name
+			 */
+			if C.LIBVIR_VERSION_NUMBER < 1002017 {
+				return nil, 0, makeNotImplementedError("virTypedParamsAddStringList")
+			}
 			for i := 0; i < len(*value.sl); i++ {
-				cparam := &cparams[nparams]
-				cparam._type = C.VIR_TYPED_PARAM_STRING
-				C.memcpy(unsafe.Pointer(&cparam.field[0]), unsafe.Pointer(cfield), C.size_t(clen))
-				nparams++
+				cvalue := C.CString((*value.sl)[i])
+				defer C.free(unsafe.Pointer(cvalue))
+				var err C.virError
+				ret := C.virTypedParamsAddStringWrapper(&cparams, &nparams, &maxparams, cname, cvalue, &err)
+				if ret < 0 {
+					return nil, 0, makeError(&err)
+				}
 			}
 		} else {
-			cparam := &cparams[nparams]
+			var err C.virError
+			var ret C.int
 			if value.i != nil {
-				cparam._type = C.VIR_TYPED_PARAM_INT
+				ret = C.virTypedParamsAddIntWrapper(&cparams, &nparams, &maxparams, cname, C.int(*value.i), &err)
 			} else if value.ui != nil {
-				cparam._type = C.VIR_TYPED_PARAM_UINT
+				ret = C.virTypedParamsAddUIntWrapper(&cparams, &nparams, &maxparams, cname, C.uint(*value.ui), &err)
 			} else if value.l != nil {
-				cparam._type = C.VIR_TYPED_PARAM_LLONG
+				ret = C.virTypedParamsAddLLongWrapper(&cparams, &nparams, &maxparams, cname, C.longlong(*value.l), &err)
 			} else if value.ul != nil {
-				cparam._type = C.VIR_TYPED_PARAM_ULLONG
+				ret = C.virTypedParamsAddULLongWrapper(&cparams, &nparams, &maxparams, cname, C.ulonglong(*value.ul), &err)
 			} else if value.b != nil {
-				cparam._type = C.VIR_TYPED_PARAM_BOOLEAN
+				v := 0
+				if *value.b {
+					v = 1
+				}
+				ret = C.virTypedParamsAddBooleanWrapper(&cparams, &nparams, &maxparams, cname, C.int(v), &err)
 			} else if value.d != nil {
-				cparam._type = C.VIR_TYPED_PARAM_DOUBLE
+				ret = C.virTypedParamsAddDoubleWrapper(&cparams, &nparams, &maxparams, cname, C.double(*value.i), &err)
 			} else if value.s != nil {
-				cparam._type = C.VIR_TYPED_PARAM_STRING
+				cvalue := C.CString(*value.s)
+				defer C.free(unsafe.Pointer(cvalue))
+				ret = C.virTypedParamsAddStringWrapper(&cparams, &nparams, &maxparams, cname, cvalue, &err)
+			} else {
+				return nil, 0, fmt.Errorf("No typed parameter value set for field '%s'", name)
 			}
-			C.memcpy(unsafe.Pointer(&cparam.field[0]), unsafe.Pointer(cfield), C.size_t(clen))
-			nparams++
+			if ret < 0 {
+				return nil, 0, makeError(&err)
+			}
 		}
 	}
 
-	err := typedParamsPack(cparams, infomap)
-	if err != nil {
-		C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), C.int(nparams))
-		return nil, err
-	}
-	return &cparams, nil
+	return cparams, nparams, nil
 }

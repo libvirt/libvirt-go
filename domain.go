@@ -2104,16 +2104,15 @@ func (d *Domain) BlockCopy(disk string, destxml string, params *DomainBlockCopyP
 
 	info := getBlockCopyParameterFieldInfo(params)
 
-	cparams, gerr := typedParamsPackNew(info)
+	cparams, cnparams, gerr := typedParamsPackNew(info)
 	if gerr != nil {
 		return gerr
 	}
-	nparams := len(*cparams)
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+	defer C.virTypedParamsFree(cparams, cnparams)
 
 	var err C.virError
-	ret := C.virDomainBlockCopyWrapper(d.ptr, cdisk, cdestxml, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams), C.uint(flags), &err)
+	ret := C.virDomainBlockCopyWrapper(d.ptr, cdisk, cdestxml, cparams, cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
@@ -2375,16 +2374,15 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 func (d *Domain) Migrate3(dconn *Connect, params *DomainMigrateParameters, flags DomainMigrateFlags) (*Domain, error) {
 
 	info := getMigrateParameterFieldInfo(params)
-	cparams, gerr := typedParamsPackNew(info)
+	cparams, cnparams, gerr := typedParamsPackNew(info)
 	if gerr != nil {
 		return nil, gerr
 	}
-	nparams := len(*cparams)
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+	defer C.virTypedParamsFree(cparams, cnparams)
 
 	var err C.virError
-	ret := C.virDomainMigrate3Wrapper(d.ptr, dconn.ptr, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.uint(nparams), C.uint(flags), &err)
+	ret := C.virDomainMigrate3Wrapper(d.ptr, dconn.ptr, cparams, C.uint(cnparams), C.uint(flags), &err)
 	if ret == nil {
 		return nil, makeError(&err)
 	}
@@ -2455,16 +2453,15 @@ func (d *Domain) MigrateToURI3(dconnuri string, params *DomainMigrateParameters,
 	}
 
 	info := getMigrateParameterFieldInfo(params)
-	cparams, gerr := typedParamsPackNew(info)
+	cparams, cnparams, gerr := typedParamsPackNew(info)
 	if gerr != nil {
 		return gerr
 	}
-	nparams := len(*cparams)
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+	defer C.virTypedParamsFree(cparams, cnparams)
 
 	var err C.virError
-	ret := C.virDomainMigrateToURI3Wrapper(d.ptr, cdconnuri, (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.uint(nparams), C.uint(flags), &err)
+	ret := C.virDomainMigrateToURI3Wrapper(d.ptr, cdconnuri, cparams, C.uint(cnparams), C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
@@ -4272,16 +4269,15 @@ func (d *Domain) SetIOThreadParams(iothreadid uint, params *DomainSetIOThreadPar
 	}
 	info := getSetIOThreadParamsFieldInfo(params)
 
-	cparams, gerr := typedParamsPackNew(info)
+	cparams, cnparams, gerr := typedParamsPackNew(info)
 	if gerr != nil {
 		return gerr
 	}
-	nparams := len(*cparams)
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams))
+	defer C.virTypedParamsFree(cparams, cnparams)
 
 	var err C.virError
-	ret := C.virDomainSetIOThreadParamsWrapper(d.ptr, C.uint(iothreadid), (*C.virTypedParameter)(unsafe.Pointer(&(*cparams)[0])), C.int(nparams), C.uint(flags), &err)
+	ret := C.virDomainSetIOThreadParamsWrapper(d.ptr, C.uint(iothreadid), cparams, cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}

@@ -77,12 +77,16 @@ func TestPackUnpack(t *testing.T) {
 		sl:  &got3,
 	}
 
-	params, err := typedParamsPackNew(infoin)
+	params, nparams, err := typedParamsPackNew(infoin)
 	if err != nil {
+		lverr, ok := err.(Error)
+		if ok && lverr.Code == ERR_NO_SUPPORT {
+			return
+		}
 		t.Fatal(err)
 	}
 
-	nout, err := typedParamsUnpack(*params, infoout)
+	nout, err := typedParamsUnpackLen(params, int(nparams), infoout)
 	if err != nil {
 		t.Fatal(err)
 	}
