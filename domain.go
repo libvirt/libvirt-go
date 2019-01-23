@@ -1195,7 +1195,7 @@ func (d *Domain) GetCPUStats(startCpu int, nCpus uint, flags uint32) ([]DomainCP
 		var cparamscpu *C.virTypedParameter
 		cparamscpu = (*C.virTypedParameter)(unsafe.Pointer(uintptr(unsafe.Pointer(cparams)) +
 			(unsafe.Sizeof(*cparams) * uintptr(coffset))))
-		_, gerr := typedParamsUnpackLen(cparamscpu, cnparams, info)
+		_, gerr := typedParamsUnpack(cparamscpu, cnparams, info)
 		if gerr != nil {
 			return []DomainCPUStats{}, gerr
 		}
@@ -1275,7 +1275,7 @@ func (d *Domain) GetInterfaceParameters(device string, flags DomainModificationI
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -1665,7 +1665,7 @@ func (d *Domain) BlockStatsFlags(disk string, flags uint32) (*DomainBlockStats, 
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -2609,7 +2609,7 @@ func (d *Domain) GetBlkioParameters(flags DomainModificationImpact) (*DomainBlki
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -2787,7 +2787,7 @@ func (d *Domain) GetBlockIoTune(disk string, flags DomainModificationImpact) (*D
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3165,7 +3165,7 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 	params := DomainJobInfo{}
 	info := getDomainJobInfoFieldInfo(&params)
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3259,7 +3259,7 @@ func (d *Domain) GetMemoryParameters(flags DomainModificationImpact) (*DomainMem
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3326,7 +3326,7 @@ func (d *Domain) GetNumaParameters(flags DomainModificationImpact) (*DomainNumaP
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3515,7 +3515,7 @@ func (d *Domain) GetPerfEvents(flags DomainModificationImpact) (*DomainPerfEvent
 
 	defer C.virTypedParamsFree(cparams, cnparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3665,7 +3665,7 @@ func (d *Domain) GetSchedulerParameters() (*DomainSchedulerParameters, error) {
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -3699,7 +3699,7 @@ func (d *Domain) GetSchedulerParametersFlags(flags DomainModificationImpact) (*D
 		return nil, makeError(&err)
 	}
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -4534,7 +4534,7 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 
 	defer C.virTypedParamsFree(cparams, C.int(cnparams))
 
-	_, gerr := typedParamsUnpackLen(cparams, C.int(cnparams), info)
+	_, gerr := typedParamsUnpack(cparams, C.int(cnparams), info)
 	if gerr != nil {
 		return nil, gerr
 	}
@@ -4751,7 +4751,7 @@ func (d *Domain) GetLaunchSecurityInfo(flags uint32) (*DomainLaunchSecurityParam
 
 	defer C.virTypedParamsFree(cparams, cnparams)
 
-	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
+	_, gerr := typedParamsUnpack(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}

@@ -53,7 +53,7 @@ type typedParamsFieldInfo struct {
 	sl  *[]string
 }
 
-func typedParamsUnpackLen(cparams *C.virTypedParameter, cnparams C.int, infomap map[string]typedParamsFieldInfo) (uint, error) {
+func typedParamsUnpack(cparams *C.virTypedParameter, cnparams C.int, infomap map[string]typedParamsFieldInfo) (uint, error) {
 	count := uint(0)
 	for name, value := range infomap {
 		var err C.virError

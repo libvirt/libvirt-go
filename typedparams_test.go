@@ -86,7 +86,7 @@ func TestPackUnpack(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	nout, err := typedParamsUnpackLen(params, nparams, infoout)
+	nout, err := typedParamsUnpack(params, nparams, infoout)
 	if err != nil {
 		t.Fatal(err)
 	}
