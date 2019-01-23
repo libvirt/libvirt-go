@@ -9,13 +9,15 @@ go:
   - 1.7
   - 1.8
   - 1.9
+  - 1.10
+  - 1.11
 
 env:
   - LIBVIRT=1.2.0  EXT=gz TEST_ARGS=
-  - LIBVIRT=1.2.10 EXT=gz TEST_ARGS=
   - LIBVIRT=1.2.20 EXT=gz TEST_ARGS="-tags integration"
   - LIBVIRT=2.5.0  EXT=xz TEST_ARGS="-tags integration"
   - LIBVIRT=3.6.0  EXT=xz TEST_ARGS="-tags integration"
+  - LIBVIRT=4.10.0  EXT=xz TEST_ARGS="-tags integration"
 
 install:
   - sudo apt-get -qqy build-dep libvirt
