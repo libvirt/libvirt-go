@@ -1,6 +1,6 @@
 language: go
 os: linux
-dist: trusty
+dist: xenial
 sudo: require
 
 go:
@@ -11,11 +11,11 @@ go:
   - 1.9
 
 env:
-  - LIBVIRT=1.2.0  EXT=gz
-  - LIBVIRT=1.2.10 EXT=gz
-  - LIBVIRT=1.2.20 EXT=gz
-  - LIBVIRT=2.5.0  EXT=xz
-  - LIBVIRT=3.6.0  EXT=xz
+  - LIBVIRT=1.2.0  EXT=gz TEST_ARGS=
+  - LIBVIRT=1.2.10 EXT=gz TEST_ARGS=
+  - LIBVIRT=1.2.20 EXT=gz TEST_ARGS="-tags integration"
+  - LIBVIRT=2.5.0  EXT=xz TEST_ARGS="-tags integration"
+  - LIBVIRT=3.6.0  EXT=xz TEST_ARGS="-tags integration"
 
 install:
   - sudo apt-get -qqy build-dep libvirt
@@ -39,4 +39,4 @@ install:
   - echo "pass" | sudo saslpasswd2 -p -a libvirt user
 
 script:
-  go test -timeout 1m -tags "integration" -v
+  go test -timeout 1m $TEST_ARGS -v
