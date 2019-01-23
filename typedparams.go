@@ -131,8 +131,15 @@ func typedParamsUnpackLen(cparams *C.virTypedParameter, cnparams C.int, infomap 
 	return count, nil
 }
 
-func typedParamsUnpack(cparams []C.virTypedParameter, infomap map[string]typedParamsFieldInfo) (uint, error) {
-	return typedParamsUnpackLen(&cparams[0], C.int(len(cparams)), infomap)
+func typedParamsNew(nparams C.int) *C.virTypedParameter {
+	var cparams *C.virTypedParameter
+	memlen := C.size_t(unsafe.Sizeof(*cparams) * uintptr(nparams))
+	cparams = (*C.virTypedParameter)(C.malloc(memlen))
+	if cparams == nil {
+		C.abort()
+	}
+	C.memset(unsafe.Pointer(cparams), 0, memlen)
+	return cparams
 }
 
 func typedParamsPackNew(infomap map[string]typedParamsFieldInfo) (*C.virTypedParameter, C.int, error) {

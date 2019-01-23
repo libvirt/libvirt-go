@@ -1905,15 +1905,14 @@ func (c *Connect) GetMemoryParameters(flags uint32) (*NodeMemoryParameters, erro
 		return nil, makeError(&err)
 	}
 
-	cparams := make([]C.virTypedParameter, cnparams)
-	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), &cnparams, C.uint(flags), &err)
+	cparams := typedParamsNew(cnparams)
+	defer C.virTypedParamsFree(cparams, cnparams)
+	ret = C.virNodeGetMemoryParametersWrapper(c.ptr, cparams, &cnparams, C.uint(flags), &err)
 	if ret == -1 {
 		return nil, makeError(&err)
 	}
 
-	defer C.virTypedParamsClear((*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), cnparams)
-
-	_, gerr := typedParamsUnpack(cparams, info)
+	_, gerr := typedParamsUnpackLen(cparams, cnparams, info)
 	if gerr != nil {
 		return nil, gerr
 	}
