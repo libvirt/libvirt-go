@@ -1312,6 +1312,9 @@ func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfacePa
 	}
 
 	ret = C.virDomainSetInterfaceParametersWrapper(d.ptr, cdevice, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -2658,6 +2661,9 @@ func (d *Domain) SetBlkioParameters(params *DomainBlkioParameters, flags DomainM
 	}
 
 	ret = C.virDomainSetBlkioParametersWrapper(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -2850,6 +2856,9 @@ func (d *Domain) SetBlockIoTune(disk string, params *DomainBlockIoTuneParameters
 	}
 
 	ret = C.virDomainSetBlockIoTuneWrapper(d.ptr, cdisk, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -3330,6 +3339,9 @@ func (d *Domain) SetMemoryParameters(params *DomainMemoryParameters, flags Domai
 	}
 
 	ret = C.virDomainSetMemoryParametersWrapper(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -3408,6 +3420,9 @@ func (d *Domain) SetNumaParameters(params *DomainNumaParameters, flags DomainMod
 	}
 
 	ret = C.virDomainSetNumaParametersWrapper(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -3605,6 +3620,9 @@ func (d *Domain) SetPerfEvents(params *DomainPerfEvents, flags DomainModificatio
 	}
 
 	ret = C.virDomainSetPerfEventsWrapper(d.ptr, cparams, nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -3799,6 +3817,9 @@ func (d *Domain) SetSchedulerParameters(params *DomainSchedulerParameters) error
 	}
 
 	ret = C.virDomainSetSchedulerParametersWrapper(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
@@ -3832,6 +3853,9 @@ func (d *Domain) SetSchedulerParametersFlags(params *DomainSchedulerParameters, 
 	}
 
 	ret = C.virDomainSetSchedulerParametersFlagsWrapper(d.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }

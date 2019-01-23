@@ -2017,6 +2017,9 @@ func (c *Connect) SetMemoryParameters(params *NodeMemoryParameters, flags uint32
 	}
 
 	ret = C.virNodeSetMemoryParametersWrapper(c.ptr, (*C.virTypedParameter)(unsafe.Pointer(&cparams[0])), nparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
 
 	return nil
 }
