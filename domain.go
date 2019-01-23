@@ -4522,23 +4522,26 @@ func (d *Domain) SaveFlags(destFile string, destXml string, flags DomainSaveRest
 }
 
 type DomainGuestVcpus struct {
-	Vcpus      []bool
-	Online     []bool
-	Offlinable []bool
+	VcpusSet      bool
+	Vcpus         []bool
+	OnlineSet     bool
+	Online        []bool
+	OfflinableSet bool
+	Offlinable    []bool
 }
 
-func getDomainGuestVcpusParametersFieldInfo(VcpusSet *bool, Vcpus *string, OnlineSet *bool, Online *string, OfflinableSet *bool, Offlinable *string) map[string]typedParamsFieldInfo {
+func getDomainGuestVcpusParametersFieldInfo(vcpus *DomainGuestVcpus, Vcpus *string, Online *string, Offlinable *string) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
 		"vcpus": typedParamsFieldInfo{
-			set: VcpusSet,
+			set: &vcpus.VcpusSet,
 			s:   Vcpus,
 		},
 		"online": typedParamsFieldInfo{
-			set: OnlineSet,
+			set: &vcpus.OnlineSet,
 			s:   Online,
 		},
 		"offlinable": typedParamsFieldInfo{
-			set: OfflinableSet,
+			set: &vcpus.OfflinableSet,
 			s:   Offlinable,
 		},
 	}
@@ -4607,9 +4610,9 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 		return nil, makeNotImplementedError("virDomainGetGuestVcpus")
 	}
 
-	var VcpusSet, OnlineSet, OfflinableSet bool
+	vcpus := &DomainGuestVcpus{}
 	var VcpusStr, OnlineStr, OfflinableStr string
-	info := getDomainGuestVcpusParametersFieldInfo(&VcpusSet, &VcpusStr, &OnlineSet, &OnlineStr, &OfflinableSet, &OfflinableStr)
+	info := getDomainGuestVcpusParametersFieldInfo(vcpus, &VcpusStr, &OnlineStr, &OfflinableStr)
 
 	var cparams C.virTypedParameterPtr
 	var nparams C.uint
@@ -4626,7 +4629,29 @@ func (d *Domain) GetGuestVcpus(flags uint32) (*DomainGuestVcpus, error) {
 		return nil, gerr
 	}
 
-	return &DomainGuestVcpus{}, nil
+	if vcpus.VcpusSet {
+		mask, gerr := parseCPUString(VcpusStr)
+		if gerr != nil {
+			return nil, gerr
+		}
+		vcpus.Vcpus = mask
+	}
+	if vcpus.OnlineSet {
+		mask, gerr := parseCPUString(OnlineStr)
+		if gerr != nil {
+			return nil, gerr
+		}
+		vcpus.Online = mask
+	}
+	if vcpus.OfflinableSet {
+		mask, gerr := parseCPUString(OfflinableStr)
+		if gerr != nil {
+			return nil, gerr
+		}
+		vcpus.Offlinable = mask
+	}
+
+	return vcpus, nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetGuestVcpus
