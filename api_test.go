@@ -161,24 +161,10 @@ var (
 		"virStorageVolGetConnect",
 
 		/* Only needed at C level */
-		"virTypedParamsAddBoolean",
-		"virTypedParamsAddDouble",
 		"virTypedParamsAddFromString",
-		"virTypedParamsAddInt",
-		"virTypedParamsAddLLong",
-		"virTypedParamsAddString",
 		"virTypedParamsAddStringList",
-		"virTypedParamsAddUInt",
-		"virTypedParamsAddULLong",
 		"virTypedParamsGet",
-		"virTypedParamsGetBoolean",
-		"virTypedParamsGetDouble",
-		"virTypedParamsGetInt",
-		"virTypedParamsGetLLong",
-		"virTypedParamsGetString",
-		"virTypedParamsGetUInt",
-		"virTypedParamsGetULLong",
-		"virTypedParamsFree",
+		"virTypedParamsClear",
 	}
 
 	ignoreMacros = []string{
@@ -220,6 +206,7 @@ var (
 		"VIR_STORAGE_POOL_EVENT_CALLBACK",
 		"VIR_UNUSE_CPU",
 		"VIR_USE_CPU",
+		"VIR_TYPED_PARAM_FIELD_LENGTH",
 	}
 
 	ignoreEnums = []string{
@@ -245,6 +232,13 @@ var (
 		"VIR_DOMAIN_SCHED_FIELD_ULLONG",
 
 		"VIR_TYPED_PARAM_STRING_OKAY",
+		"VIR_TYPED_PARAM_BOOLEAN",
+		"VIR_TYPED_PARAM_DOUBLE",
+		"VIR_TYPED_PARAM_INT",
+		"VIR_TYPED_PARAM_LLONG",
+		"VIR_TYPED_PARAM_STRING",
+		"VIR_TYPED_PARAM_UINT",
+		"VIR_TYPED_PARAM_ULLONG",
 	}
 )
 
