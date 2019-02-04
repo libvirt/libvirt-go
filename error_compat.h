@@ -163,4 +163,10 @@
 #define VIR_ERR_NO_NWFILTER_BINDING 101
 #endif
 
+/* 5.1.0 */
+
+#ifndef VIR_FROM_FIREWALLD
+#define VIR_FROM_FIREWALLD 68
+#endif
+
 #endif /* LIBVIRT_GO_ERROR_COMPAT_H__ */

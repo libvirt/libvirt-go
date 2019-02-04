@@ -569,6 +569,9 @@ const (
 
 	// Error from resoruce control
 	FROM_RESCTRL = ErrorDomain(C.VIR_FROM_RESCTRL)
+
+	// Error from firewalld
+	FROM_FIREWALLD = ErrorDomain(C.VIR_FROM_FIREWALLD)
 )
 
 type Error struct {
