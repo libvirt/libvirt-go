@@ -944,4 +944,8 @@ struct _virDomainInterface {
 #define VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY "bandwidth.postcopy"
 #endif
 
+#ifndef VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY
+#define VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY (1 << 0)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

@@ -811,6 +811,12 @@ const (
 	MIGRATE_TLS               = DomainMigrateFlags(C.VIR_MIGRATE_TLS)
 )
 
+type DomainMigrateMaxSpeedFlags int
+
+const (
+	MIGRATE_MAX_SPEED_POSTCOPY = DomainMigrateMaxSpeedFlags(C.VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY)
+)
+
 type VcpuState int
 
 const (
@@ -2484,7 +2490,7 @@ func (d *Domain) MigrateSetCompressionCache(size uint64, flags uint32) error {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainMigrateGetMaxSpeed
-func (d *Domain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
+func (d *Domain) MigrateGetMaxSpeed(flags DomainMigrateMaxSpeedFlags) (uint64, error) {
 	var maxSpeed C.ulong
 
 	var err C.virError
@@ -2497,7 +2503,7 @@ func (d *Domain) MigrateGetMaxSpeed(flags uint32) (uint64, error) {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainMigrateSetMaxSpeed
-func (d *Domain) MigrateSetMaxSpeed(speed uint64, flags uint32) error {
+func (d *Domain) MigrateSetMaxSpeed(speed uint64, flags DomainMigrateMaxSpeedFlags) error {
 	var err C.virError
 	ret := C.virDomainMigrateSetMaxSpeedWrapper(d.ptr, C.ulong(speed), C.uint(flags), &err)
 	if ret == -1 {
