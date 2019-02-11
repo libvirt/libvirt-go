@@ -939,4 +939,9 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_JOB_MEMORY_POSTCOPY_REQS "memory_postcopy_requests"
 #endif
 
+/* 5.1.0 */
+#ifndef VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY
+#define VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY "bandwidth.postcopy"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

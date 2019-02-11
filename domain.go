@@ -2309,6 +2309,10 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 			set: &params.BandwidthSet,
 			ul:  &params.Bandwidth,
 		},
+		C.VIR_MIGRATE_PARAM_BANDWIDTH_POSTCOPY: typedParamsFieldInfo{
+			set: &params.BandwidthSet,
+			ul:  &params.Bandwidth,
+		},
 		C.VIR_MIGRATE_PARAM_GRAPHICS_URI: typedParamsFieldInfo{
 			set: &params.GraphicsURISet,
 			s:   &params.GraphicsURI,
