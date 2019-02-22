@@ -952,4 +952,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_SNAPSHOT_XML_SECURE (1 << 0)
 #endif
 
+#ifndef VIR_DOMAIN_SAVE_IMAGE_XML_SECURE
+#define VIR_DOMAIN_SAVE_IMAGE_XML_SECURE (1 << 0)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

@@ -817,6 +817,12 @@ const (
 	MIGRATE_MAX_SPEED_POSTCOPY = DomainMigrateMaxSpeedFlags(C.VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY)
 )
 
+type DomainSaveImageXMLFlags int
+
+const (
+	VIR_DOMAIN_SAVE_IMAGE_XML_SECURE = DomainSaveImageXMLFlags(C.VIR_DOMAIN_SAVE_IMAGE_XML_SECURE)
+)
+
 type VcpuState int
 
 const (
@@ -4677,7 +4683,7 @@ func (d *Domain) ManagedSaveDefineXML(xml string, flags uint32) error {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainManagedSaveGetXMLDesc
-func (d *Domain) ManagedSaveGetXMLDesc(flags uint32) (string, error) {
+func (d *Domain) ManagedSaveGetXMLDesc(flags DomainSaveImageXMLFlags) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 3007000 {
 		return "", makeNotImplementedError("virDomainManagedSaveGetXMLDesc")
 	}
