@@ -28,7 +28,7 @@
 
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
-
+#include "domain_compat.h"
 
 int
 virDomainRevertToSnapshotWrapper(virDomainSnapshotPtr snapshot,

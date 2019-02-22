@@ -84,6 +84,12 @@ const (
 	DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY = DomainSnapshotDeleteFlags(C.VIR_DOMAIN_SNAPSHOT_DELETE_CHILDREN_ONLY)
 )
 
+type DomainSnapshotXMLFlags int
+
+const (
+	DOMAIN_SNAPSHOT_XML_SECURE      = DomainSnapshotXMLFlags(C.VIR_DOMAIN_SNAPSHOT_XML_SECURE)
+)
+
 type DomainSnapshot struct {
 	ptr C.virDomainSnapshotPtr
 }

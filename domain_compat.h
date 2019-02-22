@@ -948,4 +948,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY (1 << 0)
 #endif
 
+#ifndef VIR_DOMAIN_SNAPSHOT_XML_SECURE
+#define VIR_DOMAIN_SNAPSHOT_XML_SECURE (1 << 0)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
