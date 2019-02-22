@@ -2038,7 +2038,7 @@ func (c *Connect) DomainSaveImageDefineXML(file string, xml string, flags Domain
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSaveImageGetXMLDesc
-func (c *Connect) DomainSaveImageGetXMLDesc(file string, flags DomainXMLFlags) (string, error) {
+func (c *Connect) DomainSaveImageGetXMLDesc(file string, flags DomainSaveImageXMLFlags) (string, error) {
 	cfile := C.CString(file)
 	defer C.free(unsafe.Pointer(cfile))
 

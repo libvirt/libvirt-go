@@ -161,7 +161,7 @@ func (s *DomainSnapshot) HasMetadata(flags uint32) (bool, error) {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain-snapshot.html#virDomainSnapshotGetXMLDesc
-func (s *DomainSnapshot) GetXMLDesc(flags DomainXMLFlags) (string, error) {
+func (s *DomainSnapshot) GetXMLDesc(flags DomainSnapshotXMLFlags) (string, error) {
 	var err C.virError
 	result := C.virDomainSnapshotGetXMLDescWrapper(s.ptr, C.uint(flags), &err)
 	if result == nil {
