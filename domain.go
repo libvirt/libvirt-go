@@ -820,7 +820,7 @@ const (
 type DomainSaveImageXMLFlags int
 
 const (
-	VIR_DOMAIN_SAVE_IMAGE_XML_SECURE = DomainSaveImageXMLFlags(C.VIR_DOMAIN_SAVE_IMAGE_XML_SECURE)
+	DOMAIN_SAVE_IMAGE_XML_SECURE = DomainSaveImageXMLFlags(C.VIR_DOMAIN_SAVE_IMAGE_XML_SECURE)
 )
 
 type VcpuState int
