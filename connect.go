@@ -2985,3 +2985,20 @@ func (c *Connect) NWFilterBindingCreateXML(xmlConfig string, flags uint32) (*NWF
 	}
 	return &NWFilterBinding{ptr: ptr}, nil
 }
+
+// See also https://libvirt.org/html/libvirt-libvirt-storage.html#virConnectGetStoragePoolCapabilities
+func (c *Connect) GetStoragePoolCapabilities(flags uint32) (string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 5002000 {
+		return "", makeNotImplementedError("virConnectGetStoragePoolCapabilities")
+	}
+
+	var err C.virError
+	ret := C.virConnectGetStoragePoolCapabilitiesWrapper(c.ptr, C.uint(flags), &err)
+	if ret == nil {
+		return "", makeError(&err)
+	}
+
+	defer C.free(unsafe.Pointer(ret))
+
+	return C.GoString(ret), nil
+}
