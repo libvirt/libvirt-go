@@ -29,6 +29,7 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <stdlib.h>
+#include "domain_snapshot_compat.h"
 #include "domain_snapshot_wrapper.h"
 */
 import "C"
@@ -66,6 +67,7 @@ const (
 	DOMAIN_SNAPSHOT_LIST_DISK_ONLY   = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_DISK_ONLY)
 	DOMAIN_SNAPSHOT_LIST_INTERNAL    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_INTERNAL)
 	DOMAIN_SNAPSHOT_LIST_EXTERNAL    = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_EXTERNAL)
+	DOMAIN_SNAPSHOT_LIST_TOPOLOGICAL = DomainSnapshotListFlags(C.VIR_DOMAIN_SNAPSHOT_LIST_TOPOLOGICAL)
 )
 
 type DomainSnapshotRevertFlags int
