@@ -29,7 +29,6 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <stdlib.h>
-#include "domain_snapshot_compat.h"
 #include "domain_snapshot_wrapper.h"
 */
 import "C"
