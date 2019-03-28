@@ -956,4 +956,14 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_SAVE_IMAGE_XML_SECURE (1 << 0)
 #endif
 
+/* 5.2.0 */
+
+#ifndef VIR_MIGRATE_PARALLEL
+#define VIR_MIGRATE_PARALLEL (1 << 17)
+#endif
+
+#ifndef VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS
+#define VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS "parallel.connections"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

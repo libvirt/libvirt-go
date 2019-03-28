@@ -809,6 +809,7 @@ const (
 	MIGRATE_RDMA_PIN_ALL      = DomainMigrateFlags(C.VIR_MIGRATE_RDMA_PIN_ALL)
 	MIGRATE_POSTCOPY          = DomainMigrateFlags(C.VIR_MIGRATE_POSTCOPY)
 	MIGRATE_TLS               = DomainMigrateFlags(C.VIR_MIGRATE_TLS)
+	MIGRATE_PARALLEL          = DomainMigrateFlags(C.VIR_MIGRATE_PARALLEL)
 )
 
 type DomainMigrateMaxSpeedFlags int
@@ -2297,6 +2298,8 @@ type DomainMigrateParameters struct {
 	AutoConvergeInitial       int
 	AutoConvergeIncrementSet  bool
 	AutoConvergeIncrement     int
+	ParallelConnectionsSet    bool
+	ParallelConnections       int
 }
 
 func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]typedParamsFieldInfo {
@@ -2368,6 +2371,10 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 		C.VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT: typedParamsFieldInfo{
 			set: &params.AutoConvergeIncrementSet,
 			i:   &params.AutoConvergeIncrement,
+		},
+		C.VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS: typedParamsFieldInfo{
+			set: &params.ParallelConnectionsSet,
+			i:   &params.ParallelConnections,
 		},
 	}
 }
