@@ -263,5 +263,78 @@ virNetworkUpdateWrapper(virNetworkPtr network,
 }
 
 
+virNetworkPortPtr
+virNetworkPortLookupByUUIDWrapper(virNetworkPtr net,
+				  const unsigned char *uuid,
+				  virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 5005000
+    assert(0); // Caller should have checked version
+#else
+    virNetworkPortPtr ret;
+    ret = virNetworkPortLookupByUUID(net, uuid);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+virNetworkPortPtr
+virNetworkPortLookupByUUIDStringWrapper(virNetworkPtr net,
+					const char *uuidstr,
+					virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 5005000
+    assert(0); // Caller should have checked version
+#else
+    virNetworkPortPtr ret;
+    ret = virNetworkPortLookupByUUIDString(net, uuidstr);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
+virNetworkPortPtr
+virNetworkPortCreateXMLWrapper(virNetworkPtr net,
+			       const char *xmldesc,
+			       unsigned int flags,
+			       virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 5005000
+    assert(0); // Caller should have checked version
+#else
+    virNetworkPortPtr ret;
+    ret = virNetworkPortCreateXML(net, xmldesc, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
+int
+virNetworkListAllPortsWrapper(virNetworkPtr network,
+			      virNetworkPortPtr **ports,
+			      unsigned int flags,
+			      virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 5005000
+    assert(0); // Caller should have checked version
+#else
+    int ret;
+    ret = virNetworkListAllPorts(network, ports, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
 */
 import "C"
