@@ -123,7 +123,7 @@ func (n *NetworkPort) Delete(flags uint) error {
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkPortGetXMLDesc
 func (d *NetworkPort) GetXMLDesc(flags uint) (string, error) {
 	if C.LIBVIR_VERSION_NUMBER < 5005000 {
-		return makeNotImplementedError("virNetworkPortDelete")
+		return "", makeNotImplementedError("virNetworkPortDelete")
 	}
 
 	var err C.virError
