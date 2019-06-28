@@ -371,6 +371,15 @@ const (
 
 	// domain backup job id not found *
 	ERR_NO_DOMAIN_BACKUP = ErrorNumber(C.VIR_ERR_NO_DOMAIN_BACKUP)
+
+	// invalid network port object
+	ERR_INVALID_NETWORK_PORT = ErrorNumber(C.VIR_ERR_INVALID_NETWORK_PORT)
+
+	// network port already exists
+	ERR_NETWORK_PORT_EXIST = ErrorNumber(C.VIR_ERR_NETWORK_PORT_EXIST)
+
+	// network port not found
+	ERR_NO_NETWORK_PORT = ErrorNumber(C.VIR_ERR_NO_NETWORK_PORT)
 )
 
 type ErrorDomain int
