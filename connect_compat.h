@@ -197,4 +197,10 @@ typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
 #define VIR_CONNECT_GET_ALL_DOMAINS_STATS_NOWAIT 1 << 29
 #endif
 
+/* 5.6.0 */
+
+#ifndef VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI_DIRECT
+#define VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI_DIRECT 1 << 19
+#endif
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
