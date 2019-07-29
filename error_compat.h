@@ -201,4 +201,10 @@
 #define VIR_ERR_NO_NETWORK_PORT 107
 #endif
 
+/* 5.6.0 */
+
+#ifndef VIR_FROM_TPM
+#define VIR_FROM_TPM 70
+#endif
+
 #endif /* LIBVIRT_GO_ERROR_COMPAT_H__ */
