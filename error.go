@@ -593,6 +593,9 @@ const (
 
 	// Error from domain checkpoint
 	FROM_DOMAIN_CHECKPOINT = ErrorDomain(C.VIR_FROM_DOMAIN_CHECKPOINT)
+
+	// Error from TPM
+	FROM_TPM = ErrorDomain(C.VIR_FROM_TPM)
 )
 
 type Error struct {
