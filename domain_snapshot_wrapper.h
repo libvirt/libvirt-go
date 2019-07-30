@@ -45,14 +45,6 @@ int
 virDomainSnapshotFreeWrapper(virDomainSnapshotPtr snapshot,
                              virErrorPtr err);
 
-virConnectPtr
-virDomainSnapshotGetConnectWrapper(virDomainSnapshotPtr snapshot,
-                                   virErrorPtr err);
-
-virDomainPtr
-virDomainSnapshotGetDomainWrapper(virDomainSnapshotPtr snapshot,
-                                  virErrorPtr err);
-
 const char *
 virDomainSnapshotGetNameWrapper(virDomainSnapshotPtr snapshot,
                                 virErrorPtr err);

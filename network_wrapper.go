@@ -103,18 +103,6 @@ virNetworkGetBridgeNameWrapper(virNetworkPtr network,
 }
 
 
-virConnectPtr
-virNetworkGetConnectWrapper(virNetworkPtr net,
-                            virErrorPtr err)
-{
-    virConnectPtr ret = virNetworkGetConnect(net);
-    if (!ret) {
-        virCopyLastError(err);
-    }
-    return ret;
-}
-
-
 int
 virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
                                const char *mac,
