@@ -990,5 +990,22 @@ virDomainUpdateDeviceFlagsWrapper(virDomainPtr domain,
                                   unsigned int flags,
                                   virErrorPtr err);
 
+int
+virDomainListAllCheckpointsWrapper(virDomainPtr domain,
+				   virDomainCheckpointPtr **cps,
+				   unsigned int flags,
+				   virErrorPtr err);
+
+virDomainCheckpointPtr
+virDomainCheckpointCreateXMLWrapper(virDomainPtr domain,
+				    const char *xmlDesc,
+				    unsigned int flags,
+				    virErrorPtr err);
+
+virDomainCheckpointPtr
+virDomainCheckpointLookupByNameWrapper(virDomainPtr domain,
+				       const char *name,
+				       unsigned int flags,
+				       virErrorPtr err);
 
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */
