@@ -977,4 +977,11 @@ struct _virDomainInterface {
 #endif
 
 
+/* 5.6.0 */
+
+#ifndef VIR_DOMAIN_UNDEFINE_CHECKPOINTS_METADATA
+# define VIR_DOMAIN_UNDEFINE_CHECKPOINTS_METADATA (1 << 4)
+#endif
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
