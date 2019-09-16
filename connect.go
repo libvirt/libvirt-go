@@ -495,6 +495,90 @@ func closeCallback(conn C.virConnectPtr, reason ConnectCloseReason, goCallbackId
 	callback(&Connect{ptr: conn}, reason)
 }
 
+type ConnectIdentity struct {
+	UserNameSet              bool
+	UserName                 string
+	UNIXUserIDSet            bool
+	UNIXUserID               uint64
+	GroupNameSet             bool
+	GroupName                string
+	UNIXGroupIDSet           bool
+	UNIXGroupID              uint64
+	ProcessIDSet             bool
+	ProcessID                int64
+	ProcessTimeSet           bool
+	ProcessTime              uint64
+	SASLUserNameSet          bool
+	SASLUserName             string
+	X509DistinguishedNameSet bool
+	X509DistinguishedName    string
+	SELinuxContextSet        bool
+	SELinuxContext           string
+}
+
+func getConnectIdentityFieldInfo(params *ConnectIdentity) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		C.VIR_CONNECT_IDENTITY_USER_NAME: typedParamsFieldInfo{
+			set: &params.UserNameSet,
+			s:   &params.UserName,
+		},
+		C.VIR_CONNECT_IDENTITY_UNIX_USER_ID: typedParamsFieldInfo{
+			set: &params.UNIXUserIDSet,
+			ul:  &params.UNIXUserID,
+		},
+		C.VIR_CONNECT_IDENTITY_GROUP_NAME: typedParamsFieldInfo{
+			set: &params.GroupNameSet,
+			s:   &params.GroupName,
+		},
+		C.VIR_CONNECT_IDENTITY_UNIX_GROUP_ID: typedParamsFieldInfo{
+			set: &params.UNIXGroupIDSet,
+			ul:  &params.UNIXGroupID,
+		},
+		C.VIR_CONNECT_IDENTITY_PROCESS_ID: typedParamsFieldInfo{
+			set: &params.ProcessIDSet,
+			l:   &params.ProcessID,
+		},
+		C.VIR_CONNECT_IDENTITY_PROCESS_TIME: typedParamsFieldInfo{
+			set: &params.ProcessTimeSet,
+			ul:  &params.ProcessTime,
+		},
+		C.VIR_CONNECT_IDENTITY_SASL_USER_NAME: typedParamsFieldInfo{
+			set: &params.SASLUserNameSet,
+			s:   &params.SASLUserName,
+		},
+		C.VIR_CONNECT_IDENTITY_X509_DISTINGUISHED_NAME: typedParamsFieldInfo{
+			set: &params.X509DistinguishedNameSet,
+			s:   &params.X509DistinguishedName,
+		},
+		C.VIR_CONNECT_IDENTITY_SELINUX_CONTEXT: typedParamsFieldInfo{
+			set: &params.SELinuxContextSet,
+			s:   &params.SELinuxContext,
+		},
+	}
+}
+
+func (c *Connect) SetIdentity(ident *ConnectIdentity, flags uint) error {
+	if C.LIBVIR_VERSION_NUMBER < 5008000 {
+		return makeNotImplementedError("virConnectSetIdentity")
+	}
+	info := getConnectIdentityFieldInfo(ident)
+
+	cparams, cnparams, gerr := typedParamsPackNew(info)
+	if gerr != nil {
+		return gerr
+	}
+
+	defer C.virTypedParamsFree(cparams, cnparams)
+
+	var err C.virError
+	ret := C.virConnectSetIdentityWrapper(c.ptr, cparams, cnparams, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
+
+	return nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectGetCapabilities
 func (c *Connect) GetCapabilities() (string, error) {
 	var err C.virError
