@@ -30,7 +30,6 @@
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include "network_compat.h"
-#include "network_port_compat.h"
 
 int
 virNetworkCreateWrapper(virNetworkPtr network,
@@ -115,28 +114,6 @@ virNetworkUpdateWrapper(virNetworkPtr network,
                         const char *xml,
                         unsigned int flags,
                         virErrorPtr err);
-
-virNetworkPortPtr
-virNetworkPortLookupByUUIDWrapper(virNetworkPtr net,
-				  const unsigned char *uuid,
-				  virErrorPtr err);
-
-virNetworkPortPtr
-virNetworkPortLookupByUUIDStringWrapper(virNetworkPtr net,
-					const char *uuidstr,
-					virErrorPtr err);
-
-virNetworkPortPtr
-virNetworkPortCreateXMLWrapper(virNetworkPtr net,
-			       const char *xmldesc,
-			       unsigned int flags,
-			       virErrorPtr err);
-
-int
-virNetworkListAllPortsWrapper(virNetworkPtr network,
-			      virNetworkPortPtr **ports,
-			      unsigned int flags,
-			      virErrorPtr err);
 
 
 #endif /* LIBVIRT_GO_NETWORK_WRAPPER_H__ */
