@@ -28,7 +28,6 @@ package libvirt
 /*
 #cgo pkg-config: libvirt
 #include <stdlib.h>
-#include "network_wrapper.h"
 #include "network_port_wrapper.h"
 */
 import "C"
@@ -73,26 +72,6 @@ func (c *NetworkPort) Ref() error {
 		return makeError(&err)
 	}
 	return nil
-}
-
-// See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkPortGetNetwork
-//
-// Contrary to the native C API behaviour, the Go API will
-// acquire a reference on the returned Network, which must
-// be released by calling Free()
-func (n *NetworkPort) GetNetwork() (*Network, error) {
-	var err C.virError
-	ptr := C.virNetworkPortGetNetworkWrapper(n.ptr, &err)
-	if ptr == nil {
-		return nil, makeError(&err)
-	}
-
-	ret := C.virNetworkRefWrapper(ptr, &err)
-	if ret == -1 {
-		return nil, makeError(&err)
-	}
-
-	return &Network{ptr: ptr}, nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkPortGetUUID
