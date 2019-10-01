@@ -45,7 +45,6 @@ const (
 // See also https://libvirt.org/html/libvirt-libvirt-event.html#virEventRegisterDefaultImpl
 func EventRegisterDefaultImpl() error {
 	var err C.virError
-	C.virInitialize()
 	if i := int(C.virEventRegisterDefaultImplWrapper(&err)); i != 0 {
 		return makeError(&err)
 	}
@@ -189,7 +188,6 @@ var eventLoopImpl EventLoop
 // See also https://libvirt.org/html/libvirt-libvirt-event.html#virEventRegisterImpl
 func EventRegisterImpl(impl EventLoop) {
 	eventLoopImpl = impl
-	C.virInitialize()
 	C.virEventRegisterImplWrapper()
 }
 
