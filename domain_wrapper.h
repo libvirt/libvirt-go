@@ -1009,12 +1009,4 @@ virDomainCheckpointLookupByNameWrapper(virDomainPtr domain,
 				       unsigned int flags,
 				       virErrorPtr err);
 
-int
-virDomainGetGuestInfoWrapper(virDomainPtr domain,
-			     unsigned int types,
-			     virTypedParameterPtr *params,
-			     int *nparams,
-			     unsigned int flags,
-                             virErrorPtr err);
-
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */

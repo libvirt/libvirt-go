@@ -984,26 +984,4 @@ struct _virDomainInterface {
 #endif
 
 
-/* 5.7.0 */
-
-#ifndef VIR_DOMAIN_GUEST_INFO_USERS
-#define VIR_DOMAIN_GUEST_INFO_USERS (1 << 0)
-#endif
-
-#ifndef VIR_DOMAIN_GUEST_INFO_OS
-#define VIR_DOMAIN_GUEST_INFO_OS (1 << 1)
-#endif
-
-#ifndef VIR_DOMAIN_GUEST_INFO_TIMEZONE
-#define VIR_DOMAIN_GUEST_INFO_TIMEZONE (1 << 2)
-#endif
-
-#ifndef VIR_DOMAIN_GUEST_INFO_HOSTNAME
-#define VIR_DOMAIN_GUEST_INFO_HOSTNAME (1 << 3)
-#endif
-
-#ifndef VIR_DOMAIN_GUEST_INFO_FILESYSTEM
-#define VIR_DOMAIN_GUEST_INFO_FILESYSTEM (1 << 4)
-#endif
-
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
