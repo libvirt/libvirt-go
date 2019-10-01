@@ -69,6 +69,30 @@ virDomainSnapshotFreeWrapper(virDomainSnapshotPtr snapshot,
 }
 
 
+virConnectPtr
+virDomainSnapshotGetConnectWrapper(virDomainSnapshotPtr snapshot,
+                                   virErrorPtr err)
+{
+    virConnectPtr ret = virDomainSnapshotGetConnect(snapshot);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
+virDomainPtr
+virDomainSnapshotGetDomainWrapper(virDomainSnapshotPtr snapshot,
+                                  virErrorPtr err)
+{
+    virDomainPtr ret = virDomainSnapshotGetDomain(snapshot);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 const char *
 virDomainSnapshotGetNameWrapper(virDomainSnapshotPtr snapshot,
                                 virErrorPtr err)

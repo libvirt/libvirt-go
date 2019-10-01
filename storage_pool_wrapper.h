@@ -58,6 +58,10 @@ virStoragePoolGetAutostartWrapper(virStoragePoolPtr pool,
                                   int *autostart,
                                   virErrorPtr err);
 
+virConnectPtr
+virStoragePoolGetConnectWrapper(virStoragePoolPtr pool,
+                                virErrorPtr err);
+
 int
 virStoragePoolGetInfoWrapper(virStoragePoolPtr pool,
                              virStoragePoolInfoPtr info,

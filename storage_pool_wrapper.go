@@ -106,6 +106,18 @@ virStoragePoolGetAutostartWrapper(virStoragePoolPtr pool,
 }
 
 
+virConnectPtr
+virStoragePoolGetConnectWrapper(virStoragePoolPtr pool,
+                                virErrorPtr err)
+{
+    virConnectPtr ret = virStoragePoolGetConnect(pool);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 int
 virStoragePoolGetInfoWrapper(virStoragePoolPtr pool,
                              virStoragePoolInfoPtr info,

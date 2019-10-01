@@ -43,6 +43,10 @@ int
 virInterfaceFreeWrapper(virInterfacePtr iface,
                         virErrorPtr err);
 
+virConnectPtr
+virInterfaceGetConnectWrapper(virInterfacePtr iface,
+                              virErrorPtr err);
+
 const char *
 virInterfaceGetMACStringWrapper(virInterfacePtr iface,
                                 virErrorPtr err);

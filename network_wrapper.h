@@ -56,6 +56,10 @@ char *
 virNetworkGetBridgeNameWrapper(virNetworkPtr network,
                                virErrorPtr err);
 
+virConnectPtr
+virNetworkGetConnectWrapper(virNetworkPtr net,
+                            virErrorPtr err);
+
 int
 virNetworkGetDHCPLeasesWrapper(virNetworkPtr network,
                                const char *mac,

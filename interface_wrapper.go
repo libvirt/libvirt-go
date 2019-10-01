@@ -69,6 +69,18 @@ virInterfaceFreeWrapper(virInterfacePtr iface,
 }
 
 
+virConnectPtr
+virInterfaceGetConnectWrapper(virInterfacePtr iface,
+                              virErrorPtr err)
+{
+    virConnectPtr ret = virInterfaceGetConnect(iface);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 const char *
 virInterfaceGetMACStringWrapper(virInterfacePtr iface,
                                 virErrorPtr err)

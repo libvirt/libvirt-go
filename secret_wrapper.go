@@ -43,6 +43,18 @@ virSecretFreeWrapper(virSecretPtr secret,
 }
 
 
+virConnectPtr
+virSecretGetConnectWrapper(virSecretPtr secret,
+                           virErrorPtr err)
+{
+    virConnectPtr ret = virSecretGetConnect(secret);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
+
+
 int
 virSecretGetUUIDWrapper(virSecretPtr secret,
                         unsigned char *uuid,
