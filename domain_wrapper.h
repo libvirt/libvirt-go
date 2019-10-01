@@ -30,7 +30,6 @@
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 #include "domain_compat.h"
-#include "domain_checkpoint_compat.h"
 
 int
 virDomainAbortJobWrapper(virDomainPtr domain,
