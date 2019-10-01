@@ -154,8 +154,6 @@ var (
 		"virDomainGetConnect",
 		"virDomainSnapshotGetConnect",
 		"virDomainSnapshotGetDomain",
-		"virDomainCheckpointGetConnect",
-		"virDomainCheckpointGetDomain",
 		"virInterfaceGetConnect",
 		"virNetworkGetConnect",
 		"virSecretGetConnect",

@@ -117,11 +117,10 @@ const (
 type DomainUndefineFlagsValues int
 
 const (
-	DOMAIN_UNDEFINE_MANAGED_SAVE         = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)         // Also remove any managed save
-	DOMAIN_UNDEFINE_SNAPSHOTS_METADATA   = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA)   // If last use of domain, then also remove any snapshot metadata
-	DOMAIN_UNDEFINE_NVRAM                = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_NVRAM)                // Also remove any nvram file
-	DOMAIN_UNDEFINE_KEEP_NVRAM           = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)           // Keep nvram file
-	DOMAIN_UNDEFINE_CHECKPOINTS_METADATA = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_CHECKPOINTS_METADATA) // If last use of domain, then also remove any checkpoint metadata
+	DOMAIN_UNDEFINE_MANAGED_SAVE       = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)       // Also remove any managed save
+	DOMAIN_UNDEFINE_SNAPSHOTS_METADATA = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_SNAPSHOTS_METADATA) // If last use of domain, then also remove any snapshot metadata
+	DOMAIN_UNDEFINE_NVRAM              = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_NVRAM)              // Also remove any nvram file
+	DOMAIN_UNDEFINE_KEEP_NVRAM         = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_KEEP_NVRAM)         // Keep nvram file
 )
 
 type DomainDeviceModifyFlags int
@@ -2003,22 +2002,6 @@ func (d *Domain) SnapshotLookupByName(name string, flags uint32) (*DomainSnapsho
 	return &DomainSnapshot{ptr: ptr}, nil
 }
 
-// See also https://libvirt.org/html/libvirt-libvirt-domain-checkpoint.html#virDomainCheckpointLookupByName
-func (d *Domain) CheckpointLookupByName(name string, flags uint32) (*DomainCheckpoint, error) {
-	if C.LIBVIR_VERSION_NUMBER < 5006000 {
-		return nil, makeNotImplementedError("virDomainCheckpointLookupByName")
-	}
-
-	cName := C.CString(name)
-	defer C.free(unsafe.Pointer(cName))
-	var err C.virError
-	ptr := C.virDomainCheckpointLookupByNameWrapper(d.ptr, cName, C.uint(flags), &err)
-	if ptr == nil {
-		return nil, makeError(&err)
-	}
-	return &DomainCheckpoint{ptr: ptr}, nil
-}
-
 // See also https://libvirt.org/html/libvirt-libvirt-domain-snapshot.html#virDomainSnapshotListNames
 func (d *Domain) SnapshotListNames(flags DomainSnapshotListFlags) ([]string, error) {
 	const maxNames = 1024
@@ -2060,32 +2043,6 @@ func (d *Domain) ListAllSnapshots(flags DomainSnapshotListFlags) ([]DomainSnapsh
 	}
 	C.free(unsafe.Pointer(cList))
 	return pools, nil
-}
-
-// See also https://libvirt.org/html/libvirt-libvirt-domain-checkpoint.html#virDomainListAllCheckpoints
-func (d *Domain) ListAllCheckpoints(flags DomainCheckpointListFlags) ([]DomainCheckpoint, error) {
-	if C.LIBVIR_VERSION_NUMBER < 5006000 {
-		return []DomainCheckpoint{}, makeNotImplementedError("virDomainListAllCheckpoints")
-	}
-
-	var cList *C.virDomainCheckpointPtr
-	var err C.virError
-	numCps := C.virDomainListAllCheckpointsWrapper(d.ptr, (**C.virDomainCheckpointPtr)(&cList), C.uint(flags), &err)
-	if numCps == -1 {
-		return nil, makeError(&err)
-	}
-	hdr := reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(cList)),
-		Len:  int(numCps),
-		Cap:  int(numCps),
-	}
-	var cps []DomainCheckpoint
-	slice := *(*[]C.virDomainCheckpointPtr)(unsafe.Pointer(&hdr))
-	for _, ptr := range slice {
-		cps = append(cps, DomainCheckpoint{ptr})
-	}
-	C.free(unsafe.Pointer(cList))
-	return cps, nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainBlockCommit
@@ -4471,22 +4428,6 @@ func (d *Domain) CreateSnapshotXML(xml string, flags DomainSnapshotCreateFlags) 
 		return nil, makeError(&err)
 	}
 	return &DomainSnapshot{ptr: result}, nil
-}
-
-// See also https://libvirt.org/html/libvirt-libvirt-domain-checkpoint.html#virDomainCheckpointCreateXML
-func (d *Domain) CreateCheckpointXML(xml string, flags DomainCheckpointCreateFlags) (*DomainCheckpoint, error) {
-	if C.LIBVIR_VERSION_NUMBER < 5006000 {
-		return nil, makeNotImplementedError("virDomainCheckpointCreateXML")
-	}
-
-	cXml := C.CString(xml)
-	defer C.free(unsafe.Pointer(cXml))
-	var err C.virError
-	result := C.virDomainCheckpointCreateXMLWrapper(d.ptr, cXml, C.uint(flags), &err)
-	if result == nil {
-		return nil, makeError(&err)
-	}
-	return &DomainCheckpoint{ptr: result}, nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSave
