@@ -1724,6 +1724,10 @@ func (d *Domain) BlockStats(path string) (*DomainBlockStats, error) {
 		RdBytes:    int64(cStats.rd_bytes),
 		WrBytesSet: true,
 		WrBytes:    int64(cStats.wr_bytes),
+		RdTotalTimesSet: true,
+		RdTotalTimes:  int64(cStats.rd_total_times)
+		WrTotalTimesSet: true,
+		WrTotalTimes:  int64(cStats.wr_total_times)
 	}, nil
 }
 
