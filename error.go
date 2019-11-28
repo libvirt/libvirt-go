@@ -596,6 +596,9 @@ const (
 
 	// Error from TPM
 	FROM_TPM = ErrorDomain(C.VIR_FROM_TPM)
+
+	// Error from BPF
+	FROM_BPF = ErrorDomain(C.VIR_FROM_BPF)
 )
 
 type Error struct {

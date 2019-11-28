@@ -207,4 +207,10 @@
 #define VIR_FROM_TPM 70
 #endif
 
+/* 5.10.0 */
+
+#ifndef VIR_FROM_BPF
+#define VIR_FROM_BPF 71
+#endif
+
 #endif /* LIBVIRT_GO_ERROR_COMPAT_H__ */
