@@ -2419,5 +2419,22 @@ virDomainGetGuestInfoWrapper(virDomainPtr domain,
 #endif
 }
 
+int
+virDomainAgentSetResponseTimeoutWrapper(virDomainPtr domain,
+                                        int timeout,
+                                        unsigned int flags,
+                                        virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 5010000
+    assert(0); // Caller should have checked version
+#else
+    int ret = virDomainAgentSetResponseTimeout(domain, timeout, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
 */
 import "C"

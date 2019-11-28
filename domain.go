@@ -886,6 +886,14 @@ const (
 	DOMAIN_GUEST_INFO_FILESYSTEM = DomainGuestInfoTypes(C.VIR_DOMAIN_GUEST_INFO_FILESYSTEM)
 )
 
+type DomainAgentSetResponseTimeoutValues int
+
+const (
+	DOMAIN_AGENT_RESPONSE_TIMEOUT_BLOCK   = DomainAgentSetResponseTimeoutValues(C.VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_BLOCK)
+	DOMAIN_AGENT_RESPONSE_TIMEOUT_DEFAULT = DomainAgentSetResponseTimeoutValues(C.VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_DEFAULT)
+	DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT  = DomainAgentSetResponseTimeoutValues(C.VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT)
+)
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFree
 func (d *Domain) Free() error {
 	var err C.virError
@@ -5178,4 +5186,19 @@ func (d *Domain) GetGuestInfo(types DomainGuestInfoTypes, flags uint32) (*Domain
 	}
 
 	return &info, nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainAgentSetResponseTimeout
+func (d *Domain) AgentSetResponseTimeout(timeout int, flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 5010000 {
+		return makeNotImplementedError("virDomainAgentSetResponseTimeout")
+	}
+
+	var err C.virError
+	ret := C.virDomainAgentSetResponseTimeoutWrapper(d.ptr, C.int(timeout), C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
+
+	return nil
 }

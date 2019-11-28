@@ -1017,4 +1017,10 @@ virDomainGetGuestInfoWrapper(virDomainPtr domain,
 			     unsigned int flags,
                              virErrorPtr err);
 
+int
+virDomainAgentSetResponseTimeoutWrapper(virDomainPtr domain,
+                                        int timeout,
+                                        unsigned int flags,
+                                        virErrorPtr err);
+
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */
