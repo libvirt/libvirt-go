@@ -706,7 +706,8 @@ const (
 type DomainGetJobStatsFlags int
 
 const (
-	DOMAIN_JOB_STATS_COMPLETED = DomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_COMPLETED)
+	DOMAIN_JOB_STATS_COMPLETED      = DomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_COMPLETED)
+	DOMAIN_JOB_STATS_KEEP_COMPLETED = DomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_KEEP_COMPLETED)
 )
 
 type DomainNumatuneMemMode int
@@ -3068,6 +3069,8 @@ type DomainJobInfo struct {
 	Operation                 DomainJobOperationType
 	MemPostcopyReqsSet        bool
 	MemPostcopyReqs           uint64
+	JobSuccessSet             bool
+	JobSuccess                bool
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetJobInfo
@@ -3232,6 +3235,10 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_MEMORY_POSTCOPY_REQS: typedParamsFieldInfo{
 			set: &params.MemPostcopyReqsSet,
 			ul:  &params.MemPostcopyReqs,
+		},
+		C.VIR_DOMAIN_JOB_SUCCESS: typedParamsFieldInfo{
+			set: &params.JobSuccessSet,
+			b:   &params.JobSuccess,
 		},
 	}
 }

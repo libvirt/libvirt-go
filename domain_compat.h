@@ -1020,4 +1020,14 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT 0
 #endif
 
+/* 6.0.0 */
+
+#ifndef VIR_DOMAIN_JOB_SUCCESS
+#define VIR_DOMAIN_JOB_SUCCESS "success"
+#endif
+
+#ifndef VIR_DOMAIN_JOB_STATS_KEEP_COMPLETED
+#define VIR_DOMAIN_JOB_STATS_KEEP_COMPLETED (1 << 1)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
