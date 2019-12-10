@@ -1030,4 +1030,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_JOB_STATS_KEEP_COMPLETED (1 << 1)
 #endif
 
+#ifndef VIR_MIGRATE_PARAM_TLS_DESTINATION
+#define VIR_MIGRATE_PARAM_TLS_DESTINATION "tls.destination"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

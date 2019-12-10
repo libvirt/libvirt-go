@@ -2364,6 +2364,8 @@ type DomainMigrateParameters struct {
 	AutoConvergeIncrement     int
 	ParallelConnectionsSet    bool
 	ParallelConnections       int
+	TLSDestinationSet         bool
+	TLSDestination            string
 }
 
 func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]typedParamsFieldInfo {
@@ -2439,6 +2441,10 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 		C.VIR_MIGRATE_PARAM_PARALLEL_CONNECTIONS: typedParamsFieldInfo{
 			set: &params.ParallelConnectionsSet,
 			i:   &params.ParallelConnections,
+		},
+		C.VIR_MIGRATE_PARAM_TLS_DESTINATION: typedParamsFieldInfo{
+			set: &params.TLSDestinationSet,
+			s:   &params.TLSDestination,
 		},
 	}
 }
