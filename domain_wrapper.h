@@ -1023,4 +1023,17 @@ virDomainAgentSetResponseTimeoutWrapper(virDomainPtr domain,
                                         unsigned int flags,
                                         virErrorPtr err);
 
+int
+virDomainBackupBeginWrapper(virDomainPtr domain,
+			    const char *backupXML,
+			    const char *checkpointXML,
+			    unsigned int flags,
+			    virErrorPtr err);
+
+char *
+virDomainBackupGetXMLDescWrapper(virDomainPtr domain,
+				 unsigned int flags,
+				 virErrorPtr err);
+
+
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */

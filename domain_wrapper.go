@@ -2436,5 +2436,40 @@ virDomainAgentSetResponseTimeoutWrapper(virDomainPtr domain,
 #endif
 }
 
+int
+virDomainBackupBeginWrapper(virDomainPtr domain,
+			    const char *backupXML,
+			    const char *checkpointXML,
+			    unsigned int flags,
+			    virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 6000000
+    assert(0); // Caller should have checked version
+#else
+    int ret = virDomainBackupBegin(domain, backupXML, checkpointXML, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+char *
+virDomainBackupGetXMLDescWrapper(virDomainPtr domain,
+				 unsigned int flags,
+				 virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 6000000
+    assert(0); // Caller should have checked version
+#else
+    char *ret = virDomainBackupGetXMLDesc(domain, flags);
+    if (ret == NULL) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
 */
 import "C"

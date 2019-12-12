@@ -854,6 +854,12 @@ const (
 	DOMAIN_JOB_OPERATION_BACKUP          = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_BACKUP)
 )
 
+type DomainBackupBeginFlags int
+
+const (
+	DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL = DomainBackupBeginFlags(C.VIR_DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL)
+)
+
 type DomainBlockInfo struct {
 	Capacity   uint64
 	Allocation uint64
@@ -5230,4 +5236,44 @@ func (d *Domain) AgentSetResponseTimeout(timeout int, flags uint32) error {
 	}
 
 	return nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainBackupBegin
+func (d *Domain) BackupBegin(backupXML string, checkpointXML string, flags DomainBackupBeginFlags) error {
+	if C.LIBVIR_VERSION_NUMBER < 6000000 {
+		return makeNotImplementedError("virDomainBackupBegin")
+	}
+
+	cbackupXML := C.CString(backupXML)
+	defer C.free(unsafe.Pointer(cbackupXML))
+	var ccheckpointXML *C.char
+	if checkpointXML != "" {
+		ccheckpointXML = C.CString(checkpointXML)
+		defer C.free(unsafe.Pointer(ccheckpointXML))
+	}
+	var err C.virError
+	ret := C.virDomainBackupBeginWrapper(d.ptr, cbackupXML, ccheckpointXML, C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
+
+	return nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainBackupGetXMLDesc
+func (d *Domain) BackupGetXMLDesc(flags uint32) (string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 6000000 {
+		return "", makeNotImplementedError("virDomainBackupGetXMLDesc")
+	}
+
+	var err C.virError
+	ret := C.virDomainBackupGetXMLDescWrapper(d.ptr, C.uint(flags), &err)
+	if ret == nil {
+		return "", makeError(&err)
+	}
+
+	xml := C.GoString(ret)
+	defer C.free(unsafe.Pointer(ret))
+
+	return xml, nil
 }

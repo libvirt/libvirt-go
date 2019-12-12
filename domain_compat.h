@@ -1050,4 +1050,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_JOB_DISK_TEMP_TOTAL "disk_temp_total"
 #endif
 
+#ifndef VIR_DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL
+#define VIR_DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL (1 << 0)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
