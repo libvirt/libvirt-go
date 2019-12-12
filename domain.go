@@ -248,6 +248,9 @@ const (
 	// Active Block Commit (virDomainBlockCommit with flags), job
 	// exists as long as sync is active
 	DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT)
+
+	// Live disk backup job
+	DOMAIN_BLOCK_JOB_TYPE_BACKUP = DomainBlockJobType(C.VIR_DOMAIN_BLOCK_JOB_TYPE_BACKUP)
 )
 
 type DomainRunningReason int
@@ -848,6 +851,7 @@ const (
 	DOMAIN_JOB_OPERATION_SNAPSHOT        = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_SNAPSHOT)
 	DOMAIN_JOB_OPERATION_SNAPSHOT_REVERT = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_SNAPSHOT_REVERT)
 	DOMAIN_JOB_OPERATION_DUMP            = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_DUMP)
+	DOMAIN_JOB_OPERATION_BACKUP          = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_BACKUP)
 )
 
 type DomainBlockInfo struct {
@@ -3077,6 +3081,10 @@ type DomainJobInfo struct {
 	MemPostcopyReqs           uint64
 	JobSuccessSet             bool
 	JobSuccess                bool
+	DiskTempUsedSet           bool
+	DiskTempUsed              uint64
+	DiskTempTotalSet          bool
+	DiskTempTotal             uint64
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetJobInfo
@@ -3245,6 +3253,14 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_SUCCESS: typedParamsFieldInfo{
 			set: &params.JobSuccessSet,
 			b:   &params.JobSuccess,
+		},
+		C.VIR_DOMAIN_JOB_DISK_TEMP_USED: typedParamsFieldInfo{
+			set: &params.DiskTempUsedSet,
+			ul:  &params.DiskTempUsed,
+		},
+		C.VIR_DOMAIN_JOB_DISK_TEMP_TOTAL: typedParamsFieldInfo{
+			set: &params.DiskTempTotalSet,
+			ul:  &params.DiskTempTotal,
 		},
 	}
 }

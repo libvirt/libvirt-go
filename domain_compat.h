@@ -1034,4 +1034,20 @@ struct _virDomainInterface {
 #define VIR_MIGRATE_PARAM_TLS_DESTINATION "tls.destination"
 #endif
 
+#ifndef VIR_DOMAIN_BLOCK_JOB_TYPE_BACKUP
+#define VIR_DOMAIN_BLOCK_JOB_TYPE_BACKUP 5
+#endif
+
+#ifndef VIR_DOMAIN_JOB_OPERATION_BACKUP
+#define VIR_DOMAIN_JOB_OPERATION_BACKUP 9
+#endif
+
+#ifndef VIR_DOMAIN_JOB_DISK_TEMP_USED
+#define VIR_DOMAIN_JOB_DISK_TEMP_USED "disk_temp_used"
+#endif
+
+#ifndef VIR_DOMAIN_JOB_DISK_TEMP_TOTAL
+#define VIR_DOMAIN_JOB_DISK_TEMP_TOTAL "disk_temp_total"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
