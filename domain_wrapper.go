@@ -2463,7 +2463,7 @@ virDomainBackupGetXMLDescWrapper(virDomainPtr domain,
     assert(0); // Caller should have checked version
 #else
     char *ret = virDomainBackupGetXMLDesc(domain, flags);
-    if (ret == NULL) {
+    if (!ret) {
         virCopyLastError(err);
     }
     return ret;
