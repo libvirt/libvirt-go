@@ -1107,11 +1107,11 @@ func (d *Domain) GetState() (DomainState, int, error) {
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetID
 func (d *Domain) GetID() (uint, error) {
 	var err C.virError
-	id := uint(C.virDomainGetIDWrapper(d.ptr, &err))
-	if id == ^uint(0) {
-		return id, makeError(&err)
+	id := C.virDomainGetIDWrapper(d.ptr, &err)
+	if id == ^C.uint(0) {
+		return uint(id), makeError(&err)
 	}
-	return id, nil
+	return uint(id), nil
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetUUID
