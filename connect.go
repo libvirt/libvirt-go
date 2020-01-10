@@ -1909,8 +1909,8 @@ func (c *Connect) GetFreePages(pageSizes []uint64, startCell int, maxCells uint,
 	}
 
 	var err C.virError
-	ret := C.virNodeGetFreePagesWrapper(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes)), C.int(startCell),
-		C.uint(maxCells), (*C.ulonglong)(unsafe.Pointer(&ccounts)), C.uint(flags), &err)
+	ret := C.virNodeGetFreePagesWrapper(c.ptr, C.uint(len(pageSizes)), (*C.uint)(unsafe.Pointer(&cpageSizes[0])), C.int(startCell),
+		C.uint(maxCells), (*C.ulonglong)(unsafe.Pointer(&ccounts[0])), C.uint(flags), &err)
 	if ret == -1 {
 		return []uint64{}, makeError(&err)
 	}
