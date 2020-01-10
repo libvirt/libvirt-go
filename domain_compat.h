@@ -1054,4 +1054,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL (1 << 0)
 #endif
 
+#ifndef VIR_DOMAIN_STATS_MEMORY
+#define VIR_DOMAIN_STATS_MEMORY (1 << 8)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
