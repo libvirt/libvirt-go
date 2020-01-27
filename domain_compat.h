@@ -1058,4 +1058,14 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_STATS_MEMORY (1 << 8)
 #endif
 
+/* 6.1.0 */
+
+#ifndef VIR_DOMAIN_GET_HOSTNAME_LEASE
+#define VIR_DOMAIN_GET_HOSTNAME_LEASE (1 << 0)
+#endif
+
+#ifndef VIR_DOMAIN_GET_HOSTNAME_AGENT
+#define VIR_DOMAIN_GET_HOSTNAME_AGENT (1 << 1)
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

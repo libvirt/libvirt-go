@@ -906,6 +906,13 @@ const (
 	DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT  = DomainAgentSetResponseTimeoutValues(C.VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT)
 )
 
+type DomainGetHostnameFlags uint
+
+const (
+	DOMAIN_GET_HOSTNAME_AGENT = DomainGetHostnameFlags(C.VIR_DOMAIN_GET_HOSTNAME_AGENT)
+	DOMAIN_GET_HOSTNAME_LEASE = DomainGetHostnameFlags(C.VIR_DOMAIN_GET_HOSTNAME_LEASE)
+)
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFree
 func (d *Domain) Free() error {
 	var err C.virError
@@ -3010,7 +3017,7 @@ func (d *Domain) GetDiskErrors(flags uint32) ([]DomainDiskError, error) {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetHostname
-func (d *Domain) GetHostname(flags uint32) (string, error) {
+func (d *Domain) GetHostname(flags DomainGetHostnameFlags) (string, error) {
 	var err C.virError
 	ret := C.virDomainGetHostnameWrapper(d.ptr, C.uint(flags), &err)
 	if ret == nil {
