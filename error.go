@@ -380,6 +380,9 @@ const (
 
 	// network port not found
 	ERR_NO_NETWORK_PORT = ErrorNumber(C.VIR_ERR_NO_NETWORK_PORT)
+
+	// no domain's hostname found
+	ERR_NO_HOSTNAME = ErrorNumber(C.VIR_ERR_NO_HOSTNAME)
 )
 
 type ErrorDomain int
