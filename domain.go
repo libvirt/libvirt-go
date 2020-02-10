@@ -553,7 +553,8 @@ const (
 type DomainEventCrashedDetailType int
 
 const (
-	DOMAIN_EVENT_CRASHED_PANICKED = DomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_PANICKED)
+	DOMAIN_EVENT_CRASHED_PANICKED    = DomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_PANICKED)
+	DOMAIN_EVENT_CRASHED_CRASHLOADED = DomainEventCrashedDetailType(C.VIR_DOMAIN_EVENT_CRASHED_CRASHLOADED)
 )
 
 type DomainEventPMSuspendedDetailType int

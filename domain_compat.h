@@ -1068,4 +1068,8 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_GET_HOSTNAME_AGENT (1 << 1)
 #endif
 
+#ifndef VIR_DOMAIN_EVENT_CRASHED_CRASHLOADED
+#define VIR_DOMAIN_EVENT_CRASHED_CRASHLOADED 1
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
