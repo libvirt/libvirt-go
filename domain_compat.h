@@ -1072,4 +1072,10 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_EVENT_CRASHED_CRASHLOADED 1
 #endif
 
+/* 6.3.0 */
+
+#ifndef VIR_DOMAIN_JOB_ERRMSG
+#define VIR_DOMAIN_JOB_ERRMSG "errmsg"
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

@@ -3100,6 +3100,8 @@ type DomainJobInfo struct {
 	DiskTempUsed              uint64
 	DiskTempTotalSet          bool
 	DiskTempTotal             uint64
+	ErrorMessageSet           bool
+	ErrorMessage              string
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetJobInfo
@@ -3276,6 +3278,10 @@ func getDomainJobInfoFieldInfo(params *DomainJobInfo) map[string]typedParamsFiel
 		C.VIR_DOMAIN_JOB_DISK_TEMP_TOTAL: typedParamsFieldInfo{
 			set: &params.DiskTempTotalSet,
 			ul:  &params.DiskTempTotal,
+		},
+		C.VIR_DOMAIN_JOB_ERRMSG: typedParamsFieldInfo{
+			set: &params.ErrorMessageSet,
+			s:   &params.ErrorMessage,
 		},
 	}
 }
