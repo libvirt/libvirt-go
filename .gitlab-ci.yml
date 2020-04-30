@@ -1,0 +1,16 @@
+
+stages:
+  - prebuild
+
+# Check that all commits are signed-off for the DCO.
+# Skip on "libvirt" namespace, since we only need to run
+# this test on developer's personal forks from which
+# merge requests are submitted
+check-dco:
+  stage: prebuild
+  image: registry.gitlab.com/libvirt/libvirt-ci/check-dco:master
+  script:
+    - /check-dco
+  except:
+    variables:
+      - $CI_PROJECT_NAMESPACE == 'libvirt'
