@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if test -z "$1"
+then
+    echo "syntax: $0 PATH-TO-LCITOOL"
+    exit 1
+fi
+
+LCITOOL=$1
+
+if ! test -x "$LCITOOL"
+then
+    echo "$LCITOOL is not executable"
+    exit 1
+fi
+
+HOSTS=$($LCITOOL hosts | grep -v freebsd)
+
+for host in $HOSTS
+do
+    if test "$host" = "libvirt-centos-8"
+    then
+        $LCITOOL dockerfile $host libvirt+minimal,libvirt+dist,libvirt-go > $host.Dockerfile
+    else
+        $LCITOOL dockerfile $host libvirt+dist,libvirt-go > $host.Dockerfile
+    fi
+done
