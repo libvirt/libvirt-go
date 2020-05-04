@@ -660,6 +660,11 @@ func TestDomainScreenshot(t *testing.T) {
 	defer stream.Free()
 	mime, err := dom.Screenshot(stream, 0, 0)
 	if err != nil {
+		msg := "test-screenshot.png': No such file or directory"
+		if strings.Contains(err.Error(), msg) {
+			t.Skip("test-screenshot.png doesn't exist")
+			return
+		}
 		t.Fatalf("failed to take screenshot: %s", err)
 	}
 	if strings.Index(mime, "image/") != 0 {
