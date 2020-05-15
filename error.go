@@ -57,6 +57,10 @@ const (
 
 type ErrorNumber int
 
+func (err ErrorNumber) Error() string {
+	return fmt.Sprintf("virErrCode(%d)", err)
+}
+
 const (
 	ERR_OK = ErrorNumber(C.VIR_ERR_OK)
 
@@ -614,6 +618,15 @@ type Error struct {
 func (err Error) Error() string {
 	return fmt.Sprintf("virError(Code=%d, Domain=%d, Message='%s')",
 		err.Code, err.Domain, err.Message)
+}
+
+func (err Error) Is(target error) bool {
+	n, ok := target.(ErrorNumber)
+	if !ok {
+		return false
+	}
+
+	return err.Code == n
 }
 
 func makeError(err *C.virError) Error {
