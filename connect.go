@@ -2491,6 +2491,8 @@ type DomainStatsVcpu struct {
 	State    VcpuState
 	TimeSet  bool
 	Time     uint64
+	WaitSet  bool
+	Wait     uint64
 }
 
 func getDomainStatsVcpuFieldInfo(idx int, params *DomainStatsVcpu) map[string]typedParamsFieldInfo {
@@ -2502,6 +2504,10 @@ func getDomainStatsVcpuFieldInfo(idx int, params *DomainStatsVcpu) map[string]ty
 		fmt.Sprintf("vcpu.%d.time", idx): typedParamsFieldInfo{
 			set: &params.TimeSet,
 			ul:  &params.Time,
+		},
+		fmt.Sprintf("vcpu.%d.wait", idx): typedParamsFieldInfo{
+			set: &params.WaitSet,
+			ul:  &params.Wait,
 		},
 	}
 }
