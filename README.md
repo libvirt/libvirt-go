@@ -1,7 +1,7 @@
 # libvirt-go
 
 [![Build Status](https://travis-ci.org/libvirt/libvirt-go.svg?branch=master)](https://travis-ci.org/libvirt/libvirt-go)
-[![API Documentation](https://godoc.org/libvirt.org/libvirt-go?status.svg)](https://godoc.org/libvirt.org/libvirt-go)
+[![API Documentation](https://img.shields.io/static/v1?label=godev&message=reference&color=00add8)](https://pkg.go.dev/libvirt.org/libvirt-go)
 
 Go bindings for libvirt.
 
@@ -35,7 +35,7 @@ changes may apply to future versions:
 
 ## Documentation
 
-* [API documentation for the bindings](https://godoc.org/libvirt.org/libvirt-go)
+* [API documentation for the bindings](https://pkg.go.dev/libvirt.org/libvirt-go)
 * [API documentation for libvirt](https://libvirt.org/html/index.html)
 
 ## Contributing
