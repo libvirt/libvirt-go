@@ -32,8 +32,8 @@ changes may apply to future versions:
 
 ## Documentation
 
-* [api documentation for the bindings](https://godoc.org/libvirt.org/libvirt-go)
-* [api documentation for libvirt](https://libvirt.org/html/index.html)
+* [API documentation for the bindings](https://godoc.org/libvirt.org/libvirt-go)
+* [API documentation for libvirt](https://libvirt.org/html/index.html)
 
 ## Contributing
 
