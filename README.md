@@ -43,35 +43,10 @@ changes may apply to future versions:
 The libvirt project aims to add support for new APIs to libvirt-go
 as soon as they are added to the main libvirt C library. If you
 are submitting changes to the libvirt C library API, please submit
-a libvirt-go change at the same time.
+a libvirt-go change at the same time. Bug fixes and other
+improvements to the libvirt-go library are welcome at any time.
 
-Bug fixes and other improvements to the libvirt-go library are
-welcome at any time. The preferred submission method is to use
-git send-email to submit patches to the libvir-list@redhat.com
-mailing list. eg. to send a single patch
-
-   git send-email --to libvir-list@redhat.com --subject-prefix "PATCH go" \
-       --smtp-server=$HOSTNAME -1
-
-Or to send all patches on the current branch, against master
-
-   git send-email --to libvir-list@redhat.com --subject-prefix "PATCH go" \
-       --smtp-server=$HOSTNAME --no-chain-reply-to --cover-letter --annotate \
-       master..
-
-Note the master GIT repository is at
-
-* http://libvirt.org/git/?p=libvirt-go.git;a=summary
-
-The following automatic read-only mirrors are available as a
-convenience to allow contributors to "fork" the repository:
-
-* https://gitlab.com/libvirt/libvirt-go
-* https://github.com/libvirt/libvirt-go
-
-While you can send pull-requests to these mirrors, they will be
-re-submitted via emai to the mailing list for review before
-being merged, unless they are trivial/obvious bug fixes.
+For more information, see the [CONTRIBUTING](CONTRIBUTING.rst) file.
 
 ## Testing
 
