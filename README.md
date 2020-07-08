@@ -1,4 +1,7 @@
-# libvirt-go [![Build Status](https://travis-ci.org/libvirt/libvirt-go.svg?branch=master)](https://travis-ci.org/libvirt/libvirt-go) [![GoDoc](https://godoc.org/libvirt.org/libvirt-go?status.svg)](https://godoc.org/libvirt.org/libvirt-go)
+# libvirt-go
+
+[![Build Status](https://travis-ci.org/libvirt/libvirt-go.svg?branch=master)](https://travis-ci.org/libvirt/libvirt-go)
+[![API Documentation](https://godoc.org/libvirt.org/libvirt-go?status.svg)](https://godoc.org/libvirt.org/libvirt-go)
 
 Go bindings for libvirt.
 
