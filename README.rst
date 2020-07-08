@@ -1,13 +1,22 @@
-# libvirt-go
+==========
+libvirt-go
+==========
 
-[![Build Status](https://travis-ci.org/libvirt/libvirt-go.svg?branch=master)](https://travis-ci.org/libvirt/libvirt-go)
-[![API Documentation](https://img.shields.io/static/v1?label=godev&message=reference&color=00add8)](https://pkg.go.dev/libvirt.org/libvirt-go)
+.. image:: https://travis-ci.org/libvirt/libvirt-go.svg?branch=master
+   :target: https://travis-ci.org/libvirt/libvirt-go
+   :alt: Build Status
+.. image:: https://img.shields.io/static/v1?label=godev&message=reference&color=00add8
+   :target: https://pkg.go.dev/libvirt.org/libvirt-go
+   :alt: API Documentation
 
 Go bindings for libvirt.
 
-Make sure to have `libvirt-dev` package (or the development files otherwise somewhere in your include path)
+Make sure to have ``libvirt-dev`` package (or the development files
+otherwise somewhere in your include path)
 
-## Version Support
+
+Version Support
+===============
 
 The libvirt go package provides API coverage for libvirt versions
 from 1.2.0 onwards, through conditional compilation of newer APIs.
@@ -17,7 +26,9 @@ and libvirt-lxc.so. Coverage for the latter two libraries can be dropped
 from the build using build tags 'without_qemu' or 'without_lxc'
 respectively.
 
-## Development status
+
+Development status
+==================
 
 The Go API is considered to be production ready and aims to be kept
 stable across future versions. Note, however, that the following
@@ -33,12 +44,16 @@ changes may apply to future versions:
   '0' to any 'flags uint32' parameter, since this will auto-cast to
   any future typedef that is introduced.
 
-## Documentation
 
-* [API documentation for the bindings](https://pkg.go.dev/libvirt.org/libvirt-go)
-* [API documentation for libvirt](https://libvirt.org/html/index.html)
+Documentation
+=============
 
-## Contributing
+* `API documentation for the bindings <https://pkg.go.dev/libvirt.org/libvirt-go>`_
+* `API documentation for libvirt <https://libvirt.org/html/index.html>`_
+
+
+Contributing
+============
 
 The libvirt project aims to add support for new APIs to libvirt-go
 as soon as they are added to the main libvirt C library. If you
@@ -46,9 +61,12 @@ are submitting changes to the libvirt C library API, please submit
 a libvirt-go change at the same time. Bug fixes and other
 improvements to the libvirt-go library are welcome at any time.
 
-For more information, see the [CONTRIBUTING](CONTRIBUTING.rst) file.
+For more information, see the `CONTRIBUTING <CONTRIBUTING.rst>`_
+file.
 
-## Testing
+
+Testing
+=======
 
 The core API unit tests are all written to use the built-in
 test driver (test:///default), so they have no interaction
@@ -68,16 +86,16 @@ In order to run the unit tests, libvirtd should be configured
 to allow your user account read-write access with no passwords.
 This can be easily done using polkit config files
 
-```
-# cat > /etc/polkit-1/localauthority/50-local.d/50-libvirt.pkla  <<EOF
-[Passwordless libvirt access]
-Identity=unix-group:berrange
-Action=org.libvirt.unix.manage
-ResultAny=yes
-ResultInactive=yes
-ResultActive=yes
-EOF
-```
+::
+
+   # cat > /etc/polkit-1/localauthority/50-local.d/50-libvirt.pkla  <<EOF
+   [Passwordless libvirt access]
+   Identity=unix-group:berrange
+   Action=org.libvirt.unix.manage
+   ResultAny=yes
+   ResultInactive=yes
+   ResultActive=yes
+   EOF
 
 (Replace 'berrange' with your UNIX user name).
 
@@ -86,29 +104,29 @@ listening for TCP connections on localhost, with sasl auth
 This can be setup by editing /etc/libvirt/libvirtd.conf to
 set
 
-```
-  listen_tls=0
-  listen_tcp=1
-  auth_tcp=sasl
-  listen_addr="127.0.0.1"
-```
+::
+
+   listen_tls=0
+   listen_tcp=1
+   auth_tcp=sasl
+   listen_addr="127.0.0.1"
 
 and then start libvirtd with the --listen flag (this can
 be set in /etc/sysconfig/libvirtd to make it persistent).
 
 Then create a sasl user
 
-```
-   saslpasswd2 -a libvirt user
-```
+::
+
+   $ saslpasswd2 -a libvirt user
 
 and enter "pass" as the password.
 
-Alternatively a `Vagrantfile`, requiring use of virtualbox,
+Alternatively a ``Vagrantfile``, requiring use of virtualbox,
 is included to run the integration tests:
 
-* `cd ./vagrant`
-* `vagrant up` to provision the virtual machine
-* `vagrant ssh` to login to the virtual machine
+* ``cd ./vagrant``
+* ``vagrant up`` to provision the virtual machine
+* ``vagrant ssh`` to login to the virtual machine
 
-Once inside, `sudo su -` and `go test -tags integration libvirt`.
+Once inside, ``sudo su -`` and ``go test -tags integration libvirt``.
