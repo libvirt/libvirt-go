@@ -4726,9 +4726,9 @@ func (d *Domain) SetGuestVcpus(cpus []bool, state bool, flags uint32) error {
 	for i := 0; i < len(cpus); i++ {
 		if cpus[i] {
 			if cpumap == "" {
-				cpumap = string(i)
+				cpumap = fmt.Sprintf("%d", i)
 			} else {
-				cpumap += "," + string(i)
+				cpumap += "," + fmt.Sprintf("%d", i)
 			}
 		}
 	}
@@ -4760,9 +4760,9 @@ func (d *Domain) SetVcpu(cpus []bool, state bool, flags uint32) error {
 	for i := 0; i < len(cpus); i++ {
 		if cpus[i] {
 			if cpumap == "" {
-				cpumap = string(i)
+				cpumap = fmt.Sprintf("%d", i)
 			} else {
-				cpumap += "," + string(i)
+				cpumap += "," + fmt.Sprintf("%d", i)
 			}
 		}
 	}
