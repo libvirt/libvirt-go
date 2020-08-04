@@ -28,18 +28,18 @@ stages:
     - export MAKEFLAGS="-j$(getconf _NPROCESSORS_ONLN)"
     - export SCRATCH_DIR="/tmp/scratch"
     - export VROOT="$SCRATCH_DIR/vroot"
-    - export LD_LIBRARY_PATH="$VROOT/lib"
+    - export LIBDIR="$VROOT/lib"
+    - export LD_LIBRARY_PATH="$LIBDIR"
     - export PATH="$VROOT/bin:$PATH"
-    - export PKG_CONFIG_PATH="$VROOT/lib/pkgconfig"
+    - export PKG_CONFIG_PATH="$LIBDIR/pkgconfig"
   script:
     - pushd "$PWD"
     - mkdir -p "$SCRATCH_DIR"
     - cd "$SCRATCH_DIR"
     - git clone --depth 1 https://gitlab.com/libvirt/libvirt.git
-    - mkdir libvirt/build
-    - cd libvirt/build
-    - ../autogen.sh --prefix="$VROOT" --without-libvirtd
-    - $MAKE install
+    - cd libvirt
+    - meson build -Ddriver_libvirtd=disabled "--prefix=$VROOT" "--libdir=$LIBDIR"
+    - ninja -C build install
     - popd
     - go build
     - go test -tags apis
@@ -85,10 +85,10 @@ centos-8-container:
   variables:
     NAME: centos-8
 
-debian-9-container:
+centos-stream-container:
   <<: *container_job_definition
   variables:
-    NAME: debian-9
+    NAME: centos-stream
 
 debian-10-container:
   <<: *container_job_definition
@@ -147,10 +147,10 @@ centos-8-dist-build:
   variables:
     NAME: centos-8
 
-debian-9-dist-build:
+centos-stream-dist-build:
   <<: *dist_build_job_definition
   variables:
-    NAME: debian-9
+    NAME: centos-stream
 
 debian-10-dist-build:
   <<: *dist_build_job_definition
