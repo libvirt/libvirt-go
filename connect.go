@@ -1795,9 +1795,9 @@ func (c *Connect) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
 	}
 	defer C.free(unsafe.Pointer(ccpumap))
 
-	cpumapbytes := C.GoBytes(unsafe.Pointer(ccpumap), C.int(ret/8))
+	cpumapbytes := C.GoBytes(unsafe.Pointer(ccpumap), C.int((ret+7)/8))
 
-	cpumap := make(map[int]bool, 0)
+	cpumap := make(map[int]bool, ret)
 	for i := 0; i < int(ret); i++ {
 		idx := int(i / 8)
 		val := byte(cpumapbytes[idx])
