@@ -1802,7 +1802,7 @@ func (c *Connect) GetCPUMap(flags uint32) (map[int]bool, uint, error) {
 		idx := int(i / 8)
 		val := byte(cpumapbytes[idx])
 		shift := i % 8
-		cpumap[i] = (val & (1 << uint(shift))) == 1
+		cpumap[i] = (val & (1 << uint(shift))) != 0
 	}
 
 	return cpumap, uint(conline), nil
