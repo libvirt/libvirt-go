@@ -2385,6 +2385,8 @@ type DomainMigrateParameters struct {
 	ParallelConnections       int
 	TLSDestinationSet         bool
 	TLSDestination            string
+	DisksURISet               bool
+	DisksURI                  string
 }
 
 func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]typedParamsFieldInfo {
@@ -2464,6 +2466,10 @@ func getMigrateParameterFieldInfo(params *DomainMigrateParameters) map[string]ty
 		C.VIR_MIGRATE_PARAM_TLS_DESTINATION: typedParamsFieldInfo{
 			set: &params.TLSDestinationSet,
 			s:   &params.TLSDestination,
+		},
+		C.VIR_MIGRATE_PARAM_DISKS_URI: typedParamsFieldInfo{
+			set: &params.DisksURISet,
+			s:   &params.DisksURI,
 		},
 	}
 }

@@ -1078,4 +1078,12 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_JOB_ERRMSG "errmsg"
 #endif
 
+
+/* 6.8.0 */
+
+#ifndef VIR_MIGRATE_PARAM_DISKS_URI
+#define VIR_MIGRATE_PARAM_DISKS_URI "disks_uri"
+#endif
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
