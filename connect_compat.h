@@ -251,5 +251,11 @@ typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
 #endif
 
 
+/* 6.8.0 */
+
+#ifndef VIR_CONNECT_LIST_NODE_DEVICES_CAP_CSS_DEV
+#define VIR_CONNECT_LIST_NODE_DEVICES_CAP_CSS_DEV 1 << 16
+#endif
+
 
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
