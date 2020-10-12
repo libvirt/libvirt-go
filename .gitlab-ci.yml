@@ -42,7 +42,7 @@ stages:
     - ninja -C build install
     - popd
     - go build
-    - go test -tags apis
+    - go test -tags api
 
 .dist_build_job_template: &dist_build_job_definition
   image: $CI_REGISTRY_IMAGE/ci-$NAME:latest
