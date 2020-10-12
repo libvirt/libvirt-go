@@ -126,6 +126,7 @@ type ConnectCompareCPUFlags int
 
 const (
 	CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE = ConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE)
+	CONNECT_COMPARE_CPU_VALIDATE_XML      = ConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_VALIDATE_XML)
 )
 
 type ConnectListAllInterfacesFlags int
