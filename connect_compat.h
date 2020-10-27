@@ -263,4 +263,8 @@ typedef struct _virNWFilterBinding *virNWFilterBindingPtr;
 #define VIR_CONNECT_COMPARE_CPU_VALIDATE_XML 1 << 1
 #endif
 
+#ifndef VIR_CONNECT_LIST_NODE_DEVICES_CAP_VDPA
+#define VIR_CONNECT_LIST_NODE_DEVICES_CAP_VDPA 1 << 17
+#endif
+
 #endif /* LIBVIRT_GO_CONNECT_COMPAT_H__ */
