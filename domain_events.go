@@ -217,6 +217,14 @@ type DomainEventBlockThreshold struct {
 
 type DomainEventBlockThresholdCallback func(c *Connect, d *Domain, event *DomainEventBlockThreshold)
 
+type DomainEventMemoryFailure struct {
+	Recipient DomainMemoryFailureRecipientType
+	Action    DomainMemoryFailureActionType
+	Flags     DomainMemoryFailureFlags
+}
+
+type DomainEventMemoryFailureCallback func(c *Connect, d *Domain, event *DomainEventMemoryFailure)
+
 //export domainEventLifecycleCallback
 func domainEventLifecycleCallback(c C.virConnectPtr, d C.virDomainPtr,
 	event int, detail int,
@@ -958,6 +966,25 @@ func domainEventBlockThresholdCallback(c C.virConnectPtr, d C.virDomainPtr, dev 
 
 }
 
+//export domainEventMemoryFailureCallback
+func domainEventMemoryFailureCallback(c C.virConnectPtr, d C.virDomainPtr, recipient C.int, action C.int, flags C.uint, goCallbackId int) {
+	domain := &Domain{ptr: d}
+	connection := &Connect{ptr: c}
+
+	eventDetails := &DomainEventMemoryFailure{
+		Recipient: DomainMemoryFailureRecipientType(recipient),
+		Action:    DomainMemoryFailureActionType(action),
+		Flags:     DomainMemoryFailureFlags(action),
+	}
+	callbackFunc := getCallbackId(goCallbackId)
+	callback, ok := callbackFunc.(DomainEventMemoryFailureCallback)
+	if !ok {
+		panic("Inappropriate callback type called")
+	}
+	callback(connection, domain, eventDetails)
+
+}
+
 func (c *Connect) DomainEventLifecycleRegister(dom *Domain, callback DomainEventLifecycleCallback) (int, error) {
 	goCallBackId := registerCallbackId(callback)
 
@@ -1449,6 +1476,26 @@ func (c *Connect) DomainEventBlockThresholdRegister(dom *Domain, callback Domain
 	var err C.virError
 	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
 		C.VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD,
+		C.virConnectDomainEventGenericCallback(callbackPtr),
+		C.long(goCallBackId), &err)
+	if ret == -1 {
+		freeCallbackId(goCallBackId)
+		return 0, makeError(&err)
+	}
+	return int(ret), nil
+}
+
+func (c *Connect) DomainEventMemoryFailureRegister(dom *Domain, callback DomainEventMemoryFailureCallback) (int, error) {
+	goCallBackId := registerCallbackId(callback)
+
+	callbackPtr := unsafe.Pointer(C.domainEventMemoryFailureCallbackHelper)
+	var cdom C.virDomainPtr
+	if dom != nil {
+		cdom = dom.ptr
+	}
+	var err C.virError
+	ret := C.virConnectDomainEventRegisterAnyWrapper(c.ptr, cdom,
+		C.VIR_DOMAIN_EVENT_ID_MEMORY_FAILURE,
 		C.virConnectDomainEventGenericCallback(callbackPtr),
 		C.long(goCallBackId), &err)
 	if ret == -1 {

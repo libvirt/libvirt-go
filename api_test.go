@@ -112,6 +112,7 @@ var (
 		"virConnectDomainEventWatchdogCallback",
 		"virConnectDomainEventMetadataChangeCallback",
 		"virConnectDomainEventBlockThresholdCallback",
+		"virConnectDomainEventMemoryFailureCallback",
 		"virConnectDomainQemuMonitorEventCallback",
 
 		/* Network event callback typedefs */
