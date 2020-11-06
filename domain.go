@@ -1983,7 +1983,7 @@ func (d *Domain) PinVcpuFlags(vcpu uint, cpuMap []bool, flags DomainModification
 }
 
 type DomainIPAddress struct {
-	Type   int
+	Type   IPAddrType
 	Addr   string
 	Prefix uint
 }
@@ -2024,7 +2024,7 @@ func (d *Domain) ListAllInterfaceAddresses(src DomainInterfaceAddressesSource) (
 			var caddr *C.virDomainIPAddress
 			caddr = (*C.virDomainIPAddress)(unsafe.Pointer(uintptr(unsafe.Pointer(ciface.addrs)) + (unsafe.Sizeof(*caddr) * uintptr(k))))
 			ifaces[i].Addrs[k] = DomainIPAddress{}
-			ifaces[i].Addrs[k].Type = int(caddr._type)
+			ifaces[i].Addrs[k].Type = IPAddrType(caddr._type)
 			ifaces[i].Addrs[k].Addr = C.GoString(caddr.addr)
 			ifaces[i].Addrs[k].Prefix = uint(caddr.prefix)
 
