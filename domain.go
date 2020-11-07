@@ -1453,7 +1453,7 @@ func (d *Domain) UndefineFlags(flags DomainUndefineFlagsValues) error {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetMaxMemory
-func (d *Domain) SetMaxMemory(memory uint) error {
+func (d *Domain) SetMaxMemory(memory uint64) error {
 	var err C.virError
 	result := C.virDomainSetMaxMemoryWrapper(d.ptr, C.ulong(memory), &err)
 	if result == -1 {
