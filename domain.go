@@ -1388,7 +1388,7 @@ func (d *Domain) SetInterfaceParameters(device string, params *DomainInterfacePa
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetMetadata
-func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags DomainModificationImpact) (string, error) {
+func (d *Domain) GetMetadata(metadataType DomainMetadataType, uri string, flags DomainModificationImpact) (string, error) {
 	var cUri *C.char
 	if uri != "" {
 		cUri = C.CString(uri)
@@ -1396,7 +1396,7 @@ func (d *Domain) GetMetadata(tipus DomainMetadataType, uri string, flags DomainM
 	}
 
 	var err C.virError
-	result := C.virDomainGetMetadataWrapper(d.ptr, C.int(tipus), cUri, C.uint(flags), &err)
+	result := C.virDomainGetMetadataWrapper(d.ptr, C.int(metadataType), cUri, C.uint(flags), &err)
 	if result == nil {
 		return "", makeError(&err)
 
