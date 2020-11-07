@@ -1406,7 +1406,7 @@ func (d *Domain) GetMetadata(metadataType DomainMetadataType, uri string, flags 
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetMetadata
-func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriKey, uri string, flags DomainModificationImpact) error {
+func (d *Domain) SetMetadata(metadataType DomainMetadataType, metaDataCont, uriKey, uri string, flags DomainModificationImpact) error {
 	var cMetaDataCont *C.char
 	var cUriKey *C.char
 	var cUri *C.char
@@ -1416,7 +1416,7 @@ func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriK
 		defer C.free(unsafe.Pointer(cMetaDataCont))
 	}
 
-	if metaDataType == DOMAIN_METADATA_ELEMENT {
+	if metadataType == DOMAIN_METADATA_ELEMENT {
 		if uriKey != "" {
 			cUriKey = C.CString(uriKey)
 			defer C.free(unsafe.Pointer(cUriKey))
@@ -1425,7 +1425,7 @@ func (d *Domain) SetMetadata(metaDataType DomainMetadataType, metaDataCont, uriK
 		defer C.free(unsafe.Pointer(cUri))
 	}
 	var err C.virError
-	result := C.virDomainSetMetadataWrapper(d.ptr, C.int(metaDataType), cMetaDataCont, cUriKey, cUri, C.uint(flags), &err)
+	result := C.virDomainSetMetadataWrapper(d.ptr, C.int(metadataType), cMetaDataCont, cUriKey, cUri, C.uint(flags), &err)
 	if result == -1 {
 		return makeError(&err)
 	}
