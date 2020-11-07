@@ -4888,7 +4888,7 @@ const (
 )
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainSetLifecycleAction
-func (d *Domain) SetLifecycleAction(lifecycleType uint32, action uint32, flags uint32) error {
+func (d *Domain) SetLifecycleAction(lifecycleType DomainLifecycle, action DomainLifecycleAction, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 3009000 {
 		return makeNotImplementedError("virDomainSetLifecycleAction")
 	}
