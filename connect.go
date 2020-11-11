@@ -3256,7 +3256,7 @@ func (c *Connect) GetSEVInfo(flags uint32) (*NodeSEVParameters, error) {
 	return params, nil
 }
 
-// See also https://libvirt.org/html/libvirt-libvirt-domain.html#virNWFilterBindingCreateXML
+// See also https://libvirt.org/html/libvirt-libvirt-nwfilter.html#virNWFilterBindingCreateXML
 func (c *Connect) NWFilterBindingCreateXML(xmlConfig string, flags uint32) (*NWFilterBinding, error) {
 	if C.LIBVIR_VERSION_NUMBER < 4005000 {
 		return nil, makeNotImplementedError("virNWFilterBindingCreateXML")
