@@ -1098,12 +1098,12 @@ func (d *Domain) GetAutostart() (bool, error) {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainGetBlockInfo
-func (d *Domain) GetBlockInfo(disk string, flag uint) (*DomainBlockInfo, error) {
+func (d *Domain) GetBlockInfo(disk string, flags uint32) (*DomainBlockInfo, error) {
 	var cinfo C.virDomainBlockInfo
 	cDisk := C.CString(disk)
 	defer C.free(unsafe.Pointer(cDisk))
 	var err C.virError
-	result := C.virDomainGetBlockInfoWrapper(d.ptr, cDisk, &cinfo, C.uint(flag), &err)
+	result := C.virDomainGetBlockInfoWrapper(d.ptr, cDisk, &cinfo, C.uint(flags), &err)
 	if result == -1 {
 		return nil, makeError(&err)
 	}

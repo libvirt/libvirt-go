@@ -560,7 +560,7 @@ func getConnectIdentityFieldInfo(params *ConnectIdentity) map[string]typedParams
 	}
 }
 
-func (c *Connect) SetIdentity(ident *ConnectIdentity, flags uint) error {
+func (c *Connect) SetIdentity(ident *ConnectIdentity, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 5008000 {
 		return makeNotImplementedError("virConnectSetIdentity")
 	}

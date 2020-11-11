@@ -374,7 +374,7 @@ func (n *Network) LookupNetworkPortByUUID(uuid []byte) (*NetworkPort, error) {
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkPortCreateXML
-func (n *Network) PortCreateXML(xmlConfig string, flags uint) (*NetworkPort, error) {
+func (n *Network) PortCreateXML(xmlConfig string, flags uint32) (*NetworkPort, error) {
 	if C.LIBVIR_VERSION_NUMBER < 5005000 {
 		return nil, makeNotImplementedError("virNetworkPortCreateXML")
 	}
@@ -389,7 +389,7 @@ func (n *Network) PortCreateXML(xmlConfig string, flags uint) (*NetworkPort, err
 }
 
 // See also https://libvirt.org/html/libvirt-libvirt-network.html#virNetworkListAllPorts
-func (n *Network) ListAllPorts(flags uint) ([]NetworkPort, error) {
+func (n *Network) ListAllPorts(flags uint32) ([]NetworkPort, error) {
 	if C.LIBVIR_VERSION_NUMBER < 5005000 {
 		return []NetworkPort{}, makeNotImplementedError("virNetworkListAllPorts")
 	}
