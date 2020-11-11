@@ -560,6 +560,7 @@ func getConnectIdentityFieldInfo(params *ConnectIdentity) map[string]typedParams
 	}
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectSetIdentity
 func (c *Connect) SetIdentity(ident *ConnectIdentity, flags uint32) error {
 	if C.LIBVIR_VERSION_NUMBER < 5008000 {
 		return makeNotImplementedError("virConnectSetIdentity")
