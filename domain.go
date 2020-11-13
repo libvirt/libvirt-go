@@ -841,6 +841,13 @@ const (
 	VCPU_BLOCKED = VcpuState(C.VIR_VCPU_BLOCKED)
 )
 
+type VcpuHostCpuState int
+
+const (
+	VCPU_INFO_CPU_OFFLINE     = VcpuHostCpuState(C.VIR_VCPU_INFO_CPU_OFFLINE)
+	VCPU_INFO_CPU_UNAVAILABLE = VcpuHostCpuState(C.VIR_VCPU_INFO_CPU_UNAVAILABLE)
+)
+
 type DomainJobOperationType int
 
 const (

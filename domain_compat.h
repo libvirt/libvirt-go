@@ -1127,4 +1127,12 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_EVENT_ID_MEMORY_FAILURE 25
 #endif
 
+#ifndef VIR_VCPU_INFO_CPU_OFFLINE
+#define VIR_VCPU_INFO_CPU_OFFLINE -1
+#endif
+
+#ifndef VIR_VCPU_INFO_CPU_UNAVAILABLE
+#define VIR_VCPU_INFO_CPU_UNAVAILABLE -2
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
