@@ -974,7 +974,7 @@ func domainEventMemoryFailureCallback(c C.virConnectPtr, d C.virDomainPtr, recip
 	eventDetails := &DomainEventMemoryFailure{
 		Recipient: DomainMemoryFailureRecipientType(recipient),
 		Action:    DomainMemoryFailureActionType(action),
-		Flags:     DomainMemoryFailureFlags(action),
+		Flags:     DomainMemoryFailureFlags(flags),
 	}
 	callbackFunc := getCallbackId(goCallbackId)
 	callback, ok := callbackFunc.(DomainEventMemoryFailureCallback)
