@@ -1,21 +1,17 @@
-FROM centos:8
+FROM registry.centos.org/centos:8
 
 RUN dnf install 'dnf-command(config-manager)' -y && \
     dnf config-manager --set-enabled -y PowerTools && \
+    dnf install -y centos-release-advanced-virtualization && \
     dnf install -y epel-release && \
     dnf update -y && \
     dnf install -y \
-        autoconf \
-        automake \
         bash \
         bash-completion \
         ca-certificates \
         ccache \
-        chrony \
         gcc \
-        gdb \
         gettext \
-        gettext-devel \
         git \
         glib2-devel \
         glibc-devel \
@@ -24,14 +20,11 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
         golang \
         libnl3-devel \
         libtirpc-devel \
-        libtool \
         libvirt-devel \
         libxml2 \
         libxml2-devel \
         libxslt \
-        lsof \
         make \
-        net-tools \
         ninja-build \
         patch \
         perl \
@@ -43,12 +36,7 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
         python3-setuptools \
         python3-wheel \
         rpcgen \
-        rpm-build \
-        screen \
-        strace \
-        sudo \
-        vim \
-        xz && \
+        rpm-build && \
     dnf autoremove -y && \
     dnf clean all -y && \
     mkdir -p /usr/libexec/ccache-wrappers && \
