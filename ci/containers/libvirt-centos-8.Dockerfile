@@ -6,8 +6,6 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
     dnf install -y epel-release && \
     dnf update -y && \
     dnf install -y \
-        bash \
-        bash-completion \
         ca-certificates \
         ccache \
         gcc \
@@ -26,17 +24,14 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
         libxslt \
         make \
         ninja-build \
-        patch \
         perl \
-        perl-App-cpanminus \
         pkgconfig \
         python3 \
         python3-docutils \
         python3-pip \
         python3-setuptools \
         python3-wheel \
-        rpcgen \
-        rpm-build && \
+        rpcgen && \
     dnf autoremove -y && \
     dnf clean all -y && \
     mkdir -p /usr/libexec/ccache-wrappers && \
@@ -47,9 +42,7 @@ RUN pip3 install \
          meson==0.54.0
 
 ENV LANG "en_US.UTF-8"
-
 ENV MAKE "/usr/bin/make"
 ENV NINJA "/usr/bin/ninja"
 ENV PYTHON "/usr/bin/python3"
-
 ENV CCACHE_WRAPPERSDIR "/usr/libexec/ccache-wrappers"
