@@ -16,7 +16,7 @@ stages:
     - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
   script:
     - docker pull "$TAG" || docker pull "$COMMON_TAG" || true
-    - docker build --cache-from "$TAG" --cache-from "$COMMON_TAG" --tag "$TAG" -f "ci/libvirt-$NAME.Dockerfile" ci
+    - docker build --cache-from "$TAG" --cache-from "$COMMON_TAG" --tag "$TAG" -f "ci/containers/libvirt-$NAME.Dockerfile" ci/containers
     - docker push "$TAG"
   after_script:
     - docker logout
