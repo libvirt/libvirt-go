@@ -948,6 +948,13 @@ const (
 	DOMAIN_MEMORY_FAILURE_RECURSIVE       = DomainMemoryFailureFlags(C.VIR_DOMAIN_MEMORY_FAILURE_RECURSIVE)
 )
 
+type DomainAuthorizedSSHKeysFlags uint
+
+const (
+	DOMAIN_AUTHORIZED_SSH_KEYS_SET_APPEND = DomainAuthorizedSSHKeysFlags(C.VIR_DOMAIN_AUTHORIZED_SSH_KEYS_SET_APPEND)
+	DOMAIN_AUTHORIZED_SSH_KEYS_SET_REMOVE = DomainAuthorizedSSHKeysFlags(C.VIR_DOMAIN_AUTHORIZED_SSH_KEYS_SET_REMOVE)
+)
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFree
 func (d *Domain) Free() error {
 	var err C.virError
@@ -5331,4 +5338,55 @@ func (d *Domain) BackupGetXMLDesc(flags uint32) (string, error) {
 	defer C.free(unsafe.Pointer(ret))
 
 	return xml, nil
+}
+
+func (d *Domain) AuthorizedSSHKeysGet(user string, flags DomainAuthorizedSSHKeysFlags) ([]string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 6010000 {
+		return []string{}, makeNotImplementedError("virDomainAuthorizedSSHKeysGet")
+	}
+	cuser := C.CString(user)
+	defer C.free(unsafe.Pointer(cuser))
+
+	var ckeys **C.char
+	var err C.virError
+	ret := C.virDomainAuthorizedSSHKeysGetWrapper(d.ptr, cuser, &ckeys, C.uint(flags), &err)
+	if ret == -1 {
+		return []string{}, makeError(&err)
+	}
+
+	keys := make([]string, int(ret))
+	for i := 0; i < int(ret); i++ {
+		cmodel := *(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(ckeys)) + (unsafe.Sizeof(*ckeys) * uintptr(i))))
+
+		defer C.free(unsafe.Pointer(cmodel))
+		keys[i] = C.GoString(cmodel)
+	}
+	defer C.free(unsafe.Pointer(ckeys))
+
+	return keys, nil
+}
+
+func (d *Domain) AuthorizedSSHKeysSet(user string, keys []string, flags DomainAuthorizedSSHKeysFlags) error {
+	if C.LIBVIR_VERSION_NUMBER < 6010000 {
+		return makeNotImplementedError("virDomainAuthorizedSSHKeysSet")
+	}
+	cuser := C.CString(user)
+	defer C.free(unsafe.Pointer(cuser))
+
+	ckeys := make([](*C.char), len(keys))
+
+	for i := 0; i < len(keys); i++ {
+		ckeys[i] = C.CString(keys[i])
+		defer C.free(unsafe.Pointer(ckeys[i]))
+	}
+
+	nkeys := len(keys)
+	var err C.virError
+	ret := C.virDomainAuthorizedSSHKeysSetWrapper(d.ptr, cuser, (**C.char)(unsafe.Pointer(&ckeys[0])), C.uint(nkeys), C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
+
+	return nil
+
 }
