@@ -1143,5 +1143,11 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_AUTHORIZED_SSH_KEYS_SET_REMOVE (1 << 1)
 #endif
 
+/* 7.0.0 */
+
+#ifndef VIR_DOMAIN_GUEST_INFO_DISKS
+#define VIR_DOMAIN_GUEST_INFO_DISKS (1 << 5)
+#endif
+
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */

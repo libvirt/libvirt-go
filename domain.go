@@ -904,6 +904,7 @@ const (
 	DOMAIN_GUEST_INFO_TIMEZONE   = DomainGuestInfoTypes(C.VIR_DOMAIN_GUEST_INFO_TIMEZONE)
 	DOMAIN_GUEST_INFO_HOSTNAME   = DomainGuestInfoTypes(C.VIR_DOMAIN_GUEST_INFO_HOSTNAME)
 	DOMAIN_GUEST_INFO_FILESYSTEM = DomainGuestInfoTypes(C.VIR_DOMAIN_GUEST_INFO_FILESYSTEM)
+	DOMAIN_GUEST_INFO_DISKS      = DomainGuestInfoTypes(C.VIR_DOMAIN_GUEST_INFO_DISKS)
 )
 
 type DomainAgentSetResponseTimeoutValues int
@@ -5144,9 +5145,70 @@ type domainGuestInfoFileSystemLengths struct {
 
 func getDomainGuestInfoFileSystemLengthsFieldInfo(idx int, params *domainGuestInfoFileSystemLengths) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
-		fmt.Sprintf("disk.%d.count", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.disk.count", idx): typedParamsFieldInfo{
 			set: &params.DiskCountSet,
 			ui:  &params.DiskCount,
+		},
+	}
+}
+
+type DomainGuestInfoDiskDependency struct {
+	NameSet bool
+	Name    string
+}
+
+func getDomainGuestInfoDiskDependencyFieldInfo(idx1, idx2 int, params *DomainGuestInfoDiskDependency) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("disk.%d.dependency.%d.name", idx1, idx2): typedParamsFieldInfo{
+			set: &params.NameSet,
+			s:   &params.Name,
+		},
+	}
+}
+
+type DomainGuestInfoDisk struct {
+	NameSet       bool
+	Name          string
+	PartitionSet  bool
+	Partition     bool
+	AliasSet      bool
+	Alias         string
+	GuestAliasSet bool
+	GuestAlias    string
+	Dependencies  []DomainGuestInfoDiskDependency
+}
+
+func getDomainGuestInfoDiskFieldInfo(idx int, params *DomainGuestInfoDisk) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("disk.%d.name", idx): typedParamsFieldInfo{
+			set: &params.NameSet,
+			s:   &params.Name,
+		},
+		fmt.Sprintf("disk.%d.partition", idx): typedParamsFieldInfo{
+			set: &params.PartitionSet,
+			b:   &params.Partition,
+		},
+		fmt.Sprintf("disk.%d.alias", idx): typedParamsFieldInfo{
+			set: &params.AliasSet,
+			s:   &params.Alias,
+		},
+		fmt.Sprintf("disk.%d.guest_alias", idx): typedParamsFieldInfo{
+			set: &params.GuestAliasSet,
+			s:   &params.GuestAlias,
+		},
+	}
+}
+
+type domainGuestInfoDiskLengths struct {
+	DependencyCountSet bool
+	DependencyCount    uint
+}
+
+func getDomainGuestInfoDiskLengthsFieldInfo(idx int, params *domainGuestInfoDiskLengths) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		fmt.Sprintf("disk.%d.dependency.count", idx): typedParamsFieldInfo{
+			set: &params.DependencyCountSet,
+			ui:  &params.DependencyCount,
 		},
 	}
 }
@@ -5158,6 +5220,7 @@ type DomainGuestInfo struct {
 	HostnameSet bool
 	Hostname    string
 	FileSystems []DomainGuestInfoFileSystem
+	Disks       []DomainGuestInfoDisk
 }
 
 func getDomainGuestInfoFieldInfo(params *DomainGuestInfo) map[string]typedParamsFieldInfo {
@@ -5174,6 +5237,8 @@ type domainGuestInfoLengths struct {
 	UserCount          uint
 	FileSystemCountSet bool
 	FileSystemCount    uint
+	DiskCountSet       bool
+	DiskCount          uint
 }
 
 func getDomainGuestInfoLengthsFieldInfo(params *domainGuestInfoLengths) map[string]typedParamsFieldInfo {
@@ -5185,6 +5250,10 @@ func getDomainGuestInfoLengthsFieldInfo(params *domainGuestInfoLengths) map[stri
 		"fs.count": typedParamsFieldInfo{
 			set: &params.FileSystemCountSet,
 			ui:  &params.FileSystemCount,
+		},
+		"disk.count": typedParamsFieldInfo{
+			set: &params.DiskCountSet,
+			ui:  &params.DiskCount,
 		},
 	}
 }
@@ -5272,6 +5341,38 @@ func (d *Domain) GetGuestInfo(types DomainGuestInfoTypes, flags uint32) (*Domain
 				info.FileSystems[i].Disks = make([]DomainGuestInfoFileSystemDisk, fsLengths.DiskCount)
 				for j := 0; j < int(fsLengths.DiskCount); j++ {
 					diskInfo := getDomainGuestInfoFileSystemDiskFieldInfo(i, j, &info.FileSystems[i].Disks[j])
+
+					_, gerr = typedParamsUnpack(cparams, cnparams, diskInfo)
+					if gerr != nil {
+						return nil, gerr
+					}
+				}
+			}
+		}
+	}
+
+	if lengths.DiskCountSet && lengths.DiskCount > 0 {
+		info.Disks = make([]DomainGuestInfoDisk, lengths.DiskCount)
+		for i := 0; i < int(lengths.DiskCount); i++ {
+			diskInfo := getDomainGuestInfoDiskFieldInfo(i, &info.Disks[i])
+
+			_, gerr = typedParamsUnpack(cparams, cnparams, diskInfo)
+			if gerr != nil {
+				return nil, gerr
+			}
+
+			diskLengths := domainGuestInfoDiskLengths{}
+			diskLengthsInfo := getDomainGuestInfoDiskLengthsFieldInfo(i, &diskLengths)
+
+			_, gerr = typedParamsUnpack(cparams, cnparams, diskLengthsInfo)
+			if gerr != nil {
+				return nil, gerr
+			}
+
+			if diskLengths.DependencyCountSet && diskLengths.DependencyCount > 0 {
+				info.Disks[i].Dependencies = make([]DomainGuestInfoDiskDependency, diskLengths.DependencyCount)
+				for j := 0; j < int(diskLengths.DependencyCount); j++ {
+					diskInfo := getDomainGuestInfoDiskDependencyFieldInfo(i, j, &info.Disks[i].Dependencies[j])
 
 					_, gerr = typedParamsUnpack(cparams, cnparams, diskInfo)
 					if gerr != nil {
