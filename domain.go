@@ -5114,23 +5114,23 @@ type DomainGuestInfoFileSystem struct {
 
 func getDomainGuestInfoFileSystemFieldInfo(idx int, params *DomainGuestInfoFileSystem) map[string]typedParamsFieldInfo {
 	return map[string]typedParamsFieldInfo{
-		fmt.Sprintf("fs.%d.disk.mountpoint", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.mountpoint", idx): typedParamsFieldInfo{
 			set: &params.MountPointSet,
 			s:   &params.MountPoint,
 		},
-		fmt.Sprintf("fs.%d.disk.name", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.name", idx): typedParamsFieldInfo{
 			set: &params.NameSet,
 			s:   &params.Name,
 		},
-		fmt.Sprintf("fs.%d.disk.fstype", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.fstype", idx): typedParamsFieldInfo{
 			set: &params.FSTypeSet,
 			s:   &params.FSType,
 		},
-		fmt.Sprintf("fs.%d.disk.total-bytes", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.total-bytes", idx): typedParamsFieldInfo{
 			set: &params.TotalBytesSet,
 			ul:  &params.TotalBytes,
 		},
-		fmt.Sprintf("fs.%d.disk.used-bytes", idx): typedParamsFieldInfo{
+		fmt.Sprintf("fs.%d.used-bytes", idx): typedParamsFieldInfo{
 			set: &params.UsedBytesSet,
 			ul:  &params.UsedBytes,
 		},
