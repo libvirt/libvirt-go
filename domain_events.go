@@ -336,13 +336,12 @@ func domainEventGraphicsCallback(c C.virConnectPtr, d C.virDomainPtr,
 	connection := &Connect{ptr: c}
 
 	subjectGo := make([]DomainEventGraphicsSubjectIdentity, 0)
-	nidentities := int(subject.nidentity)
-	identities := (*[1 << 30]C.virDomainEventGraphicsSubjectIdentity)(unsafe.Pointer(&subject.identities))[:nidentities:nidentities]
-	for _, identity := range identities {
+	for i := 0; i < int(subject.nidentity); i++ {
+		cidentity := *(**C.virDomainEventGraphicsSubjectIdentity)(unsafe.Pointer(uintptr(unsafe.Pointer(subject.identities)) + (unsafe.Sizeof(*subject.identities) * uintptr(i))))
 		subjectGo = append(subjectGo,
 			DomainEventGraphicsSubjectIdentity{
-				Type: C.GoString(identity._type),
-				Name: C.GoString(identity.name),
+				Type: C.GoString(cidentity._type),
+				Name: C.GoString(cidentity.name),
 			},
 		)
 	}
