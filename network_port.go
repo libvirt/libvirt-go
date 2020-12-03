@@ -37,7 +37,7 @@ import (
 	"unsafe"
 )
 
-type NetworkPortCreateFlags int
+type NetworkPortCreateFlags uint
 
 const (
 	NETWORK_PORT_CREATE_RECLAIM = NetworkPortCreateFlags(C.VIR_NETWORK_PORT_CREATE_RECLAIM)

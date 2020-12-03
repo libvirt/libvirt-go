@@ -47,7 +47,7 @@ const (
 	IP_ADDR_TYPE_IPV6 = IPAddrType(C.VIR_IP_ADDR_TYPE_IPV6)
 )
 
-type NetworkXMLFlags int
+type NetworkXMLFlags uint
 
 const (
 	NETWORK_XML_INACTIVE = NetworkXMLFlags(C.VIR_NETWORK_XML_INACTIVE)
@@ -81,7 +81,7 @@ const (
 	NETWORK_SECTION_DNS_SRV           = NetworkUpdateSection(C.VIR_NETWORK_SECTION_DNS_SRV)
 )
 
-type NetworkUpdateFlags int
+type NetworkUpdateFlags uint
 
 const (
 	NETWORK_UPDATE_AFFECT_CURRENT = NetworkUpdateFlags(C.VIR_NETWORK_UPDATE_AFFECT_CURRENT)

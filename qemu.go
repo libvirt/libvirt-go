@@ -53,7 +53,7 @@ import (
  *	'info cpus'
  */
 
-type DomainQemuMonitorCommandFlags int
+type DomainQemuMonitorCommandFlags uint
 
 const (
 	DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT = DomainQemuMonitorCommandFlags(C.VIR_DOMAIN_QEMU_MONITOR_COMMAND_DEFAULT)
@@ -70,7 +70,7 @@ const (
 	DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN = DomainQemuAgentCommandTimeout(C.VIR_DOMAIN_QEMU_AGENT_COMMAND_SHUTDOWN)
 )
 
-type DomainQemuMonitorEventFlags int
+type DomainQemuMonitorEventFlags uint
 
 const (
 	CONNECT_DOMAIN_QEMU_MONITOR_EVENT_REGISTER_REGEX  = DomainQemuMonitorEventFlags(C.VIR_CONNECT_DOMAIN_QEMU_MONITOR_EVENT_REGISTER_REGEX)

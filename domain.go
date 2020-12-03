@@ -68,7 +68,7 @@ const (
 	DOMAIN_METADATA_ELEMENT     = DomainMetadataType(C.VIR_DOMAIN_METADATA_ELEMENT)
 )
 
-type DomainVcpuFlags int
+type DomainVcpuFlags uint
 
 const (
 	DOMAIN_VCPU_CONFIG       = DomainVcpuFlags(C.VIR_DOMAIN_VCPU_CONFIG)
@@ -87,7 +87,7 @@ const (
 	DOMAIN_AFFECT_LIVE    = DomainModificationImpact(C.VIR_DOMAIN_AFFECT_LIVE)
 )
 
-type DomainMemoryModFlags int
+type DomainMemoryModFlags uint
 
 const (
 	DOMAIN_MEM_CONFIG  = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_CONFIG)
@@ -96,14 +96,14 @@ const (
 	DOMAIN_MEM_MAXIMUM = DomainMemoryModFlags(C.VIR_DOMAIN_MEM_MAXIMUM)
 )
 
-type DomainDestroyFlags int
+type DomainDestroyFlags uint
 
 const (
 	DOMAIN_DESTROY_DEFAULT  = DomainDestroyFlags(C.VIR_DOMAIN_DESTROY_DEFAULT)
 	DOMAIN_DESTROY_GRACEFUL = DomainDestroyFlags(C.VIR_DOMAIN_DESTROY_GRACEFUL)
 )
 
-type DomainShutdownFlags int
+type DomainShutdownFlags uint
 
 const (
 	DOMAIN_SHUTDOWN_DEFAULT        = DomainShutdownFlags(C.VIR_DOMAIN_SHUTDOWN_DEFAULT)
@@ -124,7 +124,7 @@ const (
 	DOMAIN_UNDEFINE_CHECKPOINTS_METADATA = DomainUndefineFlagsValues(C.VIR_DOMAIN_UNDEFINE_CHECKPOINTS_METADATA) // If last use of domain, then also remove any checkpoint metadata
 )
 
-type DomainDeviceModifyFlags int
+type DomainDeviceModifyFlags uint
 
 const (
 	DOMAIN_DEVICE_MODIFY_CONFIG  = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_CONFIG)
@@ -133,7 +133,7 @@ const (
 	DOMAIN_DEVICE_MODIFY_FORCE   = DomainDeviceModifyFlags(C.VIR_DOMAIN_DEVICE_MODIFY_FORCE)
 )
 
-type DomainCreateFlags int
+type DomainCreateFlags uint
 
 const (
 	DOMAIN_NONE               = DomainCreateFlags(C.VIR_DOMAIN_NONE)
@@ -288,7 +288,7 @@ const (
 	DOMAIN_PAUSED_POSTCOPY_FAILED = DomainPausedReason(C.VIR_DOMAIN_PAUSED_POSTCOPY_FAILED) /* paused after failed post-copy */
 )
 
-type DomainXMLFlags int
+type DomainXMLFlags uint
 
 const (
 	DOMAIN_XML_SECURE     = DomainXMLFlags(C.VIR_DOMAIN_XML_SECURE)     /* dump security sensitive information too */
@@ -603,7 +603,7 @@ const (
 	DOMAIN_SHUTOFF_DAEMON        = DomainShutoffReason(C.VIR_DOMAIN_SHUTOFF_DAEMON)
 )
 
-type DomainBlockCommitFlags int
+type DomainBlockCommitFlags uint
 
 const (
 	DOMAIN_BLOCK_COMMIT_SHALLOW         = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_SHALLOW)
@@ -613,7 +613,7 @@ const (
 	DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES = DomainBlockCommitFlags(C.VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES)
 )
 
-type DomainBlockCopyFlags int
+type DomainBlockCopyFlags uint
 
 const (
 	DOMAIN_BLOCK_COPY_SHALLOW       = DomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_SHALLOW)
@@ -621,7 +621,7 @@ const (
 	DOMAIN_BLOCK_COPY_TRANSIENT_JOB = DomainBlockCopyFlags(C.VIR_DOMAIN_BLOCK_COPY_TRANSIENT_JOB)
 )
 
-type DomainBlockRebaseFlags int
+type DomainBlockRebaseFlags uint
 
 const (
 	DOMAIN_BLOCK_REBASE_SHALLOW         = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_SHALLOW)
@@ -633,32 +633,32 @@ const (
 	DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES = DomainBlockRebaseFlags(C.VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES)
 )
 
-type DomainBlockJobAbortFlags int
+type DomainBlockJobAbortFlags uint
 
 const (
 	DOMAIN_BLOCK_JOB_ABORT_ASYNC = DomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC)
 	DOMAIN_BLOCK_JOB_ABORT_PIVOT = DomainBlockJobAbortFlags(C.VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT)
 )
 
-type DomainBlockJobInfoFlags int
+type DomainBlockJobInfoFlags uint
 
 const (
 	DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES = DomainBlockJobInfoFlags(C.VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES)
 )
 
-type DomainBlockJobSetSpeedFlags int
+type DomainBlockJobSetSpeedFlags uint
 
 const (
 	DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES = DomainBlockJobSetSpeedFlags(C.VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES)
 )
 
-type DomainBlockPullFlags int
+type DomainBlockPullFlags uint
 
 const (
 	DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES = DomainBlockPullFlags(C.VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES)
 )
 
-type DomainBlockResizeFlags int
+type DomainBlockResizeFlags uint
 
 const (
 	DOMAIN_BLOCK_RESIZE_BYTES = DomainBlockResizeFlags(C.VIR_DOMAIN_BLOCK_RESIZE_BYTES)
@@ -668,13 +668,13 @@ type Domain struct {
 	ptr C.virDomainPtr
 }
 
-type DomainChannelFlags int
+type DomainChannelFlags uint
 
 const (
 	DOMAIN_CHANNEL_FORCE = DomainChannelFlags(C.VIR_DOMAIN_CHANNEL_FORCE)
 )
 
-type DomainConsoleFlags int
+type DomainConsoleFlags uint
 
 const (
 	DOMAIN_CONSOLE_FORCE = DomainConsoleFlags(C.VIR_DOMAIN_CONSOLE_FORCE)
@@ -690,7 +690,7 @@ const (
 	DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY = DomainCoreDumpFormat(C.VIR_DOMAIN_CORE_DUMP_FORMAT_KDUMP_SNAPPY)
 )
 
-type DomainDefineFlags int
+type DomainDefineFlags uint
 
 const (
 	DOMAIN_DEFINE_VALIDATE = DomainDefineFlags(C.VIR_DOMAIN_DEFINE_VALIDATE)
@@ -707,7 +707,7 @@ const (
 	DOMAIN_JOB_CANCELLED = DomainJobType(C.VIR_DOMAIN_JOB_CANCELLED)
 )
 
-type DomainGetJobStatsFlags int
+type DomainGetJobStatsFlags uint
 
 const (
 	DOMAIN_JOB_STATS_COMPLETED      = DomainGetJobStatsFlags(C.VIR_DOMAIN_JOB_STATS_COMPLETED)
@@ -722,19 +722,19 @@ const (
 	DOMAIN_NUMATUNE_MEM_INTERLEAVE = DomainNumatuneMemMode(C.VIR_DOMAIN_NUMATUNE_MEM_INTERLEAVE)
 )
 
-type DomainOpenGraphicsFlags int
+type DomainOpenGraphicsFlags uint
 
 const (
 	DOMAIN_OPEN_GRAPHICS_SKIPAUTH = DomainOpenGraphicsFlags(C.VIR_DOMAIN_OPEN_GRAPHICS_SKIPAUTH)
 )
 
-type DomainSetUserPasswordFlags int
+type DomainSetUserPasswordFlags uint
 
 const (
 	DOMAIN_PASSWORD_ENCRYPTED = DomainSetUserPasswordFlags(C.VIR_DOMAIN_PASSWORD_ENCRYPTED)
 )
 
-type DomainRebootFlagValues int
+type DomainRebootFlagValues uint
 
 const (
 	DOMAIN_REBOOT_DEFAULT        = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_DEFAULT)
@@ -745,7 +745,7 @@ const (
 	DOMAIN_REBOOT_PARAVIRT       = DomainRebootFlagValues(C.VIR_DOMAIN_REBOOT_PARAVIRT)
 )
 
-type DomainSaveRestoreFlags int
+type DomainSaveRestoreFlags uint
 
 const (
 	DOMAIN_SAVE_BYPASS_CACHE = DomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_BYPASS_CACHE)
@@ -753,7 +753,7 @@ const (
 	DOMAIN_SAVE_PAUSED       = DomainSaveRestoreFlags(C.VIR_DOMAIN_SAVE_PAUSED)
 )
 
-type DomainSetTimeFlags int
+type DomainSetTimeFlags uint
 
 const (
 	DOMAIN_TIME_SYNC = DomainSetTimeFlags(C.VIR_DOMAIN_TIME_SYNC)
@@ -781,7 +781,7 @@ const (
 	DOMAIN_STATS_MEMORY    = DomainStatsTypes(C.VIR_DOMAIN_STATS_MEMORY)
 )
 
-type DomainCoreDumpFlags int
+type DomainCoreDumpFlags uint
 
 const (
 	DUMP_CRASH        = DomainCoreDumpFlags(C.VIR_DUMP_CRASH)
@@ -791,14 +791,14 @@ const (
 	DUMP_MEMORY_ONLY  = DomainCoreDumpFlags(C.VIR_DUMP_MEMORY_ONLY)
 )
 
-type DomainMemoryFlags int
+type DomainMemoryFlags uint
 
 const (
 	MEMORY_VIRTUAL  = DomainMemoryFlags(C.VIR_MEMORY_VIRTUAL)
 	MEMORY_PHYSICAL = DomainMemoryFlags(C.VIR_MEMORY_PHYSICAL)
 )
 
-type DomainMigrateFlags int
+type DomainMigrateFlags uint
 
 const (
 	MIGRATE_LIVE              = DomainMigrateFlags(C.VIR_MIGRATE_LIVE)
@@ -821,13 +821,13 @@ const (
 	MIGRATE_PARALLEL          = DomainMigrateFlags(C.VIR_MIGRATE_PARALLEL)
 )
 
-type DomainMigrateMaxSpeedFlags int
+type DomainMigrateMaxSpeedFlags uint
 
 const (
 	MIGRATE_MAX_SPEED_POSTCOPY = DomainMigrateMaxSpeedFlags(C.VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY)
 )
 
-type DomainSaveImageXMLFlags int
+type DomainSaveImageXMLFlags uint
 
 const (
 	DOMAIN_SAVE_IMAGE_XML_SECURE = DomainSaveImageXMLFlags(C.VIR_DOMAIN_SAVE_IMAGE_XML_SECURE)
@@ -863,7 +863,7 @@ const (
 	DOMAIN_JOB_OPERATION_BACKUP          = DomainJobOperationType(C.VIR_DOMAIN_JOB_OPERATION_BACKUP)
 )
 
-type DomainBackupBeginFlags int
+type DomainBackupBeginFlags uint
 
 const (
 	DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL = DomainBackupBeginFlags(C.VIR_DOMAIN_BACKUP_BEGIN_REUSE_EXTERNAL)

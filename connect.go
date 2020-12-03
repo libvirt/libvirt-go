@@ -58,7 +58,7 @@ const (
 	CONNECT_CLOSE_REASON_CLIENT    = ConnectCloseReason(C.VIR_CONNECT_CLOSE_REASON_CLIENT)
 )
 
-type ConnectListAllDomainsFlags int
+type ConnectListAllDomainsFlags uint
 
 const (
 	CONNECT_LIST_DOMAINS_ACTIVE         = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_ACTIVE)
@@ -79,7 +79,7 @@ const (
 	CONNECT_LIST_DOMAINS_NO_CHECKPOINT  = ConnectListAllDomainsFlags(C.VIR_CONNECT_LIST_DOMAINS_NO_CHECKPOINT)
 )
 
-type ConnectListAllNetworksFlags int
+type ConnectListAllNetworksFlags uint
 
 const (
 	CONNECT_LIST_NETWORKS_INACTIVE     = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_INACTIVE)
@@ -90,7 +90,7 @@ const (
 	CONNECT_LIST_NETWORKS_NO_AUTOSTART = ConnectListAllNetworksFlags(C.VIR_CONNECT_LIST_NETWORKS_NO_AUTOSTART)
 )
 
-type ConnectListAllStoragePoolsFlags int
+type ConnectListAllStoragePoolsFlags uint
 
 const (
 	CONNECT_LIST_STORAGE_POOLS_INACTIVE     = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_INACTIVE)
@@ -115,28 +115,28 @@ const (
 	CONNECT_LIST_STORAGE_POOLS_ISCSI_DIRECT = ConnectListAllStoragePoolsFlags(C.VIR_CONNECT_LIST_STORAGE_POOLS_ISCSI_DIRECT)
 )
 
-type ConnectBaselineCPUFlags int
+type ConnectBaselineCPUFlags uint
 
 const (
 	CONNECT_BASELINE_CPU_EXPAND_FEATURES = ConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES)
 	CONNECT_BASELINE_CPU_MIGRATABLE      = ConnectBaselineCPUFlags(C.VIR_CONNECT_BASELINE_CPU_MIGRATABLE)
 )
 
-type ConnectCompareCPUFlags int
+type ConnectCompareCPUFlags uint
 
 const (
 	CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE = ConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_FAIL_INCOMPATIBLE)
 	CONNECT_COMPARE_CPU_VALIDATE_XML      = ConnectCompareCPUFlags(C.VIR_CONNECT_COMPARE_CPU_VALIDATE_XML)
 )
 
-type ConnectListAllInterfacesFlags int
+type ConnectListAllInterfacesFlags uint
 
 const (
 	CONNECT_LIST_INTERFACES_INACTIVE = ConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_INACTIVE)
 	CONNECT_LIST_INTERFACES_ACTIVE   = ConnectListAllInterfacesFlags(C.VIR_CONNECT_LIST_INTERFACES_ACTIVE)
 )
 
-type ConnectListAllNodeDeviceFlags int
+type ConnectListAllNodeDeviceFlags uint
 
 const (
 	CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM        = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM)
@@ -159,7 +159,7 @@ const (
 	CONNECT_LIST_NODE_DEVICES_CAP_VDPA          = ConnectListAllNodeDeviceFlags(C.VIR_CONNECT_LIST_NODE_DEVICES_CAP_VDPA)
 )
 
-type ConnectListAllSecretsFlags int
+type ConnectListAllSecretsFlags uint
 
 const (
 	CONNECT_LIST_SECRETS_EPHEMERAL    = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_EPHEMERAL)
@@ -168,7 +168,7 @@ const (
 	CONNECT_LIST_SECRETS_NO_PRIVATE   = ConnectListAllSecretsFlags(C.VIR_CONNECT_LIST_SECRETS_NO_PRIVATE)
 )
 
-type ConnectGetAllDomainStatsFlags int
+type ConnectGetAllDomainStatsFlags uint
 
 const (
 	CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE        = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE)
@@ -184,7 +184,7 @@ const (
 	CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS = ConnectGetAllDomainStatsFlags(C.VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS)
 )
 
-type ConnectFlags int
+type ConnectFlags uint
 
 const (
 	CONNECT_RO         = ConnectFlags(C.VIR_CONNECT_RO)
@@ -215,7 +215,7 @@ const (
 	CPU_COMPARE_SUPERSET     = CPUCompareResult(C.VIR_CPU_COMPARE_SUPERSET)
 )
 
-type NodeAllocPagesFlags int
+type NodeAllocPagesFlags uint
 
 const (
 	NODE_ALLOC_PAGES_ADD = NodeAllocPagesFlags(C.VIR_NODE_ALLOC_PAGES_ADD)

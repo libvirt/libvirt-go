@@ -37,7 +37,7 @@ import (
 	"unsafe"
 )
 
-type StreamFlags int
+type StreamFlags uint
 
 const (
 	STREAM_NONBLOCK = StreamFlags(C.VIR_STREAM_NONBLOCK)
