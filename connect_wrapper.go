@@ -780,6 +780,17 @@ virConnectOpenAuthWrapper(const char *name,
     return ret;
 }
 
+virConnectPtr
+virConnectOpenAuthDefaultWrapper(const char *name,
+                                 unsigned int flags,
+                                 virErrorPtr err)
+{
+    virConnectPtr ret = virConnectOpenAuth(name, virConnectAuthPtrDefault, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+}
 
 virConnectPtr
 virConnectOpenReadOnlyWrapper(const char *name,

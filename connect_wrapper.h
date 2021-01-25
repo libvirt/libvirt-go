@@ -332,6 +332,11 @@ virConnectOpenAuthWrapper(const char *name,
                           virErrorPtr err);
 
 virConnectPtr
+virConnectOpenAuthDefaultWrapper(const char *name,
+                                 unsigned int flags,
+                                 virErrorPtr err);
+
+virConnectPtr
 virConnectOpenReadOnlyWrapper(const char *name,
                               virErrorPtr err);
 

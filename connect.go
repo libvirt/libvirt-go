@@ -416,6 +416,23 @@ func NewConnectWithAuth(uri string, auth *ConnectAuth, flags ConnectFlags) (*Con
 	return &Connect{ptr: ptr}, nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectOpenAuth
+func NewConnectWithAuthDefault(uri string, flags ConnectFlags) (*Connect, error) {
+	var cUri *C.char
+
+	if uri != "" {
+		cUri = C.CString(uri)
+		defer C.free(unsafe.Pointer(cUri))
+	}
+
+	var err C.virError
+	ptr := C.virConnectOpenAuthDefaultWrapper(cUri, C.uint(flags), &err)
+	if ptr == nil {
+		return nil, makeError(&err)
+	}
+	return &Connect{ptr: ptr}, nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-host.html#virConnectOpenReadOnly
 func NewConnectReadOnly(uri string) (*Connect, error) {
 	var cUri *C.char

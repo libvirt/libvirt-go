@@ -261,6 +261,49 @@ func TestConnectionWithAuth(t *testing.T) {
 	}
 }
 
+func TestConnectionWithAuthDefault(t *testing.T) {
+	const authFileContent = `
+[credentials-defgrp]
+username=user
+password=pass
+
+[auth-libvirt-default]
+credentials=defgrp
+`
+	authFile, err := ioutil.TempFile("", "libvirt-go-auth-file")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.Remove(authFile.Name())
+	_, err = authFile.WriteString(authFileContent)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = os.Setenv("LIBVIRT_AUTH_FILE", authFile.Name())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer os.Unsetenv("LIBVIRT_AUTH_FILE")
+
+	conn, err := NewConnectWithAuthDefault("test+tcp://user@127.0.0.1/default", 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	res, err := conn.Close()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if res != 0 {
+		t.Errorf("Close() == %d, expected 0", res)
+	}
+}
+
 func TestConnectionWithWrongCredentials(t *testing.T) {
 	callback := func(creds []*ConnectCredential) {
 		for _, cred := range creds {
