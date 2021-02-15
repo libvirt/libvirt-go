@@ -1050,4 +1050,10 @@ virDomainAuthorizedSSHKeysSetWrapper(virDomainPtr domain,
 				     unsigned int flags,
 				     virErrorPtr err);
 
+int
+virDomainGetMessagesWrapper(virDomainPtr domain,
+			    char ***msgs,
+			    unsigned int flags,
+			    virErrorPtr err);
+
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */

@@ -2509,5 +2509,22 @@ virDomainAuthorizedSSHKeysSetWrapper(virDomainPtr domain,
 }
 
 
+int virDomainGetMessagesWrapper(virDomainPtr domain,
+                                char ***msgs,
+                                unsigned int flags,
+                                virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 7001000
+    assert(0); // Caller should have checked version
+#else
+    int ret = virDomainGetMessages(domain, msgs, flags);
+    if (ret < 0) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
 */
 import "C"

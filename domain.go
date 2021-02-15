@@ -956,6 +956,13 @@ const (
 	DOMAIN_AUTHORIZED_SSH_KEYS_SET_REMOVE = DomainAuthorizedSSHKeysFlags(C.VIR_DOMAIN_AUTHORIZED_SSH_KEYS_SET_REMOVE)
 )
 
+type DomainMessageType uint
+
+const (
+	DOMAIN_MESSAGE_DEPRECATION = DomainMessageType(C.VIR_DOMAIN_MESSAGE_DEPRECATION)
+	DOMAIN_MESSAGE_TAINTING    = DomainMessageType(C.VIR_DOMAIN_MESSAGE_TAINTING)
+)
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFree
 func (d *Domain) Free() error {
 	var err C.virError
@@ -5490,4 +5497,28 @@ func (d *Domain) AuthorizedSSHKeysSet(user string, keys []string, flags DomainAu
 
 	return nil
 
+}
+
+func (d *Domain) GetMessages(flags DomainMessageType) ([]string, error) {
+	if C.LIBVIR_VERSION_NUMBER < 7001000 {
+		return []string{}, makeNotImplementedError("virDomainGetMessages")
+	}
+
+	var cmsgs **C.char
+	var err C.virError
+	ret := C.virDomainGetMessagesWrapper(d.ptr, &cmsgs, C.uint(flags), &err)
+	if ret == -1 {
+		return []string{}, makeError(&err)
+	}
+
+	msgs := make([]string, int(ret))
+	for i := 0; i < int(ret); i++ {
+		cmodel := *(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(cmsgs)) + (unsafe.Sizeof(*cmsgs) * uintptr(i))))
+
+		defer C.free(unsafe.Pointer(cmodel))
+		msgs[i] = C.GoString(cmodel)
+	}
+	defer C.free(unsafe.Pointer(cmsgs))
+
+	return msgs, nil
 }

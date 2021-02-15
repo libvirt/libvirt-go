@@ -1149,5 +1149,14 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_GUEST_INFO_DISKS (1 << 5)
 #endif
 
+/* 7.1.0 */
+
+#ifndef VIR_DOMAIN_MESSAGE_DEPRECATION
+#define VIR_DOMAIN_MESSAGE_DEPRECATION (1 << 0)
+#endif
+
+#ifndef VIR_DOMAIN_MESSAGE_TAINTING
+#define VIR_DOMAIN_MESSAGE_TAINTING (1 << 1)
+#endif
 
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
