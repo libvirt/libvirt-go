@@ -2584,12 +2584,16 @@ func getDomainStatsBalloonFieldInfo(params *DomainStatsBalloon) map[string]typed
 }
 
 type DomainStatsVcpu struct {
-	StateSet bool
-	State    VcpuState
-	TimeSet  bool
-	Time     uint64
-	WaitSet  bool
-	Wait     uint64
+	StateSet  bool
+	State     VcpuState
+	TimeSet   bool
+	Time      uint64
+	WaitSet   bool
+	Wait      uint64
+	HaltedSet bool
+	Halted    bool
+	DelaySet  bool
+	Delay     uint64
 }
 
 func getDomainStatsVcpuFieldInfo(idx int, params *DomainStatsVcpu) map[string]typedParamsFieldInfo {
@@ -2605,6 +2609,14 @@ func getDomainStatsVcpuFieldInfo(idx int, params *DomainStatsVcpu) map[string]ty
 		fmt.Sprintf("vcpu.%d.wait", idx): typedParamsFieldInfo{
 			set: &params.WaitSet,
 			ul:  &params.Wait,
+		},
+		fmt.Sprintf("vcpu.%d.halted", idx): typedParamsFieldInfo{
+			set: &params.HaltedSet,
+			b:   &params.Halted,
+		},
+		fmt.Sprintf("vcpu.%d.delay", idx): typedParamsFieldInfo{
+			set: &params.DelaySet,
+			ul:  &params.Delay,
 		},
 	}
 }
