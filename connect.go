@@ -2974,16 +2974,49 @@ func getDomainStatsMemoryBandwidthMonitorNodeFieldInfo(idx1, idx2 int, params *D
 	}
 }
 
+type DomainStatsDirtyRate struct {
+	CalcStatusSet         bool
+	CalcStatus            uint
+	CalcStartTimeSet      bool
+	CalcStartTime         int64
+	CalcPeriodSet         bool
+	CalcPeriod            int
+	MegabytesPerSecondSet bool
+	MegabytesPerSecond    int64
+}
+
+func getDomainStatsDirtyRateFieldInfo(params *DomainStatsDirtyRate) map[string]typedParamsFieldInfo {
+	return map[string]typedParamsFieldInfo{
+		"dirtyrate.calc_status": typedParamsFieldInfo{
+			set: &params.CalcStatusSet,
+			ui:  &params.CalcStatus,
+		},
+		"dirtyrate.calc_start_time": typedParamsFieldInfo{
+			set: &params.CalcStartTimeSet,
+			l:   &params.CalcStartTime,
+		},
+		"dirtyrate.calc_period": typedParamsFieldInfo{
+			set: &params.CalcPeriodSet,
+			i:   &params.CalcPeriod,
+		},
+		"dirtyrate.megabytes_per_second": typedParamsFieldInfo{
+			set: &params.MegabytesPerSecondSet,
+			l:   &params.MegabytesPerSecond,
+		},
+	}
+}
+
 type DomainStats struct {
-	Domain  *Domain
-	State   *DomainStatsState
-	Cpu     *DomainStatsCPU
-	Balloon *DomainStatsBalloon
-	Vcpu    []DomainStatsVcpu
-	Net     []DomainStatsNet
-	Block   []DomainStatsBlock
-	Perf    *DomainStatsPerf
-	Memory  *DomainStatsMemory
+	Domain    *Domain
+	State     *DomainStatsState
+	Cpu       *DomainStatsCPU
+	Balloon   *DomainStatsBalloon
+	Vcpu      []DomainStatsVcpu
+	Net       []DomainStatsNet
+	Block     []DomainStatsBlock
+	Perf      *DomainStatsPerf
+	Memory    *DomainStatsMemory
+	DirtyRate *DomainStatsDirtyRate
 }
 
 type domainStatsLengths struct {
@@ -3205,6 +3238,17 @@ func (c *Connect) GetAllDomainStats(doms []*Domain, statsTypes DomainStatsTypes,
 
 				domstats.Memory.BandwidthMonitor[j] = bwmon
 			}
+		}
+
+		dirtyrate := &DomainStatsDirtyRate{}
+		dirtyrateInfo := getDomainStatsDirtyRateFieldInfo(dirtyrate)
+
+		count, gerr = typedParamsUnpack(cdomstats.params, cdomstats.nparams, dirtyrateInfo)
+		if gerr != nil {
+			return []DomainStats{}, gerr
+		}
+		if count != 0 {
+			domstats.DirtyRate = dirtyrate
 		}
 
 		stats[i] = domstats

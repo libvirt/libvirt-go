@@ -1173,4 +1173,9 @@ struct _virDomainInterface {
 #define VIR_DOMAIN_DIRTYRATE_MEASURED 2
 #endif
 
+#ifndef VIR_DOMAIN_STATS_DIRTYRATE
+#define VIR_DOMAIN_STATS_DIRTYRATE (1 << 9)
+#endif
+
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
