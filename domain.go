@@ -963,6 +963,14 @@ const (
 	DOMAIN_MESSAGE_TAINTING    = DomainMessageType(C.VIR_DOMAIN_MESSAGE_TAINTING)
 )
 
+type DomainDirtyRateStatus uint
+
+const (
+	DOMAIN_DIRTYRATE_UNSTARTED = DomainDirtyRateStatus(C.VIR_DOMAIN_DIRTYRATE_UNSTARTED)
+	DOMAIN_DIRTYRATE_MEASURING = DomainDirtyRateStatus(C.VIR_DOMAIN_DIRTYRATE_MEASURING)
+	DOMAIN_DIRTYRATE_MEASURED  = DomainDirtyRateStatus(C.VIR_DOMAIN_DIRTYRATE_MEASURED)
+)
+
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFree
 func (d *Domain) Free() error {
 	var err C.virError
