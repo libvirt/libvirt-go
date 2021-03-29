@@ -5522,3 +5522,17 @@ func (d *Domain) GetMessages(flags DomainMessageType) ([]string, error) {
 
 	return msgs, nil
 }
+
+func (d *Domain) StartDirtyRateCalc(secs int, flags uint) error {
+	if C.LIBVIR_VERSION_NUMBER < 7002000 {
+		return makeNotImplementedError("virDomainStartDirtyRateCalc")
+	}
+
+	var err C.virError
+	ret := C.virDomainStartDirtyRateCalcWrapper(d.ptr, C.int(secs), C.uint(flags), &err)
+	if ret == -1 {
+		return makeError(&err)
+	}
+
+	return nil
+}

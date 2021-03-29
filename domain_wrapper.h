@@ -1056,4 +1056,9 @@ virDomainGetMessagesWrapper(virDomainPtr domain,
 			    unsigned int flags,
 			    virErrorPtr err);
 
+int virDomainStartDirtyRateCalcWrapper(virDomainPtr domain,
+				       int seconds,
+				       unsigned int flags,
+				       virErrorPtr err);
+
 #endif /* LIBVIRT_GO_DOMAIN_WRAPPER_H__ */
