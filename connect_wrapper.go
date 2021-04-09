@@ -1806,6 +1806,24 @@ virConnectSetIdentityWrapper(virConnectPtr conn,
 #endif
 }
 
+virNodeDevicePtr
+virNodeDeviceDefineXMLWrapper(virConnectPtr conn,
+                              const char *xmlDesc,
+                              unsigned int flags,
+                              virErrorPtr err)
+{
+#if LIBVIR_VERSION_NUMBER < 7003000
+    assert(0); // Caller should have checked version
+#else
+    virNodeDevicePtr ret = virNodeDeviceDefineXML(conn, xmlDesc, flags);
+    if (!ret) {
+        virCopyLastError(err);
+    }
+    return ret;
+#endif
+}
+
+
 ////////////////////////////////////////////////
 */
 import "C"

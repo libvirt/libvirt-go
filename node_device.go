@@ -192,3 +192,29 @@ func (p *NodeDevice) ListCaps() ([]string, error) {
 	}
 	return goNames, nil
 }
+
+// See also https://libvirt.org/html/libvirt-libvirt-nodedev.html#virNodeDeviceCreate
+func (p *NodeDevice) Create(flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 7003000 {
+		return makeNotImplementedError("virNodeDeviceCreate")
+	}
+	var err C.virError
+	result := C.virNodeDeviceCreateWrapper(p.ptr, C.uint(flags), &err)
+	if result == -1 {
+		return makeError(&err)
+	}
+	return nil
+}
+
+// See also https://libvirt.org/html/libvirt-libvirt-nodedev.html#virNodeDeviceUndefine
+func (p *NodeDevice) Undefine(flags uint32) error {
+	if C.LIBVIR_VERSION_NUMBER < 7003000 {
+		return makeNotImplementedError("virNodeDeviceUndefine")
+	}
+	var err C.virError
+	result := C.virNodeDeviceUndefineWrapper(p.ptr, C.uint(flags), &err)
+	if result == -1 {
+		return makeError(&err)
+	}
+	return nil
+}

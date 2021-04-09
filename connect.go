@@ -1576,6 +1576,21 @@ func (c *Connect) DeviceCreateXML(xmlConfig string, flags uint32) (*NodeDevice, 
 	return &NodeDevice{ptr: ptr}, nil
 }
 
+// See also https://libvirt.org/html/libvirt-libvirt-nodedev.html#virNodeDeviceDefineXML
+func (c *Connect) DeviceDefineXML(xmlConfig string, flags uint32) (*NodeDevice, error) {
+	if C.LIBVIR_VERSION_NUMBER < 7003000 {
+		return nil, makeNotImplementedError("virNodeDeviceDefineXML")
+	}
+	cXml := C.CString(string(xmlConfig))
+	defer C.free(unsafe.Pointer(cXml))
+	var err C.virError
+	ptr := C.virNodeDeviceDefineXMLWrapper(c.ptr, cXml, C.uint(flags), &err)
+	if ptr == nil {
+		return nil, makeError(&err)
+	}
+	return &NodeDevice{ptr: ptr}, nil
+}
+
 // See also https://libvirt.org/html/libvirt-libvirt-interface.html#virConnectListAllInterfaces
 func (c *Connect) ListAllInterfaces(flags ConnectListAllInterfacesFlags) ([]Interface, error) {
 	var cList *C.virInterfacePtr

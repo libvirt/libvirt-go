@@ -743,4 +743,10 @@ virConnectSetIdentityWrapper(virConnectPtr conn,
 			     unsigned int flags,
 			     virErrorPtr err);
 
+virNodeDevicePtr
+virNodeDeviceDefineXMLWrapper(virConnectPtr conn,
+                              const char *xmlDesc,
+                              unsigned int flags,
+                              virErrorPtr err);
+
 #endif /* LIBVIRT_GO_CONNECT_WRAPPER_H__ */
