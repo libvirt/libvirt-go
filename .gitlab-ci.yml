@@ -21,17 +21,20 @@ stages:
   after_script:
     - docker logout
 
+.git_build_vars: &git_build_vars |
+  export MAKEFLAGS="-j$(getconf _NPROCESSORS_ONLN)"
+  export SCRATCH_DIR="$PWD/scratch"
+  export VROOT="$SCRATCH_DIR/vroot"
+  export LIBDIR="$VROOT/lib"
+  export LD_LIBRARY_PATH="$LIBDIR"
+  export PATH="$VROOT/bin:$PATH"
+  export PKG_CONFIG_PATH="$LIBDIR/pkgconfig"
+
 .git_build_job_template: &git_build_job_definition
   image: $CI_REGISTRY_IMAGE/ci-$NAME:latest
   stage: builds
   before_script:
-    - export MAKEFLAGS="-j$(getconf _NPROCESSORS_ONLN)"
-    - export SCRATCH_DIR="/tmp/scratch"
-    - export VROOT="$SCRATCH_DIR/vroot"
-    - export LIBDIR="$VROOT/lib"
-    - export LD_LIBRARY_PATH="$LIBDIR"
-    - export PATH="$VROOT/bin:$PATH"
-    - export PKG_CONFIG_PATH="$LIBDIR/pkgconfig"
+    - *git_build_vars
   script:
     - pushd "$PWD"
     - mkdir -p "$SCRATCH_DIR"
@@ -42,7 +45,7 @@ stages:
     - ninja -C build install
     - popd
     - go build
-    - go test -tags api
+    - go test
 
 .dist_build_job_template: &dist_build_job_definition
   image: $CI_REGISTRY_IMAGE/ci-$NAME:latest
@@ -137,6 +140,11 @@ centos-8-git-build:
   <<: *git_build_job_definition
   variables:
     NAME: centos-8
+  artifacts:
+    expire_in: 2 days
+    paths:
+      - scratch
+      - build
 
 
 centos-7-dist-build:
@@ -193,3 +201,18 @@ ubuntu-2004-dist-build:
   <<: *dist_build_job_definition
   variables:
     NAME: ubuntu-2004
+
+api-coverage:
+  image: $CI_REGISTRY_IMAGE/ci-centos-8:latest
+  stage: sanity_checks
+  needs:
+    - job: centos-8-git-build
+      artifacts: true
+  before_script:
+    - *git_build_vars
+  script:
+    - go test -tags api
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
