@@ -94,6 +94,7 @@ centos-stream-container:
   <<: *container_job_definition
   variables:
     NAME: centos-stream
+    GO111MODULES: auto
 
 debian-10-container:
   <<: *container_job_definition
@@ -119,6 +120,7 @@ fedora-rawhide-container:
   <<: *container_job_definition
   variables:
     NAME: fedora-rawhide
+    GO111MODULES: auto
 
 opensuse-151-container:
   <<: *container_job_definition
@@ -161,6 +163,7 @@ centos-stream-dist-build:
   <<: *dist_build_job_definition
   variables:
     NAME: centos-stream
+    GO111MODULE: auto
 
 debian-10-dist-build:
   <<: *dist_build_job_definition
@@ -186,6 +189,7 @@ fedora-rawhide-dist-build:
   <<: *dist_build_job_definition
   variables:
     NAME: fedora-rawhide
+    GO111MODULE: auto
 
 opensuse-151-dist-build:
   <<: *dist_build_job_definition
