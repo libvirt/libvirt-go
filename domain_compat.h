@@ -1178,4 +1178,8 @@ struct _virDomainInterface {
 #endif
 
 
+#ifndef VIR_DOMAIN_NUMATUNE_MEM_RESTRICTIVE
+#define VIR_DOMAIN_NUMATUNE_MEM_RESTRICTIVE 3
+#endif
+
 #endif /* LIBVIRT_GO_DOMAIN_COMPAT_H__ */
