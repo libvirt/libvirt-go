@@ -112,6 +112,11 @@ fedora-rawhide-container:
     NAME: fedora-rawhide
     GO111MODULES: auto
 
+opensuse-leap-152-container:
+  <<: *container_job_definition
+  variables:
+    NAME: opensuse-leap-152
+
 ubuntu-1804-container:
   <<: *container_job_definition
   variables:
@@ -164,6 +169,12 @@ fedora-rawhide-dist-build:
   <<: *dist_build_job_definition
   variables:
     NAME: fedora-rawhide
+    GO111MODULE: auto
+
+opensuse-leap-152-dist-build:
+  <<: *dist_build_job_definition
+  variables:
+    NAME: opensuse-leap-152
     GO111MODULE: auto
 
 ubuntu-1804-dist-build:
