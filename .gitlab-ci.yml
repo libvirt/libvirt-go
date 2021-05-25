@@ -89,7 +89,6 @@ centos-stream-8-container:
   <<: *container_job_definition
   variables:
     NAME: centos-stream-8
-    GO111MODULES: auto
 
 debian-10-container:
   <<: *container_job_definition
@@ -115,7 +114,6 @@ fedora-rawhide-container:
   <<: *container_job_definition
   variables:
     NAME: fedora-rawhide
-    GO111MODULES: auto
 
 opensuse-leap-152-container:
   <<: *container_job_definition
