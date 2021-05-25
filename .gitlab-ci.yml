@@ -112,11 +112,6 @@ fedora-rawhide-container:
     NAME: fedora-rawhide
     GO111MODULES: auto
 
-opensuse-151-container:
-  <<: *container_job_definition
-  variables:
-    NAME: opensuse-151
-
 ubuntu-1804-container:
   <<: *container_job_definition
   variables:
@@ -170,11 +165,6 @@ fedora-rawhide-dist-build:
   variables:
     NAME: fedora-rawhide
     GO111MODULE: auto
-
-opensuse-151-dist-build:
-  <<: *dist_build_job_definition
-  variables:
-    NAME: opensuse-151
 
 ubuntu-1804-dist-build:
   <<: *dist_build_job_definition
