@@ -2,10 +2,12 @@
 #
 #  $ lcitool dockerfile fedora-rawhide libvirt+dist,libvirt-go
 #
-# https://gitlab.com/libvirt/libvirt-ci/-/commit/b098ec6631a85880f818f2dd25c437d509e53680
+# https://gitlab.com/libvirt/libvirt-ci/-/commit/1c5d87ecd2283614a8b0c31cead0b6d7883afd28
+
 FROM registry.fedoraproject.org/fedora:rawhide
 
-RUN dnf install -y nosync && \
+RUN dnf update -y --nogpgcheck fedora-gpg-keys && \
+    dnf install -y nosync && \
     echo -e '#!/bin/sh\n\
 if test -d /usr/lib64\n\
 then\n\
@@ -15,7 +17,6 @@ else\n\
 fi\n\
 exec "$@"' > /usr/bin/nosync && \
     chmod +x /usr/bin/nosync && \
-    nosync dnf update -y --nogpgcheck fedora-gpg-keys && \
     nosync dnf update -y && \
     nosync dnf install -y \
         ca-certificates \
@@ -32,7 +33,7 @@ exec "$@"' > /usr/bin/nosync && \
     rpm -qa | sort > /packages.txt && \
     mkdir -p /usr/libexec/ccache-wrappers && \
     ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/cc && \
-    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/$(basename /usr/bin/gcc)
+    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/gcc
 
 ENV LANG "en_US.UTF-8"
 ENV CCACHE_WRAPPERSDIR "/usr/libexec/ccache-wrappers"
