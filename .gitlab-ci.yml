@@ -117,6 +117,11 @@ opensuse-leap-152-container:
   variables:
     NAME: opensuse-leap-152
 
+opensuse-tumbleweed-container:
+  <<: *container_job_definition
+  variables:
+    NAME: opensuse-tumbleweed
+
 ubuntu-1804-container:
   <<: *container_job_definition
   variables:
@@ -175,6 +180,12 @@ opensuse-leap-152-dist-build:
   <<: *dist_build_job_definition
   variables:
     NAME: opensuse-leap-152
+    GO111MODULE: auto
+
+opensuse-tumbleweed-dist-build:
+  <<: *dist_build_job_definition
+  variables:
+    NAME: opensuse-tumbleweed
     GO111MODULE: auto
 
 ubuntu-1804-dist-build:
