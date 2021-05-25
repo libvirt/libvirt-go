@@ -85,10 +85,10 @@ centos-8-container:
   variables:
     NAME: centos-8
 
-centos-stream-container:
+centos-stream-8-container:
   <<: *container_job_definition
   variables:
-    NAME: centos-stream
+    NAME: centos-stream-8
     GO111MODULES: auto
 
 debian-10-container:
@@ -139,10 +139,10 @@ centos-8-dist-build:
   variables:
     NAME: centos-8
 
-centos-stream-dist-build:
+centos-stream-8-dist-build:
   <<: *dist_build_job_definition
   variables:
-    NAME: centos-stream
+    NAME: centos-stream-8
     GO111MODULE: auto
 
 debian-10-dist-build:
