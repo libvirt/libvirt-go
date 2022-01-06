@@ -4176,19 +4176,24 @@ func (d *Domain) HasCurrentSnapshot(flags uint32) (bool, error) {
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFSFreeze
 func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
+	var err C.virError
+	var ret C.int
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
 		return makeNotImplementedError("virDomainFSFreeze")
 	}
-	cmounts := make([](*C.char), len(mounts))
+	if mounts == nil {
+		ret = C.virDomainFSFreezeWrapper(d.ptr, nil, 0, C.uint(flags), &err)
+	} else {
+		cmounts := make([](*C.char), len(mounts))
 
-	for i := 0; i < len(mounts); i++ {
-		cmounts[i] = C.CString(mounts[i])
-		defer C.free(unsafe.Pointer(cmounts[i]))
+		for i := 0; i < len(mounts); i++ {
+			cmounts[i] = C.CString(mounts[i])
+			defer C.free(unsafe.Pointer(cmounts[i]))
+		}
+
+		nmounts := len(mounts)
+		ret = C.virDomainFSFreezeWrapper(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags), &err)
 	}
-
-	nmounts := len(mounts)
-	var err C.virError
-	ret := C.virDomainFSFreezeWrapper(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
@@ -4198,19 +4203,24 @@ func (d *Domain) FSFreeze(mounts []string, flags uint32) error {
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainFSThaw
 func (d *Domain) FSThaw(mounts []string, flags uint32) error {
+	var err C.virError
+	var ret C.int
 	if C.LIBVIR_VERSION_NUMBER < 1002005 {
 		return makeNotImplementedError("virDomainFSThaw")
 	}
-	cmounts := make([](*C.char), len(mounts))
+	if mounts == nil {
+		ret = C.virDomainFSThawWrapper(d.ptr, nil, 0, C.uint(flags), &err)
+	} else {
+		cmounts := make([](*C.char), len(mounts))
 
-	for i := 0; i < len(mounts); i++ {
-		cmounts[i] = C.CString(mounts[i])
-		defer C.free(unsafe.Pointer(cmounts[i]))
+		for i := 0; i < len(mounts); i++ {
+			cmounts[i] = C.CString(mounts[i])
+			defer C.free(unsafe.Pointer(cmounts[i]))
+		}
+
+		nmounts := len(mounts)
+		ret = C.virDomainFSThawWrapper(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags), &err)
 	}
-
-	nmounts := len(mounts)
-	var err C.virError
-	ret := C.virDomainFSThawWrapper(d.ptr, (**C.char)(unsafe.Pointer(&cmounts[0])), C.uint(nmounts), C.uint(flags), &err)
 	if ret == -1 {
 		return makeError(&err)
 	}
